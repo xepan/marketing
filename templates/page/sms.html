@@ -1,0 +1,54 @@
+{$Content}
+<div class="row">{$progressbar}<br/><br/>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="main-box no-header clearfix">
+        <header class="main-box-header clearfix">
+          <h2 class="pull-left">SMS</h2>
+          <div class="filter-block pull-right">
+            <div class="form-group pull-left">
+              <input type="text" placeholder="Search..." class="form-control"/><i class="fa fa-search search-icon"></i>
+            </div><a href="#" class="btn btn-primary pull-right"><i class="fa fa-plus-circle fa-lg"></i> Add SMS</a>
+            <div class="btn-group pull-right">
+              <div role="group" aria-label="..." class="btn-group">
+                <button class="btn btn-danger"> <i class="fa fa-sm"></i><i class="fa fa-delicious"></i></button>
+                <button class="btn btn-primary">Category Filter</button>
+                <button data-toggle="dropdown" data-placeholder="false" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <input id="ID" type="checkbox" name="NAME" value="VALUE"/>
+                    <label for="ID">Jaipur Printing</label>
+                  </li>
+                  <li>
+                    <input id="ID" type="checkbox" name="NAME" value="VALUE"/>
+                    <label for="ID">Udaipur Printing</label>
+                  </li>
+                  <li>
+                    <input id="ID" type="checkbox" name="NAME" value="VALUE"/>
+                    <label for="ID">Jodhpur Printing</label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group pull-right">
+              <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Sort By<span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li>
+                  <label for="ID">Date Created</label>
+                </li>
+                <li>
+                  <label for="ID">Status</label>
+                </li>
+                <li>
+                  <label for="ID">@@@@@@</label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </header>
+        <hr/>
+        <div class="row">{$sms}</div>
+      </div>
+    </div>
+  </div>
+</div>

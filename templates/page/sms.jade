@@ -1,0 +1,49 @@
+{$Content}
+.row
+  {$progressbar}
+  br
+  br  
+  .row
+    .col-lg-12
+      .main-box.no-header.clearfix
+        header.main-box-header.clearfix
+          h2.pull-left SMS
+          .filter-block.pull-right
+            .form-group.pull-left
+              input.form-control(type='text', placeholder='Search...')
+              i.fa.fa-search.search-icon
+            a.btn.btn-primary.pull-right(href='#')
+              i.fa.fa-plus-circle.fa-lg
+              |  Add SMS
+            .btn-group.pull-right
+              .btn-group(role='group', aria-label='...')
+                button.btn.btn-danger 
+                  i.fa.fa-sm
+                  i.fa.fa-delicious
+                button.btn.btn-primary Category Filter
+                button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', data-placeholder='false')
+                  span.caret
+                ul.dropdown-menu
+                  li
+                    input#ID(type='checkbox', name='NAME', value='VALUE')
+                    label(for='ID') Jaipur Printing
+                  li
+                   input#ID(type='checkbox', name='NAME', value='VALUE')
+                   label(for='ID') Udaipur Printing
+                  li
+                   input#ID(type='checkbox', name='NAME', value='VALUE')
+                   label(for='ID') Jodhpur Printing
+            .form-group.pull-right
+              button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                | Sort By
+                span.caret
+              ul.dropdown-menu
+                li
+                  label(for='ID') Date Created
+                li
+                  label(for='ID') Status
+                li
+                  label(for='ID') @@@@@@
+        hr  
+        .row
+          {$sms}

@@ -1,0 +1,18 @@
+{$Content}
+.row
+  .col-lg-3.co-md-3.col-sm-3
+    include contact.jade
+  .col-lg-9.col-md-8.col-sm-8
+      .main-box.clearfix
+        .tabs-wrapper.profile-tabs
+          ul.nav.nav-tabs
+            li.active
+              a(data-toggle='tab', href='#tab-activity') Activity
+            li
+              a(data-toggle='tab', href='#tab-opportunity') Opportunity  
+          .tab-content
+            
+             #tab-activity.tab-pane.fade.in.active
+                {$activity}
+             #tab-opportunity.tab-pane.clearfix.fade
+                {$opportunity}  

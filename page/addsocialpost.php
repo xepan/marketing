@@ -1,6 +1,6 @@
 <?php
 namespace xepan\marketing;
-class page_lead extends \Page{
+class page_addsocialpost extends \Page{
 	public $title="Social Post";
 	function init(){
 		parent::init();

@@ -4,7 +4,7 @@ class page_sms extends \Page{
 
 	function init(){
 		parent::init();
-
+		public $title="SMS";
 		$this->add('View_Marketing_progressbar',null,'progressbar');
 		$this->add('View_Marketing_sms',['status'=>'submitted'],'sms');
 		$this->add('View_Marketing_sms',null,'sms');

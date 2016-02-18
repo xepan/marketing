@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 class page_newmailconfig extends \Page{
-
+	public $title="Mail Configuration";
 	function init(){
 		parent::init();
 

@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 class page_leadprofile extends \Page{
-
+		public $title="Lead Profile";
 	function init(){
 		parent::init();
 

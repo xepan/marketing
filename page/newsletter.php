@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 class page_newsletter extends \Page{
-
+	public $title="Newsletter";
 	function init(){
 		parent::init();
 

@@ -12,6 +12,6 @@ class page_lead extends \Page{
 
 	function defaultTemplate(){
 
-		return ['page/marketing/lead'];
+		return ['page/lead'];
 	}
 }

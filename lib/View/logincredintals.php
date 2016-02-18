@@ -1,6 +1,7 @@
 <?php
 
-class View_Marketing_logincredintals extends View{
+namespace xepan\marketing;
+class View_logincredintals extends \View{
 	function init(){
 		parent::init();
 

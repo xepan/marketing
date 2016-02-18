@@ -1,6 +1,6 @@
 <?php
-
-class page_marketing_leadprofile extends Page{
+namespace xepan\marketing;
+class page_leadprofile extends \Page{
 
 	function init(){
 		parent::init();

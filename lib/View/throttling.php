@@ -1,6 +1,6 @@
 <?php
-
-class View_Marketing_throttling extends View{
+namespace xepan\marketing;
+class View_throttling extends \View{
 
 	function init(){
 		parent::init();

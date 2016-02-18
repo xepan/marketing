@@ -1,6 +1,6 @@
 <?php
-
-class page_marketing_newsletter extends Page{
+namespace xepan\marketing;
+class page_newsletter extends \Page{
 
 	function init(){
 		parent::init();

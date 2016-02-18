@@ -1,6 +1,6 @@
 <?php
-
-class page_marketing_newmailconfig extends Page{
+namespace xepan\marketing;
+class page_newmailconfig extends \Page{
 
 	function init(){
 		parent::init();

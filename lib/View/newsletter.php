@@ -1,6 +1,7 @@
 <?php
+namespace xepan\marketing;
 
-class View_Marketing_newsletter extends View{
+class View_newsletter extends \View{
 	public $status = "draft";
 	function init(){
 		parent::init();

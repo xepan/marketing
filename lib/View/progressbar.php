@@ -1,6 +1,6 @@
 <?php
-
-class View_Marketing_progressbar extends View{
+namespace xepan\marketing;
+class View_progressbar extends \View{
 
 	function init(){
 		parent::init();

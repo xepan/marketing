@@ -1,6 +1,6 @@
 <?php
-
-class page_marketing_socialcontent extends Page{
+namespace xepan\marketing;
+class page_socialcontent extends \Page{
 
 	function init(){
 		parent::init();

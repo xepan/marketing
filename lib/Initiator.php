@@ -8,6 +8,13 @@ class Initiator extends \Controller_Addon {
 	function init(){
 		parent::init();
 		$this->routePages('xepan_marketing');
+
+		$m = $this->app->top_menu->addMenu('Marketing');
+		$m->addItem('Lead','xepan_marketing_lead');
+		$m->addItem('Opportunity','xepan_marketing_opportunity');
+		$m->addItem('Newsletter','xepan_marketing_newsletter');
+		$m->addItem('Social','xepan_marketing_socialcontent');
+		$m->addItem('SMS','xepan_marketing_sms');
 		
 	}
 }

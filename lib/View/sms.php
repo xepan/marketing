@@ -1,6 +1,6 @@
 <?php
-
-class View_Marketing_sms extends View{
+namespace xepan\marketing;
+class View_sms extends \View{
 	public $status = "draft";
 	function init(){
 		parent::init();

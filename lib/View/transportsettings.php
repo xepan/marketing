@@ -1,6 +1,6 @@
 <?php
-
-class View_Marketing_transportsettings extends View{
+namespace xepan\marketing;
+class View_transportsettings extends \View{
 
 	function init(){
 		parent::init();

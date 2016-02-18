@@ -1,6 +1,6 @@
 <?php
-
-class View_Marketing_opportunity extends View{
+namespace xepan\marketing;
+class View_opportunity extends \View{
 
 	function init(){
 		parent::init();

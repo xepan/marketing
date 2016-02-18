@@ -1,6 +1,7 @@
 <?php
+namespace xepan\marketing;
 
-class View_Marketing_headersettings extends View{
+class View_headersettings extends \View{
 
 	function init(){
 		parent::init();

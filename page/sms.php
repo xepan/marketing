@@ -1,6 +1,6 @@
 <?php
-
-class page_marketing_sms extends Page{
+namespace xepan\marketing;
+class page_sms extends \Page{
 
 	function init(){
 		parent::init();

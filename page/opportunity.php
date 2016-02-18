@@ -1,6 +1,6 @@
 <?php
-
-class page_marketing_opportunity extends Page{
+namespace xepan\marketing;
+class page_opportunity extends \Page{
 
 	function init(){
 		parent::init();

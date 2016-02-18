@@ -5,10 +5,10 @@ class page_newmailconfig extends \Page{
 	function init(){
 		parent::init();
 
-		$this->add('View_Marketing_transportsettings');
-		$this->add('View_Marketing_logincredintals');
-		$this->add('View_Marketing_headersettings');
-		$this->add('View_Marketing_throttling');
+		$this->add('xepan\marketing\View_transportsettings');
+		$this->add('xepan\marketing\View_logincredintals');
+		$this->add('xepan\marketing\View_headersettings');
+		$this->add('xepan\marketing\View_throttling');
 
 	}
 

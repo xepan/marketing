@@ -1,6 +1,8 @@
 <?php
 namespace xepan\marketing;
+
 class View_social extends \View{
+	
 	public $status="draft";
 	function init(){
 		parent::init();

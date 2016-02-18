@@ -8,6 +8,6 @@ class page_opportunity extends \Page{
 
 	function defaultTemplate(){
 
-		return['page/marketing/opportunity'];
+		return['page/opportunity'];
 	}
 }

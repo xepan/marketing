@@ -8,6 +8,6 @@ class page_socialconfiguration extends \Page{
 
 	function defaultTemplate(){
 
-		return['page/marketing/socialconfiguration'];
+		return['page/socialconfiguration'];
 	}
 }

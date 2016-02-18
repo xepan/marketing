@@ -19,6 +19,6 @@ class page_newsletter extends \Page{
 
 	function defaultTemplate(){
 
-		return ['page/marketing/newsletter'];
+		return ['page/newsletter'];
 	}
 }

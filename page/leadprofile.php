@@ -12,6 +12,6 @@ class page_leadprofile extends \Page{
 
 	function defaultTemplate(){
 
-		return ['page/marketing/leadprofile'];
+		return ['page/leadprofile'];
 	}
 }

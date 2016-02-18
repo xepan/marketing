@@ -8,7 +8,7 @@ class View_opportunity extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/opportunity'];
+		return ['view/opportunity'];
 	}
 
 }

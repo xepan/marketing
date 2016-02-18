@@ -10,7 +10,7 @@ class View_activity extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/activity'];
+		return ['view/activity'];
 	}
 
 }

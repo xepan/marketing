@@ -10,6 +10,6 @@ class page_mailconfiguration extends \Page{
 
 	function defaultTemplate(){
 
-		return ['page/marketing/mailconfiguration'];
+		return ['page/mailconfiguration'];
 	}
 }

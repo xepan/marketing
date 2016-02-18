@@ -13,6 +13,6 @@ class page_newmailconfig extends \Page{
 	}
 
 	function defaultTemplate(){
-		return ['page/marketing/newmailconfig'];
+		return ['page/newmailconfig'];
 	}
 }

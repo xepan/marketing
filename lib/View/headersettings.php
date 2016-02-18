@@ -9,7 +9,7 @@ class View_headersettings extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/headersettings'];
+		return ['view/headersettings'];
 	}
 
 }

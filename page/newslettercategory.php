@@ -8,6 +8,6 @@ class page_newslettercategory extends \Page{
 
 	function defaultTemplate(){
 
-		return['page/marketing/newslettercategory'];
+		return['page/newslettercategory'];
 	}
 }

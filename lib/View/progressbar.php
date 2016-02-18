@@ -7,6 +7,6 @@ class View_progressbar extends \View{
 	}
 
 	function defaultTemplate(){
-		return['view/marketing/progressbar'];
+		return['view/progressbar'];
 	}
 }

@@ -21,7 +21,7 @@ class View_newsletter extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/newsletter'];
+		return ['view/newsletter'];
 	}
 
 }

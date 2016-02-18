@@ -19,7 +19,7 @@ class View_social extends \View{
 	}
 	function defaultTemplate(){
 
-		return ['view/marketing/social'];
+		return ['view/social'];
 	}
 
 }

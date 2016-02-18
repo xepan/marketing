@@ -17,6 +17,6 @@ class View_sms extends \View{
 	}
 
 	function defaultTemplate(){
-		return['view/marketing/sms'];
+		return['view/sms'];
 	}
 }

@@ -9,6 +9,6 @@ class View_logincredintals extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/logincredintals'];
+		return ['view/logincredintals'];
 	}
 }

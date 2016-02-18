@@ -15,6 +15,6 @@ class page_sms extends \Page{
 
 	function defaultTemplate(){
 
-		return['page/marketing/sms'];
+		return['page/sms'];
 	}
 }

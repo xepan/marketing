@@ -9,6 +9,6 @@ class page_lead extends \Page{
 	}
 
 	function defaultTemplate(){
-		return ['page/marketing/addsocialpost'];
+		return ['page/addsocialpost'];
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 
 namespace xepan\marketing;
-
+	
 class page_lead extends \Page{
-
+	public $title="Lead";
 	function init(){
 		parent::init();
 
@@ -12,6 +12,6 @@ class page_lead extends \Page{
 
 	function defaultTemplate(){
 
-		return ['page/marketing/lead'];
+		return ['page/lead'];
 	}
 }

@@ -8,7 +8,7 @@ class View_transportsettings extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/transportsettings'];
+		return ['view/transportsettings'];
 	}
 
 }

@@ -8,6 +8,6 @@ class page_facebookconfig extends \Page{
 	}
 
 	function defaultTemplate(){
-		return ['page/marketing/facebookconfig'];
+		return ['page/facebookconfig'];
 	}
 }

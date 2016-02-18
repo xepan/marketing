@@ -8,7 +8,7 @@ class View_throttling extends \View{
 
 	function defaultTemplate(){
 
-		return ['view/marketing/throttling'];
+		return ['view/throttling'];
 	}
 
 }

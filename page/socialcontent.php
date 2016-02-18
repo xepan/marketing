@@ -14,6 +14,6 @@ class page_socialcontent extends \Page{
 
 	function defaultTemplate(){
 
-		return['page/marketing/socialcontent'];
+		return['page/socialcontent'];
 	}
 }

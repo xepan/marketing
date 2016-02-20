@@ -7,7 +7,8 @@ class Model_ContentCategory extends \Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasMany('Content');
+		$this->hasMany('xepan\marketing\Content');
+		
 
 	}
 } 

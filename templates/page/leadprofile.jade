@@ -8,12 +8,16 @@
         .tabs-wrapper.profile-tabs
           ul.nav.nav-tabs
             li.active
-              a(data-toggle='tab', href='#tab-activity') Activity
+              a(data-toggle='tab', href='#tab-details') Details
             li
-              a(data-toggle='tab', href='#tab-opportunity') Opportunity  
+              a(data-toggle='tab', href='#tab-opportunity') Opportunity
+            li
+              a(data-toggle='tab', href='#tab-activity') Activity  
           .tab-content
             
-             #tab-activity.tab-pane.fade.in.active
-                {$activity}
+             #tab-details.tab-pane.fade.in.active
+                {$details}
+             #tab-activity.tab-pane.clearfix.fade
+                {$activity}     
              #tab-opportunity.tab-pane.clearfix.fade
-                {$opportunity}  
+                {$opportunity}

@@ -17,6 +17,8 @@ class Model_LeadCategory extends \xepan\base\Model_Document{
 		parent::init();
 		
 		$cat_j = $this->join('lead_category.document_id');
+		$cat_j->addField('name');
+		
 		$cat_j->hasMany('xepan\marketing\Lead','lead_id');
 
 		$this->addCondition('type','LeadCategory');

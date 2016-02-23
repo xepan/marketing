@@ -13,10 +13,19 @@ class page_leaddetails extends \Page {
 		$lead_view = $this->add('xepan\base\View_Contact',null,'contact_view');
 		$lead_view->setModel($lead);
 
-		$details_view = $this->add('xepan\marketing\View_details',null,'details');
+		$doc = $this->add('xepan\base\View_Document',
+				[
+					'action'=>$this->api->stickyGET('action')?:'view', // add/edit
+					'id_fields_in_view'=>'["all"]/["post_id","field2_id"]',
+					'allow_many_on_add' => false, // Only visible if editinng,
+					'view_template' => ['view/details']
+				],'details'
+			);
+
+		$doc->setModel($lead,null,['source','category']);
+
 		$activity_view = $this->add('xepan\marketing\View_activity',null,'activity');
 		$opportunity_view = $this->add('xepan\marketing\View_opportunity',null,'opportunity');
-		$lead_view->setModel($lead);
 	}
 
 	function defaultTemplate(){

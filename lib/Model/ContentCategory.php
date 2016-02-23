@@ -2,13 +2,16 @@
 
 namespace xepan\marketing;  
 
-class Model_ContentCategory extends \Model_Table{
+class Model_ContentCategory extends \xepan\base\Model_Document{
 
 	function init(){
 		parent::init();
 
-		$this->hasMany('xepan\marketing\Content');
+		$this->addField('name');
+
+		$this->hasMany('xepan\marketing\Content','category_id');
 		
+		$this->addExpression('content_count')->set($this->refSQL('xepan\marketing\Content')->count());
 
 	}
 } 

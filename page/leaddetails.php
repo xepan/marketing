@@ -16,13 +16,13 @@ class page_leaddetails extends \Page {
 		$doc = $this->add('xepan\base\View_Document',
 				[
 					'action'=>$this->api->stickyGET('action')?:'view', // add/edit
-					'id_fields_in_view'=>'["all"]/["post_id","field2_id"]',
+					'id_fields_in_view'=>[],
 					'allow_many_on_add' => false, // Only visible if editinng,
 					'view_template' => ['view/details']
 				],'details'
 			);
 
-		$doc->setModel($lead,null,['source','category']);
+		$doc->setModel($lead,['source','category'],['source','category_id']);
 
 		$activity_view = $this->add('xepan\marketing\View_activity',null,'activity');
 		$opportunity_view = $this->add('xepan\marketing\View_opportunity',null,'opportunity');

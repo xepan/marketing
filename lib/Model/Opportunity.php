@@ -4,6 +4,10 @@ namespace xepan\marketing;
 
 class Model_Opportunity extends \xepan\base\Model_Document{
 
+	public $actions=[
+		'add','edit','delete','submit'
+	];
+
 	function init(){
 		parent::init();
 

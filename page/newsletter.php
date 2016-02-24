@@ -13,8 +13,6 @@ class page_newsletter extends \Page{
 		$this->add('xepan\marketing\View_newsletter',null,'newsletter');
 		$this->add('xepan\marketing\View_newsletter',null,'newsletter');
 		$this->add('xepan\marketing\View_newsletter',null,'newsletter');
-		
-		
 
 	}
 

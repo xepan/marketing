@@ -13,22 +13,18 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>
         <tr>{cols}
-          <th><span>Lead</span></th>
-          <th><span>Status</span></th>
           <th><span>Title</span></th>
+          <th><span>Description</span></th>
           <th><span>Duration</span></th>
-          <th></th>
           <th> </th>{/}
         </tr>
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">{first_name}Scarlett{/} {last_name}Johansson{/}</a></td>
-          <td>{status}{/}</td>
           <td>{title}{/}</td>
+          <td>{description}{/}</td>
           <td>{duration}{/}</td>
-          <td>{action}Action{/}</td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

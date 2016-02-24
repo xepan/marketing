@@ -13,7 +13,7 @@ class page_leaddetails extends \Page {
 		$lead_view = $this->add('xepan\base\View_Contact',null,'contact_view');
 		$lead_view->setModel($lead);
 
-		$doc = $this->add('xepan\base\View_Document',
+		$detail = $this->add('xepan\base\View_Document',
 				[
 					'action'=>$this->api->stickyGET('action')?:'view', // add/edit
 					'id_fields_in_view'=>[],
@@ -22,10 +22,21 @@ class page_leaddetails extends \Page {
 				],'details'
 			);
 
-		$doc->setModel($lead,['source','category'],['source','category_id']);
+		$detail->setModel($lead,['source','category'],['source','category_id']);
 
+		$opp = $this->add('xepan\marketing\Model_Opportunity');
+		$crud = $this->add('xepan\base\CRUD',
+						[
+							//'action_page'=>'xepan_marketing_leaddetails',
+							'grid_options'=>[
+											'defaultTemplate'=>['grid/addopportunity-grid']
+											],
+						],'opportunity');
+		$crud->setModel($opp);
+		$crud->grid->addQuickSearch(['name']);
+
+		//$opportunity_view = $this->add('xepan\marketing\View_opportunity',null,'opportunity');
 		$activity_view = $this->add('xepan\marketing\View_activity',null,'activity');
-		$opportunity_view = $this->add('xepan\marketing\View_opportunity',null,'opportunity');
 	}
 
 	function defaultTemplate(){

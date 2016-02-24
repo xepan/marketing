@@ -17,15 +17,11 @@
                 tr
                     {cols}
                     th
-                      span Lead
-                    th
-                      span Status
-                    th
                       span Title
                     th
-                      span Duration
+                      span Description
                     th
-
+                      span Duration
                     th  
                     {/}
             {/}
@@ -36,16 +32,11 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                      img(alt='', src='{image}img/samples/scarlet-159.png{/}')
-                      a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
-                    td
-                      | {status}{/}
-                    td
                       | {title}{/}
                     td
-                      | {duration}{/}
+                      | {description}{/}
                     td
-                      | {action}Action{/}
+                      | {duration}{/}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

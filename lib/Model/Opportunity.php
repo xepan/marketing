@@ -4,8 +4,12 @@ namespace xepan\marketing;
 
 class Model_Opportunity extends \xepan\hr\Model_Document{
 
+	public $status=[
+
+	];
 	public $actions=[
 		'*'=>[
+			'add',
 			'view',
 			'edit',
 			'delete'

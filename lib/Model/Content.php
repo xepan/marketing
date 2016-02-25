@@ -4,6 +4,19 @@ namespace xepan\marketing;
 
 class Model_Content extends \xepan\base\Model_Document{
 
+	public $status=[
+		'Draft',
+		'Submitted',
+		'Approved',
+		'Reject'
+	];
+	public $actions=[
+		'Draft'=>['view','edit','delete','submit'],
+		'Submitted'=>['view','edit','delete','reject','approve'],
+		'Approved'=>['view','edit','delete','reject','email'],
+		'Reject'=>['view','edit','delete','submit']
+	];
+
 	function init(){
 		parent::init();
 

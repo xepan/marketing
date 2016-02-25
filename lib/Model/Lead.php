@@ -4,6 +4,18 @@ namespace xepan\marketing;
 
 class Model_Lead extends \xepan\base\Model_Contact{
 
+	public $status=[
+
+	];
+	public $actions=[
+		'*'=>[
+			'add',
+			'view',
+			'edit',
+			'delete'
+		]
+	];
+
 	function init(){
 		parent::init();
 		

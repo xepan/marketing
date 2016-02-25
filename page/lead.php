@@ -8,7 +8,7 @@ class page_lead extends \Page{
 		parent::init();
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
-		$crud = $this->add('xepan\base\CRUD',
+		$crud = $this->add('xepan\hr\CRUD',
 						[
 							'action_page'=>'xepan_marketing_leaddetails',
 							'grid_options'=>[

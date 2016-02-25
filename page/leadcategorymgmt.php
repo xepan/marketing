@@ -7,7 +7,7 @@ class page_leadcategorymgmt extends \Page{
 
 		$mgmt=$this->add('xepan\marketing\Model_LeadCategory');
 
-		$crud=$this->add('xepan\base\CRUD',array('grid_class'=>'xepan\base\Grid','grid_options'=>array('defaultTemplate'=>['grid/lead-grid'])));
+		$crud=$this->add('xepan\hr\CRUD',array('grid_class'=>'xepan\base\Grid','grid_options'=>array('defaultTemplate'=>['grid/lead-grid'])));
 
 		$crud->setModel($mgmt);
 		$crud->grid->addQuickSearch(['name']);

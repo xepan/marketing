@@ -2,10 +2,14 @@
 
 namespace xepan\marketing;  
 
-class Model_Opportunity extends \xepan\base\Model_Document{
+class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	public $actions=[
-		'add','edit','delete','submit'
+		'*'=>[
+			'view',
+			'edit',
+			'delete'
+		]
 	];
 
 	function init(){

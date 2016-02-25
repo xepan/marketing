@@ -24,18 +24,19 @@ class page_leaddetails extends \Page {
 
 		$detail->setModel($lead,['source','category'],['source','category_id']);
 
-		$opp = $this->add('xepan\marketing\Model_Opportunity');
-		$crud = $this->add('xepan\base\CRUD',
-						[
-							//'action_page'=>'xepan_marketing_leaddetails',
-							'grid_options'=>[
-											'defaultTemplate'=>['grid/addopportunity-grid']
-											],
-						],'opportunity');
-		$crud->setModel($opp);
-		$crud->grid->addQuickSearch(['name']);
-
-		//$opportunity_view = $this->add('xepan\marketing\View_opportunity',null,'opportunity');
+		if($lead->loaded()){
+			$opp = $lead->ref('xepan\marketing\Opportunity');
+			$crud = $this->add('xepan\base\CRUD',
+							[
+								//'action_page'=>'xepan_marketing_leaddetails',
+								'grid_options'=>[
+												'defaultTemplate'=>['grid/addopportunity-grid']
+												],
+							],'opportunity');
+			$crud->setModel($opp);
+			$crud->grid->addQuickSearch(['name']);
+			
+		}
 		$activity_view = $this->add('xepan\marketing\View_activity',null,'activity');
 	}
 

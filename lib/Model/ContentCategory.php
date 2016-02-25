@@ -4,6 +4,18 @@ namespace xepan\marketing;
 
 class Model_ContentCategory extends \xepan\base\Model_Document{
 
+	public $status=[
+
+	];
+	public $actions=[
+		'*'=>[
+			'add',
+			'view'
+			'edit'
+			'delete'
+		]
+	];
+
 	function init(){
 		parent::init();
 

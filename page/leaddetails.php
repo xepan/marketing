@@ -10,10 +10,10 @@ class page_leaddetails extends \Page {
 
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 		
-		$lead_view = $this->add('xepan\hr\View_Contact',null,'contact_view');
+		$lead_view = $this->add('xepan\base\View_Contact',null,'contact_view');
 		$lead_view->setModel($lead);
 
-		$detail = $this->add('xepan\hr\View_Document',
+		$detail = $this->add('xepan\base\View_Document',
 				[
 					'action'=>$this->api->stickyGET('action')?:'view', // add/edit
 					'id_fields_in_view'=>[],

@@ -30,7 +30,7 @@ class page_lead extends \Page{
 		$form = $g->add('Form',null,'filter',['form/empty'])->addClass('pull-right');
 		//Add Fields
 		$category_field = $form->addField('DropDown','category');
-		$category_field->setModel('xepan/marketing/Model_LeadCategory');
+		$category_field->setModel('xepan/marketing/Model_MarketingCampaign');
 		$category_field->setEmptyText('Select Category');
 		$category_field->set($category_id);
 		//adding custom submit button
@@ -58,6 +58,7 @@ class page_lead extends \Page{
 			return $form->js()->univ()->location($form->api->url(null,['category_id'=>$form['category']]));
 		});
 
+		// $this->add('CRUD')->setModel('xepan/marketing/MarketingCampaign');
 		
 	}
 }

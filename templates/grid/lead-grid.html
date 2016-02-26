@@ -2,11 +2,9 @@
 <div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
   <header class="main-box-header clearfix atk-actions  {$class} ">
     <div style="100%" class="filter-block">
-      <div class="btnn btn-primaryy pull-right">{$grid_buttons} 
+      <div class="pull-right">{$grid_buttons} 
       </div>
-      <div style="width:50%;margin:auto" class="form-group">
-        <div class="pull-right"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
-      </div>
+      <div style="margin:auto" class="form-group pull-right"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>{$filter}
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix table">

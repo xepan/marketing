@@ -3,12 +3,12 @@
     //- .atk-box-small(class="{$pannel_class}") 
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block( style="100%")
-            .btnn.btn-primaryy.pull-right{$grid_buttons} 
+            .pull-right{$grid_buttons} 
                 //- i(class="fa fa-plus-circle fa-lg")
-            .form-group(style="width:50%;margin:auto")
-                .pull-right
-                    span(class="form-control pull-left")|{$quick_search}
-                        i(class="fa fa-search search-icon")
+            .form-group.pull-right(style="margin:auto")
+                span(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+            {$filter}
     {/Pannel}
     .main-box-body.clearfix.table
         table.table.user-list.table-hover(style="width:100%")

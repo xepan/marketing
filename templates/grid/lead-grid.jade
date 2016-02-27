@@ -1,31 +1,27 @@
 .xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
     {Pannel}
-    //- .atk-box-small(class="{$pannel_class}") 
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block( style="100%")
-            .pull-right{$grid_buttons} 
-                //- i(class="fa fa-plus-circle fa-lg")
-            .form-group.pull-right(style="margin:auto")
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
                 span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
-            {$filter}
     {/Pannel}
     .main-box-body.clearfix.table
         table.table.user-list.table-hover(style="width:100%")
             {header}
             thead
-                tr
-                    {cols}
-                    th
-                      span Name
-                    th
-                      span Communication
-                    th
-                      span Category
-                    th
-                      span opportunities
-                    th  
-                    {/}
+                {cols}{col}
+                th
+                    span Name
+                th
+                    span Communication
+                th
+                    span Category
+                th
+                    span Opportunities
+                th 
+                {/}{/}
             {/}
             {$subheader}
 
@@ -35,24 +31,25 @@
                     {cols}
                     td
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
-                      a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
-                      span.user-subhead {source}Admin{/}
+                      a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}')
+                        {name}Name{/}
+                      span.user-subhead {source}Source{/}
                     td
-                      | {communication}{/}
+                      | {communication}Todo{/}
                     td
-                      | {category}{/}
+                      | {category}Category{/}
                     td
-                      | {opportunities}{/}
+                      | {opportunities}Todo{/}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}
-                        {/}
+                    
+                    {/}
                 {/}{/}
                 {not_found}
-                tr
-                    td.atk-padding-large.atk-align-center
-                        span.atk-label.atk-effect-warning
-                            span.icon-attention &nbsp;{$not_found_message}
+                div.row
+                    .col-md-12.text-center.alert.alert-warning(role="alert")
+                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
                 {/}
 
             {totals}

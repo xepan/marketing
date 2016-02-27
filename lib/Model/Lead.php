@@ -20,7 +20,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		parent::init();
 		
 		$lead_j = $this->join('lead.contact_id');
-		$lead_j->hasOne('xepan\marketing\MarketingCampaign','category_id');
+		$lead_j->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
 		$lead_j->addField('source');
 		$lead_j->hasMany('xepan\marketing\Opportunity','lead_id');
 		

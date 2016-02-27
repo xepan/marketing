@@ -1,0 +1,50 @@
+.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
+	{Pannel}
+	header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+		div.filter-block
+			.pull-right {$grid_buttons} 
+			.form-group.pull-right.xepan-filter-form
+				div(class="form-control pull-left")|{$quick_search}
+					i(class="fa fa-search search-icon")
+	{/Pannel}
+	.main-box-body.clearfix
+		.row
+			{header}{cols}{col}{/}{/}{/}
+			{rows}{row}
+			div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
+				{cols}
+				.col-lg-12.col-md-6.col-sm-6
+					.main-box.clearfix.project-box.green-box
+						.main-box-body.clearfix
+							span.label.pull-right.label-danger {status}Draft{/status} 
+							.project-box-header.green-bg
+								.name
+									a(href='#')
+										| {$title} 
+							.project-box-content
+							span
+								{short_content}{/short_content} 
+							.project-box-footer.clearfix
+								a(href='#')
+									span.value 0
+									span.label Likes
+								a(href='#')
+									span.value 0
+									span.label Follows
+								a(href='#')
+									span.value 0
+									span.label Comments
+							.project-box-ultrafooter.clearfix
+								.col-lg-4 
+									{$action} 
+                
+			{/}
+			{/}{/}
+			{not_found}
+			div.row
+				.col-md-12.text-center.alert.alert-warning(role="alert")
+					span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+			{/}
+
+			{totals}{cols}{col}{$content}{/}{/}{/}
+		{$Paginator}

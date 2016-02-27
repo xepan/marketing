@@ -1,0 +1,42 @@
+
+<div id="{$_name}" class="xepan-grid main-box clearfix {$class}">{Pannel}
+  <header class="main-box-header clearfix atk-actions  {$class} ">
+    <div class="filter-block">
+      <div class="pull-right">{$grid_buttons} </div>
+      <div class="form-group pull-right xepan-filter-form">
+        <div class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></div>
+      </div>
+    </div>
+  </header>{/Pannel}
+  <div class="main-box-body clearfix">
+    <div class="row">
+      {header}{cols}{col}{/}{/}{/}
+      {rows}{row}
+      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
+        <div class="col-lg-12 col-md-6 col-sm-6">
+          <div class="main-box clearfix project-box green-box">
+            <div class="main-box-body clearfix"><span class="label pull-right label-danger">{status}Draft{/status} </span>
+              <div class="project-box-header green-bg">
+                <div class="name"><a href="#">{$title} </a></div>
+              </div>
+              <div class="project-box-content"></div><span>{short_content}{/short_content} </span>
+              <div class="project-box-footer clearfix"><a href="#"><span class="value">0</span><span class="label">Likes</span></a><a href="#"><span class="value">0</span><span class="label">Follows</span></a><a href="#"><span class="value">0</span><span class="label">Comments</span></a></div>
+              <div class="project-box-ultrafooter clearfix">
+                <div class="col-lg-4">
+                   
+                  {$action} 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>{/}
+      {/}{/}
+      {not_found}
+      <div class="row">
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+      </div>{/}
+      {totals}{cols}{col}{$content}{/}{/}{/}
+    </div>{$Paginator}
+  </div>
+</div>

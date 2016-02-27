@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Model_SocialCampaign extends \xepan\base\Model_Document{
+class Model_MarketingCategory extends \xepan\base\Model_Document{
 
 	public $status=[
 
@@ -19,12 +19,12 @@ class Model_SocialCampaign extends \xepan\base\Model_Document{
 	function init(){
 		parent::init();
 		
-		$cat_j = $this->join('social_campaign.document_id');
+		$cat_j = $this->join('marketingcategory.document_id');
 		$cat_j->addField('name');
 		
 		$cat_j->hasMany('xepan\marketing\Lead','lead_id');
 
-		$this->addCondition('type','SocialCampaign');
+		$this->addCondition('type','MarketingCategory');
 
 	}
 }

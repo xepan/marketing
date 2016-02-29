@@ -27,6 +27,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->addExpression('duration')->set('"TODO"');
 
+		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Opportunity');
 	}
 } 

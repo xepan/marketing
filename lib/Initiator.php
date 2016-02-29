@@ -17,8 +17,7 @@ class Initiator extends \Controller_Addon {
 		$m->addItem('Newsletter','xepan_marketing_newsletter');
 		$m->addItem('Social','xepan_marketing_socialcontent');
 		$m->addItem('SMS','xepan_marketing_sms');
-		$m->addItem('Marketing Campaign','xepan_marketing_marketingcampaign');
-		$m->addItem('Social Campaign','xepan_marketing_socialcampaign');
+		$m->addItem('Category Management','xepan_marketing_marketingcategory');
 		
 	}
 }

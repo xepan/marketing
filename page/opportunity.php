@@ -12,7 +12,7 @@ class page_opportunity extends \Page{
 
 		$crud=$this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
 
-		$crud->setModel($opportunity)->debug();
+		$crud->setModel($opportunity);
 		
 		$crud->grid->addQuickSearch(['lead']);
 

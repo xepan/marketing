@@ -14,6 +14,8 @@
                 {cols}{col}
                 th
                     span Category
+                th
+                    span Leads Count    
                 th 
                 {/}{/}
             {/}
@@ -25,6 +27,8 @@
                     {cols}
                     td
                       | {$name}
+                    td 
+                      | {$leads_count}    
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

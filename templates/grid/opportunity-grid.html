@@ -2,7 +2,7 @@
 <div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
   <header class="main-box-header clearfix atk-actions  {$class} ">
     <div style="100%" class="filter-block">
-      <div class="pull-right">{$grid_buttons} </div>
+      <div class="pull-right">{$grid_buttons}{$form_buttons} </div>
       <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
   </header>{/Pannel}
@@ -18,9 +18,9 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">
+          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$lead_id}{/}" class="user-link">
                
-              {lead}Lead{/}</a></td>
+              {lead}Lead{/}</a><span class="user-subhead">{$source}</span></td>
           <td><span class="label label-success">{status}Status{/}</span></td>
           <td>{title}Title{/}</td>
           <td>{duration}Duration{/}</td>

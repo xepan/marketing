@@ -17,13 +17,15 @@ class page_leaddetails extends \Page {
 		$detail = $this->add('xepan\hr\View_Document',['action'=> $action],'details',['view/details']);
 		$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
 
+		$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action],'opportunity',['view/opp']);
+		$opportunities_tab->setModel($lead,['no_fields_in_view'],['no_field_in_form']);
+
 		if($lead->loaded()){
-			$opp = $lead->ref('xepan\marketing\Opportunity');
-			$crud = $this->add('xepan\hr\CRUD',null,'opportunity',['grid/addopportunity-grid']);
-			$crud->setModel($opp);
-			$crud->grid->addQuickSearch(['name']);
-			
+			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
+			$o->setModel('xepan/marketing/Opportunity');
 		}
+
+
 		$activity_view = $this->add('xepan\marketing\View_activity',null,'activity');
 	}
 

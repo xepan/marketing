@@ -10,12 +10,17 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
         <th><span>Category</span></th>
+        <th><span>Leads Count    </span></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{$name}</td>
+          <td>
+             
+            {$leads_count}    
+          </td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

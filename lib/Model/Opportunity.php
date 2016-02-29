@@ -26,7 +26,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$opp_j->addField('description')->type('text');
 
 		$this->addExpression('duration')->set('"TODO"');
-		$this->addExpression('source')->set('"source_TODO"');
+		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Opportunity');
 	}

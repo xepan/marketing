@@ -18,13 +18,7 @@ class page_leaddetails extends \Page {
 
 		if($lead->loaded()){
 			$opp = $lead->ref('xepan\marketing\Opportunity');
-			$crud = $this->add('xepan\hr\CRUD',
-							[
-								//'action_page'=>'xepan_marketing_leaddetails',
-								'grid_options'=>[
-												'defaultTemplate'=>['grid/addopportunity-grid']
-												],
-							],'opportunity');
+			$crud = $this->add('xepan\hr\CRUD',null,'opportunity',['grid/addopportunity-grid']);
 			$crud->setModel($opp);
 			$crud->grid->addQuickSearch(['name']);
 			

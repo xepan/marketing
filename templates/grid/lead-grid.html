@@ -18,10 +18,10 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">{name}Name{/}</a><span class="user-subhead">{source}Admin{/}</span></td>
-          <td>{communication}{/}</td>
-          <td>{category}{/}</td>
-          <td>{opportunities}{/}</td>
+          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">{name}Name{/}</a><span class="user-subhead">{source}Source{/}</span></td>
+          <td><span sparkType="bar" width="100" height="100" class="sparkline">{communication_history}40,10,30,30,10,5,20{/}</span></td>
+          <td>{category}Category{/}</td>
+          <td>{opportunities}Todo{/}</td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

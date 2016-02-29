@@ -15,11 +15,15 @@
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
         <div class="row">
           <div class="col-lg-12">
-            <div class="col-lg-8">{$title}</div>
-            <div class="col-lg-4"><span class="label label-success">{$status}             </span></div>
+            <div class="col-lg-8"><span>{$title}</span></div>
+            <div class="col-lg-4"><span class="label label-success">{$status}</span></div>
           </div>
-        </div><img alt="" src="img/samples/email-template-3.png" class="img-responsive"/>
-        <div class="col-lg-4">{$action}</div>
+        </div><img alt="" src="img/samples/email-template-3.png" class="img-responsive"/><br/>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+             
+          {$action}
+        </div>
       </div>{/}
       {/}{/}
       {not_found}

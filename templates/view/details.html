@@ -11,16 +11,14 @@
             <cite>{source}Source here{/}</cite>
           </div>
           <div class="col-lg-6"> <strong>Category:</strong><br/>
-            <cite>{$category}{$category_id}</cite>
+            <cite>{$marketing_category}{$marketing_category_id}</cite>
           </div>
         </div><br/><br/><br/><br/>
         <div class="col-lg-12"> 
-          <div class="col-lg-6"><strong>Communication Graph:</strong><br/>
-            <cite>Graph here</cite>
-          </div>
-          <div class="col-lg-6"> <strong>Opportunity Chart:</strong><br/>
-            <cite>Chart here</cite>
-          </div>
+          <div class="col-lg-6"><strong>Communication Graph:</strong><br/><span sparkType="bar" class="sparkline">{communication}40,10,30,30,10,5,20{/}</span></div>
+          <div class="col-lg-6"> <strong>Opportunity Chart:</strong><br/><span sparkType="pie" class="sparkline">
+               
+              {opportunities}40,30,30{/}</span></div>
         </div>
       </div>
     </div>

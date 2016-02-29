@@ -13,16 +13,8 @@ class page_leaddetails extends \Page {
 		$lead_view = $this->add('xepan\base\View_Contact',null,'contact_view');
 		$lead_view->setModel($lead);
 
-		$detail = $this->add('xepan\base\View_Document',
-				[
-					'action'=>$this->api->stickyGET('action')?:'view', // add/edit
-					'id_fields_in_view'=>[],
-					'allow_many_on_add' => false, // Only visible if editinng,
-					'view_template' => ['view/details']
-				],'details'
-			);
-
-		$detail->setModel($lead,['source','category'],['source','category_id']);
+		$detail = $this->add('xepan\hr\View_Document',['action'=> $action],'details',['view/details']);
+		$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
 
 		if($lead->loaded()){
 			$opp = $lead->ref('xepan\marketing\Opportunity');

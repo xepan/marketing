@@ -9,10 +9,10 @@
                 strong Source:
                 br
                 cite {source}Source here{/}
-          .col-lg-6 
+          .col-lg-6  
                 strong Category:
                 br
-                cite {$category}{$category_id}
+                cite {$marketing_category}{$marketing_category_id}
         br
         br
         br
@@ -21,9 +21,11 @@
           .col-lg-6
                 strong Communication Graph:
                 br
-                cite Graph here
+                span.sparkline(sparkType="bar")
+                  {communication}40,10,30,30,10,5,20{/}
           .col-lg-6 
                 strong Opportunity Chart:
                 br
-                cite Chart here
+                span.sparkline(sparkType="pie") 
+                  {opportunities}40,30,30{/}
         

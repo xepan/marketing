@@ -35,11 +35,13 @@
                         {name}Name{/}
                       span.user-subhead {source}Source{/}
                     td
-                      span.sparkline(sparkType="bar", width="100", height="100" ){communication_history}40,10,30,30,10,5,20{/}
+                      span.sparkline(sparkType="bar")
+                        {communication_history}40,10,30,30,10,5,20{/}
                     td
                       | {category}Category{/}
                     td
-                      | {opportunities}Todo{/}
+                      span.sparkline(sparkType="pie") 
+                        {opportunity_no}40,30,30{/}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

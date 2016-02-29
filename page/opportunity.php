@@ -10,7 +10,7 @@ class page_opportunity extends \Page{
 
 		$opportunity=$this->add('xepan\marketing\Model_Opportunity');
 
-		$crud=$this->add('xepan\hr\CRUD',array('grid_class'=>'xepan\base\Grid','grid_options'=>array('defaultTemplate'=>['grid/opportunity-grid'])));
+		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
 
 		$crud->setModel($opportunity);
 		

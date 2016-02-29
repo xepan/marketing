@@ -18,8 +18,10 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link"> </a>{name}Name{/}</td>
-          <td>{status}Status{/}</td>
+          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">
+               
+              {lead}Lead{/}</a></td>
+          <td><span class="label label-success">{status}Status{/}</span></td>
           <td>{title}Title{/}</td>
           <td>{duration}Duration{/}</td>
           <td style="width: 15%;">

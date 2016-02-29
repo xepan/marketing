@@ -8,8 +8,9 @@ class page_leaddetails extends \Page {
 	function init(){
 		parent::init();
 
+		$action = $this->api->stickyGET('action')?:'view';
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
-		
+		$lead->tryLoadAny();
 		$lead_view = $this->add('xepan\base\View_Contact',null,'contact_view');
 		$lead_view->setModel($lead);
 

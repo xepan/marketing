@@ -5,16 +5,14 @@ namespace xepan\marketing;
 class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	public $status=[
-
+		'Open',
+		'Converted',
+		'Rejected'
 	];
 	public $actions=[
-		'*'=>[
-			'add',
-			'view',
-			'edit',
-			'delete'
-			
-		]
+		'Open'=>['view','edit','delete','convert','reject'],
+		'Converted'=>['view','edit','delete','open','reject'],
+		'Rejected'=>['view','edit','delete','open','convert']
 	];
 
 	function init(){
@@ -27,7 +25,22 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->addExpression('duration')->set('"TODO"');
 		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
-		$this->getElement('status')->defaultValue('Active');
+		$this->getElement('status')->defaultValue('Open');
 		$this->addCondition('type','Opportunity');
+	}
+
+	function convert(){
+		$this['status']='Converted';
+		$this->saveAndUnload();
+	}
+
+	function reject(){
+		$this['status']='Rejected';
+		$this->saveAndUnload();
+	}
+
+	function open(){
+		$this['status']='Open';
+		$this->saveAndUnload();
 	}
 } 

@@ -25,7 +25,7 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		$cat_j->hasMany('xepan\marketing\Lead','marketing_category_id');
 		$this->addExpression('leads_count')->set($this->refSql('xepan\marketing\Lead')->count());
 		$this->addCondition('type','MarketingCategory');
-		$this->debug();
+		//$this->debug();
 
 	}
 }

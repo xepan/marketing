@@ -13,13 +13,15 @@
             thead
                 {cols}{col}
                 th
-                    span Lead
+                    span Title
                 th
                     span Status
                 th
-                    span Title
+                    span Description    
                 th
-                    span Duration        
+                    span Duration 
+                th  
+                               
                 th 
                 {/}{/}
             {/}
@@ -31,15 +33,20 @@
                     {cols}
                     td
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
+                      {title}{/}
                       a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$lead_id}{/}') 
-                        {lead}Lead{/}
-                      span.user-subhead {$source}
+                        span.user-subhead.small {lead}Lead{/}
                     td
                         span.label.label-success {status}Status{/}
+
                     td
-                        | {title}Title{/}
+                        span.small {$description}    
                     td
                         | {duration}Duration{/}
+
+                    td  
+                        | {$action}
+
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

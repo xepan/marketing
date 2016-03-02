@@ -11,9 +11,15 @@
           <li><a data-toggle="tab" href="#tab-activity">Activity  </a></li>
         </ul>
         <div class="tab-content">
-          <div id="tab-details" class="tab-pane fade in active">{details}Add lead first.{/details}</div>
-          <div id="tab-opportunity" class="tab-pane clearfix fade">{$opportunity}   </div>
-          <div id="tab-activity" class="tab-pane clearfix fade">{$activity}     </div>
+          <div id="tab-details" class="tab-pane fade in active">{details}
+            <div class="alert alert-warning"><i class="fa fa-warning fa-fw fa-lg"></i><strong>Warning!</strong> Please Fill the basic information first. </div>{/details}
+          </div>
+          <div id="tab-opportunity" class="tab-pane clearfix fade">{opportunity}
+            <div class="alert alert-warning"><i class="fa fa-warning fa-fw fa-lg"></i><strong>Warning!</strong> Please Fill the basic information first. </div>{/opportunity}
+          </div>
+          <div id="tab-activity" class="tab-pane clearfix fade">{activity}
+            <div class="alert alert-warning"><i class="fa fa-warning fa-fw fa-lg"></i><strong>Warning!</strong> Please Fill the basic information first. </div>{/activity}
+          </div>
         </div>
       </div>
     </div>

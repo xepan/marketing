@@ -16,9 +16,28 @@
           .tab-content
             
              #tab-details.tab-pane.fade.in.active
-                {details}Add lead first.{/details}
+                  {details}
+                  .alert.alert-warning
+                    i.fa.fa-warning.fa-fw.fa-lg
+                    strong Warning!
+                    |  Please Fill the basic information first. 
+                  {/details}
+
+                
              #tab-opportunity.tab-pane.clearfix.fade
-                {$opportunity}   
+                {opportunity}
+                .alert.alert-warning
+                  i.fa.fa-warning.fa-fw.fa-lg
+                  strong Warning!
+                  |  Please Fill the basic information first. 
+                {/opportunity}
+   
              #tab-activity.tab-pane.clearfix.fade
-                {$activity}     
+                {activity}
+                .alert.alert-warning
+                  i.fa.fa-warning.fa-fw.fa-lg
+                  strong Warning!
+                  |  Please Fill the basic information first. 
+                {/activity}
+     
              

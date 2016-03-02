@@ -1,9 +1,8 @@
 .email-detail-nano-content(tabindex='0', style='right: -13px;')
   #email-detail-inner
-    {$Content}
     #email-detail-subject.clearfix
       span.subject Subject: {$title}
-      span.label.label-success {$status}
+      span.label.label-success {$marketing_category}{$marketing_category_id}
     #email-detail-sender.clearfix
       .picture.hidden-xs
         img(alt='', src='img/samples/angelina-300.jpg')
@@ -17,28 +16,8 @@
         .date
           | {created_at}
         .btns
-          .btn-group
-            button.btn.btn-success(type='button')
-              i.fa.fa-mail-reply
-            button.btn.btn-success.dropdown-toggle(type='button', data-toggle='dropdown')
-              span.caret
-            ul.dropdown-menu
-              li
-                a(href='#')
-                  i.fa.fa-mail-reply
-                  |  Reply
-              li
-                a(href='#')
-                  i.fa.fa-mail-reply-all
-                  |  Reply all
-              li
-                a(href='#')
-                  i.fa.fa-mail-forward
-                  |  Forward
-              li
-                a(href='#')
-                  i.fa.fa-print
-                  |  Print
+          .btn-group {$action}
     #email-body
-      //- {$Content}
-      {$long_content}
+      {long_content}
+      | the big brown fox jumps over the lazy dog.
+      {/long_content}

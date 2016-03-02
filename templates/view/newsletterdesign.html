@@ -1,7 +1,7 @@
 
 <div tabindex="0" style="right: -13px;" class="email-detail-nano-content">
-  <div id="email-detail-inner">{$Content}
-    <div id="email-detail-subject" class="clearfix"><span class="subject">Subject: {$title}</span><span class="label label-success">{$status}</span></div>
+  <div id="email-detail-inner">
+    <div id="email-detail-subject" class="clearfix"><span class="subject">Subject: {$title}</span><span class="label label-success">{$marketing_category}{$marketing_category_id}</span></div>
     <div id="email-detail-sender" class="clearfix">
       <div class="picture hidden-xs"><img alt="" src="img/samples/angelina-300.jpg"/></div>
       <div class="users">
@@ -13,20 +13,14 @@
       <div class="tools">
         <div class="date">{created_at}</div>
         <div class="btns">
-          <div class="btn-group">
-            <button type="button" class="btn btn-success"><i class="fa fa-mail-reply"></i></button>
-            <button type="button" data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#"><i class="fa fa-mail-reply"></i> Reply</a></li>
-              <li><a href="#"><i class="fa fa-mail-reply-all"></i> Reply all</a></li>
-              <li><a href="#"><i class="fa fa-mail-forward"></i> Forward</a></li>
-              <li><a href="#"><i class="fa fa-print"></i> Print</a></li>
-            </ul>
-          </div>
+          <div class="btn-group">{$action}</div>
         </div>
       </div>
     </div>
-    <div id="email-body">{$long_content}
+    <div id="email-body">
+      {long_content}
+      the big brown fox jumps over the lazy dog.
+      {/long_content}
     </div>
   </div>
 </div>

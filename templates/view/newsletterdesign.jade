@@ -1,0 +1,104 @@
+.row
+  .col-lg-12
+    .panel.panel-default
+      .panel-heading Category and other information here.
+  .col-lg-12  
+
+    .main-box-body.clearfix
+      #alerts
+      .btn-toolbar.editor-toolbar(data-target='#editor', data-role='editor-toolbar')
+        .btn-group
+          a.btn.btn-default.dropdown-toggle(title='', data-toggle='dropdown', data-original-title='Font')
+            i.fa.fa-font
+            b.caret
+          ul.dropdown-menu
+            li
+              a(style="font-family:'Serif'", data-edit='fontName Serif') Serif
+            li
+              a(style="font-family:'Sans'", data-edit='fontName Sans') Sans
+            li
+              a(style="font-family:'Arial'", data-edit='fontName Arial') Arial
+            li
+              a(style="font-family:'Arial Black'", data-edit='fontName Arial Black') Arial Black
+            li
+              a(style="font-family:'Courier'", data-edit='fontName Courier') Courier
+            li
+              a(style="font-family:'Courier New'", data-edit='fontName Courier New') Courier New
+            li
+              a(style="font-family:'Comic Sans MS'", data-edit='fontName Comic Sans MS') Comic Sans MS
+            li
+              a(style="font-family:'Helvetica'", data-edit='fontName Helvetica') Helvetica
+            li
+              a(style="font-family:'Impact'", data-edit='fontName Impact') Impact
+            li
+              a(style="font-family:'Lucida Grande'", data-edit='fontName Lucida Grande') Lucida Grande
+            li
+              a(style="font-family:'Lucida Sans'", data-edit='fontName Lucida Sans') Lucida Sans
+            li
+              a(style="font-family:'Tahoma'", data-edit='fontName Tahoma') Tahoma
+            li
+              a(style="font-family:'Times'", data-edit='fontName Times') Times
+            li
+              a(style="font-family:'Times New Roman'", data-edit='fontName Times New Roman') Times New Roman
+            li
+              a(style="font-family:'Verdana'", data-edit='fontName Verdana') Verdana
+        .btn-group
+          a.btn.btn-default.dropdown-toggle(title='', data-toggle='dropdown', data-original-title='Font Size')
+            i.fa.fa-text-height
+            b.caret
+          ul.dropdown-menu
+            li
+              a(data-edit='fontSize 5')
+                font(size='5') Huge
+            li
+              a(data-edit='fontSize 3')
+                font(size='3') Normal
+            li
+              a(data-edit='fontSize 1')
+                font(size='1') Small
+        .btn-group
+          a.btn.btn-default(title='', data-edit='bold', data-original-title='Bold (Ctrl/Cmd+B)')
+            i.fa.fa-bold
+          a.btn.btn-default(title='', data-edit='italic', data-original-title='Italic (Ctrl/Cmd+I)')
+            i.fa.fa-italic
+          a.btn.btn-default(title='', data-edit='strikethrough', data-original-title='Strikethrough')
+            i.fa.fa-strikethrough
+          a.btn.btn-default(title='', data-edit='underline', data-original-title='Underline (Ctrl/Cmd+U)')
+            i.fa.fa-underline
+        .btn-group
+          a.btn.btn-default(title='', data-edit='insertunorderedlist', data-original-title='Bullet list')
+            i.fa.fa-list-ul
+          a.btn.btn-default(title='', data-edit='insertorderedlist', data-original-title='Number list')
+            i.fa.fa-list-ol
+          a.btn.btn-default(title='', data-edit='outdent', data-original-title='Reduce indent (Shift+Tab)')
+            i.fa.fa-dedent
+          a.btn.btn-default(title='', data-edit='indent', data-original-title='Indent (Tab)')
+            i.fa.fa-indent
+        .btn-group
+          a.btn.btn-default.btn-info(title='', data-edit='justifyleft', data-original-title='Align Left (Ctrl/Cmd+L)')
+            i.fa.fa-align-left
+          a.btn.btn-default(title='', data-edit='justifycenter', data-original-title='Center (Ctrl/Cmd+E)')
+            i.fa.fa-align-center
+          a.btn.btn-default(title='', data-edit='justifyright', data-original-title='Align Right (Ctrl/Cmd+R)')
+            i.fa.fa-align-right
+          a.btn.btn-default(title='', data-edit='justifyfull', data-original-title='Justify (Ctrl/Cmd+J)')
+            i.fa.fa-align-justify
+        .btn-group
+          a.btn.btn-default.dropdown-toggle(title='', data-toggle='dropdown', data-original-title='Hyperlink')
+            i.fa.fa-link
+          .dropdown-menu.input-append
+            input.span2(type='text', data-edit='createLink', placeholder='URL')
+            button.btn(type='button') Add
+          a.btn.btn-default(title='', data-edit='unlink', data-original-title='Remove Hyperlink')
+            i.fa.fa-cut
+        .btn-group
+          a#pictureBtn.btn.btn-default(title='', data-original-title='Insert picture (or just drag & drop)')
+            i.fa.fa-picture-o
+          input(type='file', data-edit='insertImage', data-target='#pictureBtn', data-role='magic-overlay', style='opacity: 0; position: absolute; top: 0px; left: 0px; width: 39px; height: 34px;')
+        .btn-group
+          a.btn.btn-default(title='', data-edit='undo', data-original-title='Undo (Ctrl/Cmd+Z)')
+            i.fa.fa-undo
+          a.btn.btn-default(title='', data-edit='redo', data-original-title='Redo (Ctrl/Cmd+Y)')
+            i.fa.fa-repeat
+        input#voiceBtn(type='text', x-webkit-speech='', data-edit='inserttext', style='display: none;')
+      #editor.wysiwyg-editor(contenteditable='true')

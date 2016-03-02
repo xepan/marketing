@@ -25,6 +25,7 @@ class Model_Content extends \xepan\base\Model_Document{
 		$cont_j->addField('short_content');
 		$cont_j->addField('long_content')->type('text');
 		$cont_j->addField('title');
+		$cont_j->addField('is_template')->type('boolean')->defaultValue(false);
 
 		$this->getElement('status')->defaultValue('Draft');
 		//$this->addCondition('type','Content');

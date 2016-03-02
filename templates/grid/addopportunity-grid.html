@@ -11,7 +11,8 @@
       <thead>{cols}{col}
         <th><span>Title</span></th>
         <th><span>Description</span></th>
-        <th><span>Duration </span></th>{/}{/}
+        <th><span>Duration</span></th>
+        <th>     </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -19,6 +20,7 @@
           <td>{title}Title{/}</td>
           <td>{description}Description{/}</td>
           <td>{duration}Duration{/}</td>
+          <td>{$action}    </td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

@@ -17,7 +17,8 @@
                 th
                     span Description
                 th
-                    span Duration 
+                    span Duration
+                th      
                 {/}{/}
             {/}
             {$subheader}
@@ -31,7 +32,9 @@
                     td
                       | {description}Description{/}
                     td
-                        | {duration}Duration{/}
+                      | {duration}Duration{/}
+                    td
+                      | {$action}    
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

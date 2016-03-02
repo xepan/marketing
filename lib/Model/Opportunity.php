@@ -41,11 +41,17 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	function reject(){
 		$this['status']='Rejected';
+		$this->app->employee
+			->addActivity("Rejected Opportunity", $this->id, $this['lead_id'])
+			->notifyWhoCan('reject,convert,open','Converted');
 		$this->saveAndUnload();
 	}
 
 	function open(){
 		$this['status']='Open';
+		$this->app->employee
+			->addActivity("Opened Opportunity", $this->id, $this['lead_id'])
+			->notifyWhoCan('reject,convert,open','Converted');
 		$this->saveAndUnload();
 	}
 } 

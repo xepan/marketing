@@ -15,7 +15,10 @@ class page_newsletter extends \Page{
 		// $this->add('xepan\marketing\View_newsletter',null,'newsletter');
 
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter');
-		$crud=$this->add('xepan\hr\CRUD',null,null,['grid/newsletter-grid']);
+		$newsletter->addCondition('is_template',false);
+		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_newslettertemplate'],null,['grid/newsletter-grid']);
+
+		//$crud=$this->add('xepan\hr\CRUD',null,null,['grid/newsletter-grid']);
 		$crud->setModel($newsletter);
 	}
 

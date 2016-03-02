@@ -1,0 +1,28 @@
+
+<div id="{$_name}" class="xepan-grid main-box clearfix {$class}">
+  <div class="main-box-body clearfix">
+    <div class="row">
+      {header}{cols}{col}{/}{/}{/}
+      {rows}{row}
+      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="col-lg-8"><span>{$title}</span></div>
+            <div class="col-lg-4"><span class="label label-success">{$status}</span></div>
+          </div>
+        </div><img alt="" src="img/samples/email-template-3.png" class="img-responsive"/><br/>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">   
+          <button style="" class="btn btn-primary atk-button"> Select</button>
+        </div>
+        <div class="col-lg-4">    </div>
+      </div>{/}
+      {/}{/}
+      {not_found}
+      <div class="row">
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+      </div>{/}
+      {totals}{cols}{col}{$content}{/}{/}{/}
+    </div>{$Paginator}
+  </div>
+</div>

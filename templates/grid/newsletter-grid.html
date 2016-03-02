@@ -13,20 +13,19 @@
       {header}{cols}{col}{/}{/}{/}
       {rows}{row}
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="col-lg-8"><span>{$title}</span></div>
-            <div class="col-lg-4"><span class="label label-success">{$status}</span></div>
+        <div class="col-lg-12 col-md-6 col-sm-6">
+          <div class="main-box clearfix project-box green-box">
+            <div class="main-box-body clearfix">
+              <div class="project-box-header green-bg">
+                <div class="name"><a href="#">{$title}</a></div>
+              </div>
+              <div class="project-box-content"><img alt="" src="img/samples/email-template-3.png" class="img-responsive"/></div>
+              <div class="project-box-footer clearfix"><a href="#"><span class="value">93</span><span class="label">Tasks</span></a><a href="#"><span class="value">3</span><span class="label">Alerts</span></a><a href="#"><span class="value">483</span><span class="label">Messages</span></a><span class="subinfo pull-right"><i class="fa fa-user"></i> created by    </span></div>
+              <div class="project-box-ultrafooter clearfix">
+                <div class="pull-left">{$action}</div><a href="#" class="link pull-right">{$edit}</a>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="panel panel-default">
-               
-          {$long_content}
-        </div><br/>
-        <div class="col-lg-6">{$edit}</div>
-        <div class="col-lg-6">
-             
-          {$action}
         </div>
       </div>{/}
       {/}{/}

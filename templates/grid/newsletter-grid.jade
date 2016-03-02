@@ -13,19 +13,35 @@
             {rows}{row}
             div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
                 {cols}
-                .row
-                  .col-lg-12
-                    .col-lg-8
-                      span {$title}
-                    .col-lg-4
-                      span.label.label-success {$status}
-                .panel.panel-default      
-                    {$long_content}
-                br
-                .col-lg-6
-                    {$edit}
-                .col-lg-6    
-                  {$action}
+                .col-lg-12.col-md-6.col-sm-6
+                  .main-box.clearfix.project-box.green-box
+                    .main-box-body.clearfix
+                      .project-box-header.green-bg
+                        .name
+                          a(href='#')
+                            | {$title}
+                      .project-box-content
+                        img.img-responsive(alt='',src ='img/samples/email-template-3.png')    
+                      .project-box-footer.clearfix
+                        a(href='#')
+                          span.value 93
+                          span.label Tasks
+                        a(href='#')
+                          span.value 3
+                          span.label Alerts
+                        a(href='#')
+                          span.value 483
+                          span.label Messages
+                        span.subinfo.pull-right
+                          i.fa.fa-user
+                          |  created by    
+                      .project-box-ultrafooter.clearfix
+                        .pull-left
+                            {$action}
+                        a.link.pull-right(href='#')
+                          {$edit}
+
+      
                 
             {/}
             {/}{/}

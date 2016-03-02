@@ -6,20 +6,21 @@
       <div class="picture hidden-xs"><img alt="" src="img/samples/angelina-300.jpg"/></div>
       <div class="users">
         <div class="from clearfix">
-          <div class="name">{created_by}</div>
-          <div class="email hidden-xs"><angelina@jolie.com></div>
+          <div class="name">{$created_by}</div>
         </div>
       </div>
       <div class="tools">
-        <div class="date">{created_at}</div>
+        <div class="date">{$created_at}</div>
         <div class="btns">
-          <div class="btn-group">{$action}</div>
+          <div class="btn-group">
+             
+            {$action}    
+          </div>
         </div>
       </div>
     </div>
     <div id="email-body">
       {long_content}
-      the big brown fox jumps over the lazy dog.
       {/long_content}
     </div>
   </div>

@@ -9,15 +9,15 @@
       .users
         .from.clearfix
           .name
-            | {created_by}
-          .email.hidden-xs
-            | <angelina@jolie.com>
+            | {$created_by}
       .tools
         .date
-          | {created_at}
+          | {$created_at}
         .btns
-          .btn-group {$action}
+          .btn-group 
+               {$action}    
     #email-body
       {long_content}
-      | the big brown fox jumps over the lazy dog.
+      
       {/long_content}
+    

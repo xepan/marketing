@@ -19,10 +19,12 @@
                       span {$title}
                     .col-lg-4
                       span.label.label-success {$status}
-                img.img-responsive(alt='', src='img/samples/email-template-3.png')
+                .panel.panel-default      
+                    {$long_content}
                 br
-                .col-lg-4
-                .col-lg-4    
+                .col-lg-6
+                    {$edit}
+                .col-lg-6    
                   {$action}
                 
             {/}

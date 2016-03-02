@@ -31,6 +31,11 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	function convert(){
 		$this['status']='Converted';
+
+		$this->app->employee
+			->addActivity("Converted Opportunity", $this->id, $this['lead_id'])
+			->notifyWhoCan('reject,convert,open','Converted');
+
 		$this->saveAndUnload();
 	}
 

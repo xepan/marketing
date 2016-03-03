@@ -22,8 +22,11 @@
 									a(href='#')
 										| {$title} 
 							.project-box-content
-							span
-								{short_content}{/short_content} 
+								span
+									{message_160}{/}
+									{message_250}{/}
+									{message_3000}{/}
+									{message_blog}{/} 
 							.project-box-footer.clearfix
 								a(href='#')
 									span.value 0
@@ -35,9 +38,14 @@
 									span.value 0
 									span.label Comments
 							.project-box-ultrafooter.clearfix
-								.col-lg-4 
-								.col-lg-4 
+								.col-md-1
+								.col-md-5
 									{$action}
+								.col-md-5  
+									.btn.btn-group    
+										{$delete}    
+										{$edit}
+								.col-md-1  
                 
 			{/}
 			{/}{/}

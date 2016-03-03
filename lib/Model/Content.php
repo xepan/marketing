@@ -22,8 +22,11 @@ class Model_Content extends \xepan\base\Model_Document{
 
 		$cont_j=$this->join('content.document_id');
 		$cont_j->hasone('xepan\marketing\MarketingCategory','marketing_category_id');
-		$cont_j->addField('short_content');
-		$cont_j->addField('long_content')->type('text');
+		$cont_j->addField('message_160')->type('text');
+		$cont_j->addField('message_255')->type('text');
+		$cont_j->addField('message_3000')->type('text');
+		$cont_j->addField('message_blog')->type('text');
+		$cont_j->addField('url');
 		$cont_j->addField('title');
 		$cont_j->addField('is_template')->type('boolean')->defaultValue(false);
 

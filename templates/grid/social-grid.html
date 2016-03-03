@@ -19,14 +19,23 @@
               <div class="project-box-header green-bg">
                 <div class="name"><a href="#">{$title} </a></div>
               </div>
-              <div class="project-box-content"></div><span>{short_content}{/short_content} </span>
+              <div class="project-box-content"><span>
+                  {message_160}{/}
+                  {message_250}{/}
+                  {message_3000}{/}
+                  {message_blog}{/} </span></div>
               <div class="project-box-footer clearfix"><a href="#"><span class="value">0</span><span class="label">Likes</span></a><a href="#"><span class="value">0</span><span class="label">Follows</span></a><a href="#"><span class="value">0</span><span class="label">Comments</span></a></div>
               <div class="project-box-ultrafooter clearfix">
-                <div class="col-lg-4"> </div>
-                <div class="col-lg-4">
-                   
-                  {$action}
+                <div class="col-md-1"></div>
+                <div class="col-md-5">{$action}</div>
+                <div class="col-md-5"> 
+                  <div class="btn btn-group">
+                       
+                    {$delete}    
+                    {$edit}
+                  </div>
                 </div>
+                <div class="col-md-1"> </div>
               </div>
             </div>
           </div>

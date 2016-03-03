@@ -10,7 +10,6 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
         <th><span>Title</span></th>
-        <th><span>Status</span></th>
         <th><span>Description    </span></th>
         <th><span>Duration </span></th>
         <th> </th>
@@ -20,7 +19,6 @@
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{title}{/}<a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$lead_id}{/}" class="user-link"> <span class="user-subhead small">{lead}Lead{/}</span></a></td>
-          <td><span class="label label-success">{status}Status{/}</span></td>
           <td><span class="small">{$description}    </span></td>
           <td>{duration}Duration{/}</td>
           <td>

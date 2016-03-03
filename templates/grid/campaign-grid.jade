@@ -13,13 +13,13 @@
             {rows}{row}
             div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
                 {cols}
-                .col-lg-12.col-md-6.col-sm-6
+                .col-lg-12.col-md-6.col-sm-6.panel.panel-default
                   .main-box.clearfix.project-box.green-box
                       .main-box.infographic-box
+                        h1(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
                         i.fa.fa-bullhorn.emerald-bg
                         span.headline.text-success Active: 10 Days 2 Hours
                           .text-danger Remaining: 1 Day 3 Hours
-                        span.value {$title}
                       .project-box-footer.clearfix
                         a(href='#')
                           span.value 93

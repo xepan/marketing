@@ -1,34 +1,29 @@
-{$content}
 .panel.panel-default
 	.panel-heading Add Social Post
 	.panel-body
 		.row.col-lg-12
-			a.btn.btn-primary.pull-right(href='#')
-				|  ADD	
 		br
-		br
-		br			
 		.row.col-lg-12
 			.col-lg-3
 				span 
 				strong Category:
 				div 
-					cite Print Marketing
+					cite {$marketing_category}{$marketing_category_id}
 			.col-lg-3
 				span
 				strong Name: 
 				div 
-					cite name here
+					cite something else here
 			.col-lg-3
 				span 
 				strong Post Title: 
 				div 
-					cite post title here
+					cite {$title}
 			.col-lg-3
 				span 
 				strong URL: 
 				div 
-					cite www.url.com
+					cite {$url}
 		br
 		br
 		br
@@ -37,12 +32,12 @@
 				span 
 				strong Attachment: 
 				div 
-					cite attachement here
+					cite attachment_todo
 			.col-lg-6
 				span 
 				strong Message 160 Characters:
 				div 
-					cite Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper, magna eget sagittis auctor, leo lectus mattis tortor, vitae auctor ligula nibh in elit. Aenean eget eleifend nisl
+					cite {$message_160}
 		br
 		br
 		br
@@ -50,7 +45,7 @@
 				span 
 				strong Message 255 Characters:
 				div 
-					cite Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper, magna eget sagittis auctor, leo lectus mattis tortor, vitae auctor ligula nibh in elit. Aenean eget eleifend nisl
+					cite {$message_255}
 		br
 		br
 		br
@@ -58,7 +53,7 @@
 				span 
 				strong Message 3000 Characters:
 				div 
-					cite ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper, magna eget sagittis auctor, leo lectus mattis tortor, vitae auctor ligula nibh in elit. Aenean eget eleifend nisl. Donec porta enim mi, eu porttitor augue ultricies et. Quisque porta leo vel quam sodales porttitor. Suspendisse posuere sollicitudin ullamcorper. Morbi eu laoreet ante. Vivamus cursus blandit tellus ac finibus. Nulla vulputate at lorem sed suscipit. Integer ac quam ac nibh viverra pellentesque. Proin vitae lobortis magna. Sed tellus felis, volutpat quis pulvinar laoreet, bibendum eget mi. Praesent justo justo, volutpat sit amet lorem at, fermentum volutpat nunc. Mauris sed metus felis. Cras lobortis iaculis dignissim. In maximus neque a fermentum iaculis.
+					cite {$message_3000}
 		br
 		br
 		br		
@@ -66,5 +61,5 @@
 				span 
 				strong Blog:
 				div 
-					cite Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper, magna eget sagittis auctor, leo lectus mattis tortor, vitae auctor ligula nibh in elit. Aenean eget eleifend nisl. Donec porta enim mi, eu porttitor augue ultricies et. Quisque porta leo vel quam sodales porttitor. Suspendisse posuere sollicitudin ullamcorper. Morbi eu laoreet ante. Vivamus cursus blandit tellus ac finibus. Nulla vulputate at lorem sed suscipit. Integer ac quam ac nibh viverra pellentesque. Proin vitae lobortis magna. Sed tellus felis, volutpat quis pulvinar laoreet, bibendum eget mi. Praesent justo justo, volutpat sit amet lorem at, fermentum volutpat nunc. Mauris sed metus felis. Cras lobortis iaculis dignissim. In maximus neque a fermentum iaculis.	
+					cite {$message_blog}
 							

@@ -1,0 +1,20 @@
+.row
+	.col-lg-3.hidden-xs.hidden-sm
+		#external-events.main-box
+			header.main-box-header.clearfix
+				h2 Draggable Events
+			.main-box-body.clearfix
+				.external-event.label-primary.ui-draggable(data-eventclass='label-primary', style='position: relative;') My Event 1
+				.external-event.label-danger.ui-draggable(data-eventclass='label-danger', style='position: relative;') My Event 2
+				.external-event.label-success.ui-draggable(data-eventclass='label-success', style='position: relative;') My Event 3
+				.external-event.label-warning.ui-draggable(data-eventclass='label-warning', style='position: relative;') My Event 4
+				.external-event.label-info.ui-draggable(data-eventclass='label-info', style='position: relative;') My Event 5
+				.external-event.label-default.ui-draggable(data-eventclass='label-default', style='position: relative;') My Event 6
+				.form-group
+					label.checkbox-inline
+						input#drop-remove(type='checkbox', value='option1')
+						|  Remove after drop
+
+	{$Content}
+
+	//- content spot just to put a initial check  on progress in jade file

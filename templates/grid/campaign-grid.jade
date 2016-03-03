@@ -1,0 +1,55 @@
+.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
+    {Pannel}
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                div(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+    {/Pannel}
+    .main-box-body.clearfix
+        .row
+            {header}{cols}{col}{/}{/}{/}
+            {rows}{row}
+            div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
+                {cols}
+                .col-lg-12.col-md-6.col-sm-6
+                  .main-box.clearfix.project-box.green-box
+                      .main-box.infographic-box
+                        i.fa.fa-bullhorn.emerald-bg
+                        span.headline.text-success Active: 10 Days 2 Hours
+                          .text-danger Remaining: 1 Day 3 Hours
+                        span.value {$title}
+                      .project-box-footer.clearfix
+                        a(href='#')
+                          span.value 93
+                          span.text-success Posted To
+                        a(href='#')
+                          span.value 3
+                          span.text-warning Remaining
+                        a(href='#')
+                          span.value 5
+                          span.text-danger Unsuccessful
+                      .project-box-ultrafooter.clearfix
+                        .col-md-4
+                          {$action}
+                        .col-md-4  
+                          .btn.btn-group    
+                            {$delete}    
+                            {$edit}
+                        .col-md-4
+                            a.user-link(href='index.php?page=xepan_marketing_schedule&action=add&campaign_id={$id}')      
+                              button.btn.btn-primary.atk-button(style='')
+                                  |  Schedule     
+                        
+
+            {/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
+
+            {totals}{cols}{col}{$content}{/}{/}{/}
+        {$Paginator}

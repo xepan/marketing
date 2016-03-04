@@ -16,6 +16,8 @@ class page_opportunity extends \Page{
 		
 		$crud->grid->addQuickSearch(['lead']);
 
+		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
+
 	}
 
 }

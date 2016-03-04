@@ -30,18 +30,20 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
+                      {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
+                      {/}
                       a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}')
                         {name}Name{/}
                       span.user-subhead {source}Source{/}
                     td
-                      span.sparkline(sparkType="bar")
-                        {communication}40,10,30,30,10,5,20{/}
+                      span.sparkline(sparkType="bar" sparkHeight="50px")
+                        {communication}40,10,30,30,10,5,20,40,10,30,30,10,5,20,40,10,30,30,10,5,20,40,10,30,30,10,5,20,10,5{/}
                     td
                       | {marketing_category}Category{/}
                     td
-                      span.sparkline(sparkType="pie" sparkHeight="50px") 
-                        {opportunities}40,30,30{/}
+                      span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
+                        {$open_count},{$converted_count},{$rejected_count}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

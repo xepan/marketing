@@ -18,12 +18,12 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">{name}Name{/}</a><span class="user-subhead">{source}Source{/}</span></td>
-          <td><span sparkType="bar" class="sparkline">{communication}40,10,30,30,10,5,20{/}</span></td>
+          <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">{name}Name{/}</a><span class="user-subhead">{source}Source{/}</span></td>
+          <td><span sparkType="bar" sparkHeight="50px" class="sparkline">{communication}40,10,30,30,10,5,20,40,10,30,30,10,5,20,40,10,30,30,10,5,20,40,10,30,30,10,5,20,10,5{/}</span></td>
           <td>{marketing_category}Category{/}</td>
-          <td><span sparkType="pie" sparkHeight="50px" class="sparkline">
+          <td><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">
                
-              {opportunities}40,30,30{/}</span></td>
+              {$open_count},{$converted_count},{$rejected_count}</span></td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

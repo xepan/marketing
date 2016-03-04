@@ -21,11 +21,11 @@
           .col-lg-6
                 strong Communication Graph:
                 br
-                span.sparkline(sparkType="bar")
-                  {communication}40,10,30,30,10,5,20{/}
+                span.sparkline(sparkType="bar" sparkHeight="40px" sparkbarColor="lightgray")
+                        {communication}40,10,30,30,10,5,20,40,10,30,30{/} 
           .col-lg-6 
                 strong Opportunity Chart:
                 br
-                span.sparkline(sparkType="pie") 
-                  {opportunities}40,30,30{/}
+                span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
+                        {$open_count},{$converted_count},{$rejected_count}
         

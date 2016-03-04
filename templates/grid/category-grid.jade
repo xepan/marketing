@@ -15,7 +15,9 @@
                 th
                     span Category
                 th
-                    span Leads Count    
+                    span Leads Count 
+                th
+                    span Communication       
                 th 
                 {/}{/}
             {/}
@@ -28,7 +30,10 @@
                     td
                       | {$name}
                     td 
-                      | {$leads_count}    
+                      | {$leads_count}
+                    td
+                      span.sparkline(sparkType="bar" sparkHeight="40px" sparkbarColor="lightgray")
+                        {communication}40,10,30,30,10,5,20,40,10,30,30{/}       
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

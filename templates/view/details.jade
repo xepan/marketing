@@ -5,27 +5,25 @@
         header.main-box-header.clearfix
           h2 Lead Details
         .col-lg-12  
-          .col-lg-6
+          .col-lg-6.xepan-push
                 strong Source:
-                br
+                .row
                 cite {source}Source here{/}
-          .col-lg-6  
+          .col-lg-6.xepan-push  
                 strong Category:
-                br
+                .row
                 cite {$marketing_category}{$marketing_category_id}
-        br
-        br
-        br
-        br        
+        .row.xepan-push-large
+        
         .col-lg-12  
-          .col-lg-6
+          .col-lg-6.xepan-push
                 strong Communication Graph:
-                br
+                .row
                 span.sparkline(sparkType="bar" sparkHeight="40px" sparkbarColor="lightgray")
                         {communication}40,10,30,30,10,5,20,40,10,30,30{/} 
-          .col-lg-6 
+          .col-lg-6.xepan-push 
                 strong Opportunity Chart:
-                br
+                .row
                 span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
                         {$open_count},{$converted_count},{$rejected_count}
         

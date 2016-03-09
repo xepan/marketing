@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;  
 
-class Model_SocialConfiguration extends \Model_Document{
+class Model_SocialUser extends xepan\base\Model_Table{
 
 	public $status=[
 

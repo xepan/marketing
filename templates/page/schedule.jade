@@ -1,0 +1,27 @@
+| {$Content}
+.row
+  .col-lg-4
+      .main-box.clearfix
+        .tabs-wrapper.profile-tabs
+          ul.nav.nav-tabs
+            li.active
+              a(data-toggle='tab', href='#tab-content') Content
+            li
+              a(data-toggle='tab', href='#tab-category') Category
+            li
+              a(data-toggle='tab', href='#tab-socialusers') Social Users  
+          .tab-content
+            
+             #tab-content.tab-pane.fade.in.active
+                  {$MarketingContent}
+
+                
+             #tab-category.tab-pane.clearfix.fade
+                {$Category}
+
+   
+             #tab-socialusers.tab-pane.clearfix.fade
+                {$SocialUsers}
+     
+  .col-lg-8
+    #calendar           

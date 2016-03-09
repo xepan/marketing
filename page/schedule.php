@@ -12,6 +12,7 @@ class page_schedule extends \Page{
 
 		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
 		$content_view->setModel('xepan/marketing/Content');
+		
 	}
 
 	function defaultTemplate(){
@@ -20,9 +21,9 @@ class page_schedule extends \Page{
 
 	function render(){
 
-		$this->app->jquery->addStylesheet('libs/fullcalendar');
-		$this->app->jquery->addStylesheet('libs/fullcalendar.print');
-		$this->app->jquery->addStylesheet('compiled/calendar');
+		// $this->app->jquery->addStylesheet('libs/fullcalendar');
+		// $this->app->jquery->addStylesheet('libs/fullcalendar.print');
+		// $this->app->jquery->addStylesheet('compiled/calendar');
 
 		$this->js(true)->_load('fullcalendar.min')->_load('xepan-scheduler');
 		$this->js(true)->_selector('#calendar')->univ()->schedularDate([

@@ -10,8 +10,8 @@ class page_schedule extends \Page{
 
 		$m=$this->add('xepan/marketing/Model_Campaign');
 
-		// $content_view = $this->add('View_ScheduleContent',null,'MarketingContent');
-		// $content_view->setModel('xepan\marketing\Content');
+		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
+		$content_view->setModel('xepan/marketing/Content');
 	}
 
 	function defaultTemplate(){

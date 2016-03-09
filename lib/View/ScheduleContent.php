@@ -1,6 +1,8 @@
 <?php
 
-class View_ScheduleContent extends CompleteLister{
+namespace xepan\marketing;
+
+class View_ScheduleContent extends \CompleteLister{
 	function init(){
 		parent::init();
 

@@ -2,7 +2,8 @@
 
 namespace xepan\marketing;
 
-class Model_Campaign_Category_Association extends \xepan\base\Model_Document{
+class Model_Campaign_Category_Association extends \xepan\base\Model_Table{
+	public $table = "campaign_category_association";
 
 	public $status=[
 
@@ -15,15 +16,15 @@ class Model_Campaign_Category_Association extends \xepan\base\Model_Document{
 			'delete'
 		]
 	];
+	public $acl=false;
 
 	function init(){
 		parent::init();
 		
-		$cat_j = $this->join('campaigncategory.document_id');
-		$cat_j->addField('name');
+		$this->addField('name');
 		
-		$cat_j->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
-		$cat_j->hasOne('xepan\marketing\Campaign','Camapign_id');
+		$this->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
+		$this->hasOne('xepan\marketing\Campaign','campaign_id');
 		//$this->addCondition('type','CampaignCategory');
 
 	}	

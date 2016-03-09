@@ -6,9 +6,7 @@
             thead
                 {cols}{col}
                 th
-                | Category
                 th
-                th 
                 {/}{/}
             {/}
             {$subheader}
@@ -18,12 +16,10 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                      | {$name}
+                      | {$selected}
                     td
-                      |	  
-                    td(style="width: 15%;")
-                        {$edit}
-                        {$delete}
+                      strong 
+                        cite{$name}
                     
                     {/}
                 {/}{/}

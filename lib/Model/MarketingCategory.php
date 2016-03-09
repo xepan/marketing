@@ -22,7 +22,7 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		$cat_j = $this->join('marketingcategory.document_id');
 		$cat_j->addField('name');
 		
-		$cat_j->hasMany('xepan\marketing\Campaign_Category_Association','marketingcategory_id');
+		$cat_j->hasMany('xepan\marketing\Campaign_Category_Association','marketing_category_id');
 		$cat_j->hasMany('xepan\marketing\Lead','marketing_category_id');
 
 		$this->addExpression('leads_count')->set($this->refSql('xepan\marketing\Lead')->count());
@@ -42,4 +42,5 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		if($campaign_catasso_count or $lead_count)
 			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association And Leads ');	
 	}
+
 }

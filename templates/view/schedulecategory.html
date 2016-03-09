@@ -3,19 +3,15 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th></th>Category
         <th></th>
-        <th> </th>{/}{/}
+        <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$name}</td>
-          <td>	  </td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}
-          </td>{/}
+          <td>{$selected}</td>
+          <td><strong> 
+              <cite>{$name}</cite></strong></td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

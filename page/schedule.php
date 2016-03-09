@@ -13,10 +13,36 @@ class page_schedule extends \Page{
 		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
 		$content_view->setModel('xepan/marketing/Content');
 
-		$category_grid = $this->add('xepan/base/Grid',null,'Category',['view\schedulecategory']);
-		$category_grid->setModel('xepan/marketing/MarketingCategory');
+		/**
+			campaign and category association.
+		*/ 
 
+		$category_assoc_grid = $this->add('xepan/base/Grid',null,'Category',['view\schedulecategory']);
+		$model_assoc_category =$this->add('xepan/marketing/Model_Campaign_Category_Association')->tryLoadAny();
+
+		$form = $this->add('Form',null,'asso_form');
+		$ass_field = $form->addField('hidden','ass_cat')->set(json_encode($m->getAssociatedCategories()));
+		$form->addSubmit('Save');
+
+		$category_assoc_grid->setModel($model_assoc_category);
+		$category_assoc_grid->addSelectable($form);
+
+		// if($form->isSubmitted()){
+		// 		$category->ref('xepan\commerce\CampaingCategory')->deleteAll();
+
+		// 		$selected_categories = array();
+		// 		$selected_categories = json_decode($form['ass_cat'],true);
+		// 		foreach ($selected_categories as $cat_id) {
+		// 			$model_asso = $this->add('xepan\commerce\Model_CategoryItemAssociation');
+		// 			$model_asso->addCondition('category_id',$cat_id);
+		// 			$model_asso->addCondition('item_id',$item->id);
+		// 			$model_asso->tryLoadAny();
+		// 			$model_asso->saveAndUnload();
+		// 		}
+		// 		$form->js(null,$this->js()->univ()->successMessage('Category Associated'))->reload()->execute();
+		// 	}
 		
+
 	}
 
 	function defaultTemplate(){

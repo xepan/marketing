@@ -23,6 +23,17 @@ class Model_SocialUser extends xepan\base\Model_Table{
 		$this->addField('name');
 		$this->addField('configuration');
 		$this->hasMany('xepan/marketing/CampaignSocialUser','social_user_id');		
+		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 
+	}
+
+	function beforeSave($m){}
+
+	function beforeDelete($m){
+		$campaign_social_user_count = $m->ref('xepan\marketing\CampaignSocialUser')->count()->getOne();
+		
+		if($campaign_social_user_count)
+			throw $this->exception('Cannot Delete,first delete Campaign`s Social Users ');	
 	}
 } 

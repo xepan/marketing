@@ -12,6 +12,10 @@ class page_schedule extends \Page{
 
 		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
 		$content_view->setModel('xepan/marketing/Content');
+
+		$category_grid = $this->add('xepan/base/Grid',null,'Category',['view\schedulecategory']);
+		$category_grid->setModel('xepan/marketing/MarketingCategory');
+
 		
 	}
 

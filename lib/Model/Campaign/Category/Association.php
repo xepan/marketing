@@ -26,17 +26,5 @@ class Model_Campaign_Category_Association extends \xepan\base\Model_Document{
 		$cat_j->hasOne('xepan\marketing\Campaign','Camapign_id');
 		//$this->addCondition('type','CampaignCategory');
 
-		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
-	}
-
-	function beforeSave($m){}
-
-	function beforeDelete($m){
-		$campaign_count = $m->ref('xepan\marketing\Campaign')->count()->getOne();
-		$marketing_count = $m->ref('xepan\marketing\MarketingCategory')->count()->getOne();
-		
-		if($campaign_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s ');	
-	}
+	}	
 }

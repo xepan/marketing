@@ -28,16 +28,30 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$camp_j->addField('ending_date')->type('datetime');
 		$camp_j->addField('campaign_type')->hint('Based on lead creation date or as campaign date');
 		
-		$camp_j->hasMany('xepan\marketing\CampaignCategory','campaign_id');
+		$camp_j->hasMany('xepan\marketing\Campaign_Category_Association','campaign_id');
 		$camp_j->hasMany('xepan\marketing\CampaignSocialUser','Camapign_id');
 		
 		$this->addCondition('type','Campaign');
 		$this->getElement('status')->defaultValue('Draft');
+		
+		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 	}
+
 
 	function schedule(){
 
 		$this->app->redirect($this->api->url('xepan/marketing/schedule',['campaign_id'=>$this->id]));
 		
+	}
+	
+	function beforeSave($m){}
+
+	function beforeDelete($m){
+		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
+		$cam_user_count = $m->ref('xepan\marketing\CampaignSocialUser')->count()->getOne();
+		
+		if($campaign_catasso_count or $cam_user_count)
+			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association And Campaign Social User ');	
 	}
 } 

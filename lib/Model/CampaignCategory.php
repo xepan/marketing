@@ -2,7 +2,8 @@
 
 namespace xepan\marketing;
 
-class Model_CampaignCategory extends \xepan\base\Model_Document{
+class Model_CampaignCategory extends \xepan\base\Model_Table{
+	public $table = "camapigncategory";
 
 	public $status=[
 
@@ -15,16 +16,15 @@ class Model_CampaignCategory extends \xepan\base\Model_Document{
 			'delete'
 		]
 	];
+	public $acl=false;
 
 	function init(){
 		parent::init();
 		
-		$cat_j = $this->join('campaigncategory.document_id');
-		$cat_j->addField('name');
-		
-		$cat_j->hasMany('xepan\marketing\MarketingCategory','campaign_category_id');
-		$cat_j->hasMany('xepan\marketing\Campaign','campaign_category_id');
-		//$this->addCondition('type','CampaignCategory');
+		$this->hasOne('xepan\marketing\MarketingCategory','marketingcategory_id');
+		$this->hasOne('xepan\marketing\Campaign','campaign_id');
+		$this = $this->join('campaigncategory.document_id');
+		$this->addField('name');
 
 	}
 }

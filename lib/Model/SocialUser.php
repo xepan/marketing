@@ -22,7 +22,7 @@ class Model_SocialConfiguration extends \Model_Document{
 
 		$this->addField('name');
 		$this->addField('configuration');
-		$this->hasMany('xepan/marketing/CampaignSocialUser','Social_user_id');		
+		$this->hasMany('xepan/marketing/CampaignSocialUser','social_user_id');		
 
 	}
 } 

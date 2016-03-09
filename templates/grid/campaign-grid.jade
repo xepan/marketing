@@ -31,16 +31,13 @@
                           span.value 5
                           span.text-danger Unsuccessful
                       .project-box-ultrafooter.clearfix
-                        .col-md-4.pull-left
-                          {$action}
+                        .col-md-2
                         .col-md-4
-                            a.user-link(href='index.php?page=xepan_marketing_schedule&action=add&campaign_id={$id}')      
-                              button.btn.btn-primary.pull-left.atk-button(style='')
-                                  |  Schedule     
-                        .col-md-4     
-                            {$edit}
-                            {$delete}
-                        
+                          {$action}
+                        .col-md-4 
+                          {$edit}
+                          {$delete}
+                        .col-md-2
 
             {/}
             {/}{/}

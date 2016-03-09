@@ -3,6 +3,7 @@
 namespace xepan\marketing;
 
 class Model_Schedule extends \xepan\base\Model_Table{
+	public $table = "schedule";
 	function init(){
 		parent::init();
 

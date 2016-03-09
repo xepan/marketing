@@ -15,12 +15,14 @@ class Model_SocialConfiguration extends \Model_Document{
 			'delete'
 		]
 	];
+	public $acl=false; 
 
 	function init(){
 		parent::init();
 
 		$this->addField('name');
-		$this->addField('configuration');		
+		$this->addField('configuration');
+		$this->hasMany('xepan/marketing/CampaignSocialUser','Social_user_id');		
 
 	}
 } 

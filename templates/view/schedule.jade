@@ -1,0 +1,286 @@
+.row
+  .col-md-3.hidden-xs.hidden-sm
+    #external-events.main-box
+      header.main-box-header.clearfix
+        h2 Draggable Events
+      .main-box-body.clearfix
+        .external-event.label-primary.ui-draggable(data-eventclass='label-primary', style='position: relative;') My Event 1
+        .external-event.label-danger.ui-draggable(data-eventclass='label-danger', style='position: relative;') My Event 2
+        .external-event.label-success.ui-draggable(data-eventclass='label-success', style='position: relative;') My Event 3
+        .external-event.label-warning.ui-draggable(data-eventclass='label-warning', style='position: relative;') My Event 4
+        .external-event.label-info.ui-draggable(data-eventclass='label-info', style='position: relative;') My Event 5
+        .external-event.label-default.ui-draggable(data-eventclass='label-default', style='position: relative;') My Event 6
+        .form-group
+          label.checkbox-inline
+            input#drop-remove(type='checkbox', value='option1')
+            |  Remove after drop
+  .col-md-9
+    .main-box
+      .main-box-body.clearfix
+        #calendar.fc.fc-ltr.fc-unthemed
+          .fc-toolbar
+            .fc-left
+              .fc-button-group
+                button.fc-prev-button.fc-button.fc-state-default.fc-corner-left(type='button')
+                  span.fc-icon.fc-icon-left-single-arrow
+                button.fc-next-button.fc-button.fc-state-default.fc-corner-right(type='button')
+                  span.fc-icon.fc-icon-right-single-arrow
+              button.fc-today-button.fc-button.fc-state-default.fc-corner-left.fc-corner-right.fc-state-disabled(type='button', disabled='disabled') today
+            .fc-right
+              .fc-button-group
+                button.fc-month-button.fc-button.fc-state-default.fc-corner-left.fc-state-active(type='button') month
+                button.fc-agendaWeek-button.fc-button.fc-state-default(type='button') week
+                button.fc-agendaDay-button.fc-button.fc-state-default.fc-corner-right(type='button') day
+            .fc-center
+              h2 March 2016
+            .fc-clear
+          .fc-view-container(style='')
+            .fc-view.fc-month-view.fc-basic-view(style='')
+              table
+                thead.fc-head
+                  tr
+                    td.fc-widget-header
+                      .fc-row.fc-widget-header
+                        table
+                          thead
+                            tr
+                              th.fc-day-header.fc-widget-header.fc-sun Sun
+                              th.fc-day-header.fc-widget-header.fc-mon Mon
+                              th.fc-day-header.fc-widget-header.fc-tue Tue
+                              th.fc-day-header.fc-widget-header.fc-wed Wed
+                              th.fc-day-header.fc-widget-header.fc-thu Thu
+                              th.fc-day-header.fc-widget-header.fc-fri Fri
+                              th.fc-day-header.fc-widget-header.fc-sat Sat
+                tbody.fc-body
+                  tr
+                    td.fc-widget-content
+                      .fc-day-grid-container(style='')
+                        .fc-day-grid
+                          .fc-row.fc-week.fc-widget-content(style='height: 91px;')
+                            .fc-bg
+                              table
+                                tbody
+                                  tr
+                                    td.fc-day.fc-widget-content.fc-sun.fc-other-month.fc-past(data-date='2016-02-28')
+                                    td.fc-day.fc-widget-content.fc-mon.fc-other-month.fc-past(data-date='2016-02-29')
+                                    td.fc-day.fc-widget-content.fc-tue.fc-past(data-date='2016-03-01')
+                                    td.fc-day.fc-widget-content.fc-wed.fc-past(data-date='2016-03-02')
+                                    td.fc-day.fc-widget-content.fc-thu.fc-past(data-date='2016-03-03')
+                                    td.fc-day.fc-widget-content.fc-fri.fc-past(data-date='2016-03-04')
+                                    td.fc-day.fc-widget-content.fc-sat.fc-past(data-date='2016-03-05')
+                            .fc-content-skeleton
+                              table
+                                thead
+                                  tr
+                                    td.fc-day-number.fc-sun.fc-other-month.fc-past(data-date='2016-02-28') 28
+                                    td.fc-day-number.fc-mon.fc-other-month.fc-past(data-date='2016-02-29') 29
+                                    td.fc-day-number.fc-tue.fc-past(data-date='2016-03-01') 1
+                                    td.fc-day-number.fc-wed.fc-past(data-date='2016-03-02') 2
+                                    td.fc-day-number.fc-thu.fc-past(data-date='2016-03-03') 3
+                                    td.fc-day-number.fc-fri.fc-past(data-date='2016-03-04') 4
+                                    td.fc-day-number.fc-sat.fc-past(data-date='2016-03-05') 5
+                                tbody
+                                  tr
+                                    td(rowspan='2')
+                                    td(rowspan='2')
+                                    td.fc-event-container(rowspan='2')
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.label-success.fc-draggable
+                                        .fc-content
+                                          span.fc-time 12a
+                                          span.fc-title All Day Event
+                                    td.fc-event-container(colspan='3')
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable
+                                        .fc-content
+                                          span.fc-time 12a
+                                          span.fc-title Long Event
+                                    td(rowspan='2')
+                                  tr
+                                    td
+                                    td
+                                    td.fc-event-container
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.label-danger.fc-draggable
+                                        .fc-content
+                                          span.fc-time 4p
+                                          span.fc-title Repeating Event
+                          .fc-row.fc-week.fc-widget-content(style='height: 91px;')
+                            .fc-bg
+                              table
+                                tbody
+                                  tr
+                                    td.fc-day.fc-widget-content.fc-sun.fc-past(data-date='2016-03-06')
+                                    td.fc-day.fc-widget-content.fc-mon.fc-today.fc-state-highlight(data-date='2016-03-07')
+                                    td.fc-day.fc-widget-content.fc-tue.fc-future(data-date='2016-03-08')
+                                    td.fc-day.fc-widget-content.fc-wed.fc-future(data-date='2016-03-09')
+                                    td.fc-day.fc-widget-content.fc-thu.fc-future(data-date='2016-03-10')
+                                    td.fc-day.fc-widget-content.fc-fri.fc-future(data-date='2016-03-11')
+                                    td.fc-day.fc-widget-content.fc-sat.fc-future(data-date='2016-03-12')
+                            .fc-content-skeleton
+                              table
+                                thead
+                                  tr
+                                    td.fc-day-number.fc-sun.fc-past(data-date='2016-03-06') 6
+                                    td.fc-day-number.fc-mon.fc-today.fc-state-highlight(data-date='2016-03-07') 7
+                                    td.fc-day-number.fc-tue.fc-future(data-date='2016-03-08') 8
+                                    td.fc-day-number.fc-wed.fc-future(data-date='2016-03-09') 9
+                                    td.fc-day-number.fc-thu.fc-future(data-date='2016-03-10') 10
+                                    td.fc-day-number.fc-fri.fc-future(data-date='2016-03-11') 11
+                                    td.fc-day-number.fc-sat.fc-future(data-date='2016-03-12') 12
+                                tbody
+                                  tr
+                                    td(rowspan='2')
+                                    td.fc-event-container
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.label-info.fc-draggable
+                                        .fc-content
+                                          span.fc-time 10:30a
+                                          span.fc-title Meeting
+                                    td.fc-event-container(rowspan='2')
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.label-info.fc-draggable
+                                        .fc-content
+                                          span.fc-time 7p
+                                          span.fc-title Birthday Party
+                                    td(rowspan='2')
+                                    td(rowspan='2')
+                                    td.fc-event-container(rowspan='2')
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable
+                                        .fc-content
+                                          span.fc-time 4p
+                                          span.fc-title Repeating Event
+                                    td(rowspan='2')
+                                  tr
+                                    td.fc-event-container
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.label-success.fc-draggable
+                                        .fc-content
+                                          span.fc-time 12p
+                                          span.fc-title Lunch
+                          .fc-row.fc-week.fc-widget-content(style='height: 91px;')
+                            .fc-bg
+                              table
+                                tbody
+                                  tr
+                                    td.fc-day.fc-widget-content.fc-sun.fc-future(data-date='2016-03-13')
+                                    td.fc-day.fc-widget-content.fc-mon.fc-future(data-date='2016-03-14')
+                                    td.fc-day.fc-widget-content.fc-tue.fc-future(data-date='2016-03-15')
+                                    td.fc-day.fc-widget-content.fc-wed.fc-future(data-date='2016-03-16')
+                                    td.fc-day.fc-widget-content.fc-thu.fc-future(data-date='2016-03-17')
+                                    td.fc-day.fc-widget-content.fc-fri.fc-future(data-date='2016-03-18')
+                                    td.fc-day.fc-widget-content.fc-sat.fc-future(data-date='2016-03-19')
+                            .fc-content-skeleton
+                              table
+                                thead
+                                  tr
+                                    td.fc-day-number.fc-sun.fc-future(data-date='2016-03-13') 13
+                                    td.fc-day-number.fc-mon.fc-future(data-date='2016-03-14') 14
+                                    td.fc-day-number.fc-tue.fc-future(data-date='2016-03-15') 15
+                                    td.fc-day-number.fc-wed.fc-future(data-date='2016-03-16') 16
+                                    td.fc-day-number.fc-thu.fc-future(data-date='2016-03-17') 17
+                                    td.fc-day-number.fc-fri.fc-future(data-date='2016-03-18') 18
+                                    td.fc-day-number.fc-sat.fc-future(data-date='2016-03-19') 19
+                                tbody
+                                  tr
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                          .fc-row.fc-week.fc-widget-content(style='height: 91px;')
+                            .fc-bg
+                              table
+                                tbody
+                                  tr
+                                    td.fc-day.fc-widget-content.fc-sun.fc-future(data-date='2016-03-20')
+                                    td.fc-day.fc-widget-content.fc-mon.fc-future(data-date='2016-03-21')
+                                    td.fc-day.fc-widget-content.fc-tue.fc-future(data-date='2016-03-22')
+                                    td.fc-day.fc-widget-content.fc-wed.fc-future(data-date='2016-03-23')
+                                    td.fc-day.fc-widget-content.fc-thu.fc-future(data-date='2016-03-24')
+                                    td.fc-day.fc-widget-content.fc-fri.fc-future(data-date='2016-03-25')
+                                    td.fc-day.fc-widget-content.fc-sat.fc-future(data-date='2016-03-26')
+                            .fc-content-skeleton
+                              table
+                                thead
+                                  tr
+                                    td.fc-day-number.fc-sun.fc-future(data-date='2016-03-20') 20
+                                    td.fc-day-number.fc-mon.fc-future(data-date='2016-03-21') 21
+                                    td.fc-day-number.fc-tue.fc-future(data-date='2016-03-22') 22
+                                    td.fc-day-number.fc-wed.fc-future(data-date='2016-03-23') 23
+                                    td.fc-day-number.fc-thu.fc-future(data-date='2016-03-24') 24
+                                    td.fc-day-number.fc-fri.fc-future(data-date='2016-03-25') 25
+                                    td.fc-day-number.fc-sat.fc-future(data-date='2016-03-26') 26
+                                tbody
+                                  tr
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                          .fc-row.fc-week.fc-widget-content(style='height: 91px;')
+                            .fc-bg
+                              table
+                                tbody
+                                  tr
+                                    td.fc-day.fc-widget-content.fc-sun.fc-future(data-date='2016-03-27')
+                                    td.fc-day.fc-widget-content.fc-mon.fc-future(data-date='2016-03-28')
+                                    td.fc-day.fc-widget-content.fc-tue.fc-future(data-date='2016-03-29')
+                                    td.fc-day.fc-widget-content.fc-wed.fc-future(data-date='2016-03-30')
+                                    td.fc-day.fc-widget-content.fc-thu.fc-future(data-date='2016-03-31')
+                                    td.fc-day.fc-widget-content.fc-fri.fc-other-month.fc-future(data-date='2016-04-01')
+                                    td.fc-day.fc-widget-content.fc-sat.fc-other-month.fc-future(data-date='2016-04-02')
+                            .fc-content-skeleton
+                              table
+                                thead
+                                  tr
+                                    td.fc-day-number.fc-sun.fc-future(data-date='2016-03-27') 27
+                                    td.fc-day-number.fc-mon.fc-future(data-date='2016-03-28') 28
+                                    td.fc-day-number.fc-tue.fc-future(data-date='2016-03-29') 29
+                                    td.fc-day-number.fc-wed.fc-future(data-date='2016-03-30') 30
+                                    td.fc-day-number.fc-thu.fc-future(data-date='2016-03-31') 31
+                                    td.fc-day-number.fc-fri.fc-other-month.fc-future(data-date='2016-04-01') 1
+                                    td.fc-day-number.fc-sat.fc-other-month.fc-future(data-date='2016-04-02') 2
+                                tbody
+                                  tr
+                                    td
+                                    td.fc-event-container
+                                      a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.label-danger.fc-draggable(href='http://google.com/')
+                                        .fc-content
+                                          span.fc-time 12a
+                                          span.fc-title Click for Google
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                          .fc-row.fc-week.fc-widget-content(style='height: 91px;')
+                            .fc-bg
+                              table
+                                tbody
+                                  tr
+                                    td.fc-day.fc-widget-content.fc-sun.fc-other-month.fc-future(data-date='2016-04-03')
+                                    td.fc-day.fc-widget-content.fc-mon.fc-other-month.fc-future(data-date='2016-04-04')
+                                    td.fc-day.fc-widget-content.fc-tue.fc-other-month.fc-future(data-date='2016-04-05')
+                                    td.fc-day.fc-widget-content.fc-wed.fc-other-month.fc-future(data-date='2016-04-06')
+                                    td.fc-day.fc-widget-content.fc-thu.fc-other-month.fc-future(data-date='2016-04-07')
+                                    td.fc-day.fc-widget-content.fc-fri.fc-other-month.fc-future(data-date='2016-04-08')
+                                    td.fc-day.fc-widget-content.fc-sat.fc-other-month.fc-future(data-date='2016-04-09')
+                            .fc-content-skeleton
+                              table
+                                thead
+                                  tr
+                                    td.fc-day-number.fc-sun.fc-other-month.fc-future(data-date='2016-04-03') 3
+                                    td.fc-day-number.fc-mon.fc-other-month.fc-future(data-date='2016-04-04') 4
+                                    td.fc-day-number.fc-tue.fc-other-month.fc-future(data-date='2016-04-05') 5
+                                    td.fc-day-number.fc-wed.fc-other-month.fc-future(data-date='2016-04-06') 6
+                                    td.fc-day-number.fc-thu.fc-other-month.fc-future(data-date='2016-04-07') 7
+                                    td.fc-day-number.fc-fri.fc-other-month.fc-future(data-date='2016-04-08') 8
+                                    td.fc-day-number.fc-sat.fc-other-month.fc-future(data-date='2016-04-09') 9
+                                tbody
+                                  tr
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td
+                                    td

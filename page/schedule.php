@@ -6,9 +6,9 @@ class page_schedule extends \Page{
 		parent::init();	
 
 		$action = $this->api->stickyGET('action')?:'view';
-		$schedule = $this->add('xepan\marketing\Model_Sms')->tryLoadBy('id',$this->api->stickyGET('document_id'));
-
+		$schedule = $this->add('xepan\marketing\Model_Campaign')->tryLoadBy('id',$this->api->stickyGET('campaign_id'));
 		$sch = $this->add('xepan\hr\View_Document',['action'=>$action],null,['view/schedule']);
+		$sch->setIdField('campaign_id');
 	    $sch->setModel($schedule,['x'],['y']);
 	}
 }

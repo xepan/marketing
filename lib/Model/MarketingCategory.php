@@ -19,13 +19,14 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 	function init(){
 		parent::init();
 		
+		$cat_j->hasOne('xepan\marketing\CampaignCategory','campaign_category_id');
 		$cat_j = $this->join('marketingcategory.document_id');
 		$cat_j->addField('name');
 		
 		$cat_j->hasMany('xepan\marketing\Lead','marketing_category_id');
+
 		$this->addExpression('leads_count')->set($this->refSql('xepan\marketing\Lead')->count());
 		$this->addCondition('type','MarketingCategory');
-		//$this->debug();
 
 	}
 }

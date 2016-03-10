@@ -11,7 +11,7 @@ class Model_Content extends \xepan\base\Model_Document{
 		'Reject'
 	];
 	public $actions=[
-		'Draft'=>['view','edit','delete','submit'],
+		'Draft'=>['view','edit','delete','submit','test'],
 		'Submitted'=>['view','reject','approve','edit','delete'],
 		'Approved'=>['view','reject','email','edit','delete'],
 		'Reject'=>['view','edit','delete','submit']
@@ -32,4 +32,6 @@ class Model_Content extends \xepan\base\Model_Document{
 
 		$this->getElement('status')->defaultValue('Draft');
 	}
+
+
 } 

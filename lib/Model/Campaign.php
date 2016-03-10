@@ -26,7 +26,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$camp_j->addField('title');
 		$camp_j->addField('starting_date')->type('datetime');
 		$camp_j->addField('ending_date')->type('datetime');
-		$camp_j->addField('campaign_type')->hint('Based on lead creation date or as campaign date');
+		$camp_j->addField('dropdown','campaign_type')->enum(['subscription','campaign']);
 		
 		$camp_j->hasMany('xepan\marketing\Campaign_Category_Association','campaign_id');
 		$camp_j->hasMany('xepan\marketing\CampaignSocialUser','camapign_id');
@@ -58,7 +58,11 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function getAssociatedCategories(){
 
 		$associated_categories = $this->ref('xepan\marketing\Campaign_Category_Association')
-								->_dsql()->del('fields')->field('marketingcategory_id')->getAll();
+								->_dsql()->del('fields')->field('marketing_category_id')->getAll();
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
+	}
+
+	function removeAssociateCategory(){
+		$this->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();
 	}
 } 

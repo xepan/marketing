@@ -21,7 +21,6 @@ class Model_Campaign_Category_Association extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 		
-		$this->addField('name');
 		
 		$this->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
 		$this->hasOne('xepan\marketing\Campaign','campaign_id');

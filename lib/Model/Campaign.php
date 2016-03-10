@@ -29,7 +29,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$camp_j->addField('dropdown','campaign_type')->enum(['subscription','campaign']);
 		
 		$camp_j->hasMany('xepan\marketing\Campaign_Category_Association','campaign_id');
-		$camp_j->hasMany('xepan\marketing\CampaignSocialUser','camapign_id');
+		$camp_j->hasMany('xepan\marketing\Campaign_SocialUser_Association','campaign_id');
 		
 		$this->addCondition('type','Campaign');
 		$this->getElement('status')->defaultValue('Draft');
@@ -62,7 +62,18 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
 	}
 
+	function getAssociatedUsers(){
+
+		$associated_users = $this->ref('xepan\marketing\Campaign_SocialUser_Association')
+								->_dsql()->del('fields')->field('socialuser_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_users)),false);
+	}
+
 	function removeAssociateCategory(){
 		$this->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();
+	}
+
+	function removeAssociateUser(){
+		$this->ref('xepan\marketing\Campaign_SocialUser_Association')->deleteAll();
 	}
 } 

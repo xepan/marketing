@@ -1,6 +1,7 @@
 {rows}{row}
-.row.xepan-push-small
+.row.xepan
 	.col-md-12
-		.external-event.label.label-primary(data-id="{$id}")
-			span(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;")      	{$title}
+		.draggable-event(data-id="{$id}")
+			h6.text-muted(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;")
+				{$title}
 {/}{/}

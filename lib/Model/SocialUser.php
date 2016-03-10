@@ -2,10 +2,9 @@
 
 namespace xepan\marketing;  
 
-class Model_SocialUser extends xepan\base\Model_Table{
-
+class Model_SocialUser extends \xepan\base\Model_Table{
+	public $table = "socialuser";
 	public $status=[
-
 	];
 	public $actions=[
 		'*'=>[
@@ -22,7 +21,7 @@ class Model_SocialUser extends xepan\base\Model_Table{
 
 		$this->addField('name');
 		$this->addField('configuration');
-		$this->hasMany('xepan/marketing/CampaignSocialUser','social_user_id');		
+		$this->hasMany('xepan/marketing/Campaign_SocialUser_Association','socialuser_id');		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
@@ -31,7 +30,7 @@ class Model_SocialUser extends xepan\base\Model_Table{
 	function beforeSave($m){}
 
 	function beforeDelete($m){
-		$campaign_social_user_count = $m->ref('xepan\marketing\CampaignSocialUser')->count()->getOne();
+		$campaign_social_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
 		
 		if($campaign_social_user_count)
 			throw $this->exception('Cannot Delete,first delete Campaign`s Social Users ');	

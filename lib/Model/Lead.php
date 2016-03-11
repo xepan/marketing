@@ -48,15 +48,18 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this->addCondition('type','Lead');
 
 		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
+
+	}
+
+	function rule_abcd($a){
 
 	}
 
 	function beforeSave($m){}
 
-	function beforeDelete($m){
-		$opp_count = $m->ref('Opportunity')->count()->getOne();
-		
+	function checkExistingOpportunities($m){
+		$opp_count = $this->ref('Opportunity')->count()->getOne();
 		if($opp_count)
 			throw $this->exception('Cannot Delete,first delete Opportunitie`s ');	
 	}

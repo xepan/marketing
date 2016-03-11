@@ -14,11 +14,10 @@ class page_leaddetails extends \Page {
 		$lead_view->setModel($lead);
 
 
-
 		if($lead->loaded()){
-			$detail = $this->add('xepan\hr\View_Document',['action'=> $action],'details',['view/details']);
+			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
 			$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
-			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action],'opportunity',['view/opp']);
+			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
 			$o->setModel($lead->ref('Opportunity'));
 		}

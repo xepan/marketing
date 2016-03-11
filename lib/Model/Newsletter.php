@@ -33,11 +33,32 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$frm=$p->add('Form');
 		foreach ($emails as $email) {
 			$frm->addField('checkbox',$this->api->normalizeName($email),$email);
-
 		}
 		$frm->addSubmit('Send');
 		if($frm->isSubmitted()){
-			return true;
+			$communication=$this->add('xepan\marketing\Model_Communication_Newsletter');	
+			$communication->setSubject($this['title']);
+			$communication->setBody($this['message_3000']);
+			
+			$communication->setRelatedDocument($this);
+
+			$i=1;
+			foreach ($emails as $email) {
+				if(!$frm[$this->api->normalizeName($email)]) continue;
+				if($i==1){
+					$communication->addTo($email,$this->employee['name']);
+				}else{
+					$communication->addBcc($email);
+				}
+				$i++;
+			}
+			try{
+				$communication->send();
+			}catch(\Exception $e){
+				$this->api->js()->univ()->errorMessage($e->getMessage())->execute();
+			}
+
+			return $this->api->js()->univ()->closeDialog()->execute();
 		}
 
 	}

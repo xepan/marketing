@@ -76,4 +76,38 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function removeAssociateUser(){
 		$this->ref('xepan\marketing\Campaign_SocialUser_Association')->deleteAll();
 	}
+
+	function submit(){
+		$this['status']='Submitted';
+        $this->app->employee
+            ->addActivity("Submitted Campaign", $this->id)
+            ->notifyWhoCan('approve,redesign,onhold','Submitted');
+        $this->saveAndUnload();    
+	}
+
+	function redesign(){
+		$this['status']='Redesign';
+        $this->app->employee
+            ->addActivity("Rejected Campaign", $this->id)
+            ->notifyWhoCan('submit,','Redesign');
+        $this->saveAndUnload();     
+	}
+
+
+	function onhold(){
+		$this['status']='Onhold';
+        $this->app->employee
+            ->addActivity("Put Campaign onhold", $this->id)
+            ->notifyWhoCan('redesign','Onhold');
+		$this->saveAndUnload(); 	
+		
+	}
+
+	function approve(){
+		$this['status']='Approved';
+        $this->app->employee
+            ->addActivity("Approved Campaign", $this->id)
+            ->notifyWhoCan('?????','Approved');
+		$this->saveAndUnload(); 
+	}
 } 

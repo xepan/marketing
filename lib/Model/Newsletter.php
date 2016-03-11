@@ -84,7 +84,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this['status']='Approved';
         $this->app->employee
             ->addActivity("Approved Newsletter", $this->id)
-            ->notifyWhoCan('email','Approved');
+            ->notifyWhoCan('?????','Approved');
 		$this->saveAndUnload(); 
 	}
 

@@ -8,13 +8,13 @@ class Model_Content extends \xepan\base\Model_Document{
 		'Draft',
 		'Submitted',
 		'Approved',
-		'Reject'
+		'Rejected'
 	];
 	public $actions=[
 		'Draft'=>['view','edit','delete','submit','test'],
 		'Submitted'=>['view','reject','approve','edit','delete'],
 		'Approved'=>['view','reject','email','edit','delete'],
-		'Reject'=>['view','edit','delete','submit']
+		'Rejected'=>['view','edit','delete','submit']
 	];
 
 	function init(){

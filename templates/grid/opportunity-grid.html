@@ -20,7 +20,8 @@
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}
-            {title}{/}<a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$lead_id}{/}" class="user-link"> <span class="user-subhead small">{lead}Lead{/}</span></a>
+            {title}{/}
+            <div class="row"> <a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$lead_id}{/}"> <span class="user-subhead">{lead}Lead{/}</span></a></div>
           </td>
           <td><span sparkType="bar" sparkHeight="40px" sparkbarColor="lightgray" class="sparkline">{communication}40,10,30,30,10,5,20,40,10,30,30{/}    </span></td>
           <td><span class="small">{$description}    </span></td>

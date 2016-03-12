@@ -24,7 +24,7 @@ class Model_Content extends \xepan\base\Model_Document{
 		$cont_j->hasone('xepan\marketing\MarketingCategory','marketing_category_id');
 		$cont_j->addField('message_160')->type('text');
 		$cont_j->addField('message_255')->type('text');
-		$cont_j->addField('message_3000')->type('text');
+		$cont_j->addField('message_3000')->type('text')->display(['form'=>'xepan\base\RichText']);
 		$cont_j->addField('message_blog')->type('text');
 		$cont_j->addField('url');
 		$cont_j->addField('title');

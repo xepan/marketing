@@ -12,17 +12,18 @@ class page_lead extends \Page{
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
 		$crud->setModel($lead);
 		$crud->grid->addPaginator(10);
-		$f=$crud->grid->addQuickSearch(['name']);
+		$crud->add('xepan\base\Controller_Avatar');
+		
+		$frm=$crud->grid->addQuickSearch(['name']);
 				
-		$status=$f->addField('Dropdown','category_id')->setEmptyText('All Category');
+		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
-		$status->js('change',$f->js()->submit());
+		$status->js('change',$frm->js()->submit());
 
-		$f->addHook('appyFilter',function($f,$m){
-			if($f['category_id'])
-				$m->addCondition('marketing_category_id',$f['category_id']);
+		$frm->addHook('appyFilter',function($f,$m){
+			if($frm['marketing_category_id'])
+				$m->addCondition('document_id',$f['marketing_category_id']);
 		});
 
-		$crud->add('xepan\base\Controller_Avatar');
 	}
 }

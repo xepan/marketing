@@ -10,7 +10,8 @@ class page_opportunity extends \Page{
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
 		
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
-		$crud->setModel($opportunity);		
+		$crud->setModel($opportunity);
+		$crud->grid->addPaginator(10);		
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
 		
 		$f = $crud->grid->addQuickSearch(['lead']);

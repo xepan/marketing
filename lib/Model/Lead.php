@@ -4,9 +4,7 @@ namespace xepan\marketing;
 
 class Model_Lead extends \xepan\base\Model_Contact{
 
-	public $status=[
-
-	];
+	public $status=[];
 	public $actions=[
 		'*'=>[
 			'add',
@@ -46,7 +44,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		});
 		
 		$this->addCondition('type','Lead');
-
+		$this->getElement('status')->defaultValue('Active');
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 

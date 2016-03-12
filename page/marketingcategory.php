@@ -12,7 +12,7 @@ class page_marketingcategory extends \Page{
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
 
 		$crud->setModel($m);
-		// $crud->grid->addQuickSearch(['name']);
+	    $crud->grid->addQuickSearch(['name']);
 	}
 
 	function defaultTemplate(){

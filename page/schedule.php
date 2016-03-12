@@ -18,8 +18,8 @@ class page_schedule extends \Page{
 		*/
 
 		$form = $this->add('Form',null,'asso_form');
-		$cat_ass_field = $form->addField('line','ass_cat')->set(json_encode($m->getAssociatedCategories()));
-		$usr_ass_field = $form->addField('line','ass_usr')->set(json_encode($m->getAssociatedUsers()));
+		$cat_ass_field = $form->addField('hidden','ass_cat')->set(json_encode($m->getAssociatedCategories()));
+		$usr_ass_field = $form->addField('hidden','ass_usr')->set(json_encode($m->getAssociatedUsers()));
 		$form->addSubmit('Update');
 		
 		/**

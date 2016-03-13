@@ -20,7 +20,7 @@ class page_schedule extends \Page{
 		$form = $this->add('Form',null,'asso_form');
 		$cat_ass_field = $form->addField('hidden','ass_cat')->set(json_encode($m->getAssociatedCategories()));
 		$usr_ass_field = $form->addField('hidden','ass_usr')->set(json_encode($m->getAssociatedUsers()));
-		$events_field = $form->addField('hidden','events_fields');
+		$events_field = $form->addField('Text','events_fields');
 		$submit_btn = $form->addButton('Update');
 
 		$js=[
@@ -59,7 +59,9 @@ class page_schedule extends \Page{
 			$m->removeAssociateCategory();
 			$m->removeAssociateUser();
 
+			// json decode/encode it and do what you want to do 
 			$form->js()->univ()->successMessage($form['events_fields'])->execute();
+
 			$model_asso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
 			$model_user_asso = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association');
 			

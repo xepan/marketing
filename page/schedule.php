@@ -20,7 +20,14 @@ class page_schedule extends \Page{
 		$form = $this->add('Form',null,'asso_form');
 		$cat_ass_field = $form->addField('hidden','ass_cat')->set(json_encode($m->getAssociatedCategories()));
 		$usr_ass_field = $form->addField('hidden','ass_usr')->set(json_encode($m->getAssociatedUsers()));
-		$form->addSubmit('Update');
+		$events_field = $form->addField('hidden','events_fields');
+		$submit_btn = $form->addButton('Update');
+
+		$js=[
+			$submit_btn->js()->univ()->getDateEvents($events_field),
+			$form->js()->submit()
+		];
+		$submit_btn->js('click',$js);
 		
 		/**
 			 campaign and category association.
@@ -52,6 +59,7 @@ class page_schedule extends \Page{
 			$m->removeAssociateCategory();
 			$m->removeAssociateUser();
 
+			$form->js()->univ()->successMessage($form['events_fields'])->execute();
 			$model_asso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
 			$model_user_asso = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association');
 			

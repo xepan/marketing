@@ -1,6 +1,15 @@
 $.each({
+	
+	getDateEvents : function(field){
+		events_list = $('#calendar').fullCalendar('clientEvents');
+		event_data = [];
+		$.each(events_list,function(index,value){
+			event_data.push({title:value.title,start:value.start});
+		});
+		$(field).val(JSON.stringify(event_data));
+	},
+
 	schedularDate: function(schedule_events){
-		
 		$('.draggable-event').draggable({
 				zIndex: 999,
 				revert: true,      // will cause the event to go back to its

@@ -18,7 +18,6 @@
         "reference": "origin/master"
     },
     "require": {
-        "atk4/atk4": "master-dev",
         "xepan/base" : "dev-master",
         "php": ">=5.3"
     },

@@ -29,6 +29,8 @@ class Model_Content extends \xepan\base\Model_Document{
 		$cont_j->addField('url');
 		$cont_j->addField('title');
 		$cont_j->addField('is_template')->type('boolean')->defaultValue(false);
+		$cont_j->hasMany('xepan/marketing/Schedule','document_id');
+
 
 		$this->getElement('status')->defaultValue('Draft');
 	}

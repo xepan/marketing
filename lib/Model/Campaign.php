@@ -22,12 +22,13 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		parent::init();
 
 		$camp_j=$this->join('campaign.document_id');
-		$camp_j->hasone('xepan\marketing\Schedule','schedule_id');
 		$camp_j->addField('title');
+		$camp_j->addField('schedule');
 		$camp_j->addField('starting_date')->type('datetime');
 		$camp_j->addField('ending_date')->type('datetime');
 		$camp_j->addField('dropdown','campaign_type')->enum(['subscription','campaign']);
 		
+		$camp_j->hasMany('xepan\marketing\Schedule','campaign_id');
 		$camp_j->hasMany('xepan\marketing\Campaign_Category_Association','campaign_id');
 		$camp_j->hasMany('xepan\marketing\Campaign_SocialUser_Association','campaign_id');
 		

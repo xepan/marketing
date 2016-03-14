@@ -3,8 +3,9 @@ $.each({
 	getDateEvents : function(field){
 		events_list = $('#calendar').fullCalendar('clientEvents');
 		event_data = [];
+
 		$.each(events_list,function(index,value){
-			event_data.push({title:value.title,start:value.start});
+			event_data.push({title:value.title,start:value.start,document_id:value.document_id});
 		});
 		$(field).val(JSON.stringify(event_data));
 	},
@@ -71,8 +72,7 @@ $.each({
 				
 				// render the event on the calendar
 				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'id':$(this).data('id'),'start':date}, true);
-				
+				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id')}, true);
 				// is the "remove after drop" checkbox checked?
 				if ($('#drop-remove').is(':checked')) {
 					// if so, remove the element from the "Draggable Events" list

@@ -8,10 +8,9 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->hasOne('xepan/marketing/Campaign','campaign_id');
+		$this->hasOne('xepan/marketing/Content','document_id');
 		$this->addField('date')->type('datetime');
-		$this->addField('day');
-
-		$this->hasMany('xepan/marketing/Campaign','Schedule_id');
+		$this->addField('day')->type('Number')->defaultValue(-1);
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);

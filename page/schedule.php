@@ -23,6 +23,10 @@ class page_schedule extends \Page{
 		$events_field = $form->addField('Text','events_fields');
 		$submit_btn = $form->addButton('Update');
 
+		/**
+				getting json encoded event list on form click
+		*/
+
 		$js=[
 			$submit_btn->js()->univ()->getDateEvents($events_field),
 			$form->js()->submit()
@@ -59,8 +63,21 @@ class page_schedule extends \Page{
 			$m->removeAssociateCategory();
 			$m->removeAssociateUser();
 
-			// json decode/encode it and do what you want to do 
-			$form->js()->univ()->successMessage($form['events_fields'])->execute();
+			$m['schedule']= $form['events_fields'];
+			$m->save();
+
+ 			$events = json_decode($form['events_fields'],true);
+			$model_schedule = $this->add('xepan\marketing\Model_Schedule')->addCondition('campaign_id',$_GET['campaign_id']);
+
+			
+			foreach ($events as $event) {
+				if(!$event['document_id'])
+					continue;
+				$model_schedule['date'] = $event['start'];
+				$model_schedule['day'] = $event['day'];
+				$model_schedule['document_id'] = $event['document_id'];
+				$model_schedule->saveAndUnload();
+			}
 
 			$model_asso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
 			$model_user_asso = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association');
@@ -71,14 +88,12 @@ class page_schedule extends \Page{
 		 	$selected_user = json_decode($form['ass_usr'],true);
 
 			foreach ($selected_categories as $cat) {
-				
 				$model_asso['campaign_id']=$m->id;
 				$model_asso['marketing_category_id']=$cat;
 				$model_asso->saveAndUnload();
 			}
 
-		 	foreach ($selected_user as $usr) {
-				
+		 	foreach ($selected_user as $usr) {				
 		 		$model_user_asso['campaign_id']=$m->id;
 		 		$model_user_asso['socialuser_id']=$usr;
 		 		$model_user_asso->saveAndUnload();
@@ -94,14 +109,15 @@ class page_schedule extends \Page{
 
 	function render(){
 
+		$campaign_id=$this->app->stickyGET('campaign_id');
+		$m=$this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
+
+		$event = array();
+		$event = json_decode($m['schedule'],true);
+
+
 		$this->js(true)->_load('fullcalendar.min')->_load('xepan-scheduler');
-		$this->js(true)->_selector('#calendar')->univ()->schedularDate([
-				[
-					'title'=> 'All Day Event',
-					'start'=> date('Y-m-d'),
-					'className'=> 'label-success'
-				]
-			]);
+		$this->js(true)->_selector('#calendar')->univ()->schedularDate($event);
 		parent::render();
 
 	}

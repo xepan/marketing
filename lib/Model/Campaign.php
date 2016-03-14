@@ -111,4 +111,16 @@ class Model_Campaign extends \xepan\base\Model_Document{
             ->notifyWhoCan('?????','Approved');
 		$this->saveAndUnload(); 
 	}
+
+	function getSchedule(){
+		if(!$this->loaded())
+			throw new \Exception("Campaign model must loaded");
+
+
+		$schedule = $this->ref('xepan\marketing\Schedule')
+								->_dsql()->del('fields')->field('id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($schedule)),false);
+			
+	}
+
 } 

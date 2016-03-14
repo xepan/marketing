@@ -80,11 +80,28 @@ $.each({
 				}
 				
 			},
-			events: schedule_events
+			events: schedule_events,
+
+			eventDragStop:function(event,jsEvent,ui,view){
+				var trashEl = jQuery('#calendarTrash');
+			    var ofs = trashEl.offset();
+
+			    var x1 = ofs.left;
+			    var x2 = ofs.left + trashEl.outerWidth(true);
+			    var y1 = ofs.top;
+			    var y2 = ofs.top + trashEl.outerHeight(true);
+			    console.log(event);
+			    if (jsEvent.pageX >= x1 && jsEvent.pageX<= x2 &&
+			        jsEvent.pageY>= y1 && jsEvent.pageY <= y2) {
+			        $($element).fullCalendar('removeEvents', event._id);
+			    }
+			}
 		};
 
 		$($element).fullCalendar($options);
-
+		event_trash = $($element).children('.fc-toolbar').children('.fc-left').children('.fc-button-group')
+		.append('<button id="calendarTrash" class="btn btn-danger" type="button"><span class="fc-icon fa fa-trash-o fa-stack-1x fa-inverse"></span></button>');
+		
 	},
 
 	schedularDays: function(){

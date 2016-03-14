@@ -1,8 +1,8 @@
-{rows}{row}
-<div class="row xepan xepan-push-small">
-  <div class="col-md-12">
-    <div data-id="{$id}" class="draggable-event">
-      <div style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;" class="text-muted">{$title}</div>
-    </div>
+
+<ol class="dd-list"></ol>{rows}{row}
+<li data-id="{$id}" data-content-type="{$type}" class="dd-item dd-item-list draggable-event">
+  <div class="dd-handle-list"><i class="fa fa-bars"></i></div>
+  <div class="dd-handle">
+    <div style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</div>
   </div>
-</div>{/}{/}
+</li>{/}{/}

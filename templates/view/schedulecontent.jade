@@ -1,7 +1,8 @@
+ol.dd-list
 {rows}{row}
-.row.xepan.xepan-push-small
-	.col-md-12
-		.draggable-event(data-id="{$id}")
-			.text-muted(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;")
-				{$title}
+li.dd-item.dd-item-list.draggable-event(data-id="{$id}" data-content-type="{$type}")
+        .dd-handle-list
+          i.fa.fa-bars
+        .dd-handle
+         div(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
 {/}{/}

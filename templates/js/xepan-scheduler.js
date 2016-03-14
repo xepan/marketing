@@ -72,7 +72,7 @@ $.each({
 				
 				// render the event on the calendar
 				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id')}, true);
+				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id'),'data-content-type':$(this).data('content-type')}, true);
 				// is the "remove after drop" checkbox checked?
 				if ($('#drop-remove').is(':checked')) {
 					// if so, remove the element from the "Draggable Events" list
@@ -95,7 +95,11 @@ $.each({
 			        jsEvent.pageY>= y1 && jsEvent.pageY <= y2) {
 			        $($element).fullCalendar('removeEvents', event._id);
 			    }
-			}
+			},
+			
+			eventRender: function(event, element, view) {
+        		return $('<a class="fc-day-grid-event fc-h-event fc-event fc-start fc-end fc-draggable "  title="'+event.title+'" class="'+xepan-marketing-event.type+'"><div class="fc-content"> <span class="fc-title">'+event.title+'</span></div></a>');
+    		}
 		};
 
 		$($element).fullCalendar($options);

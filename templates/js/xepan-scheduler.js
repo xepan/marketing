@@ -72,7 +72,7 @@ $.each({
 				
 				// render the event on the calendar
 				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id'),'data-content-type':$(this).data('content-type')}, true);
+				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id'),'contenttype':$(this).data('contenttype')}, true);
 				// is the "remove after drop" checkbox checked?
 				if ($('#drop-remove').is(':checked')) {
 					// if so, remove the element from the "Draggable Events" list
@@ -98,13 +98,13 @@ $.each({
 			},
 			
 			eventRender: function(event, element, view) {
-        		return $('<a class="fc-day-grid-event fc-h-event fc-event fc-start fc-end fc-draggable "  title="'+event.title+'" class="'+xepan-marketing-event.type+'"><div class="fc-content"> <span class="fc-title">'+event.title+'</span></div></a>');
+        		return $('<a class="fc-day-grid-event fc-h-event fc-event fc-start fc-end fc-draggable xepan-marketing-campaign-content-'+event.contenttype+'"  title="'+event.title+'" ><div class="fc-content"> <span class="fc-title">'+event.title+'</span></div></a>');
     		}
 		};
 
 		$($element).fullCalendar($options);
 		event_trash = $($element).children('.fc-toolbar').children('.fc-left').children('.fc-button-group')
-		.append('<button id="calendarTrash" class="btn btn-danger" type="button"><span class="fc-icon fa fa-trash-o fa-stack-1x fa-inverse"></span></button>');
+		.append('<button id="calendarTrash" class="btn btn-danger" type="button"><span class="fa fa-trash-o"></span></button>');
 		
 	},
 

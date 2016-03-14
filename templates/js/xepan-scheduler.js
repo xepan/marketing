@@ -5,7 +5,7 @@ $.each({
 		event_data = [];
 
 		$.each(events_list,function(index,value){
-			event_data.push({title:value.title,start:value.start,document_id:value.document_id});
+			event_data.push({title:value.title,start:value.start,document_id:value.document_id,'client_event_id':value._id});
 		});
 		$(field).val(JSON.stringify(event_data));
 	},
@@ -90,7 +90,7 @@ $.each({
 			    var x2 = ofs.left + trashEl.outerWidth(true);
 			    var y1 = ofs.top;
 			    var y2 = ofs.top + trashEl.outerHeight(true);
-			    console.log(event);
+			    
 			    if (jsEvent.pageX >= x1 && jsEvent.pageX<= x2 &&
 			        jsEvent.pageY>= y1 && jsEvent.pageY <= y2) {
 			        $($element).fullCalendar('removeEvents', event._id);

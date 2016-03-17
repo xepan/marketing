@@ -26,7 +26,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$camp_j->addField('schedule');
 		$camp_j->addField('starting_date')->type('datetime');
 		$camp_j->addField('ending_date')->type('datetime');
-		$camp_j->addField('dropdown','campaign_type')->enum(['subscription','campaign']);
+		$camp_j->addField('campaign_type')->enum(['subscription','campaign']);
 		
 		$camp_j->hasMany('xepan\marketing\Schedule','campaign_id');
 		$camp_j->hasMany('xepan\marketing\Campaign_Category_Association','campaign_id');
@@ -42,7 +42,13 @@ class Model_Campaign extends \xepan\base\Model_Document{
 
 	function schedule(){
 
+		$this->load($this->id);
+	
+		if($this['campaign_type']=='campaign')
 		$this->app->redirect($this->api->url('xepan/marketing/schedule',['campaign_id'=>$this->id]));
+
+		else
+		$this->app->redirect($this->api->url('xepan/marketing/subscriberschedule',['campaign_id'=>$this->id]));
 		
 	}
 	

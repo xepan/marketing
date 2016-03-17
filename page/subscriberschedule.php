@@ -85,6 +85,8 @@ class page_subscriberschedule extends \Page{
 	}
 
 	function render(){
+		$this->js(true)->_load('xepan-daycalendar');
+		$this->js(true)->_selector('#daycalendar')->xepan_daycalendar();
 		parent::render();
 	}
 }

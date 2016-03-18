@@ -14,10 +14,10 @@ var xepan_subscriptionday = function(day){
 		return this.events[data.data.id] != undefined;
 	};
 
-	this.removeEvent= function(evt){ // xepan_subscriptionevent object
+	this.removeEvent= function(data){ // xepan_subscriptionevent object
 		// CALL AJAX
 		var self=this;
-		delete  this.events[evt.event._id]
+		delete  this.events[data.data.id];
 	};
 	
 	this.render= function(parent){
@@ -76,16 +76,22 @@ jQuery.widget("ui.xepan_daycalendar", {
 		*/
 		header = $('<div class="xepan-daycalendar-header xepan-push-large row">').appendTo(this.element);
 		
-		input_group = $('<div class="input-group">').appendTo(header);
-		this.add_input = $('<input type="number" placeholder="Enter Day" id="dayInput" class="form-control">').appendTo(input_group);		
-		this.add_button = $('<span class="btn btn-primary input-group-addon" type="submit" id="dayAdd">Add Day</span>').appendTo(input_group);
-		this.trash = $('<button id="dayTrash" class="btn btn-danger col-md-1" type="button"><span class="fa fa-trash-o"></span></button>').appendTo(input_group);
+		this.add_input = $('<input type="number" placeholder="Enter Day" id="dayInput" class="xepan-push-small col-md-5">').appendTo(header);
+		
+		input_group = $('<div class="row col-lg-12">').appendTo(header);		
+
+		this.add_button = $('<span class="btn btn-primary col-md-3" type="submit" id="dayAdd">Add Day</span>').appendTo(input_group);
+		
+		this.trash = $('<button id="dayTrash" class=" days btn btn-danger col-md-3" type="button"><span class="fa fa-trash-o"></span></button>').appendTo(input_group);
+		
+
 
 		/**
 			Dragged Schedules
 		*/
+
 		body = $('<div></div>').appendTo(this.element);
-		this.schedular = $(' <div class="panel panel-default xepan-push-small"><div class="panel-body"></div></div>').appendTo(body);
+		this.schedular = $(' <div class="xepan-push-small"></div>').appendTo(body);
 
 
 		this.add_button.bind('click', undefined, function(event) {
@@ -102,7 +108,18 @@ jQuery.widget("ui.xepan_daycalendar", {
 
 			self.addDay(input);
 			self.render();
-		});	
+		});
+
+				this.trash.sortable({
+				connectWith: ".days",
+				receive: function(day, ui){
+					var duration = ui.sender.data('day');
+					self.days[ui.sender.data('duration')].removeEvent(new xepan_subscriptionevent(ui.item.data('data')));
+					self.inform('removeEvent',duration,ui.item.data('data')._nid);
+					ui.item.remove();
+				}
+			});
+
 	},
 
 	addDay: function(day){

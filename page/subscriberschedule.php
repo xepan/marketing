@@ -21,7 +21,20 @@ class page_subscriberschedule extends \Page{
 		$form = $this->add('Form',null,'asso_form');
 		$cat_ass_field = $form->addField('hidden','ass_cat')->set(json_encode($m->getAssociatedCategories()));
 		$usr_ass_field = $form->addField('hidden','ass_usr')->set(json_encode($m->getAssociatedUsers()));
+		$events_field = $form->addField('Text','events_fields');
 		$submit_btn = $form->addButton('Update');
+
+		/**
+				getting json encoded event list on form click
+		*/
+
+		$js=[
+			$submit_btn->js()->univ()->getDateEvents($events_field),
+			$form->js()->submit()
+		];
+		$submit_btn->js('click',$js);
+		// $this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander('foobar');
+
 
 		
 		/**
@@ -50,11 +63,20 @@ class page_subscriberschedule extends \Page{
 
 
 		if($form->isSubmitted()){
-			
+
 			$m->removeAssociateCategory();
 			$m->removeAssociateUser();
 
-			$model_asso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
+			$m['schedule']= $form['events_fields'];
+			$m->save();
+			
+			// $events = json_decode($form['events_fields'],true);
+			// foreach ($events as $event) {
+
+			// }
+
+
+			$model_sso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
 			$model_user_asso = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association');
 			
 			$selected_categories = array();
@@ -85,8 +107,15 @@ class page_subscriberschedule extends \Page{
 	}
 
 	function render(){
-		$this->js(true)->_load('xepan-daycalendar');
-		$this->js(true)->_selector('#daycalendar')->xepan_daycalendar();
+
+		$campaign_id=$this->app->stickyGET('campaign_id');
+		$m=$this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
+
+		$event = array();
+		$event = json_decode($m['schedule'],true);
+
+		$this->js(true)->_load('subscriptioncalendar');
+		$this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander($event);
 		parent::render();
 	}
 }

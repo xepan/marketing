@@ -29,11 +29,10 @@ class page_subscriberschedule extends \Page{
 		*/
 
 		$js=[
-			$submit_btn->js()->univ()->getDateEvents($events_field),
+			$this->js()->_selector('#daycalendar')->xepan_subscriptioncalander('to_field',$events_field),
 			$form->js()->submit()
 		];
 		$submit_btn->js('click',$js);
-		// $this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander('foobar');
 
 
 		
@@ -70,10 +69,43 @@ class page_subscriberschedule extends \Page{
 			$m['schedule']= $form['events_fields'];
 			$m->save();
 			
-			// $events = json_decode($form['events_fields'],true);
-			// foreach ($events as $event) {
+			$events = json_decode($form['events_fields'],true);
 
-			// }
+			//get All Previous added schedule
+			//[28,29]
+			$previous_schedule_array = $m->getSchedule();
+			// unset one by one according to events
+
+			foreach ($events as $event) {
+
+				if(!$event['document_id'])
+					continue;
+				
+				$model_schedule = $this->add('xepan\marketing\Model_Schedule')
+					->addCondition('campaign_id',$_GET['campaign_id'])
+					->addCondition('client_event_id',$event['client_event_id'])
+					->tryLoadAny();
+				
+				if($model_schedule->loaded()){
+					
+					$key = array_search($model_schedule->id, $previous_schedule_array);
+					if (false !== $key) {
+						unset($previous_schedule_array[$key]);
+					}
+					
+				}
+				// $save_del = array();
+
+				$model_schedule['date'] = $event['start'];
+				$model_schedule['day'] = $event['day'];
+				$model_schedule['document_id'] = $event['document_id'];
+				$model_schedule->saveAndUnload();
+			}
+
+			//finally delete all Remaining schedule according to previous_schedule array
+			if(count($previous_schedule_array))
+				$this->add('xepan\marketing\Model_Schedule')
+					->addCondition('id',$previous_schedule_array)->deleteAll();
 
 
 			$model_sso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
@@ -115,7 +147,7 @@ class page_subscriberschedule extends \Page{
 		$event = json_decode($m['schedule'],true);
 
 		$this->js(true)->_load('subscriptioncalendar');
-		$this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander($event);
+		$this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander($events);
 		parent::render();
 	}
 }

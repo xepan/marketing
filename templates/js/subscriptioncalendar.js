@@ -150,6 +150,10 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 		});
 	},
 
+	to_field : function(field){
+		$(field).val(JSON.stringify(this.options.events));
+	},
+
 	inform: function(what,on_day,newsletter_id,from_day){
 		var self=this;
 		var calendar_name= self.options.schedular_name;
@@ -164,24 +168,6 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 		var success=true;
 		var cogs=$('<div id="banner-loader" class="atk-banner atk-cells atk-visible"><div class="atk-cell atk-align-center atk-valign-middle"><div class="atk-box atk-inline atk-size-zetta atk-banner-cogs"></div></div></div>');
         cogs.appendTo('body');
-
-		// $.ajax({
-		// 	url: self.options.url,
-		// 	type: 'GET',
-		// 	data: param
-		// })
-		// .done(function(ret) {
-		// 	eval(ret);
-		// 	console.log("success");
-		// })
-		// .fail(function(ret) {
-		// 	eval(ret);
-		// 	console.log("error");
-		// })
-		// .always(function() {
-		// 	cogs.remove();
-		// 	console.log("complete");
-		// });
 		
 	}
 

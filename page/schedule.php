@@ -91,9 +91,8 @@ class page_schedule extends \Page{
 					
 				}
 				// $save_del = array();
-
+				$model_schedule['campaign_id'] = $m->id;
 				$model_schedule['date'] = $event['start'];
-				$model_schedule['day'] = $event['day'];
 				$model_schedule['document_id'] = $event['document_id'];
 				$model_schedule->saveAndUnload();
 			}

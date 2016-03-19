@@ -20,7 +20,7 @@ var xepan_subscriptionday = function(duration){
 	};
 	
 	this.render= function(parent){
-		console.log('day rendered '+ this.duration);
+		// console.log('day rendered '+ this.duration);
 		day_obj = $('<div class="days clearfix panel panel-default atk-padding-small day-'+this.duration+'"></div>').appendTo($(parent)).data('duration',this.duration);
 		duration_title = $('<div class="atk-size-tera pull-left panel panel-default atk-padding-large">'+this.duration+'</div>').appendTo(day_obj);
 		$.each(this.events, function(index, e) {
@@ -99,11 +99,17 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 		var self= this;
 		// console.log(this.options.events);
 		self.addDay(0);
-		$.each(this.options.events, function(index, evt) {
-			 if(self.days[evt.day]==undefined){
-			 	self.addDay(evt.day);
-			 }
-			self.days[evt.day].addEvent(new xepan_subscriptionevent(evt));			 
+		$.each(this.options.days, function(index, day) {
+			console.log(day);
+			if(self.days[index]==undefined){
+			 	self.addDay(index);
+			}
+
+			day_index = index;
+			$.each(day.events,function(index,evt){	
+				 // console.log(day_index);
+				self.days[day_index].addEvent(new xepan_subscriptionevent(evt.event));
+			});
 		});
 		// console.log(this.days);
 		this.render();
@@ -151,8 +157,8 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 
 	to_field : function(field){
 		var self = this;
-		// console.log(self.days);
-		// console.log(JSON.stringify(self.days));
+		console.log(self.days);
+		console.log(JSON.stringify(self.days));
 
 		$(field).val(JSON.stringify(this.days));
 	},

@@ -20,7 +20,7 @@ var xepan_subscriptionday = function(duration){
 	};
 	
 	this.render= function(parent){
-		// console.log('day rendered '+ this.duration);
+		console.log('day rendered '+ this.duration);
 		day_obj = $('<div class="days clearfix panel panel-default atk-padding-small day-'+this.duration+'"></div>').appendTo($(parent)).data('duration',this.duration);
 		duration_title = $('<div class="atk-size-tera pull-left panel panel-default atk-padding-large">'+this.duration+'</div>').appendTo(day_obj);
 		$.each(this.events, function(index, e) {
@@ -157,9 +157,6 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 
 	to_field : function(field){
 		var self = this;
-		console.log(self.days);
-		console.log(JSON.stringify(self.days));
-
 		$(field).val(JSON.stringify(this.days));
 	},
 

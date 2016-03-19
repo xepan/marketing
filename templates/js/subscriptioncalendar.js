@@ -99,11 +99,17 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 		var self= this;
 		// console.log(this.options.events);
 		self.addDay(0);
-		$.each(this.options.events, function(index, evt) {
-			 if(self.days[evt.day]==undefined){
-			 	self.addDay(evt.day);
-			 }
-			self.days[evt.day].addEvent(new xepan_subscriptionevent(evt));			 
+		$.each(this.options.days, function(index, day) {
+			console.log(day);
+			if(self.days[index]==undefined){
+			 	self.addDay(index);
+			}
+
+			day_index = index;
+			$.each(day.events,function(index,evt){	
+				 // console.log(day_index);
+				self.days[day_index].addEvent(new xepan_subscriptionevent(evt.event));
+			});
 		});
 		// console.log(this.days);
 		this.render();

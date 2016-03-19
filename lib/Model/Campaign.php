@@ -23,7 +23,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 
 		$camp_j=$this->join('campaign.document_id');
 		$camp_j->addField('title');
-		$camp_j->addField('schedule');
+		$camp_j->addField('schedule')->defaultValue('[]');
 		$camp_j->addField('starting_date')->type('datetime');
 		$camp_j->addField('ending_date')->type('datetime');
 		$camp_j->addField('campaign_type')->enum(['subscription','campaign']);

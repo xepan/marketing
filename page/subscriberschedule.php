@@ -62,50 +62,35 @@ class page_subscriberschedule extends \Page{
 
 
 		if($form->isSubmitted()){
-
 			$m->removeAssociateCategory();
 			$m->removeAssociateUser();
 
 			$m['schedule']= $form['events_fields'];
 			$m->save();
 			
-			$events = json_decode($form['events_fields'],true);
+			$day_events = json_decode($form['events_fields'],true);
 
 			//get All Previous added schedule
 			//[28,29]
-			$previous_schedule_array = $m->getSchedule();
+			// $previous_schedule_array = $m->getSchedule();
 			// unset one by one according to events
-
-			foreach ($events as $event) {
-
-				if(!$event['document_id'])
-					continue;
+			foreach ($day_events as $day => $events) {
+	
+				$m = $this->add('xepan\marketing\Model_Schedule');
 				
-				$model_schedule = $this->add('xepan\marketing\Model_Schedule')
-					->addCondition('campaign_id',$_GET['campaign_id'])
-					->addCondition('client_event_id',$event['client_event_id'])
-					->tryLoadAny();
-				
-				if($model_schedule->loaded()){
+				foreach($events['events'] as $event_id => $event_value_array){
 					
-					$key = array_search($model_schedule->id, $previous_schedule_array);
-					if (false !== $key) {
-						unset($previous_schedule_array[$key]);
-					}
-					
+					$m['document_id'] = $event_id;
+					$m['day'] = $events['duration'];
+					$m->saveAndUnload();
 				}
-				// $save_del = array();
-
-				$model_schedule['date'] = $event['start'];
-				$model_schedule['day'] = $event['day'];
-				$model_schedule['document_id'] = $event['document_id'];
-				$model_schedule->saveAndUnload();
 			}
 
+			exit;
 			//finally delete all Remaining schedule according to previous_schedule array
-			if(count($previous_schedule_array))
-				$this->add('xepan\marketing\Model_Schedule')
-					->addCondition('id',$previous_schedule_array)->deleteAll();
+			// if(count($previous_schedule_array))
+			// 	$this->add('xepan\marketing\Model_Schedule')
+			// 		->addCondition('id',$previous_schedule_array)->deleteAll();
 
 
 			$model_sso = $this->add('xepan\marketing\Model_Campaign_Category_Association');
@@ -147,7 +132,7 @@ class page_subscriberschedule extends \Page{
 		$event = json_decode($m['schedule'],true);
 
 		$this->js(true)->_load('subscriptioncalendar');
-		$this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander($events);
+		$this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander($event);
 		parent::render();
 	}
 }

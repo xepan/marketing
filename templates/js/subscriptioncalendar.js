@@ -6,7 +6,6 @@ var xepan_subscriptionday = function(duration){
 	
 	this.addEvent= function(evt){ // xepan_subscriptionevent object
 		// CALL AJAX
-		console.log(evt);
 		this.events[evt.event._nid] = evt;// event_html.appendTo($(this.element).closest('.days'));
 		this.events[evt.event._nid] = evt;// event_html.appendTo($(this.element).closest('.days'));
 		return evt;
@@ -151,7 +150,11 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 	},
 
 	to_field : function(field){
-		$(field).val(JSON.stringify(this.options.events));
+		var self = this;
+		// console.log(self.days);
+		// console.log(JSON.stringify(self.days));
+
+		$(field).val(JSON.stringify(this.days));
 	},
 
 	inform: function(what,on_day,newsletter_id,from_day){

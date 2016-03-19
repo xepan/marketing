@@ -72,13 +72,14 @@ class page_subscriberschedule extends \Page{
 
 			foreach ($day_events as $day => $events) {
 	
-				$m = $this->add('xepan\marketing\Model_Schedule');
+				$schedule_model = $this->add('xepan\marketing\Model_Schedule');
 				
 				foreach($events['events'] as $event_id => $event_value_array){
 					
-					$m['document_id'] = $event_id;
-					$m['day'] = $events['duration'];
-					$m->saveAndUnload();
+					$schedule_model['campaign_id'] = $m->id;
+					$schedule_model['document_id'] = $event_id;
+					$schedule_model['day'] = $events['duration'];
+					$schedule_model->saveAndUnload();
 				}
 			}
 

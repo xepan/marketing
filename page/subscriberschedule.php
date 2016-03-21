@@ -71,27 +71,33 @@ class page_subscriberschedule extends \Page{
 			$day_events = json_decode($form['events_fields'],true);
 			$previous_schedule_array = $m->getSchedule();
 
+
+			// echo"<pre>";
+			// print_r($previous_schedule_array);
+			// exit;
+
 			foreach ($day_events as $day => $events) {
-				// if(!$event['document_id'])
+				// if(!$events['document_id'])
 				// 	continue;
+
+				foreach($events['events'] as $event_id => $event_value_array){
 	
 				$model_schedule = $this->add('xepan\marketing\Model_Schedule')
 					->addCondition('campaign_id',$_GET['campaign_id'])
+					->addCondition('day', $events['duration'])
+					->addCondition('document_id',$event_id)
 					->tryLoadAny();
-				
-				if($model_schedule->loaded()){
-					
-					$key = array_search($model_schedule->id, $previous_schedule_array);
-					if (false !== $key) {
-						unset($previous_schedule_array[$key]);
-					}
-				}
 
-				foreach($events['events'] as $event_id => $event_value_array){
-					
-					$model_schedule['campaign_id'] = $m->id; 
-					$model_schedule['document_id'] = $event_id;
-					$model_schedule['day'] = $events['duration'];
+					if($model_schedule->loaded()){
+						$key = array_search($model_schedule->id, $previous_schedule_array);
+						if (false !== $key) {
+							unset($previous_schedule_array[$key]);
+						}
+					}
+
+					// $model_schedule['campaign_id'] = $m->id; 
+					// $model_schedule['document_id'] = $event_id;
+					// $model_schedule['day'] = $events['duration'];
 					$model_schedule->saveAndUnload();
 				}
 			}
@@ -99,6 +105,7 @@ class page_subscriberschedule extends \Page{
 			if(count($previous_schedule_array))
 				$this->add('xepan\marketing\Model_Schedule')
 					->addCondition('id',$previous_schedule_array)->deleteAll();
+			
 
 
 			$model_asso = $this->add('xepan\marketing\Model_Campaign_Category_Association');

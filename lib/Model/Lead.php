@@ -72,13 +72,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
 	}
 
-	function getCategory(){
-		if(!$this->loaded())
-			throw new \Exception("Lead model must loaded");
-
-		$category = $this->ref('xepan\marketing\MarketingCategory')
-								->_dsql()->del('fields')->field('id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($category)),false);
-			
+	function removeAssociateCategory(){
+		$this->ref('xepan\marketing\Lead_Category_Association')->deleteAll();
 	}
 } 

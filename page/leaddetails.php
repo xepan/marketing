@@ -49,15 +49,19 @@ class page_leaddetails extends \Page {
 
 				$base = $detail->form->layout;
 
-				$cat_ass_field = $base->addField('line','ass_cat')->set(json_encode($lead->getAssociatedCategories()));
+				
+				$cat_ass_field = $base->addField('hidden','ass_cat')->set(json_encode($lead->getAssociatedCategories()));
 
-				$base->addField('line','contact_id')->set($_GET['contact_id']);
+				$base->addField('hidden','contact_id')->set($_GET['contact_id']);
 
-				$category_assoc_grid = $base->add('xepan\base\Grid',null,'marketing_category');
+				$category_assoc_grid = $base->add('xepan\base\Grid',['show_header'=>false],'marketing_category');
 				$category_assoc_grid->setModel($model_assoc_category,['name'],['name']);
 				$category_assoc_grid->addSelectable($cat_ass_field);
 
 				$detail->form->onSubmit(function($frm){
+
+				$lead_model = $this->add('xepan\marketing\Model_lead')->load($_GET['contact_id']);	
+				$lead_model->removeAssociateCategory();
 
 				$selected_categories = array();
 				$selected_categories = json_decode($frm['ass_cat'],true);

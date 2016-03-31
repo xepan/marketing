@@ -25,7 +25,8 @@ class page_test extends \Page {
 		// 		-< category_association
 		// 			-< Lead / Contact (emails_str) [-< Emails * ]
 
-		$lead =$this->add('xepan\marketing\Model_Lead');
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		
 		$lead_cat_assos_j = $lead->join('lead_category_association.marketing_category_id');
 		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id');
 		$camp_j = $camp_cat_assos_j->join('campaign','campaign_id');

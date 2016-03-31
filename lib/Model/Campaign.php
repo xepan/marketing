@@ -55,11 +55,17 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function beforeSave($m){}
 
 	function beforeDelete($m){
-		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
-		$cam_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
 		
-		if($campaign_catasso_count or $cam_user_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association And Campaign Social User ');	
+		// $campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
+		// $cam_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
+		
+		// if($campaign_catasso_count or $cam_user_count)
+		// 	throw $this->exception('Cannot Delete,first delete Campaign`s Category Association And Campaign Social User ');	
+
+		$this->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();
+		$this->ref('xepan\marketing\Campaign_SocialUser_Association')->deleteAll();
+		$this->ref('xepan\marketing\Schedule')->deleteAll();
+
 	}
 
 	function getAssociatedCategories(){

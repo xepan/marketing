@@ -29,19 +29,26 @@ class page_test extends \Page {
 		
 		$lead_cat_assos_j = $lead->join('lead_category_association.lead_id');
 		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
-		$camp_j = $camp_cat_assos_j->join('campaign','campaign_id');
-		$schedule_j = $camp_j->join('schedule.campaign_id');
-		$schedule_j->hasOne('xepan/marketing/Content','document_id');
-		$comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
+				
+		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
+		$camp_j->addField('campaign_title','title');
 		
+		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
+		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
+		$schedule_j->addField('schedule_date','date');
+		$schedule_j->addField('schedule_day','day');
+
+		$comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
 		$comm_j->addField('related_id');
 		$schedule_j->addField('date');
 
-		$lead->addCondition('related_id',null);
-		$lead->addCondition('date','<=',$this->app->now);
+		$lead->addExpression('days_from_join')->set($lead->dsql()->expr("DATEDIFF([0],'[1]')",[$lead->getElement('created_at'),$this->api->today]));
 
+		$lead->addCondition('related_id',null);
+		$lead->addCondition('schedule_date','<=',$this->app->now);
+		
 		$grid= $this->add('Grid');
-		$grid->setModel($lead->debug(),['name','document']);
+		$grid->setModel($lead->debug(),['related_id','name','document','campaign_title','schedule_day','days_from_join']);
 
 	}
 }

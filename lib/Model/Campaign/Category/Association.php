@@ -26,5 +26,6 @@ class Model_Campaign_Category_Association extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\marketing\Campaign','campaign_id');
 		//$this->addCondition('type','CampaignCategory');
 
+
 	}	
 }

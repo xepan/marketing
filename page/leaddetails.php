@@ -16,11 +16,11 @@ class page_leaddetails extends \Page {
 
 		
 
-		if($lead->loaded()){
+		// if($lead->loaded()){
 
 			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
 			
-		}
+		// }
 
 			$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);

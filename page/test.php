@@ -16,14 +16,7 @@ class page_test extends \Page {
 
 	function init(){
 		parent::init();
-		
-		// campaign 
-		// 		-< schedule
-		// 			-> content_id *
-		// 			->date
-		// 			->day
-		// 		-< campaign category_association
-		// 			-< Lead / Contact (emails_str) [-< Emails * ]
+
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
@@ -42,11 +35,16 @@ class page_test extends \Page {
 		$comm_j->addField('related_id');
 		$schedule_j->addField('date');
 
-		$lead->addExpression('days_from_join')->set($lead->dsql()->expr("DATEDIFF([0],'[1]')",[$lead->getElement('created_at'),$this->api->today]));
+		$lead->addExpression('days_from_join')->set(function($m,$q){
+			return $m->dsql()->expr("DATEDIFF([0],'[1]')",[$m->getElement('created_at'),$this->api->today]);
+		});
 
+		// $date=date_diff(date('Y-m-d',$lead['created_at']),date('Y-m-d',$this->api->today));
+		// echo "string".$date;
+		
 		$lead->addCondition('related_id',null);
 		$lead->addCondition('schedule_date','<=',$this->app->now);
-		
+
 		$grid= $this->add('Grid');
 		$grid->setModel($lead->debug(),['related_id','name','document','campaign_title','schedule_day','days_from_join']);
 

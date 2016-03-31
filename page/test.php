@@ -22,13 +22,13 @@ class page_test extends \Page {
 		// 			-> content_id *
 		// 			->date
 		// 			->day
-		// 		-< category_association
+		// 		-< campaign category_association
 		// 			-< Lead / Contact (emails_str) [-< Emails * ]
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
-		$lead_cat_assos_j = $lead->join('lead_category_association.marketing_category_id');
-		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id');
+		$lead_cat_assos_j = $lead->join('lead_category_association.lead_id');
+		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
 		$camp_j = $camp_cat_assos_j->join('campaign','campaign_id');
 		$schedule_j = $camp_j->join('schedule.campaign_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id');
@@ -41,7 +41,7 @@ class page_test extends \Page {
 		$lead->addCondition('date','<=',$this->app->now);
 
 		$grid= $this->add('Grid');
-		$grid->setModel($lead,['name','document']);
+		$grid->setModel($lead->debug(),['name','document']);
 
 	}
 }

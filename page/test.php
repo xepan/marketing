@@ -25,6 +25,7 @@ class page_test extends \Page {
 				
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
 		$camp_j->addField('campaign_title','title');
+		$camp_j->addField('campaign_type');
 		
 		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
@@ -32,21 +33,43 @@ class page_test extends \Page {
 		$schedule_j->addField('schedule_day','day');
 
 		$comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
-		$comm_j->addField('related_id');
 		$schedule_j->addField('date');
 
 		$lead->addExpression('days_from_join')->set(function($m,$q){
-			return $m->dsql()->expr("DATEDIFF([0],'[1]')",[$m->getElement('created_at'),$this->api->today]);
+			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
 		});
 
-		// $date=date_diff(date('Y-m-d',$lead['created_at']),date('Y-m-d',$this->api->today));
-		// echo "string".$date;
-		
-		$lead->addCondition('related_id',null);
-		$lead->addCondition('schedule_date','<=',$this->app->now);
+		$lead->addExpression('sendable')->set(function($m,$q){
+			return $q->expr(
+					"IF([0]='campaign',
+						if([1]<='[2]',1,0),
+						if([3]>=[4],1,0)
+						)",
+					[
+						/* 0 */ $m->getElement('campaign_type'),
+						/* 1 */ $m->getElement('schedule_date'),
+						/* 2 */ $this->app->now,
+						/* 3 */ $m->getElement('days_from_join'),
+						/* 4 */ $m->getElement('schedule_day')
+					]
+					);
+		})->type('boolean');
+
+		$lead->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
+			return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
+				[
+				$this->add('xepan\marketing\Model_Communication_Newsletter')
+					->addCondition('related_id',$m->getElement('document_id'))
+					->fieldQuery('created_at'),
+				$this->app->now
+				]);
+		});
+
+		$lead->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
+		$lead->addCondition('sendable',true);
 
 		$grid= $this->add('Grid');
-		$grid->setModel($lead->debug(),['related_id','name','document','campaign_title','schedule_day','days_from_join']);
+		$grid->setModel($lead->debug(),['name','document','campaign_title','campaign_type','schedule_day','days_from_join','sendable','last_sent_newsletter_from_schedule_row_days']);
 
 	}
 }

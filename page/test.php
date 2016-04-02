@@ -17,7 +17,9 @@ class page_test extends \Page {
 	function init(){
 		parent::init();
 
-
+		/***************************************************************************
+			Joining tables to find lead->categories->campaigns->schedule->content
+		***************************************************************************/
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
 		$lead_cat_assos_j = $lead->join('lead_category_association.lead_id');
@@ -37,10 +39,18 @@ class page_test extends \Page {
 		$comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
 		$schedule_j->addField('date');
 
+
+		/***************************************************************************
+			Expression for finding total days since lead joined
+		***************************************************************************/
 		$lead->addExpression('days_from_join')->set(function($m,$q){
 			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
 		});
 
+
+		/***************************************************************************
+			Expression to find if the lead is 'Hot'/'sendable limit'
+		***************************************************************************/
 		$lead->addExpression('sendable')->set(function($m,$q){
 			return $q->expr(
 					"IF([0]='campaign',
@@ -57,6 +67,10 @@ class page_test extends \Page {
 					);
 		})->type('boolean');
 
+
+		/***************************************************************************
+			To find the last newsletter sending time.
+		***************************************************************************/	
 		$lead->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
 			return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
 				[
@@ -67,6 +81,10 @@ class page_test extends \Page {
 				]);
 		});
 
+
+		/***************************************************************************
+			Expression to extract 'message_3000' field from content model
+		***************************************************************************/
 		$lead->addExpression('body')->set(function($m,$q){
 			return $m->refSQL('document_id')->fieldQuery('message_3000');
 		});
@@ -75,34 +93,36 @@ class page_test extends \Page {
 		$lead->addCondition('sendable',true);
 
 
-
-		// $grid= $this->add('Grid');
-		// $grid->setModel($lead->debug(),['name','document','campaign_title','campaign_type','schedule_day','days_from_join','sendable','last_sent_newsletter_from_schedule_row_days']);
-
-
+		/***************************************************************************
+			Sending newsletter
+		***************************************************************************/
 		$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 		$email_settings = $this->add('xepan\base\Model_Epan_EmailSetting')->tryLoadAny();
 		$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
-		$mass_mail_id = $this->add('xepan\marketing\Model_MassMailing');
-
-
+		$model = $this->add('xepan\marketing\Model_MassMailing');/*Mass Email Active*/
+		
 		$form = $this->add('Form');
 		$form->addSubmit('Send Newsletter');
 
 		if($form->isSubmitted()){
+			/*******************************************************************
+			        For each lead run this code
+		    *******************************************************************/
 			foreach ($lead as $newsletter) {
 				
 				$emails = $lead->getEmails();
 			    $subject = $lead['document'] ;		    		    
 				$body = $lead['body'];
-
+				/***************************************************
+			         for each email of a particular lead 
+		        ***************************************************/	
 				foreach ($emails as $email) {	
 					$model_communication_newsletter->addTo($email);
 				}
 
 				$model_communication_newsletter->setSubject($subject);
 				$model_communication_newsletter->setBody($body);
-				$model_communication_newsletter->send();
+				// $model_communication_newsletter->send($email_settings);
 				$model_communication_newsletter->save();
 			}
 
@@ -111,3 +131,18 @@ class page_test extends \Page {
 
 	}
 }
+
+// foreach($mass_email_id as email_id){
+// 	function sendAndCalculate($email_id);
+// }
+
+// function sendAndCalculate($email_id){
+// 	if (count == queue)
+// 	return;
+// 	foreach(newsletter){
+// 		if(time limit exceed)
+// 			return;
+// 		send mails;
+// 		count ++;	
+// 		}
+// 	}

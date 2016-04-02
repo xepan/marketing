@@ -83,6 +83,8 @@ class page_test extends \Page {
 		$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 		$email_settings = $this->add('xepan\base\Model_Epan_EmailSetting')->tryLoadAny();
 		$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
+		$mass_mail_id = $this->add('xepan\marketing\Model_MassMailing');
+
 
 		$form = $this->add('Form');
 		$form->addSubmit('Send Newsletter');
@@ -100,7 +102,7 @@ class page_test extends \Page {
 
 				$model_communication_newsletter->setSubject($subject);
 				$model_communication_newsletter->setBody($body);
-				// $model_communication_newsletter->send();
+				$model_communication_newsletter->send();
 				$model_communication_newsletter->save();
 			}
 

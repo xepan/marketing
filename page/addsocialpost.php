@@ -1,7 +1,9 @@
 <?php
 namespace xepan\marketing;
-class page_addsocialpost extends \Page{
+class page_addsocialpost extends \xepan\base\Page{
 	public $title="Add Social Post";
+	public $breadcrumb=['Home'=>'index','Social'=>'xepan_marketing_socialcontent','addsocialpost'=>'#'];
+
 	function init(){
 		parent::init();	
 

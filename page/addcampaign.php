@@ -1,7 +1,9 @@
 <?php
 namespace xepan\marketing;
-class page_addcampaign extends \Page{
+class page_addcampaign extends \xepan\base\Page{
 	public $title="Add Campaign";
+		public $breadcrumb=['Home'=>'index','Campaign'=>'xepan_marketing_Campaign','AddCampaign'=>'#'];
+
 	function init(){
 		parent::init();	
 

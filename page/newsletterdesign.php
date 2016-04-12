@@ -2,7 +2,7 @@
 namespace xepan\marketing;
 class page_newsletterdesign extends \xepan\base\Page{
 	public $title="Newsletter Design";
-	public $breadcrumb=['Home'=>'index','Newsletter'=>'xepan_marketing_newsletter','Design'=>'#'];
+	public $breadcrumb=['Home'=>'index','Newsletter'=>'xepan_marketing_newslettertemplate','Design'=>'#'];
 
 	function init(){
 		parent::init();	

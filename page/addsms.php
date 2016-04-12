@@ -1,7 +1,9 @@
 <?php
 namespace xepan\marketing;
-class page_addsms extends \Page{
+class page_addsms extends \xepan\base\Page{
 	public $title="Add Sms";
+	public $breadcrumb=['Home'=>'index','Sms'=>'xepan_marketing_Sms','Add sms'=>'#'];
+
 	function init(){
 		parent::init();	
 

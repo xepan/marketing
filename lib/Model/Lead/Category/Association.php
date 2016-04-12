@@ -2,8 +2,8 @@
 
 namespace xepan\marketing;
 
-class Model_Campaign_Category_Association extends \xepan\base\Model_Table{
-	public $table = "campaign_category_association";
+class Model_Lead_Category_Association extends \xepan\base\Model_Table{
+	public $table = "lead_category_association";
 
 	public $status=[
 
@@ -22,10 +22,8 @@ class Model_Campaign_Category_Association extends \xepan\base\Model_Table{
 		parent::init();
 		
 		
+		$this->hasOne('xepan\marketing\Lead','lead_id');
 		$this->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
-		$this->hasOne('xepan\marketing\Campaign','campaign_id');
-		//$this->addCondition('type','CampaignCategory');
-
 
 	}	
 }

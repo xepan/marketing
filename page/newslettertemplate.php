@@ -1,7 +1,9 @@
 <?php
 namespace xepan\marketing;
-class page_newslettertemplate extends \Page{
+class page_newslettertemplate extends \xepan\base\Page{
 	public $title="Newsletter Template";
+	public $breadcrumb=['Home'=>'index','Newsletter'=>'xepan_marketing_newsletter','Template'=>'#'];
+
 	function init(){
 		parent::init();	
 

@@ -2,8 +2,10 @@
 
 namespace xepan\marketing;
 
-class page_leaddetails extends \Page {
+class page_leaddetails extends \xepan\base\Page {
 	public $title ='Lead Details';
+	public $breadcrumb=['Home'=>'index','Lead'=>'xepan_marketing_lead','Details'=>'#'];
+
 
 	function init(){
 		parent::init();

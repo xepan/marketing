@@ -26,7 +26,7 @@ class Initiator extends \Controller_Addon {
 		
 	}
 
-	function generateInstaller(){
+	function resetDB(){
 		// Clear DB
 		if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
         if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;

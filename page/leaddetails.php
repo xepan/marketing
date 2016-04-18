@@ -27,7 +27,7 @@ class page_leaddetails extends \xepan\base\Page {
 			$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
-			$o->setModel($lead->ref('Opportunity'));
+			$o->setModel($lead->ref('Opportunities'));
 			
 			/*
 			*	
@@ -51,11 +51,6 @@ class page_leaddetails extends \xepan\base\Page {
 
 				$base = $detail->form->layout;
 
-				$base->leadCategoryassociation();
-			}
-
-
-			function leadCategoryassociation(){	
 				$cat_ass_field = $base->addField('hidden','ass_cat')->set(json_encode($lead->getAssociatedCategories()));
 
 				$base->addField('hidden','contact_id')->set($_GET['contact_id']);
@@ -69,24 +64,23 @@ class page_leaddetails extends \xepan\base\Page {
 				$lead_model = $this->add('xepan\marketing\Model_lead')->load($_GET['contact_id']);	
 				$lead_model->removeAssociateCategory();
 
-				$selected_categories = array();
 				$selected_categories = json_decode($frm['ass_cat'],true);
 
-				$model_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
-
 				foreach ($selected_categories as $cat) {
-					$model_asso
-							->addCondition('lead_id',$frm['contact_id'])
-							->addCondition('marketing_category_id',$cat)
-							->tryLoadAny()	
-							->saveAndUnload();
+					$lead_model->associateCategory($cat);
 				}
 
 				$frm->save();
 				$frm->js(null,$this->js()->univ()->successMessage('Lead associated with categories'))->reload()->execute();	
 				});
-
+			
 			}
+
+			/*
+			*	
+			*	Lead <=> Category association form
+			*	
+			*/
 	}
 
 	function defaultTemplate(){

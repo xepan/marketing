@@ -84,4 +84,12 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function removeAssociateCategory(){
 		$this->ref('xepan\marketing\Lead_Category_Association')->deleteAll();
 	}
+
+	function associateCategory($category){
+		return $this->add('xepan\marketing\Model_Lead_Category_Association')
+						->addCondition('lead_id',$this->id)
+		     			->addCondition('marketing_category_id',$category)
+			 			->tryLoadAny()	
+			 			->save();
+	}
 } 

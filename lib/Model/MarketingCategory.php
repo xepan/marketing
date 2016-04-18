@@ -25,7 +25,8 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		$cat_j->hasMany('xepan\marketing\Lead_Category_Association','marketing_category_id');
 		$cat_j->hasMany('xepan\marketing\Campaign_Category_Association','marketing_category_id');
 
-		$this->addExpression('leads_count')->set($this->refSQL('xepan\marketing\Lead_Category_Association')->count());
+		// $this->addExpression('leads_count')->set($this->refSQL('xepan\marketing\Lead_Category_Association')->count());
+		
 		$this->addCondition('type','MarketingCategory');
 
 		$this->addHook('beforeSave',$this);
@@ -49,6 +50,30 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		
 		if($campaign_catasso_count)
 			throw $this->exception('Cannot Delete,first delete Lead`s Category Association');	
+	}
+
+	function getAssociatedLeads(){
+
+		$associated_leads = $this->ref('xepan\marketing\Lead_Category_Association')
+								->_dsql()->del('fields')->field('lead_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_leads)),false);
+	}
+
+	function getAssociatedCampaigns(){
+
+		$associated_campaigns = $this->ref('xepan\marketing\Campaign_Category_Association')
+								->_dsql()->del('fields')->field('campaign_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_campaigns)),false);
+	}
+
+	function removeAssociatedLeads(){
+		$this->ref('xepan\marketing\Lead_Category_Association')
+								->deleteAll();
+	}
+
+	function removeAssociatedCampaigns(){
+		$this->ref('xepan\marketing\Campaign_Category_Association')
+								->deleteAll();
 	}
 
 }

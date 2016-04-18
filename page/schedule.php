@@ -112,9 +112,7 @@ class page_schedule extends \Page{
 		 	$selected_user = json_decode($form['ass_usr'],true);
 
 			foreach ($selected_categories as $cat) {
-				$model_asso['campaign_id']=$m->id;
-				$model_asso['marketing_category_id']=$cat;
-				$model_asso->saveAndUnload();
+				$m->associateCategory($cat);
 			}
 
 		 	foreach ($selected_user as $usr) {				

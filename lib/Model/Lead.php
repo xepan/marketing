@@ -67,7 +67,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	}
 
 	function checkExistingCategoryAssociation($m){
-		$cat_ass_count = $this->ref('Lead_Category_Association')->count()->getOne();
+		$cat_ass_count = $this->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
 		if($cat_ass_count)
 			throw $this->exception('Cannot Delete,first delete Category Association`s ');	
 	}

@@ -30,7 +30,7 @@ class Model_SocialUser extends \xepan\base\Model_Table{
 	function beforeSave($m){}
 
 	function checkExistingCampaignSocialUserAssociation($m){
-		$campaign_social_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
+		$campaign_social_user_count = $m->ref('xepan/marketing/Campaign_SocialUser_Association')->count()->getOne();
 		if($campaign_social_user_count)
 			throw $this->exception('Cannot Delete,first delete Campaign`s Social Users ');	
 	}

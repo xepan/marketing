@@ -13,8 +13,5 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('client_event_id');
 		$this->addField('day')->type('Number');
 
-		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
-
 	}
 }

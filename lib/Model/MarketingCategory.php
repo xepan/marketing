@@ -37,9 +37,9 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 	function beforeSave($m){}
 
 	function checkExistingLeadCategoryAssociation($m){
-		$lead_count = $m->ref('xepan\marketing\Lead')->count()->getOne();
+		$lead__cat_count = $m->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
 
-		if($lead_count)
+		if($lead__cat_count)
 			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association ');	
 	}
 		

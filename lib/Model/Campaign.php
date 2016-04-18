@@ -36,35 +36,44 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$this->getElement('status')->defaultValue('Draft');
 		
 		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
+		$this->addHook('beforeDelete',[$this,'checkExistingCampaignSocialUserAssociation']);
+		$this->addHook('beforeDelete',[$this,'checkExistingSchedule']);
 	}
 
 
 	function schedule(){
-
 		$this->load($this->id);
 	
-		if($this['campaign_type']=='campaign')
-		$this->app->redirect($this->api->url('xepan/marketing/schedule',['campaign_id'=>$this->id]));
-
-		else
-		$this->app->redirect($this->api->url('xepan/marketing/subscriberschedule',['campaign_id'=>$this->id]));
+		if($this['campaign_type']=='campaign'){
+			$this->app->redirect($this->api->url('xepan/marketing/schedule',['campaign_id'=>$this->id]));
+		}else{
+			$this->app->redirect($this->api->url('xepan/marketing/subscriberschedule',['campaign_id'=>$this->id]));
+		}
 		
 	}
 	
 	function beforeSave($m){}
 
-	function beforeDelete($m){
+	function checkExistingCampaignCategoryAssociation($m){
+		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
 		
-		// $campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
-		// $cam_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
-		
-		// if($campaign_catasso_count or $cam_user_count)
-		// 	throw $this->exception('Cannot Delete,first delete Campaign`s Category Association And Campaign Social User ');	
+		if($campaign_catasso_count)
+			throw $this->exception('Cannot Delete,first delete Campaign`s  Category Assciation`s ');
+	}
 
-		$this->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();
-		$this->ref('xepan\marketing\Campaign_SocialUser_Association')->deleteAll();
-		$this->ref('xepan\marketing\Schedule')->deleteAll();
+	function checkExistingCampaignSocialUserAssociation($m){
+		$cam_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
+		
+		if($cam_user_count)
+			throw $this->exception('Cannot Delete,first delete Campaign`s  Social User`s ');	
+	}
+
+	function checkExistingSchedule($m){
+		$schedule_count = $m->ref('xepan\marketing\Schedule')->count()->getOne();
+
+		if($schedule_count)
+			throw $this->exception('Cannot Delete,first delete  Schedule`s ');
 
 	}
 

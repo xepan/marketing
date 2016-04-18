@@ -13,17 +13,5 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('client_event_id');
 		$this->addField('day')->type('Number');
 
-		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
-
-	}
-
-	function beforeSave($m){}
-
-	function beforeDelete($m){
-		$campaign_count = $m->ref('xepan\marketing\Campaign')->count()->getOne();
-		
-		if($campaign_catasso_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s ');	
 	}
 }

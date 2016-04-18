@@ -27,5 +27,18 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function generateInstaller(){
+		// Clear DB
+        $this->app->epan=$this->app->old_epan;
+        $truncate_models = ['Opportunity','Lead_Category_Association','Lead','Campaign_Category_Association','Schedule','Campaign_SocialUser_Association','SocialUser','campaign','Content','MarketingCategory'];
+        foreach ($truncate_models as $t) {
+            $m=$this->add('xepan\marketing\Model_'.$t);
+            foreach ($m as $mt) {
+                $mt->delete();
+            }
+        }
+        
+        $this->app->epan=$this->app->new_epan;
+
+        // Create default Company Department
 	}
 }

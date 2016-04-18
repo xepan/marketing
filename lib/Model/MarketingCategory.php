@@ -29,17 +29,26 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		$this->addCondition('type','MarketingCategory');
 
 		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',[$this,'checkExistingLeadCategoryAssociation']);
+		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
+
 	}
 
 	function beforeSave($m){}
 
-	function beforeDelete($m){
-		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
-		$lead_count = $m->ref('xepan\marketing\Lead')->count()->getOne();
+	function checkExistingLeadCategoryAssociation($m){
+		$lead__cat_count = $m->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
+
+		if($lead__cat_count)
+			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association ');	
+	}
 		
-		if($campaign_catasso_count or $lead_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association And Leads ');	
+
+	function checkExistingCampaignCategoryAssociation($m){
+		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
+		
+		if($campaign_catasso_count)
+			throw $this->exception('Cannot Delete,first delete Lead`s Category Association');	
 	}
 
 }

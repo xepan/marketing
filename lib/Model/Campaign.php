@@ -69,7 +69,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 			throw $this->exception('Cannot Delete,first delete Campaign`s  Social User`s ');	
 	}
 
-	function checkExistingcheckExistingSchedule($m){
+	function checkExistingSchedule($m){
 		$schedule_count = $m->ref('xepan\marketing\Schedule')->count()->getOne();
 
 		if($schedule_count)

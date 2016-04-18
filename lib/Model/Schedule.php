@@ -17,13 +17,4 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addHook('beforeDelete',$this);
 
 	}
-
-	function beforeSave($m){}
-
-	function beforeDelete($m){
-		$campaign_count = $m->ref('xepan\marketing\Campaign')->count()->getOne();
-		
-		if($campaign_catasso_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s ');	
-	}
 }

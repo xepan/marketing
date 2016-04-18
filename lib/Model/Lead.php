@@ -50,6 +50,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
+		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);
 
 	}
 
@@ -63,6 +64,12 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$opp_count = $this->ref('Opportunity')->count()->getOne();
 		if($opp_count)
 			throw $this->exception('Cannot Delete,first delete Opportunitie`s ');	
+	}
+
+	function checkExistingCategoryAssociation($m){
+		$cat_ass_count = $this->ref('Lead_Category_Association')->count()->getOne();
+		if($cat_ass_count)
+			throw $this->exception('Cannot Delete,first delete Category Association`s ');	
 	}
 
 	function getAssociatedCategories(){

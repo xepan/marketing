@@ -30,7 +30,6 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
-
 	}
 
 	function beforeSave($m){}

@@ -12,7 +12,7 @@ class page_leaddetails extends \xepan\base\Page {
 
 		$action = $this->api->stickyGET('action')?:'view';
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
-		$lead_view = $this->add('xepan\base\View_Contact',null,'contact_view');
+		$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead'],'contact_view');
 		$lead_view->setModel($lead);
 
 
@@ -51,7 +51,11 @@ class page_leaddetails extends \xepan\base\Page {
 
 				$base = $detail->form->layout;
 
-				
+				$base->leadCategoryassociation();
+			}
+
+
+			function leadCategoryassociation(){	
 				$cat_ass_field = $base->addField('hidden','ass_cat')->set(json_encode($lead->getAssociatedCategories()));
 
 				$base->addField('hidden','contact_id')->set($_GET['contact_id']);
@@ -81,14 +85,8 @@ class page_leaddetails extends \xepan\base\Page {
 				$frm->save();
 				$frm->js(null,$this->js()->univ()->successMessage('Lead associated with categories'))->reload()->execute();	
 				});
-			
-		}
 
-			/*
-			*	
-			*	Lead <=> Category association form
-			*	
-			*/
+			}
 	}
 
 	function defaultTemplate(){

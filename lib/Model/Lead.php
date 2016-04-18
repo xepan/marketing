@@ -19,6 +19,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function init(){
 		parent::init();
 		
+		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
+		
 		$lead_j = $this->join('lead.contact_id');
 		$lead_j->addField('source');
 
@@ -43,7 +45,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 						->count();
 		});
 
-		$lead_j->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunity');
+		$lead_j->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$lead_j->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		
 		$this->addCondition('type','Lead');
@@ -60,7 +62,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function beforeSave($m){}
 
 	function checkExistingOpportunities($m){
-		$opp_count = $this->ref('Opportunity')->count()->getOne();
+		$opp_count = $this->ref('Opportunities')->count()->getOne();
 		if($opp_count)
 			throw $this->exception('Cannot Delete,first delete Opportunitie`s ');	
 	}

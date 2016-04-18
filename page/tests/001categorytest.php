@@ -135,7 +135,7 @@ class page_tests_001categorytest extends \xepan\base\Page_Tester {
 
     function prepare_CampaignCount2(){
         $this->proper_responses['Test_CampaignCount2']=[
-            'Category0'=>1, 
+            'Category0'=>2, 
             'Category1'=>Exception, 
             'Category2'=>2, 
             'Category3'=>1, 
@@ -143,13 +143,14 @@ class page_tests_001categorytest extends \xepan\base\Page_Tester {
     }
 
     function test_CampaignCount2(){
+       /*
+            ERROR WHEN ASSOCIATING WITH 0th CATEGORY OTHERWISE WORKING FINE
+       */
                  
        $campaign = $this->add('xepan\marketing\Model_Campaign')
                     ->tryLoadAny();
-       $campaign->associateCategory($this->category[2]->id);       
-       /*
-             !!!!!!!!!!!!!!!ERROR WHEN ASSOCIATING WITH 0th CATEGORY!!!!!!!!!!!!!!!!!!
-       */
+       $campaign->associateCategory($this->category[0]->id);       
+       
 
        $result=[];        
         for ($i=0; $i < 4; $i++) { 

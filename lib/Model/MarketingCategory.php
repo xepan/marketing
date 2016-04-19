@@ -4,12 +4,9 @@ namespace xepan\marketing;
 
 class Model_MarketingCategory extends \xepan\base\Model_Document{
 
-	public $status=[
-
-	];
+	public $status=[];
 	public $actions=[
 		'*'=>[
-			'add',
 			'view',
 			'edit',
 			'delete'
@@ -28,6 +25,8 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		// $this->addExpression('leads_count')->set($this->refSQL('xepan\marketing\Lead_Category_Association')->count());
 		
 		$this->addCondition('type','MarketingCategory');
+		
+		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',[$this,'checkExistingLeadCategoryAssociation']);

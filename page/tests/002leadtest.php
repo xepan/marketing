@@ -10,6 +10,10 @@ class page_tests_002leadtest extends \xepan\base\Page_Tester {
         '-'=>'-'
     ];
 
+    function prepare(){
+        $this->add('xepan\marketing\page_tests_init');
+    }
+    
     function prepare_leadCreation(){
         $this->proper_responses['Test_leadCreation']=[
             'epan_id'=>$this->app->epan->id,

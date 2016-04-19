@@ -15,6 +15,9 @@ class page_tests_004opportunityactiontest extends \xepan\base\Page_Tester {
     ];
 
     function prepare(){
+        
+        $this->add('xepan\marketing\page_tests_init');
+        
         $this->lead = $lead =  $this->add('xepan\marketing\Model_Lead');
         $lead['first_name']="Lead1";
         $lead['last_name']="Lead1";

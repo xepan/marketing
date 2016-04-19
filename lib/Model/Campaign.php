@@ -91,6 +91,14 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_users)),false);
 	}
 
+	function associateCategory($category){
+		return $this->add('xepan\marketing\Model_Campaign_Category_Association')
+						->addCondition('campaign_id',$this->id)
+		     			->addCondition('marketing_category_id',$category)
+			 			->tryLoadAny()	
+			 			->save();
+	}
+
 	function removeAssociateCategory(){
 		$this->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();
 	}

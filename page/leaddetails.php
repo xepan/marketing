@@ -18,13 +18,11 @@ class page_leaddetails extends \xepan\base\Page {
 
 		
 
-		// if($lead->loaded()){
+		$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
+		$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
 
-			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
 			
-		// }
-
-			$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
+		if($lead->loaded()){
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
 			$o->setModel($lead->ref('Opportunities'));
@@ -76,6 +74,7 @@ class page_leaddetails extends \xepan\base\Page {
 			
 			}
 
+		}
 			/*
 			*	
 			*	Lead <=> Category association form

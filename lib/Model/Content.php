@@ -12,9 +12,9 @@ class Model_Content extends \xepan\base\Model_Document{
 	];
 	public $actions=[
 		'Draft'=>['view','edit','delete','submit','test'],
-		'Submitted'=>['view','reject','approve','edit','delete'],
-		'Approved'=>['view','reject','email','edit','delete'],
-		'Rejected'=>['view','edit','delete','submit']
+		'Submitted'=>['view','reject','approve','edit','delete','test'],
+		'Approved'=>['view','reject','email','edit','delete','test'],
+		'Rejected'=>['view','edit','delete','submit','test']
 	];
 
 	function init(){

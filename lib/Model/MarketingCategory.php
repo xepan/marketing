@@ -6,7 +6,7 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 
 	public $status=[];
 	public $actions=[
-		'*'=>[
+		'All'=>[
 			'view',
 			'edit',
 			'delete'

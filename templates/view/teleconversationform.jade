@@ -1,12 +1,15 @@
 .panel.panel-default 
 	.panel-body
 		.row.xepan.push-small
-			h1.text-center {$name} 
+			h1.text-center {$name}
 			hr
-		.row
-			.col-md-4
+		.row 	
+			.col-md-6
 				{$description}	
-			.col-md-4
-				{$title}
-			.col-md-4
-				{$FormButtons}
+			.col-md-6		
+				.row.xepan-push-small
+					{$title}
+				.row.xepan-push-small
+					{$FormButtons}
+				.row.xepan-push-small
+					{$btn-opportunity}

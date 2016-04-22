@@ -20,7 +20,7 @@ class page_telemarketing extends \Page{
 		$view_lead->setModel($model_lead, ['name']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$view_lead->addPaginator(7);
-		$frm = $view_lead->addQuickSearch(['name']);
+		$view_lead->addQuickSearch(['name']);
 
 		/*
 				FORM FOR ADDING CONVERSATION 
@@ -39,8 +39,9 @@ class page_telemarketing extends \Page{
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 
 		$form->setModel($model_telecommunication,['title','description']);
-		$form->addSubmit('Add Conversation');
-		
+		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
+
+		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
 
 									
@@ -55,6 +56,8 @@ class page_telemarketing extends \Page{
 		$view_conversation = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'bottom',['view\teleconversationlister']);
 		$view_conversation->setModel($model_communication,['title','description','created_at','from'],['title','description','created_at','from_id']);
 		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
+		$view_conversation->grid->addPaginator(7);
+		$view_conversation->grid->addQuickSearch(['name']);
 		
 		/*
 				JS FOR RELOAD WITH SPECIFIC ID 
@@ -77,8 +80,10 @@ class page_telemarketing extends \Page{
 
 		if($form->isSubmitted()){
 
-			if(!$lead_id)
-				throw new \Exception("Please Select A Lead First");
+			if(!$lead_id){
+				return $form->js()->univ()->errorMessage('Please Select A Lead First')->execute();
+			}
+
 			$form->model['title'] = $form['title']; 
 			$form->model['description'] = $form['description']; 
 			$form->model->addCondition('from_id', $this->app->employee->id);
@@ -91,22 +96,20 @@ class page_telemarketing extends \Page{
 
 		/*
 				VIRTUAL PAGE TO SEE AND ADD OPPORTUNITIES 
-		*/			
-
-		$vp = $this->add('VirtualPage');
-		$vp->set(function($p){
-			$lead_id = $this->app->stickyGET('lead_id');
-
-			$opportunity_model = $p->add('xepan\marketing\Model_Opportunity')
+		*/	
+ 		$button->add('VirtualPage')
+			->bindEvent('Opportunities','click')
+			->set(function($page){
+				$lead_id = $this->app->stickyGET('lead_id');
+				if(!$lead_id){
+					$page->add('View_Error')->set('Please Select A Lead First');
+					return;	
+				}
+				$opportunity_model = $page->add('xepan\marketing\Model_Opportunity')
 									  ->addCondition('lead_id',$lead_id);	
-			$p->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
-		});
+				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
 
-		$vp_url = $vp->getURL();
-
-		$view_lead->on('click','.btn-opportunity',function($js,$data)use($vp,$vp_url){
-			return $js->univ()->frameURL('ADD OPPORTUNITIES',$this->app->url($vp_url,['lead_id'=>$data['id']]));
-		});
+			});
 	}
 
 	function defaultTemplate(){

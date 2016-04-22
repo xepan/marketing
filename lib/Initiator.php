@@ -23,7 +23,7 @@ class Initiator extends \Controller_Addon {
 			$m->addItem(['Tele Marketing','icon'=>'fa fa-phone'],'xepan_marketing_telemarketing');
 			$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],'xepan_marketing_sms');
 			$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],'xepan_marketing_campaign');
-			$m->addItem(['Report','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_report');
+			$m->addItem(['Reports','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_reports');
 		}
 		
 	}

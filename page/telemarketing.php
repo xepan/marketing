@@ -60,7 +60,7 @@ class page_telemarketing extends \Page{
 				JS FOR RELOAD WITH SPECIFIC ID 
 		*/
 		
-		$view_lead->on('click','.lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
+		$view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
 
 			$js_array = [
 					$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
@@ -70,9 +70,11 @@ class page_telemarketing extends \Page{
 			return $js_array;
 		});
 		
+		
 		/*
 				FORM SUBMISSION 
-		*/							
+		*/
+
 		if($form->isSubmitted()){
 
 			if(!$lead_id)
@@ -86,6 +88,25 @@ class page_telemarketing extends \Page{
 			return $view_conversation->js(true,$form->js()->univ()->successMessage("Added"))->univ()->reload()->execute();
 			  
 		}
+
+		/*
+				VIRTUAL PAGE TO SEE AND ADD OPPORTUNITIES 
+		*/			
+
+		$vp = $this->add('VirtualPage');
+		$vp->set(function($p){
+			$lead_id = $this->app->stickyGET('lead_id');
+
+			$opportunity_model = $p->add('xepan\marketing\Model_Opportunity')
+									  ->addCondition('lead_id',$lead_id);	
+			$p->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
+		});
+
+		$vp_url = $vp->getURL();
+
+		$view_lead->on('click','.btn-opportunity',function($js,$data)use($vp,$vp_url){
+			return $js->univ()->frameURL('ADD OPPORTUNITIES',$this->app->url($vp_url,['lead_id'=>$data['id']]));
+		});
 	}
 
 	function defaultTemplate(){

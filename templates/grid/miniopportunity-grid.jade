@@ -1,7 +1,8 @@
 .xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
     {Pannel}
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block( style="100%") 
+        div.filter-block( style="100%")
+            .pull-right {$grid_buttons} 
             .form-group.pull-right.xepan-filter-form
                 span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
@@ -12,7 +13,9 @@
             thead
                 {cols}{col}
                 th
-                    span Lead
+                    span Title
+                th
+                    span Description      
                 th 
                 {/}{/}
             {/}
@@ -23,12 +26,14 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                      {$avatar}
-                      a#lead(href='' data-id="{$id}")
-                        span.user-subhead
-                            {$name}
+                      {$title}
+                    td
+                        span.small {$description}    
+
                     td(style="width: 15%;")
-                        .btn.btn-sm.btn-primary.pull-right.btn-opportunity(data-id="{$id}") Opportunities
+                        {$edit}
+                        {$delete}
+                    
                     {/}
                 {/}{/}
                 {not_found}

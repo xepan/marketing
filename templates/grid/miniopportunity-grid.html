@@ -1,22 +1,26 @@
 
 <div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
   <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div style="100%" class="filter-block"> 
+    <div style="100%" class="filter-block">
+      <div class="pull-right">{$grid_buttons} </div>
       <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th><span>Lead</span></th>
+        <th><span>Title</span></th>
+        <th><span>Description      </span></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}<a id="lead" href="" data-id="{$id}"><span class="user-subhead">{$name}</span></a></td>
+          <td>{$title}</td>
+          <td><span class="small">{$description}    </span></td>
           <td style="width: 15%;">
-            <div data-id="{$id}" class="btn btn-sm btn-primary pull-right btn-opportunity">Opportunities</div>
+            {$edit}
+            {$delete}
           </td>{/}
         </tr>{/}{/}
         {not_found}

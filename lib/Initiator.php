@@ -14,14 +14,16 @@ class Initiator extends \Controller_Addon {
 
 		if($this->app->is_admin){
 			$m = $this->app->top_menu->addMenu('Marketing');
-			$m->addItem(['Category Management','icon'=>'fa fa-table'],'xepan_marketing_marketingcategory');
-			$m->addItem(['Lead','icon'=>'fa fa-desktop'],'xepan_marketing_lead');
-			$m->addItem(['Opportunity','icon'=>'fa fa-archive'],'xepan_marketing_opportunity');
-			$m->addItem(['Newsletter','icon'=>'fa fa-copy'],'xepan_marketing_newsletter');
-			$m->addItem(['Social','icon'=>'fa fa-cubes'],'xepan_marketing_socialcontent');
-			$m->addItem(['SMS','icon'=>'fa fa-envelope'],'xepan_marketing_sms');
-			$m->addItem(['Campaign','icon'=>'fa fa-sliders'],'xepan_marketing_campaign');
-			$m->addItem(['Report','icon'=>'fa fa-file-text-o'],'xepan_marketing_report');
+			$m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],'xepan_marketing_dashboard');
+			$m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
+			$m->addItem(['Lead','icon'=>'fa fa-users'],'xepan_marketing_lead');
+			$m->addItem(['Opportunity','icon'=>'fa fa-user'],'xepan_marketing_opportunity');
+			$m->addItem(['Newsletter','icon'=>'fa fa-envelope-o'],'xepan_marketing_newsletter');
+			$m->addItem(['Social Marketing','icon'=>'fa fa-globe'],'xepan_marketing_socialcontent');
+			$m->addItem(['Tele Marketing','icon'=>'fa fa-phone'],'xepan_marketing_telemarketing');
+			$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],'xepan_marketing_sms');
+			$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],'xepan_marketing_campaign');
+			$m->addItem(['Report','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_report');
 		}
 		
 	}

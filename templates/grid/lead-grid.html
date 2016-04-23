@@ -18,7 +18,14 @@
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$id}{/}" class="user-link">{name}Name{/}</a><span class="user-subhead">{source}Source{/}</span></td>
-          <td>{marketing_category}Category{/}</td>
+          <td>
+            {$category}
+            {category_lister}
+            {rows}
+            {row}
+            <div class="row">{$marketing_category}</div>{/}{/}
+            {/}
+          </td>
           <td><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">
                
               {$open_count},{$converted_count},{$rejected_count}</span></td>

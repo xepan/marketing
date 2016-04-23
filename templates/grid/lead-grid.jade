@@ -35,7 +35,14 @@
                         {name}Name{/}
                       span.user-subhead {source}Source{/}
                     td
-                      | {marketing_category}Category{/}
+                        {$category}
+                        {category_lister}
+                        {rows}
+                        {row}
+                        .row
+                            {$marketing_category}
+                        {/}{/}
+                        {/}
                     td
                       span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
                         {$open_count},{$converted_count},{$rejected_count}

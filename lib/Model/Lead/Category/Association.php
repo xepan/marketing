@@ -25,5 +25,6 @@ class Model_Lead_Category_Association extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\marketing\Lead','lead_id');
 		$this->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
 
+		// $this->addExpression('name')->set("'hello'");
 	}	
 }

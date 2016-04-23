@@ -25,5 +25,15 @@ class page_lead extends \Page{
 				$m->addCondition('document_id',$f['marketing_category_id']);
 		});
 
+		$crud->grid->addColumn('category');
+		$crud->grid->addMethod('format_marketingcategory',function($grid,$field){				
+				$data = $grid->add('xepan\marketing\Model_Lead_Category_Association')->addCondition('lead_id',$grid->model->id);
+				$l = $grid->add('Lister',null,'category',['grid/lead-grid','category_lister']);
+				$l->setModel($data);
+				
+				$grid->current_row_html[$field] = $l->getHtml();
+		});
+
+		$crud->grid->addFormatter('category','marketingcategory');
 	}
 }

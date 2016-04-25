@@ -1,43 +1,18 @@
 <?php
 
-namespace xMarketingCampaign;
+namespace xepan\marketing;
 
-class Model_GoogleBloggerConfig extends \Model_Table{
-	public $table='xmarketingcampaign_googlebloggerconfig';
-
-	function init(){
-		parent::init();
-
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
-
-		$this->addField('name');
-		$this->addField('userid');
-		$this->addField('userid_returned');
-		$this->addField('blogid');
-		$this->addField('appId')->display(array('grid'=>'shorttext,wrap'));
-		$this->addField('secret');
-		$this->addField('access_token')->system(false)->type('text');
-		$this->addField('access_token_secret')->system(false)->type('text');
-		$this->addField('refresh_token')->system(false)->type('text');
-		$this->addField('is_access_token_valid')->type('boolean')->defaultValue(false)->system(true);
-		$this->addField('is_active')->type('boolean')->defaultValue(true);
-
-		// $this->add('dynamic_model/Controller_AutoCreator');
-	}
-}
-
-class Controller_SocialPosters_GoogleBlogger extends Controller_SocialPosters_Base_Social{
+class SocialPosters_GoogleBlogger extends SocialPosters_Base_Social{
 	public $client=null;
 	public $client_config=null;
 
 	function init(){
 		parent::init();
 
-		require_once('epan-components/xMarketingCampaign/lib/Controller/SocialPosters/Base/http.php');
-		require_once('epan-components/xMarketingCampaign/lib/Controller/SocialPosters/Base/oauth/client/class.php');
+		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/http.php');
+		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/oauth/client/class.php');
 		
-		$this->client_config = $client_config = $this->add('xMarketingCampaign/Model_GoogleBloggerConfig')->tryLoadAny();
+		$this->client_config = $client_config = $this->add('xepan/marketing/SocialPosters_GoogleBlogger_GoogleBloggerConfig')->tryLoadAny();
 		
 		if(!$this->client_config->loaded()) $this->client_config->save();
 
@@ -48,7 +23,7 @@ class Controller_SocialPosters_GoogleBlogger extends Controller_SocialPosters_Ba
 		$client->offline = true;
 		$client->debug_http = 1;
 		$client->server = 'Google';
-		$client->redirect_uri = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xMarketingCampaign_page_socialafterloginhandler&xfrom=GoogleBlogger';
+		$client->redirect_uri = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan/marketing_socialafterloginhandler&xfrom=GoogleBlogger';
 
 		$client->client_id = $this->client_config['appId']; $application_line = __LINE__;
 		$client->client_secret = $this->client_config['secret'];
@@ -193,16 +168,17 @@ class Controller_SocialPosters_GoogleBlogger extends Controller_SocialPosters_Ba
 	}
 
 	function config_page(){
+		$model = $this->add('xepan/marketing/SocialPosters_GoogleBlogger_GoogleBloggerConfig');
 		$c=$this->owner->add('CRUD',array('allow_add'=>false,'allow_del'=>false));
-		$c->setModel('xMarketingCampaign/GoogleBloggerConfig');
+		$c->setModel($model);
 
 		if($c->grid){
 			$f=$c->addFrame('Login URL');
 			if($f){
-				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xMarketingCampaign_page_socialloginmanager&social_login_to=GoogleBlogger')->setAttr('target','_blank')->set('index.php?page=xMarketingCampaign_page_socialloginmanager&social_login_to=GoogleBlogger');
+				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan/marketing_socialloginmanager&social_login_to=GoogleBlogger')->setAttr('target','_blank')->set('index.php?page=xepan/marketing_socialloginmanager&social_login_to=GoogleBlogger');
 			}
 		}
 
-		$c->add('Controller_FormBeautifier');
+		// $c->add('Controller_FormBeautifier');
 	}
 }

@@ -8,19 +8,18 @@ class page_socialconfiguration extends \Page{
 		
 		$tabs = $this->add('Tabs');
 
-		$objects = ['Facebook'];
-		// $objects = scandir($plug_path = getcwd()."../vendor");
+		// $objects = ['Facebook','Linkedin'];
+		$objects = scandir($plug_path = getcwd()."/../vendor/xepan/marketing/lib/SocialPosters");
     	foreach ($objects as $object) {
-    	// 	if ($object != "." && $object != "..") {
-     //    		if (filetype($plug_path.DS.$object) != "dir"){
-     //    			$object = str_replace(".php", "", $object);
-        			$t=$tabs->addTab($object);
-        			// $login_status_view =$t->add('View');
+    		if ($object != "." && $object != "..") {
+        		if (filetype($plug_path.'/'.$object) != "dir"){
+        			$object = str_replace(".php", "", $object);
+                    $t=$tabs->addTab($object);
         			$social = $t->add('xepan/marketing/SocialPosters_'.$object);
         			$social->config_page();
         			// $login_status_view->setHTML($object. ' - '. $social->login_status());
-     //    		}
-    	// 	}
+        		}
+    		}
     	}
 
 	}

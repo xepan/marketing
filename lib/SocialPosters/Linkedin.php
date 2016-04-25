@@ -1,33 +1,29 @@
 <?php
 
-namespace xMarketingCampaign;
+namespace xepan\marketing;
 
 // EXTRA  MODELS DEFINED AT THE BOTTOM OF THIS FILES
 
-class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_Social{
+class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	public $client=null;
 	public $client_config=null;
 
 	function init(){
 		parent::init();
 
-		require_once('epan-components/xMarketingCampaign/lib/Controller/SocialPosters/Base/http.php');
-		require_once('epan-components/xMarketingCampaign/lib/Controller/SocialPosters/Base/oauth/client/class.php');
-		
-		
-		// if($_GET['facebook_logout']){
-		// 	$this->fb->destroySession();
-		// }
+		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/http.php');
+		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/oauth/client/class.php');
+				
 	}
 
 	function setup_client($client_config_id){
-		$this->client_config = $client_config = $this->add('xMarketingCampaign/Model_LinkedinConfig')->load($client_config_id);
+		$this->client_config = $client_config = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig')->load($client_config_id);
 		
 		$this->client = $client = new \oauth_client_class;
 		$client->debug = 1;
 		$client->debug_http = 1;
 		$client->server = 'LinkedIn';
-		$client->redirect_uri = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xMarketingCampaign_page_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$client_config_id;
+		$client->redirect_uri = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$client_config_id;
 
 		$client->client_id = $this->client_config['appId']; $application_line = __LINE__;
 		$client->client_secret = $this->client_config['secret'];
@@ -126,7 +122,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 			// echo "dadsa" .$user_id[1][0];
 			// echo $this->client->access_token;
 			
-			$li_user= $this->add('xMarketingCampaign/Model_SocialUsers');
+			$li_user= $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');
 			$li_user->addCondition('userid_returned',$user_id[1][0]);
 			$li_user->addCondition('config_id',$this->client_config->id);
 			$li_user->tryLoadAny();
@@ -146,23 +142,25 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 
 
 	function config_page(){
+		$model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
+
 		$c=$this->owner->add('CRUD',array('allow_add'=>false,'allow_del'=>false));
-		$c->setModel('xMarketingCampaign/LinkedinConfig');
+		$c->setModel($model);
 		
-		$users_crud = $c->addRef('xMarketingCampaign/SocialUsers',array('label'=>'Users'));
+		$users_crud = $c->addRef('xepan/marketing/Model_SocialPosters_SocialUsers',array('label'=>'Users'));
 
 		if($c->grid and !$users_crud){
 			$f=$c->addFrame('Login URL');
 			if($f){
-				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xMarketingCampaign_page_socialloginmanager&social_login_to=Facebook&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xMarketingCampaign_page_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id);
+				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id);
 			}
 		}
 
-		$c->add('Controller_FormBeautifier');
+		// $c->add('Controller_FormBeautifier');
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, &$groups_posted=array(),$under_campaign_id=0){
-		if(! $user_model instanceof xMarketingCampaign\Model_SocialUsers AND !$user_model->loaded()){
+		if(! $user_model instanceof xepan/marketing\Model_SocialUsers AND !$user_model->loaded()){
 			throw $this->exception('User must be a loaded model of Social User Type','Growl');
 		}
 
@@ -213,7 +211,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 		$success = $client->CallAPI('http://api.linkedin.com/v1/people/~/'.$activity_type.'?format=json','POST', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $new_post);
 		$success = $client->Finalize($success);
 
-		$social_posting_save = $this->add('xMarketingCampaign/Model_SocialPosting');
+		$social_posting_save = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialPosting');
 		$social_posting_save->create($user_model->id, $params->id, $new_post->updateKey, $activity_type, $new_post->updateUrl,"", $under_campaign_id);
 		
 
@@ -275,9 +273,9 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 
   		$groups_posted=array();
 
-  		$config_model = $this->add('xMarketingCampaign/Model_LinkedinConfig');
+  		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
   		foreach ($config_model as $junk) {	  			
-	  		$users=$config_model->ref('xMarketingCampaign/SocialUsers');
+	  		$users=$config_model->ref('xepan/marketing/SocialPosters_Base_SocialUsers');
 	  		$users->addCondition('is_active',true);
 
 	  		foreach ($users as $junk) {
@@ -297,7 +295,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 	function profileURL($user_id_pk,$other_user_id=false){
 
 		if(!$other_user_id){
-			$user = $this->add('xMarketingCampaign/Model_SocialUsers')->tryLoad($user_id_pk);
+			$user = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers')->tryLoad($user_id_pk);
 			if(!$user->loaded()) return false;
 			$other_user_id = $user['userid_returned'];
 			$name=$user['name'];
@@ -317,7 +315,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 
 	function postURL($post_id_returned){
 
-		$post = $this->add('xMarketingCampaign/Model_SocialPosting')->tryLoadBy('postid_returned',$post_id_returned);
+		$post = $this->add('xepan/marketing//Model_SocialPosters_Base_SocialPosting')->tryLoadBy('postid_returned',$post_id_returned);
 		if(!$post->loaded()) return false;
 				
 		$post_id_returned_array = explode("-", $post_id_returned);
@@ -338,7 +336,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 	}
 
 	function updateActivities($posting_model){
-		if(! $posting_model instanceof xMarketingCampaign\Model_SocialPosting and !$posting_model->loaded())
+		if(! $posting_model instanceof xepan/marketing\Model_SocialPosting and !$posting_model->loaded())
 			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
 
 		
@@ -376,7 +374,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 			$posting_model->updateLikesCount($likes_count);
 			if($likes_comments['updateComments']['_total']){
 				foreach ($likes_comments['updateComments']['values'] as $comment) {
-					$activity = $this->add('xMarketingCampaign/Model_Activity');
+					$activity = $this->add('xepan/marketing/Model_Activity');
 					$activity->addCondition('posting_id',$posting_model->id);
 					$activity->addCondition('activityid_returned',$comment['id']);
 					$activity->tryLoadAny();
@@ -414,7 +412,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 			// save all comments
 			if(isset($group_post_details['comments']) and $group_post_details['comments']['_total']){
 				foreach ($group_post_details['comments']['values'] as $comment) {
-					$activity = $this->add('xMarketingCampaign/Model_Activity');
+					$activity = $this->add('xepan/marketing/Model_Activity');
 					$activity->addCondition('posting_id',$posting_model->id);
 					$activity->addCondition('activityid_returned',$comment['id']);
 					$activity->tryLoadAny();
@@ -438,7 +436,7 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 
 	function comment($posting_model,$msg){
 
-		if(! $posting_model instanceof xMarketingCampaign\Model_SocialPosting and !$posting_model->loaded())
+		if(! $posting_model instanceof xepan/marketing\Model_SocialPosting and !$posting_model->loaded())
 			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
 
 		$user_model = $posting_model->ref('user_id');
@@ -477,17 +475,3 @@ class Controller_SocialPosters_Linkedin extends Controller_SocialPosters_Base_So
 		return array('title','url','image','255');
 	}
 }
-
-
-class Model_LinkedinConfig extends Model_SocialConfig {
-	function init(){
-		parent::init();
-		$this->getElement('social_app')->defaultValue('Linkedin');
-		$this->addCondition('social_app','Linkedin');
-
-	}
-}
-
-class Model_LinkedinUsers extends Model_SocialUsers {}
-
-class Model_LinkedinPosting extends Model_SocialPosting {}

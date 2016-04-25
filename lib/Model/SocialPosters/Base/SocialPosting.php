@@ -9,8 +9,8 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->addExpression('social_app')->set(function($m,$q){
-			$config = $m->add('xepan/marketing/SocialPosters_Base_SocialConfig',array('table_alais'=>'tmp'));
-			$user_j = $config->join('xmarketingcampaign_socialusers.config_id');
+			$config = $m->add('xepan/marketing/Model_SocialPosters_Base_SocialConfig',array('table_alais'=>'tmp'));
+			$user_j = $config->join('marketingcampaign_socialusers.config_id');
 			$user_j->addField('user_j_id','id');
 
 			$config->addCondition('user_j_id',$q->getField('user_id'));
@@ -20,8 +20,8 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 		})->caption('At')->sortable(true);
 
 		$this->hasOne('xepan\base\Epan','epan_id');
-		$this->hasOne('xepan/marketing/SocialPosters_Base_SocialUsers','user_id');
-		$this->hasOne('xepan/marketing/SocialPosters_Base_SocialPost','post_id');
+		$this->hasOne('xepan/marketing/Model_SocialPosters_Base_SocialUsers','user_id');
+		$this->hasOne('xepan/marketing/SocialPost','post_id');
 		
 		$this->hasOne('xepan/marketing/Campaign','campaign_id')->sortable(true);
 
@@ -35,7 +35,7 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 		$this->addField('likes')->sortable(true)->defaultValue(0); // Change Caption in subsequent extended social controller, if nesecorry
 		$this->addField('share')->sortable(true)->defaultValue(0); // Change Caption in subsequent extended social controller, if nesecorry
 		$this->addExpression('total_comments')->set(function($m,$q){
-			return $m->refSQL('xepan/marketing/SocialActivity')->count();
+			return $m->refSQL('xepan/marketing/SocialPosters_Base_SocialActivity')->count();
 		})->sortable(true);
 
 		$this->addExpression('unread_comments')->set(function($m,$q){
@@ -63,6 +63,8 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 	}
 
 	function create($user_id, $social_post_id, $postid_returned, $post_type,$group_id=0,$group_name="", $campaign_id=0){
+
+		
 		if($this->loaded()) $this->unload();
 
 		$this['post_type'] = $post_type;
@@ -73,7 +75,7 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 		$this['group_id'] = $group_id;
 		$this['group_name'] = $group_name;
 		$this->save();
-
+		
 		return $this;
 
 	}

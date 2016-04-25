@@ -26,9 +26,7 @@ class page_socialexec extends \xepan\base\Page{
 						$groups_posted=array(),
 						$under_campaign_id=$all_postable_contents['campaign_id']
 					);
-			}	
-			$all_postable_contents['is_posted']=true;
-			$all_postable_contents->saveAndUnload();
+			}
 		}
 
 	}

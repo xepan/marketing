@@ -24,6 +24,8 @@ class Initiator extends \Controller_Addon {
 			$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],'xepan_marketing_sms');
 			$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],'xepan_marketing_campaign');
 			$m->addItem(['Reports','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_reports');
+			$m->addItem(['Social Config','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_socialconfiguration');
+			$m->addItem(['Social Exec','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_socialexec');
 		}
 		
 	}

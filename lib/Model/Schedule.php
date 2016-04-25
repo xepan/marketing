@@ -14,4 +14,24 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('day')->type('Number');
 
 	}
+
+	function campaign(){
+		if(!$this->loaded())
+			throw new \Exception("schedule must loaded");
+			
+		return $this->add('xepan/marketing/Model_Campaign')->load($this['campaign_id']);
+	}
+
+	function campaignSocialUser(){
+		$campaign = $this->campaign();
+		$association = $this->add('xepan/marketing/Model_Campaign_SocialUser_Association')
+				->addCondition('campaign_id',$campaign->id);
+
+		$association->addExpression('configuration')->set(function($m,$q){
+			return $m->refSQL('socialuser_id')->fieldQuery('configuration');
+		});
+
+		return $association;
+	}
+
 }

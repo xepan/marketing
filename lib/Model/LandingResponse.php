@@ -28,5 +28,6 @@ class Model_LandingResponse extends \xepan\base\Model_Table{
 		$this->addField('ip');
 		$this->addField('latitude');
 		$this->addField('longitude');
+		$this->addField('referrersite');
 	}
 }

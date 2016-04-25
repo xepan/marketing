@@ -28,7 +28,7 @@ class Model_SocialPosters_Base_SocialConfig extends \xepan\base\Model_Table{
 	}
 
 	function beforeDelete(){
-		$this->ref('xMarketingCampaign/SocialUsers')->deleteAll();
+		$this->ref('xepan/marketing/SocialPosters_Base_SocialUsers')->deleteAll();
 	}
 
 }

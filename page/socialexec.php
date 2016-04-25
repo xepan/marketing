@@ -7,9 +7,12 @@ class page_socialexec extends \xepan\base\Page{
 		parent::init();
 
 		$all_postable_contents = $this->add('xepan/marketing/Model_SocialPost');
+		$all_postable_contents->addExpression('first_image')->set(function($m,$q){
+			return $m->refSQL('Attachments')->setLimit(1)->fieldQuery('file');
+		});
 		// $all_postable_contents->join('campaing')
 		// $post_users = and take its assciated users in group_concat 2,4,6,8 (user_ids)
-
+		
 		foreach ($all_postable_contents as $junk) {
 
 			$social_users = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');

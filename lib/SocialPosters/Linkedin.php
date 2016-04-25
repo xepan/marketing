@@ -32,7 +32,8 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		/*  API permission scopes
 		 *  Separate scopes with a space, not with +
 		 */
-		$client->scope = 'rw_company_admin w_messages r_basicprofile r_contactinfo r_fullprofile r_network r_emailaddress rw_nus rw_groups';
+		// $client->scope = 'rw_company_admin w_messages r_basicprofile r_contactinfo r_fullprofile r_network r_emailaddress rw_nus rw_groups';
+		$client->scope = "w_share";
 		$client->Initialize();
 	}
 
@@ -82,7 +83,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	}
 
 	function after_login_handler(){
-		$this->setup_client($_GET['for_config_id']);
+		$this->setup_client($_GET['client_config_id']);
 		
 		if(!$this->client){
 			return "Configuration Problem";
@@ -142,16 +143,19 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 
 
 	function config_page(){
-		$model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
+		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
 
-		$c=$this->owner->add('CRUD',array('allow_add'=>false,'allow_del'=>false));
-		$c->setModel($model);
+		$c=$this->owner->add('CRUD',array('allow_add'=>true,'allow_del'=>true));
+		$c->setModel($config_model);
 		
 		$users_crud = $c->addRef('xepan/marketing/Model_SocialPosters_SocialUsers',array('label'=>'Users'));
 
 		if($c->grid and !$users_crud){
 			$f=$c->addFrame('Login URL');
 			if($f){
+				$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
+				$config_model->load($c->id);
+
 				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id);
 			}
 		}
@@ -160,7 +164,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, &$groups_posted=array(),$under_campaign_id=0){
-		if(! $user_model instanceof xepan/marketing\Model_SocialUsers AND !$user_model->loaded()){
+		if(! $user_model instanceof xepan\marketing\Model_SocialPosters_Base_SocialUsers AND !$user_model->loaded()){
 			throw $this->exception('User must be a loaded model of Social User Type','Growl');
 		}
 
@@ -198,16 +202,21 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		$parameters = new \stdClass;
 		$parameters->visibility = new \stdClass;
 		$parameters->visibility->code = 'anyone';
-  		if($params['message_255_chars']) $parameters->comment = $params['message_255_chars'];
+  		if($params['message_255']) $parameters->comment = $params['message_255'];
   		
-		if($params['url']){
+		if($params['url'] or $params['first_image']){
 			$parameters->content = new \stdClass;
 	  		$parameters->content->{'submitted-url'} = $params['url'];
 	  		if($params['post_title']) 
 	  			$parameters->content->title = $params['post_title'];
-	  		if($params['image'])
-	  			$parameters->content->{'submitted-image-url'} = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/' .$params['image'];
+
+	  		if($params['first_image']){
+	  			$parameters->content->{'submitted-image-url'} = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/' .$params['first_image'];
+	  		}
 		}
+		
+		// throw new \Exception("outside", 1);
+		
 		$success = $client->CallAPI('http://api.linkedin.com/v1/people/~/'.$activity_type.'?format=json','POST', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $new_post);
 		$success = $client->Finalize($success);
 

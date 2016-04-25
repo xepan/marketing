@@ -2,12 +2,14 @@
 
 namespace xepan\marketing;
 // Model Post Activity/Comments
-class Model_SocialActivity extends \Model_Table{
+class Model_SocialPosters_Base_SocialActivity extends \xepan\base\Model_Table{
 	public $table = "marketingcampaign_socialpostings_activities";
 
 	function init(){
 		parent::init();
-		$this->hasOne('xepan/marketing/Model_SocialPosting','posting_id');
+
+		$this->hasOne('xepan\base\Epan','epan_id');
+		$this->hasOne('xepan/marketing/SocialPosters_Base_SocialPosting','posting_id');
 
 		$this->addField('activityid_returned');
 		$this->addField('activity_type');

@@ -11,14 +11,16 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 	function init(){
 		parent::init();
 		
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookConfig.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookPosting.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookUsers.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookConfig.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookPosting.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookUsers.php');
 		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/facebook.php');
+
+		
 	}
 
 	function login_status(){
-		$config_model = $this->add('xepan/marketing/Model_FacebookConfig');
+		$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
 		$config_model->tryLoad($_GET['for_config_id']);
 
 		if(!$config_model->loaded()){
@@ -44,9 +46,10 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		if(!$user_id){
 			$login_url = $this->fb->getLoginUrl(
 										array(
-											'scope'=>'publish_stream,status_update,user_groups',
-											'redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan/marketing_page_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id
+											'scope'=>'public_profile,user_friends,email,user_about_me,user_education_history,user_events,user_hometown,user_likes,user_location,user_managed_groups,user_photos,user_posts,user_tagged_places,user_videos,read_custom_friendlists,read_insights,read_audience_network_insights,read_page_mailboxes,manage_pages,publish_pages,publish_actions,rsvp_event,pages_show_list,pages_manage_cta,pages_manage_instant_articles,ads_read,ads_management,pages_messaging,pages_messaging_phone_number',
+											'redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id
 											));
+			
 		  	echo '<a class="btn btn-danger btn-xs" href="'.$login_url.'">Login</a>';
 		}else{
 			if($this->after_login_handler())
@@ -61,9 +64,8 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	}
 
-	function after_login_handler(){
-		
-		$config_model = $this->add('xepan/marketing/Model_FacebookConfig');
+	function after_login_handler(){		
+		$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
 		$config_model->tryLoad($_GET['for_config_id']);
 
 		if(!$config_model->loaded()){
@@ -71,6 +73,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			return false;
 		}
 
+		
 		$config = array(
 		      'appId' => $config_model['appId'],
 		      'secret' => $config_model['secret'],
@@ -87,7 +90,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		$user_id = $this->fb->getUser();
 		
 		if(!$user_id){
-			$login_url = $this->fb->getLoginUrl(array('scope'=>'publish_actions,status_update,publish_stream,user_groups','redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan/marketing_page_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id));
+			$login_url = $this->fb->getLoginUrl(array('scope'=>'publish_actions,status_update,publish_stream,user_groups','redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan/marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id));
 			echo "<a href='$login_url'>Login URL $login_url</a>";
 			return false;
 
@@ -97,11 +100,12 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		$this->fb->setExtendedAccessToken();
 		$new_token = $this->fb->getAccessToken();
 
-		$fb_user = $this->add('xepan/marketing/Model_SocialUsers');
+		$fb_user = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookUsers');
 		$fb_user->addCondition('userid_returned',$user_id);
 		$fb_user->addCondition('config_id',$config_model->id);
 		$fb_user->tryLoadAny();
 
+		
 		$user_profile = $this->fb->api('/me','GET',array('access_token'=>$new_token));
         $fb_user['name']= $user_profile['name'];
         
@@ -116,16 +120,19 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	function config_page(){
 		
-		$c=$this->owner->add('CRUD');
-		$c->setModel('xepan/marketing/FacebookConfig');
 
-		$users_crud = $c->addRef('xepan/marketing/SocialUsers',array('label'=>'Users'));
+		$c=$this->owner->add('CRUD');
+		$model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
+		$c->setModel($model);
+
+		
+		$users_crud = $c->addRef('xepan/marketing/SocialPosters_Base_SocialUsers',array('label'=>'Users'));
 
 		if($c->grid and !$users_crud){
 			$f = $c->addFrame('Login URL');
 
 			if($f){
-				$config_model = $this->add('xepan/marketing/Model_FacebookConfig');
+				$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
 				$config_model->load($c->id);
 				$config = array(
 			      'appId' => $config_model['appId'],
@@ -143,14 +150,14 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, &$groups_posted=array(),$under_campaign_id=0){
-		if(! $user_model instanceof xepan/marketing\Model_SocialUsers AND !$user_model->loaded()){
+		if(! $user_model instanceof xepan\marketing\Model_SocialPosters_Base_SocialUsers AND !$user_model->loaded()){
 			throw $this->exception('User must be a loaded model of Social User Type','Growl');
 		}
 
 		$post_content=array();
 	  		
   		$api='feed';
-  		if($params['post_title']) $post_content['title'] = $params['post_title'];
+  		if($params['title']) $post_content['title'] = $params['title'];
   		if($params['url']) $post_content['link'] = $params['url'];
   		if($params['image']){
   			
@@ -159,7 +166,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
   			$post_content['ImageSource'] = '@'.realpath($params['image']);
   		} 
 
-  		if($params['message_255_chars']) $post_content['message'] = $params['message_255_chars'];
+  		if($params['message_255']) $post_content['message'] = $params['message_255'];
   		$post_content['access_token'] = $user_model['access_token'];
 
 
@@ -172,13 +179,15 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 				      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
 				  );
 
+  		
   		$this->fb = $facebook = new \Facebook($config);
+  		// $this->fb = $facebook = $this->add('xepan\marketing\SocialPosters_Facebook_facebook',$config);
 		$this->fb->setFileUploadSupport(true);
 
 		$ret_obj = $this->fb->api('/'. $user_model['userid_returned'] .'/'.$api, 'POST',
 			  								$post_content
 		                                 );
-		$social_posting_save = $this->add('xepan/marketing/Model_SocialPosting');
+		$social_posting_save = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialPosting');
 		$social_posting_save->create($user_model->id, $params->id, $ret_obj['id'], 'Status Update', 0,"", $under_campaign_id);
 
 		if($post_in_groups){
@@ -212,10 +221,10 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	  		$groups_posted=array();
 	  		
-	  		$config_model = $this->add('xepan/marketing/Model_FacebookConfig');
+	  		$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
 	  		foreach ($config_model as $junk) {
 	  			
-		  		$users=$config_model->ref('xepan/marketing/SocialUsers');
+		  		$users=$config_model->ref('xepan/marketing/SocialPosters_Base_SocialUsers');
 		  		$users->addCondition('is_active',true);
 
 		  		foreach ($users as $junk) {
@@ -243,7 +252,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	function profileURL($user_id_pk, $other_user_id=false){
 		if(!$other_user_id){
-			$user = $this->add('xepan/marketing/Model_SocialUsers')->tryLoad($user_id_pk);
+			$user = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers')->tryLoad($user_id_pk);
 			if(!$user->loaded()) return false;
 			$other_user_id = $user['userid_returned'];
 			$name=$user['name'];
@@ -258,7 +267,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 	}
 
 	function postURL($post_id_returned){
-		$post = $this->add('xepan/marketing/Model_SocialPosting')->tryLoadBy('postid_returned',$post_id_returned);
+		$post = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialPosting')->tryLoadBy('postid_returned',$post_id_returned);
 		if(!$post->loaded()) return false;
 		
 		$user= $post->ref('user_id');
@@ -326,7 +335,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		                                 );
 
 		foreach ($comments['data'] as $comment) {
-			$activity = $this->add('xepan/marketing/Model_Activity');
+			$activity = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialActivity');
 			$activity->addCondition('posting_id',$posting_model->id);
 			$activity->addCondition('activityid_returned',$comment['id']);
 			$activity->tryLoadAny();

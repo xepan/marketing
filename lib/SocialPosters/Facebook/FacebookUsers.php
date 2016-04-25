@@ -1,4 +1,5 @@
 <?php
 namespace xepan\marketing;
 
-class Model_FacebookUsers extends Model_SocialUsers {}
+class SocialPosters_Facebook_FacebookUsers extends \xepan\marketing\Model_SocialPosters_Base_SocialUsers {
+}

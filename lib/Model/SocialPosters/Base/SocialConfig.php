@@ -2,7 +2,8 @@
 
 namespace xepan\marketing;
 
-class Model_SocialConfig extends \Model_Table{
+class Model_SocialPosters_Base_SocialConfig extends \xepan\base\Model_Table{
+	
 	public $table='marketingcampaign_socialconfig';
 
 	function init(){
@@ -19,7 +20,7 @@ class Model_SocialConfig extends \Model_Table{
 		$this->addField('post_in_groups')->type('boolean')->defaultValue(true);
 		$this->addField('filter_repeated_posts')->type("boolean")->defaultValue(true);
 
-		$this->hasMany('xepan/marketing/SocialUsers','config_id');
+		$this->hasMany('xepan/marketing/SocialPosters_Base_SocialUsers','config_id');
 
 		$this->addHook('beforeDelete',$this);
 

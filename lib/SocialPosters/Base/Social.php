@@ -7,10 +7,10 @@ class SocialPosters_Base_Social extends \AbstractController{
 	function init(){
 		parent::init();
 
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialActivity.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialConfig.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialPost.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialUsers.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialActivity.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialConfig.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialPost.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/SocialUsers.php');
 
 	}
 

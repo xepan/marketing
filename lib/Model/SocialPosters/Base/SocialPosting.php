@@ -2,14 +2,14 @@
 
 namespace xepan\marketing;
 
-class Model_SocialPosting extends \Model_Table{
+class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 	public $table="marketingcampaign_socialpostings";
 
 	function init(){
 		parent::init();
 
 		$this->addExpression('social_app')->set(function($m,$q){
-			$config = $m->add('xepan/marketing/Model_SocialConfig',array('table_alais'=>'tmp'));
+			$config = $m->add('xepan/marketing/SocialPosters_Base_SocialConfig',array('table_alais'=>'tmp'));
 			$user_j = $config->join('xmarketingcampaign_socialusers.config_id');
 			$user_j->addField('user_j_id','id');
 
@@ -19,9 +19,9 @@ class Model_SocialPosting extends \Model_Table{
 
 		})->caption('At')->sortable(true);
 
-
-		$this->hasOne('xepan/marketing/Model_SocialUsers','user_id');
-		$this->hasOne('xepan/marketing/SocialPost','post_id');
+		$this->hasOne('xepan\base\Epan','epan_id');
+		$this->hasOne('xepan/marketing/SocialPosters_Base_SocialUsers','user_id');
+		$this->hasOne('xepan/marketing/SocialPosters_Base_SocialPost','post_id');
 		
 		$this->hasOne('xepan/marketing/Campaign','campaign_id')->sortable(true);
 
@@ -39,13 +39,13 @@ class Model_SocialPosting extends \Model_Table{
 		})->sortable(true);
 
 		$this->addExpression('unread_comments')->set(function($m,$q){
-			return $m->refSQL('xepan/marketing/SocialActivity')->addCondition('is_read',false)->count();
+			return $m->refSQL('xepan/marketing/SocialPosters_Base_SocialActivity')->addCondition('is_read',false)->count();
 		})->sortable(true);
 
 		$this->addField('is_monitoring')->type('boolean')->defaultValue(true)->sortable(true);
 		$this->addField('force_monitor')->type('boolean')->defaultValue(false)->caption('Keep Monitoring')->sortable(true);
 
-		$this->hasMany('xepan/marketing/SocialActivity','posting_id');
+		$this->hasMany('xepan/marketing/SocialPosters_Base_SocialActivity','posting_id');
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}

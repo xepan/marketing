@@ -2,12 +2,15 @@
 
 namespace xepan\marketing;
 
-class Model_SocialUsers extends \Model_Table{
+class Model_SocialPosters_Base_SocialUsers extends \xepan\base\Model_Table{
 	public $table='marketingcampaign_socialusers';
 
 	function init(){
 		parent::init();
-		$this->hasOne('xepan\marketing/SocialConfig','config_id');
+
+		$this->hasOne('xepan\base\Epan','epan_id');
+
+		$this->hasOne('xepan\marketing\SocialPosters_Base_SocialConfig','config_id');
 		
 		$this->addField('name');
 		$this->addField('userid'); // Used for profile in case different then api returned userid like facebook

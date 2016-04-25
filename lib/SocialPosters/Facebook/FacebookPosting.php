@@ -2,4 +2,4 @@
 namespace xepan\marketing;
 
 
-class Model_FacebookPosting extends Model_SocialPosting {}
+class SocialPosters_Facebook_FacebookPosting extends \xepan\marketing\Model_SocialPosters_Base_SocialPost {}

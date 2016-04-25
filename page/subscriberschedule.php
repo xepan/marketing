@@ -50,11 +50,12 @@ class page_subscriberschedule extends \Page{
 			 social user and campaign association
 		*/
 
-		 $user_assoc_grid = $this->add('xepan/base/Grid',null,'SocialUsers',['view\schedulesocialuser']);
-		 $model_assoc_user = $this->add('xepan/marketing/Model_SocialUser');
+			 //TODO with social user 
+		 // $user_assoc_grid = $this->add('xepan/base/Grid',null,'SocialUsers',['view\schedulesocialuser']);
+		 // $model_assoc_user = $this->add('xepan/marketing/Model_SocialUser');
 
-		 $user_assoc_grid->setModel($model_assoc_user);
-		 $user_assoc_grid->addSelectable($usr_ass_field);
+		 // $user_assoc_grid->setModel($model_assoc_user);
+		 // $user_assoc_grid->addSelectable($usr_ass_field);
 
 		/**
 			 Common form submitted 

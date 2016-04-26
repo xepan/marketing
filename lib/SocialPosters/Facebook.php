@@ -162,8 +162,9 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
   		// throw new \Exception($this->api->url()->absolute()->getUrl());
   		if($params['first_image']){
-  			if(!$params['url']) $api='photos';
-  			$post_content['ImageSource'] = '@'.realpath($params['first_image']);
+  			// if(!$params['url']) $api='photos';
+  			// $post_content['ImageSource'] = '@'.realpath($params['first_image']);
+  			$post_content['source'] = 'http://'.$_SERVER['HTTP_HOST'].$params['first_image'];
   		} 
 
   		if($params['message_255']) $post_content['message'] = $params['message_255'];
@@ -178,7 +179,8 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 				      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
 				  );
 
-  		
+  		// var_dump($post_content);
+  		// exit;
   		$this->fb = $facebook = new \Facebook($config);
   		// $this->fb = $facebook = $this->add('xepan\marketing\SocialPosters_Facebook_facebook',$config);
 		$this->fb->setFileUploadSupport(true);

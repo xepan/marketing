@@ -159,16 +159,15 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
   		$api='feed';
   		if($params['title']) $post_content['title'] = $params['title'];
   		if($params['url']) $post_content['link'] = $params['url'];
-  		if($params['image']){
-  			
-  			if(!$params['url']) $api='photos';
 
-  			$post_content['ImageSource'] = '@'.realpath($params['image']);
+  		// throw new \Exception($this->api->url()->absolute()->getUrl());
+  		if($params['first_image']){
+  			if(!$params['url']) $api='photos';
+  			$post_content['ImageSource'] = '@'.realpath($params['first_image']);
   		} 
 
   		if($params['message_255']) $post_content['message'] = $params['message_255'];
   		$post_content['access_token'] = $user_model['access_token'];
-
 
   		$config_model = $user_model->ref('config_id');
 

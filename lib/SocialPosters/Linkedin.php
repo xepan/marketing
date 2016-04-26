@@ -204,22 +204,19 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		$parameters->visibility->code = 'anyone';
   		if($params['message_255']) $parameters->comment = $params['message_255'];
   		
-		if($params['url'] or $params['first_image']){
+		if($params['url']){
 			$parameters->content = new \stdClass;
 	  		$parameters->content->{'submitted-url'} = $params['url'];
 	  		if($params['post_title']) 
 	  			$parameters->content->title = $params['post_title'];
 
 	  		if($params['first_image']){
-	  			$parameters->content->{'submitted-image-url'} = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/' .$params['first_image'];
+	  			$parameters->content->{'submitted-image-url'} = 'http://'.$_SERVER['HTTP_HOST'].'/' .$params['first_image'];
 	  		}
 		}
-		
-		// throw new \Exception("outside", 1);
-		
+		// throw new \Exception("outside", 1);		
 		$success = $client->CallAPI('http://api.linkedin.com/v1/people/~/'.$activity_type.'?format=json','POST', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $new_post);
 		$success = $client->Finalize($success);
-
 		$social_posting_save = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialPosting');
 		$social_posting_save->create($user_model->id, $params->id, $new_post->updateKey, $activity_type, $new_post->updateUrl,"", $under_campaign_id);
 		

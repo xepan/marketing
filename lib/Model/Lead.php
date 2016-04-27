@@ -23,6 +23,9 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		
 		$lead_j = $this->join('lead.contact_id');
 		$lead_j->addField('source');
+		// $lead_count=$lead_j->addExpression('count_leads')->set(function($m){
+		// 	return $m->refSQL('xepan\marketing\Model_Opportunity')->count();
+		// });
 
 		$this->addExpression('open_count')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_Opportunity',['table_alias'=>'open_count'])
@@ -92,4 +95,5 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			 			->tryLoadAny()	
 			 			->save();
 	}
+
 } 

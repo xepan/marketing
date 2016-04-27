@@ -14,6 +14,7 @@ class page_leaddetails extends \xepan\base\Page {
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 		$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead'],'contact_view');
 		$lead_view->setModel($lead);
+		$lead_view->count()->getOne();
 
 
 		

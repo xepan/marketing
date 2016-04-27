@@ -149,7 +149,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	}
 
-	function postSingle($user_model,$params,$post_in_groups=true, &$groups_posted=array(),$under_campaign_id=0){
+	function postSingle($user_model,$params,$post_in_groups=true, $groups_posted=array(),$under_campaign_id=0){
 		if(! $user_model instanceof xepan\marketing\Model_SocialPosters_Base_SocialUsers AND !$user_model->loaded()){
 			throw $this->exception('User must be a loaded model of Social User Type','Growl');
 		}
@@ -163,7 +163,9 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
   		// throw new \Exception($this->api->url()->absolute()->getUrl());
   		if($params['first_image']){
   			if(!$params['url']) $api='photos';
-  			$post_content['ImageSource'] = '@'.realpath($params['first_image']);
+  			$img = str_replace($this->app->pathfinder->base_location->base_url, "", $params['first_image']);
+  			die($img);
+  			$post_content['attached_files'] = '@'.$img;
   		} 
 
   		if($params['message_255']) $post_content['message'] = $params['message_255'];

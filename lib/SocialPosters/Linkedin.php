@@ -163,7 +163,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		// $c->add('Controller_FormBeautifier');
 	}
 
-	function postSingle($user_model,$params,$post_in_groups=true, &$groups_posted=array(),$under_campaign_id=0){
+	function postSingle($user_model,$params,$post_in_groups=true, $groups_posted=array(),$under_campaign_id=0){
 		if(! $user_model instanceof xepan\marketing\Model_SocialPosters_Base_SocialUsers AND !$user_model->loaded()){
 			throw $this->exception('User must be a loaded model of Social User Type','Growl');
 		}

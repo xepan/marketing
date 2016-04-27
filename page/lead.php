@@ -18,12 +18,16 @@ class page_lead extends \Page{
 				
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
-		$status->js('change',$frm->js()->submit());
 
-		$frm->addHook('appyFilter',function($f,$m){
-			if($frm['marketing_category_id'])
-				$m->addCondition('document_id',$f['marketing_category_id']);
+		$frm->addHook('applyFilter',function($f,$m){
+			if($f['marketing_category_id']){
+				$cat_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
+				$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
+				$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
+			}
 		});
+		
+		$status->js('change',$frm->js()->submit());
 
 		$crud->grid->addColumn('category');
 		$crud->grid->addMethod('format_marketingcategory',function($grid,$field){				

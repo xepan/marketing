@@ -5,9 +5,7 @@ namespace xepan\marketing;
 class Initiator extends \Controller_Addon {
 	public $addon_name = 'xepan_marketing';
 
-	function init(){
-		parent::init();
-		
+	function setup_admin(){
 		$this->routePages('xepan_marketing');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 		->setBaseURL('../vendor/xepan/marketing/');
@@ -26,6 +24,9 @@ class Initiator extends \Controller_Addon {
 			$m->addItem(['Reports','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_reports');
 			$m->addItem(['Social Config','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_socialconfiguration');
 			$m->addItem(['Social Exec','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_socialexec');
+		}
+
+		function setup_frontend(){
 		}
 		
 	}

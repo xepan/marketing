@@ -14,10 +14,6 @@ class page_leaddetails extends \xepan\base\Page {
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 		$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead'],'contact_view');
 		$lead_view->setModel($lead);
-		$lead_view->count()->getOne();
-
-
-		
 
 		$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
 		$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);

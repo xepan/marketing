@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Model_MassMailing extends \xepan\base\Model_Epan_EmailSetting{
+class Model_MassMailing extends \xepan\communication\Model_Communication_EmailSetting{
 	function init(){
 		parent::init();
 

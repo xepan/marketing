@@ -97,7 +97,7 @@ class page_test extends \Page {
 	// 		Sending newsletter
 	// 	***************************************************************************/
 	// 	$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
-	// 	$email_settings = $this->add('xepan\base\Model_Epan_EmailSetting')->tryLoadAny();
+	// 	$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
 	// 	$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
 	// 	$model = $this->add('xepan\marketing\Model_MassMailing');/*Mass Email Active*/
 		

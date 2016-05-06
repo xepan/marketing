@@ -51,6 +51,19 @@ class Initiator extends \Controller_Addon {
         
         $this->app->epan=$this->app->new_epan;
 
+        $mar_cat=$this->add('xepan\marketing\Model_MarketingCategory');
+        $mar_cat['name']="default";
+        $mar_cat->save();
+
+        $news=$this->add('xepan\marketing\Model_Newsletter');
+        $news['marketing_category_id']=$mar_cat->id;
+        $news['message_160']="No Content";
+        $news['message_255']="No Content";
+        $news['message_3000']="No Content";
+        $news['message_blog']="No Content";
+        $news['url']="xavoc.com";
+        $news['title']="Empty";
+        $news->save();
         // Create default Company Department
 	}
 }

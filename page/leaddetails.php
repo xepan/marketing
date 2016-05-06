@@ -16,7 +16,7 @@ class page_leaddetails extends \xepan\base\Page {
 		$lead_view->setModel($lead);
 
 		$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
-		$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source','marketing_category_id','communication','opportunities']);
+		$detail->setModel($lead,['source','marketing_category','communication','opportunities'],['source']);
 
 			
 		if($lead->loaded()){

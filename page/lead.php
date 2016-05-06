@@ -39,5 +39,6 @@ class page_lead extends \Page{
 		});
 
 		$crud->grid->addFormatter('category','marketingcategory');
+		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 	}
 }

@@ -8,6 +8,9 @@ class page_lead extends \Page{
 		parent::init();
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
+		if($status = $this->app->stickyGET('status'))
+			$lead->addCondition('status',$status);
+		$lead->add('xepan\hr\Controller_SideBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
 		$crud->setModel($lead);

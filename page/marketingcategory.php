@@ -13,7 +13,7 @@ class page_marketingcategory extends \Page{
 
 		$crud->setModel($m);
 	    $crud->grid->addQuickSearch(['name']);
-	    $crud->grid->addPaginator(10);
+	    $crud->grid->addPaginator(50);
 	}
 
 	function defaultTemplate(){

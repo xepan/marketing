@@ -11,7 +11,7 @@ class page_lead extends \Page{
 
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
 		$crud->setModel($lead);
-		$crud->grid->addPaginator(10);
+		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_Avatar');
 		
 		$frm=$crud->grid->addQuickSearch(['name']);

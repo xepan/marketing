@@ -12,10 +12,13 @@
             {header}
             thead
                 {cols}{col}
-                th
+                th(id="{$name_sortid}")
                     span Category
-                th
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
+                th(id="{$leads_count_sortid}")
                     span Leads Count 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$leads_count_sort}
+
                 th
                     span Communication       
                 th 

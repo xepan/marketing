@@ -12,8 +12,9 @@
             {header}
             thead
                 {cols}{col}
-                th
+                th(id="{$title_sortid}")
                     span Title
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$title_sort}
                 th
                     span Communication    
                 th

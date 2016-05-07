@@ -17,7 +17,7 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 		parent::init();
 		
 		$cat_j = $this->join('marketingcategory.document_id');
-		$cat_j->addField('name');
+		$cat_j->addField('name')->sortable(true);
 		
 		$cat_j->hasMany('xepan\marketing\Lead_Category_Association','marketing_category_id');
 		$cat_j->hasMany('xepan\marketing\Campaign_Category_Association','marketing_category_id');
@@ -30,7 +30,7 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 
 		$this->addExpression('leads_count')->set(function($m){
 			return $m->refSQL('xepan\marketing\Lead_Category_Association')->count();
-		});
+		})->sortable(true);
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',[$this,'checkExistingLeadCategoryAssociation']);

@@ -8,7 +8,10 @@ class page_opportunity extends \Page{
 		parent::init(); 
  
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
-		
+		if($status = $this->app->stickyGET('status'))
+			$opportunity->addCondition('status',$status);
+		$opportunity->add('xepan\hr\Controller_SideBarStatusFilter');
+
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
 		$crud->setModel($opportunity);
 		$crud->grid->addPaginator(10);		

@@ -3,12 +3,6 @@
 namespace xepan\marketing;
 
 class Model_Newsletter extends \xepan\marketing\Model_Content{
-	public $status=[
-		'Draft',
-		'Submitted',
-		'Approved',
-		'Rejected'
-	];
 
 	function init(){
 		parent::init();

@@ -4,17 +4,11 @@ namespace xepan\marketing;
 
 class Model_Lead extends \xepan\base\Model_Contact{
 
-	public $status=[];
-	public $actions=[
-		'*'=>[
-			'add',
-			'view',
-			'edit',
-			'delete'
-		]
-	];
-
-	public $acl=false;
+	public $status = ['Active','InActive'];
+	public $actions = [
+					'Active'=>['view','edit','delete','deactivate','communication'],
+					'InActive'=>['view','edit','delete','activate','communication']
+					];
 
 	function init(){
 		parent::init();
@@ -59,9 +53,28 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	}
 
+	function activate(){
+		$this['status']='Active';
+		$this->app->employee
+            ->addActivity("InActive Lead", $this->id/* Related Document ID*/, $this['contact_id'] /*Related Contact ID*/)
+            ->notifyWhoCan('activate','InActive');
+		$this->save();
+	}
+
+	//deactivate Lead
+	function deactivate(){
+		$this['status']='InActive';
+		$this->app->employee
+            ->addActivity("Active Lead", $this->id/* Related Document ID*/, $this['contact_id'] /*Related Contact ID*/)
+            ->notifyWhoCan('deactivate','Active');
+		$this->save();
+	}
+
 	function rule_abcd($a){
 
 	}
+
+	//activate Lead
 
 	function beforeSave($m){}
 

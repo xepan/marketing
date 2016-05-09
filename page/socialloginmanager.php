@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 
-class page_socialloginmanager extends \Page{
+class page_socialloginmanager extends \xepan\base\Page{
 	
 	function init(){
 		parent::init();

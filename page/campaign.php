@@ -1,6 +1,6 @@
 <?php
 namespace xepan\marketing;
-class page_campaign extends \Page{
+class page_campaign extends \xepan\base\Page{
 	public $title="Campaign";
 	function init(){
 		parent::init();	

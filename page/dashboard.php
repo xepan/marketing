@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class page_dashboard extends \Page{
+class page_dashboard extends \xepan\base\Page{
 	public $title = "Dashboard";
 	function init(){
 		parent::init();

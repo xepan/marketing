@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class page_telemarketing extends \Page{
+class page_telemarketing extends \xepan\base\Page{
 	public $title = "Tele Marketing";
 	function init(){
 		parent::init();

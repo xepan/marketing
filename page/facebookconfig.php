@@ -1,6 +1,6 @@
 <?php
 namespace xepan\marketing;
-class page_facebookconfig extends \Page{
+class page_facebookconfig extends \xepan\base\Page{
 	public $title="Social Post";
 	function init(){
 		parent::init();

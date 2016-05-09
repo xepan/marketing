@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 
-class page_opportunity extends \Page{
+class page_opportunity extends \xepan\base\Page{
 	public $title ="Opportunity";
 
 	function init(){

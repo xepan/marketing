@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class page_newsletterpreview extends \Page{
+class page_newsletterpreview extends \xepan\base\Page{
 	function init(){
 		parent::init();
 

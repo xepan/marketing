@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class page_subscriberschedule extends \Page{
+class page_subscriberschedule extends \xepan\base\Page{
 	public $title = 'Schedule';
 
 	function init(){

@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 
-class page_marketingcategory extends \Page{
+class page_marketingcategory extends \xepan\base\Page{
 
 	public $title = "Marketing Category";
 	function init(){

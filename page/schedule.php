@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 
-class page_schedule extends \Page{
+class page_schedule extends \xepan\base\Page{
 	
 	public $title="Schedule";
 	

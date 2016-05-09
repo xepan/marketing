@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 	
-class page_lead extends \Page{
+class page_lead extends \xepan\base\Page{
 	public $title = "Lead";
 	function init(){
 		parent::init();

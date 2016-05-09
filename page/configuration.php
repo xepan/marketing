@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Page_configuration extends \Page
+class Page_configuration extends \xepan\base\Page
 {
 	
 	function init()

@@ -1,7 +1,7 @@
 <?php
 namespace xepan\marketing;
 
-class page_socialconfiguration extends \Page{
+class page_socialconfiguration extends \xepan\base\Page{
 	public $title="Social";
 	function init(){
 		parent::init();

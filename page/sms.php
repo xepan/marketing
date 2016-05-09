@@ -1,6 +1,6 @@
 <?php
 namespace xepan\marketing;
-class page_sms extends \Page{
+class page_sms extends \xepan\base\Page{
 	public $title="SMS";
 	function init(){
 		parent::init();

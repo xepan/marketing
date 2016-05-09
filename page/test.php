@@ -11,7 +11,7 @@
 
 namespace xepan\marketing;
 
-class page_test extends \Page {
+class page_test extends \xepan\base\Page {
 	public $title='Cron to send NewsLetters';
 
 	function init(){

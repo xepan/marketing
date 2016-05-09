@@ -110,16 +110,16 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function submit(){
 		$this['status']='Submitted';
         $this->app->employee
-            ->addActivity("Submitted Campaign", $this->id)
-            ->notifyWhoCan('approve,redesign,onhold','Submitted');
+            ->addActivity("Submitted Campaign", $this->id,null)
+            ->notifyWhoCan('approve,redesign','Submitted',$this);
         $this->saveAndUnload();    
 	}
 
 	function redesign(){
 		$this['status']='Redesign';
         $this->app->employee
-            ->addActivity("Rejected Campaign", $this->id)
-            ->notifyWhoCan('submit,','Redesign');
+            ->addActivity("Rejected Campaign", $this->id,null)
+            ->notifyWhoCan('submit,schedule','Redesign',$this);
         $this->saveAndUnload();     
 	}
 
@@ -127,8 +127,8 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function onhold(){
 		$this['status']='Onhold';
         $this->app->employee
-            ->addActivity("Put Campaign onhold", $this->id)
-            ->notifyWhoCan('redesign','Onhold');
+            ->addActivity("Put Campaign onhold", $this->id,null)
+            ->notifyWhoCan('redesign','Onhold',$this);
 		$this->saveAndUnload(); 	
 		
 	}
@@ -136,8 +136,8 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function approve(){
 		$this['status']='Approved';
         $this->app->employee
-            ->addActivity("Approved Campaign", $this->id)
-            ->notifyWhoCan('?????','Approved');
+            ->addActivity("Approved Campaign", $this->id,null)
+            ->notifyWhoCan('redesign,onhold','Approved',$this);
 		$this->saveAndUnload(); 
 	}
 

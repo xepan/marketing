@@ -17,7 +17,7 @@ class Model_Sms extends \xepan\marketing\Model_Content{
 		$this['status']='Submitted';
         $this->app->employee
             ->addActivity("Submitted Sms", $this->id)
-            ->notifyWhoCan('approve,reject','Submitted');
+            ->notifyWhoCan('approve,reject,test','Submitted');
         $this->saveAndUnload();    
 	}
 
@@ -25,7 +25,7 @@ class Model_Sms extends \xepan\marketing\Model_Content{
 		$this['status']='Rejected';
         $this->app->employee
             ->addActivity("Rejected Sms", $this->id)
-            ->notifyWhoCan('submit','Rejected');
+            ->notifyWhoCan('submit,test','Rejected');
         $this->saveAndUnload();     
 	}
 
@@ -33,7 +33,7 @@ class Model_Sms extends \xepan\marketing\Model_Content{
 		$this['status']='Approved';
         $this->app->employee
             ->addActivity("Approved Sms", $this->id)
-            ->notifyWhoCan('????','Approved');
+            ->notifyWhoCan('email,reject,test','Approved');
 		$this->saveAndUnload(); 
 	}
 }

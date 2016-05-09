@@ -34,8 +34,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->app->employee
 			->addActivity("Converted Opportunity", $this->id, $this['lead_id'])
-			->notifyWhoCan('reject,convert,open','Converted');
-		$this->save();	
+			->notifyWhoCan('reject,open','Converted');
+		$this->saveAndUnload();	
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
 	}
 
@@ -43,8 +43,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this['status']='Rejected';
 		$this->app->employee
 			->addActivity("Rejected Opportunity", $this->id, $this['lead_id'])
-			->notifyWhoCan('reject,convert,open','Converted');
-		$this->save();
+			->notifyWhoCan('convert,open','Rejected');
+		$this->saveAndUnload();
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
 	}
 
@@ -52,8 +52,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this['status']='Open';
 		$this->app->employee
 			->addActivity("Opened Opportunity", $this->id, $this['lead_id'])
-			->notifyWhoCan('reject,convert,open','Converted');
-		$this->save();
+			->notifyWhoCan('reject,convert','Open');
+		$this->saveAndUnload();
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
 	}
 } 

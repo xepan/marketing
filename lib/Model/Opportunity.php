@@ -27,6 +27,20 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
 		$this->getElement('status')->defaultValue('Open');
 		$this->addCondition('type','Opportunity');
+
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
+	}
+
+	function updateSearchString($m){
+
+		$search_string = ' ';
+		$search_string .=" ". $this['title'];
+		$search_string .=" ". $this['description'];
+		$search_string .=" ". $this['duration'];
+		$search_string .=" ". $this['source'];
+		$search_string .=" ". $this['description'];
+
+		$this['search_string'] = $search_string;
 	}
 
 	function convert(){

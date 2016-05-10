@@ -53,6 +53,17 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	}
 
+	function updateSearchString($m){
+
+		$search_string = ' ';
+		$search_string .=" ". $this['source'];
+		$search_string .=" ". $this['open_count'];
+		$search_string .=" ". $this['converted_count'];
+		$search_string .=" ". $this['rejected_count'];
+
+		$this['search_string'] = $search_string;
+	}
+	
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
@@ -60,6 +71,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
             ->notifyWhoCan('activate','InActive',$this);
 		$this->save();
 	}
+
 
 	//deactivate Lead
 	function deactivate(){

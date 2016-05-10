@@ -9,8 +9,8 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		
 
 		$this->getElement('status')->defaultValue('Draft');
-
 		$this->addCondition('type','Newsletter');
+
 	}
 
 	function page_test($p){

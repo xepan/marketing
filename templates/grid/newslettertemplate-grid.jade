@@ -21,16 +21,14 @@
                           a(href='#')
                             | {$title}
                       .project-box-content
-                        img.img-responsive(alt='',src ='img/samples/email-template-3.png')
+                        iframe(style="height:250px; border1: none; pointer-events: none; -webkit-transform: scale(1); -moz-transform: scale(1); -ms-transform: scale(1); transform: scale(1); -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0;" src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}' width="100%") 
                       .project-box-ultrafooter.clearfix
-                        .col-lg-4
-                        .col-lg-4
+                        .col-md-4
+                        .col-md-4
                           a.user-link(href='index.php?page=xepan_marketing_newsletterdesign&action=add&content_id={$id}')      
-                              button.btn.btn-primary.atk-button(style='')
-                                  |  Select
-                        .col-lg-4     
-    
-
+                                button.btn.btn-primary.atk-button(style='')
+                                    |  Select
+                        .col-md-4  
       
                 
             {/}

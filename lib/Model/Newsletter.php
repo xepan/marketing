@@ -66,7 +66,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this['status']='Submitted';
         $this->app->employee
             ->addActivity("Submitted Newsletter", $this->id)
-            ->notifyWhoCan('approve,reject','Submitted');
+            ->notifyWhoCan('reject,approve,test','Submitted');
         $this->saveAndUnload();    
 	}
 
@@ -74,7 +74,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this['status']='Rejected';
         $this->app->employee
             ->addActivity("Rejected Newsletter", $this->id)
-            ->notifyWhoCan('submit','Rejected');
+            ->notifyWhoCan('submit,test','Rejected');
         $this->saveAndUnload();     
 	}
 
@@ -82,7 +82,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this['status']='Approved';
         $this->app->employee
             ->addActivity("Approved Newsletter", $this->id)
-            ->notifyWhoCan('?????','Approved');
+            ->notifyWhoCan('reject,email,test','Approved');
 		$this->saveAndUnload(); 
 	}
 

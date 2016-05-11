@@ -29,7 +29,8 @@ class page_newsletterdesign extends \xepan\base\Page{
 					    $content
 					);
 					$content = preg_replace("/(href|src)\s*\=\s*[\"\']([^(http)])(\/)?/", "$1=\"$domain$2", $content);
-
+					$content = preg_replace('/url\(\s*[\'"]?\/?(.+?)[\'"]?\s*\)/i', 'url('.$domain.'$1)', $content);
+					
 					$templates[] = [ 'title'=> $template, 'description'=> '', 'content'=> $content];
 				}
 			}

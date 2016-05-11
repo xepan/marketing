@@ -14,7 +14,6 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	}
 
 	function page_test($p){
-		$p->add('View')->set('Hello');
 		$emails=[];
 
 		// all emails for these employees post
@@ -27,8 +26,13 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			$emails[]=$emp_emails['value'];
 		}
 
+		$post_emails= $this->add('xepan\hr\Model_Post_Email_MyEmails');
 
 		$frm=$p->add('Form');
+
+		$mymail = $frm->addField('Dropdown','email_username')->setEmptyText('Please Select From Email')->validate('required');
+		$mymail->setModel('xepan\hr\Model_Post_Email_MyEmails');
+
 		foreach ($emails as $email) {
 			$frm->addField('checkbox',$this->api->normalizeName($email),$email);
 
@@ -37,23 +41,28 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		if($frm->isSubmitted()){
 			$communication=$this->add('xepan\marketing\Model_Communication_Newsletter');	
 			$communication->setSubject($this['title']);
-			$communication->setBody($this['message_3000']);
+			$communication->setBody($this['message_blog']);
 			
 			$communication->setRelatedDocument($this);
+
+			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->load($frm['email_username']);	
+			$communication->setfrom($email_settings['from_email'],$email_settings['from_name']);
 
 			$i=1;
 			foreach ($emails as $email) {
 				if(!$frm[$this->api->normalizeName($email)]) continue;
 				if($i==1){
-					$communication->addTo($email,$this->employee['name']);
+					$communication->addTo($email,$this->app->employee['name']);
 				}else{
 					$communication->addBcc($email);
 				}
 				$i++;
 			}
 			try{
-				$communication->send();
+				$communication->send($email_settings);
 			}catch(\Exception $e){
+				throw $e;
+				
 				$this->api->js()->univ()->errorMessage($e->getMessage())->execute();
 			}
 

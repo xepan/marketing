@@ -138,7 +138,7 @@ class page_schedule extends \xepan\base\Page{
 		$event = json_decode($m['schedule'],true);
 
 
-		$this->js(true)->_load('fullcalendar.min')->_load('xepan-scheduler');
+		$this->js(true)->_load('fullcalendar.min')->_load('moment.min')->_load('xepan-scheduler');
 		$this->js(true)->_selector('#calendar')->univ()->schedularDate($event);
 		parent::render();
 

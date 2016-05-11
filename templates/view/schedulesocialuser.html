@@ -4,14 +4,15 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
         <th></th>
+        <th>   </th>
         <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$selected}</td>
-          <td><strong> 
-              <cite>{$name}</cite></strong></td>{/}
+          <td><span>{$selected}</span></td>
+          <td> <span><strong>{$name}</strong></span></td>
+          <td>   <span class="user-subhead">{$type}</span></td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

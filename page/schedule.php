@@ -130,15 +130,15 @@ class page_schedule extends \xepan\base\Page{
 	}
 
 	function render(){
-
 		$campaign_id=$this->app->stickyGET('campaign_id');
 		$m=$this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
 
 		$event = array();
 		$event = json_decode($m['schedule'],true);
 
+		$this->js(true)->_css('libs/fullcalendar')->_css('compiled/calendar');
 
-		$this->js(true)->_load('fullcalendar.min')->_load('xepan-scheduler');
+		$this->js(true)->_load('moment.min')->_load('fullcalendar.min')->_load('xepan-scheduler');
 		$this->js(true)->_selector('#calendar')->univ()->schedularDate($event);
 		parent::render();
 

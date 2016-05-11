@@ -7,7 +7,7 @@ class Model_Campaign_SocialUser_Association extends \Model_Table{
 	function init(){
 		parent::init();
 
-		// $this->hasOne('xepan/marketing/SocialUser','socialuser_id');
+		$this->hasOne('xepan/marketing/SocialUser','socialuser_id');
 		$this->hasOne('xepan/marketing/Campaign','campaign_id');		
 
 	}

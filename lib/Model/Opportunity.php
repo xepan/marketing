@@ -27,6 +27,20 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
 		$this->getElement('status')->defaultValue('Open');
 		$this->addCondition('type','Opportunity');
+
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
+	}
+
+	function updateSearchString($m){
+
+		$search_string = ' ';
+		$search_string .=" ". $this['title'];
+		$search_string .=" ". $this['description'];
+		$search_string .=" ". $this['duration'];
+		$search_string .=" ". $this['source'];
+		$search_string .=" ". $this['description'];
+
+		$this['search_string'] = $search_string;
 	}
 
 	function convert(){
@@ -34,8 +48,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->app->employee
 			->addActivity("Converted Opportunity", $this->id, $this['lead_id'])
-			->notifyWhoCan('reject,convert,open','Converted');
-		$this->save();	
+			->notifyWhoCan('reject,open','Converted');
+		$this->saveAndUnload();	
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
 	}
 
@@ -43,8 +57,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this['status']='Rejected';
 		$this->app->employee
 			->addActivity("Rejected Opportunity", $this->id, $this['lead_id'])
-			->notifyWhoCan('reject,convert,open','Converted');
-		$this->save();
+			->notifyWhoCan('convert,open','Rejected');
+		$this->saveAndUnload();
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
 	}
 
@@ -52,8 +66,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this['status']='Open';
 		$this->app->employee
 			->addActivity("Opened Opportunity", $this->id, $this['lead_id'])
-			->notifyWhoCan('reject,convert,open','Converted');
-		$this->save();
+			->notifyWhoCan('reject,convert','Open');
+		$this->saveAndUnload();
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
 	}
 } 

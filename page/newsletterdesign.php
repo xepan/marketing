@@ -29,7 +29,8 @@ class page_newsletterdesign extends \xepan\base\Page{
 					    $content
 					);
 					$content = preg_replace("/(href|src)\s*\=\s*[\"\']([^(http)])(\/)?/", "$1=\"$domain$2", $content);
-
+					$content = preg_replace('/url\(\s*[\'"]?\/?(.+?)[\'"]?\s*\)/i', 'url('.$domain.'$1)', $content);
+					
 					$templates[] = [ 'title'=> $template, 'description'=> '', 'content'=> $content];
 				}
 			}
@@ -41,7 +42,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 		$action = $this->api->stickyGET('action')?:'view';
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter')->tryLoadBy('id',$this->api->stickyGET('document_id'));
-
+		$newsletter->addCondition('created_by_id',$this->app->employee->id);
 		if($action !='view'){
 			$tmps = scandir(getcwd().'/../vendor/xepan/marketing/templates/newsletter-layout-chunks');
 			unset($tmps[0]);
@@ -60,8 +61,8 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 		$nv = $this->add('xepan\hr\View_Document',['action'=>$action,'id_field_on_reload'=>'content_id'],null,['view/newsletterdesign']);
 		$nv->setModel($newsletter,['title','message_blog','marketing_category','created_by','created_at'],['title','message_blog','marketing_category_id']);
-
-		if($action !='view'){
+		
+		if($action !='view'){			
 			$field = $nv->form->getElement('message_blog');
 			$field->options=['templates'=> $templates_vp->getURL(),'relative_urls'=> true];
 		}

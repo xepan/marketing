@@ -36,6 +36,7 @@ class Model_Content extends \xepan\base\Model_Document{
 
 		$this->addHook('beforeDelete',[$this,'checkExistingSchedule']);
 	}
+
 	function checkExistingSchedule($m){
 		$schedule_count = $m->ref('xepan/marketing/Schedule')->count()->getOne();
 

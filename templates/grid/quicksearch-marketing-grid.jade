@@ -1,0 +1,27 @@
+.xepan-grid(id="{$_name}" class="{$class}")
+    table.table.user-list(style="width:100%; margin-bottom:0px !important;")
+        {header}
+        {cols}{col}   
+        {/}{/}
+        {/}
+        {$subheader}
+        tbody
+            {rows}{row}
+            tr(class="{$odd_even}" data-id="{$id}")
+                {cols}
+                td(style="width:50%;padding:0px !important;")
+                    small
+                        a.user-link(href='#' style="margin-left:0;")
+                            {$name} {$title} &nbsp; 
+                        p.user-subhead.text-muted {$source} {$city} {$campaign_type} 
+                td(style="width:25%;padding:0px !important;")
+                   {$type} {$communication_type}
+                td(style="width:25%;padding:0px !important;") 
+                   {$status}
+                {/}
+            {/}{/}
+            {not_found}
+            {$not_found_message}
+            {/}
+    {$Paginator}
+

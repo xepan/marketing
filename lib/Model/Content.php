@@ -35,6 +35,20 @@ class Model_Content extends \xepan\base\Model_Document{
 		$this->getElement('status')->defaultValue('Draft');
 
 		$this->addHook('beforeDelete',[$this,'checkExistingSchedule']);
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
+	}
+
+	function updateSearchString($m){
+		$search_string = ' ';
+		$search_string .=" ". $this['title'];
+		$search_string .=" ". $this['type'];
+		$search_string .=" ". $this['message_160'];
+		$search_string .=" ". $this['message_255'];
+		$search_string .=" ". $this['message_3000'];
+		$search_string .=" ". $this['message_blog'];
+		$search_string .=" ". $this['status'];
+
+		$this['search_string'] = $search_string;
 	}
 
 	function checkExistingSchedule($m){

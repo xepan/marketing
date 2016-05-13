@@ -33,7 +33,9 @@ class Initiator extends \Controller_Addon {
                         "xepan\marketing\Model_Sms"=>['All'=>'fa fa-globe','Draft'=>"fa fa-sticky-note-o ",'Submitted'=>'fa fa-check-square-o xepan-effect-blue','Approved'=>'fa fa-thumbs-up xepan-effect-green','Rejected'=>'fa fa-times xepan-effect-red'],
                         "xepan\marketing\Model_Campaign"=>['All'=>'fa fa-globe','Draft'=>"fa fa-sticky-note-o ",'Submitted'=>'fa fa-check-square-o xepan-effect-blue','Redesign'=>'fa fa-refresh ','Approved'=>'fa fa-thumbs-up xepan-effect-green','Onhold'=>'fa fa-pause xepan-effect-warning']
                         ];
-	
+		$search_lead = $this->add('xepan\marketing\Model_Lead');
+		$this->app->addHook('quick_searched',[$search_lead,'quickSearch']);
+
 		return $this;
 		
 	}

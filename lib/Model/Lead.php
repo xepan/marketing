@@ -47,21 +47,83 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		
 		$this->addCondition('type','Lead');
 		$this->getElement('status')->defaultValue('Active');
-		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
 
 	}
 
 	function updateSearchString($m){
-
 		$search_string = ' ';
+		$search_string .=" ". $this['name'];
+		$search_string .=" ". str_replace("<br/>", " ", $this['contacts_str']);
+		$search_string .=" ". str_replace("<br/>", " ", $this['emails_str']);
 		$search_string .=" ". $this['source'];
-		$search_string .=" ". $this['open_count'];
-		$search_string .=" ". $this['converted_count'];
-		$search_string .=" ". $this['rejected_count'];
+		$search_string .=" ". $this['type'];
+		$search_string .=" ". $this['city'];
+		$search_string .=" ". $this['state'];
+		$search_string .=" ". $this['pin_code'];
+		$search_string .=" ". $this['organization'];
+		$search_string .=" ". $this['post'];
+		$search_string .=" ". $this['website'];
 
 		$this['search_string'] = $search_string;
+	}
+
+	function quickSearch($app,$search_string,$view){
+		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$this->addCondition('Relevance','>',0);
+ 		$this->setOrder('Relevance','Desc');
+ 		if($this->count()->getOne()){
+ 			$lc = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
+ 			$lc->setModel($this);
+ 		}
+
+ 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$opportunity->addCondition('Relevance','>',0);
+ 		$opportunity->setOrder('Relevance','Desc'); 		
+ 		if($opportunity->count()->getOne()){
+ 			$oc = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
+ 			$oc->setModel($opportunity);	
+ 		}
+
+ 		$category = $this->add('xepan\marketing\Model_MarketingCategory');
+		$category->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$category->addCondition('Relevance','>',0);
+ 		$category->setOrder('Relevance','Desc');
+ 		if($category->count()->getOne()){
+ 			$cc = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
+ 			$cc->setModel($category);
+ 		}
+
+ 		$content = $this->add('xepan\marketing\Model_Content');
+		$content->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$content->addCondition('Relevance','>',0);
+ 		$content->setOrder('Relevance','Desc');
+ 		if($content->count()->getOne()){
+ 			$c = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
+ 			$c->setModel($content); 	
+ 		}
+
+ 		$campaign = $this->add('xepan\marketing\Model_Campaign');
+		$campaign->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$campaign->addCondition('Relevance','>',0);
+ 		$campaign->setOrder('Relevance','Desc');
+ 		if($campaign->count()->getOne()){
+ 			$c = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
+ 			$c->setModel($campaign); 
+ 		}
+ 		
+ 		$tele = $this->add('xepan\marketing\Model_TeleCommunication');
+		$tele->addExpression('Relevance')->set('MATCH(title,description) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$tele->addCondition('Relevance','>',0);
+ 		$tele->setOrder('Relevance','Desc');
+ 		if($tele->count()->getOne()){
+ 			$c = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
+ 			$c->setModel($tele); 
+
+ 		}
 	}
 	
 	function activate(){
@@ -87,8 +149,6 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	}
 
 	//activate Lead
-
-	function beforeSave($m){}
 
 	function checkExistingOpportunities($m){
 		$opp_count = $this->ref('Opportunities')->count()->getOne();

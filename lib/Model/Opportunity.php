@@ -38,7 +38,6 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$search_string .=" ". $this['description'];
 		$search_string .=" ". $this['duration'];
 		$search_string .=" ". $this['source'];
-		$search_string .=" ". $this['description'];
 
 		$this['search_string'] = $search_string;
 	}

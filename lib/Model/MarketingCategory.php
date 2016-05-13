@@ -32,13 +32,20 @@ class Model_MarketingCategory extends \xepan\base\Model_Document{
 			return $m->refSQL('xepan\marketing\Lead_Category_Association')->count();
 		})->sortable(true);
 
-		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',[$this,'checkExistingLeadCategoryAssociation']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
-
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
 	}
 
-	function beforeSave($m){}
+	function updateSearchString($m){
+
+		$search_string = ' ';
+		$search_string .=" ". $this['name'];
+		$search_string .=" ". $this['type'];
+		$search_string .=" ". $this['status'];
+
+		$this['search_string'] = $search_string;
+	}
 
 	function checkExistingLeadCategoryAssociation($m){
 		$lead__cat_count = $m->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();

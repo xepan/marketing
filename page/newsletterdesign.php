@@ -19,15 +19,15 @@ class page_newsletterdesign extends \xepan\base\Page{
 					$content = file_get_contents($path.'/'.$template.'/index.html');
 					// replace rel 2 abs URL/Path
 					$domain = $this->app->pm->base_url.$this->app->pm->base_path.'../vendor/xepan/marketing/templates/newsletter-templates/'.$template.'/';
-					$rep['/href="(?!https?:\/\/)(?!data:)(?!#)/'] = 'href="'.$domain;
-					$rep['/src="(?!https?:\/\/)(?!data:)(?!#)/'] = 'src="'.$domain;
-					$rep['/@import[\n+\s+]"\//'] = '@import "'.$domain;
-					$rep['/@import[\n+\s+]"\./'] = '@import "'.$domain;
-					$content = preg_replace(
-					    array_keys($rep),
-					    array_values($rep),
-					    $content
-					);
+					// $rep['/href="(?!https?:\/\/)(?!data:)(?!#)/'] = 'href="'.$domain;
+					// $rep['/src="(?!https?:\/\/)(?!data:)(?!#)/'] = 'src="'.$domain;
+					// $rep['/@import[\n+\s+]"\//'] = '@import "'.$domain;
+					// $rep['/@import[\n+\s+]"\./'] = '@import "'.$domain;
+					// $content = preg_replace(
+					//     array_keys($rep),
+					//     array_values($rep),
+					//     $content
+					// );
 					$content = preg_replace("/(href|src)\s*\=\s*[\"\']([^(http)])(\/)?/", "$1=\"$domain$2", $content);
 					$content = preg_replace('/url\(\s*[\'"]?\/?(.+?)[\'"]?\s*\)/i', 'url('.$domain.'$1)', $content);
 					

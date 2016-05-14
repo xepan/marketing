@@ -137,7 +137,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  		}
  		
  		$tele = $this->add('xepan\marketing\Model_TeleCommunication');
-		$tele->addExpression('Relevance')->set('MATCH(title,description) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$tele->addExpression('Relevance')->set('MATCH(title, description, communication_type) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$tele->addCondition('Relevance','>',0);
  		$tele->setOrder('Relevance','Desc');
  		if($tele->count()->getOne()){

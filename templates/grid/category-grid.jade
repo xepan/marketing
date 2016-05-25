@@ -8,18 +8,18 @@
                     i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix.table-responsive
-        table.table.user-list.table-hover(style="width:100%")
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
                 th(id="{$name_sortid}")
                     span Category
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
-                th(id="{$leads_count_sortid}")
+                th(id="{$leads_count_sortid}" data-hide="phone")
                     span Leads Count 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$leads_count_sort}
 
-                th
+                th(data-hide="phone")
                     span Communication       
                 th 
                 {/}{/}

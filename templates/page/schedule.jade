@@ -3,7 +3,7 @@
   .col-lg-4
       .main-box.clearfix
         .tabs-wrapper.profile-tabs
-          ul.nav.nav-tabs
+          ul.nav.nav-tabs.responsive-tabs
             li.active
               a(data-toggle='tab', href='#tab-content') Content
             li
@@ -12,14 +12,14 @@
               a(data-toggle='tab', href='#tab-socialusers') Social Users  
           .tab-content
             
-             #tab-content.tab-pane.fade.in.active
+             #tab-content.tab-pane.active
                 {$MarketingContent}
 
                 
-             #tab-category.tab-pane.clearfix.fade
+             #tab-category.tab-pane
                 {$Category}
    
-             #tab-socialusers.tab-pane.clearfix.fade
+             #tab-socialusers.tab-pane
                 {$SocialUsers}
      
   .col-lg-8

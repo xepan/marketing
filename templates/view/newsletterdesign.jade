@@ -1,13 +1,15 @@
 .email-detail-nano-content(tabindex='0', style='right: -13px;')
   #email-detail-inner
     #email-detail-subject.clearfix
-      span.subject.xepan-push Subject: {$title}
-      span Category: {$marketing_category}{$marketing_category_id}
+      .col-md-1
+        span.subject Subject: 
+      .col-md-4
+        span.subject.text-muted {$title}
+      .col-md-7  
+        span.pull-right Category: {$marketing_category}{$marketing_category_id}
     #email-detail-sender.clearfix
       .picture.hidden-xs 
-        {avatar}
-        img(alt='', src='img/samples/angelina-300.jpg')
-        {/} 
+        {$avatar} 
       .users
         .from.clearfix
           .name

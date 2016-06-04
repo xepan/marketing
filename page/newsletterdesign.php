@@ -2,7 +2,7 @@
 namespace xepan\marketing;
 class page_newsletterdesign extends \xepan\base\Page{
 	public $title="Newsletter Design";
-	public $breadcrumb=['Home'=>'index','Newsletter'=>'xepan_marketing_newslettertemplate','Design'=>'#'];
+	public $breadcrumb=['Home'=>'index','Newsletter'=>'xepan_marketing_newsletter','Design'=>'#'];
 
 	function init(){
 		parent::init();	
@@ -52,10 +52,17 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 
 		$nv = $this->add('xepan\hr\View_Document',['action'=>$action,'id_field_on_reload'=>'content_id'],null,['view/newsletterdesign']);
-		$nv->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'created_by','default_value'=>'']);
-
 		$nv->setModel($newsletter,['title','message_blog','marketing_category','created_by','created_at'],['title','message_blog','marketing_category_id']);
+		$nv->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'created_by','default_value'=>'']);
 		
+		if($action = $this->app->stickyGET('action') ==='add'){
+			$nwl_id = $this->app->stickyGET('content_id');
+			$content = $this->add('xepan\marketing\Model_Content');
+			$content->load($nwl_id);
+
+			$nv->form->getElement('message_blog')->set($content['message_blog']);
+		}
+
 		if($action !='view'){			
 			$field = $nv->form->getElement('message_blog');
 			$field->options=['templates'=> $templates_vp->getURL(),'relative_urls'=> true];

@@ -7,7 +7,7 @@
                 div(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix
+    .main-box-body.clearfix 
         .row
             {header}{cols}{col}{/}{/}{/}
             {rows}{row}
@@ -21,8 +21,7 @@
                           a(href='#')
                             | {$title}
                       .project-box-content
-                        iframe(style="height:250px; border1: none; pointer-events: none; -webkit-transform: scale(1); -moz-transform: scale(1); -ms-transform: scale(1); transform: scale(1); -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0;" src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}' width="100%")
-
+                        iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0")
                       .project-box-footer.clearfix
                         a(href='#')
                           span.value 93
@@ -54,4 +53,8 @@
 
             {totals}{cols}{col}{$content}{/}{/}{/}
         {$Paginator}
-        
+
+style(type='text/css', media='screen').
+  .project-box-content {
+  padding: 0px 0px 0px !important;
+  }        

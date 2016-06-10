@@ -20,9 +20,9 @@ class page_newsletterexec extends \xepan\base\Page {
 		/***************************************************************************
 			Joining tables to find lead->categories->campaigns->schedule->content
 		***************************************************************************/
-		$lead = $this->add('xepan\marketing\Model_Lead');
+		$leads = $this->add('xepan\marketing\Model_Lead');
 		
-		$lead_cat_assos_j = $lead->join('lead_category_association.lead_id');
+		$lead_cat_assos_j = $leads->join('lead_category_association.lead_id');
 		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
 				
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
@@ -43,7 +43,7 @@ class page_newsletterexec extends \xepan\base\Page {
 	// 	/***************************************************************************
 	// 		Expression for finding total days since lead joined
 	// 	***************************************************************************/
-		$lead->addExpression('days_from_join')->set(function($m,$q){
+		$leads->addExpression('days_from_join')->set(function($m,$q){
 			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
 		});
 
@@ -51,7 +51,7 @@ class page_newsletterexec extends \xepan\base\Page {
 		/***************************************************************************
 			Expression to find if the lead is 'Hot'/'sendable limit'
 		***************************************************************************/
-		$lead->addExpression('sendable')->set(function($m,$q){
+		$leads->addExpression('sendable')->set(function($m,$q){
 			return $q->expr(
 					"IF([0]='campaign',
 						if([1]<='[2]',1,0),
@@ -71,7 +71,7 @@ class page_newsletterexec extends \xepan\base\Page {
 	// 	/***************************************************************************
 	// 		To find the last newsletter sending time.
 	// 	***************************************************************************/	
-		$lead->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
+		$leads->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
 			return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
 				[
 				$this->add('xepan\marketing\Model_Communication_Newsletter')
@@ -85,12 +85,12 @@ class page_newsletterexec extends \xepan\base\Page {
 	// 	/***************************************************************************
 	// 		Expression to extract 'message_3000' field from content model
 	// 	***************************************************************************/
-		$lead->addExpression('body')->set(function($m,$q){
+		$leads->addExpression('body')->set(function($m,$q){
 			return $m->refSQL('document_id')->fieldQuery('message_blog');
 		});
 
-		$lead->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
-		$lead->addCondition('sendable',true);
+		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
+		$leads->addCondition('sendable',true);
 
 
 		/***************************************************************************
@@ -114,11 +114,11 @@ class page_newsletterexec extends \xepan\base\Page {
 			/*******************************************************************
 			        For each lead run this code
 		    *******************************************************************/
-			foreach ($lead as $newsletter) {
+			foreach ($leads as $lead) {
 				$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 				$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
-				$email_lead=$this->add('xepan\marketing\Model_Lead')->load($lead->id);			
-				$emails = $email_lead->getEmails();
+				// $email_lead=$this->add('xepan\marketing\Model_Lead')->load($lead->id);
+				$emails = $lead->getEmails();
 			    $subject = $lead['document'] ;		    		    
 				$email_body = $lead['body'];
 				/***************************************************
@@ -128,12 +128,13 @@ class page_newsletterexec extends \xepan\base\Page {
 				// exit;			         
 				$email_subject=$this->add('GiTemplate');
 				$email_subject->loadTemplateFromString($subject);
-				$subject_v=$this->add('View',null,null,[$email_subject]);
+				$subject_v=$this->add('View',null,null,$email_subject);
+				$subject_v->template->set($lead->get());
 				
 				$temp=$this->add('GiTemplate');
 				$temp->loadTemplateFromString($email_body);
-				$body_v=$this->add('View',null,null,[$temp]);
-				$body_v->setModel($email_lead);
+				$body_v=$this->add('View',null,null,$temp);
+				$body_v->template->set($lead->get());
 
 				foreach ($emails as $email) {	
 					$model_communication_newsletter->addTo($email);

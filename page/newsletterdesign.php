@@ -52,7 +52,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 		}
 
-
+		$newsletter->getElement('message_blog')->hint('{$first_name},{$last_name},{$name},{$organization},{$website},{$search_string},{$emails_str},{$contacts_str} ');
 		$nv = $this->add('xepan\hr\View_Document',['action'=>$action,'id_field_on_reload'=>'content_id'],null,['view/newsletterdesign']);
 		$nv->setModel($newsletter,['title','message_blog','marketing_category','created_by','created_at'],['title','message_blog','marketing_category_id']);
 		$nv->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'created_by','default_value'=>'']);

@@ -33,6 +33,8 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 
 		$action = $this->api->stickyGET('action')?:'view';
+		$nwl_id = $this->app->stickyGET('content_id');
+
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter')->tryLoadBy('id',$this->api->stickyGET('document_id'));
 		$newsletter->addCondition('created_by_id',$this->app->employee->id);
 		if($action !='view'){
@@ -55,11 +57,9 @@ class page_newsletterdesign extends \xepan\base\Page{
 		$nv->setModel($newsletter,['title','message_blog','marketing_category','created_by','created_at'],['title','message_blog','marketing_category_id']);
 		$nv->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'created_by','default_value'=>'']);
 		
-		if($action = $this->app->stickyGET('action') ==='add'){
-			$nwl_id = $this->app->stickyGET('content_id');
+		if($action ==='add' && $nwl_id){
 			$content = $this->add('xepan\marketing\Model_Content');
 			$content->load($nwl_id);
-
 			$nv->form->getElement('message_blog')->set($content['message_blog']);
 		}
 

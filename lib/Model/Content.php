@@ -34,8 +34,15 @@ class Model_Content extends \xepan\base\Model_Document{
 
 		$this->getElement('status')->defaultValue('Draft');
 
+		$this->is([
+			'marketing_category_id|required',
+			'title|required'
+			]);
+
 		$this->addHook('beforeDelete',[$this,'checkExistingSchedule']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
+
+
 	}
 
 	function updateSearchString($m){

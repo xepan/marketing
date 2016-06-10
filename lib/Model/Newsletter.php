@@ -11,9 +11,17 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this->getElement('status')->defaultValue('Draft');
 		$this->addCondition('type','Newsletter');
 
+		$this->is([
+			'message_blog|required'
+			]);
+
 	}
 
 	function page_test($p){
+
+		if(!$this->loaded())
+			throw $this->exception('Newsletter must be saved before test','ValidityCheck')->setField('message_blog');
+
 		$emails=[];
 
 		// all emails for these employees post

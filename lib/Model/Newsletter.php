@@ -21,7 +21,6 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 
 		if(!$this->loaded())
 			throw $this->exception('Newsletter must be saved before test','ValidityCheck')->setField('message_blog');
-
 		$emails=[];
 
 		// all emails for these employees post
@@ -48,9 +47,6 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$frm->addSubmit('Send');
 		if($frm->isSubmitted()){
 			$communication=$this->add('xepan\marketing\Model_Communication_Newsletter');	
-			$communication->setSubject($this['title']);
-			$communication->setBody($this['message_blog']);
-			
 			$communication->setRelatedDocument($this);
 
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->load($frm['email_username']);	
@@ -66,15 +62,34 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 				}
 				$i++;
 			}
+			
+			$subject=$this['title'];
+			$email_body=$this['message_blog'];
+
+			$email_subject=$this->add('GiTemplate');
+			$email_subject->loadTemplateFromString($subject);
+			$subject_v = $this->add('View',null,null,$email_subject);
+			
+			$temp=$this->add('GiTemplate');
+			$temp->loadTemplateFromString($email_body);
+			
+			$body_v = $this->add('View',null,null,$temp);
+			$contact=$this->app->employee;
+
+			$body_v->setModel($contact);
+
+			$communication->setSubject($subject_v->getHtml());
+			$communication->setBody($body_v->getHtml());
+
 			try{
 				$communication->send($email_settings);
 			}catch(\Exception $e){
 				throw $e;
 				
-				$this->api->js()->univ()->errorMessage($e->getMessage())->execute();
+				return $this->api->js()->univ()->errorMessage($e->getMessage());
 			}
 
-			return $this->api->js()->univ()->closeDialog()->execute();
+			return $this->api->js()->univ()->successMessage('Email Send SuccessFully')->closeDialog();
 		}
 
 	}

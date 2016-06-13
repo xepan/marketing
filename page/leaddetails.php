@@ -12,14 +12,24 @@ class page_leaddetails extends \xepan\base\Page {
 
 		$action = $this->api->stickyGET('action')?:'view';
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
-		$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead'],'contact_view');
+		
+		if($action=="add"){
+
+			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
+			$lead_view->document_view->effective_template->del('im_and_events_andrelation');
+			$lead_view->document_view->effective_template->del('email_and_phone');
+			$this->template->del('other_details');
+			$lead_view->setStyle(['width'=>'50%','margin'=>'auto']);
+		}else{
+			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+		}
+
 		$lead_view->setModel($lead);
 
-		$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
-		$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark'],['source','remark']);//,'marketing_category_id','communication','opportunities'
-
-			
+			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
+			$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark'],['source','remark']);//,'marketing_category_id','communication','opportunities'
 		if($lead->loaded()){
+			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
 			$o->setModel($lead->ref('Opportunities'));

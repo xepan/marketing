@@ -1,43 +1,45 @@
 | {$Content}
 .row
+  .col-lg-12.col-md-12.col-sm-12
+    {$contact_view_full_width}
   .col-lg-3.co-md-3.col-sm-3
     {$contact_view}
-    //-include ../../../base/templates/view/profile.jade
+  //-include ../../../base/templates/view/profile.jade
+  {other_details}
   .col-lg-9.col-md-8.col-sm-8
-      .main-box.clearfix
-        .tabs-wrapper.profile-tabs
-          ul.nav.nav-tabs.responsive-tabs
-            li.active
-              a(data-toggle='tab', href='#tab-details') Details
-            li
-              a(data-toggle='tab', href='#tab-opportunity') Opportunity
-            li
-              a(data-toggle='tab', href='#tab-activity') Activity  
-          .tab-content
-            
-             #tab-details.tab-pane.active
-                  {details}
-                  .alert.alert-warning
-                    i.fa.fa-warning.fa-fw.fa-lg
-                    strong Warning!
-                    |  Please Fill the basic information first. 
-                  {/details}
+    .main-box.clearfix
+      .tabs-wrapper.profile-tabs
+        ul.nav.nav-tabs.responsive-tabs
+          li.active
+            a(data-toggle='tab', href='#tab-details') Details
+          li
+            a(data-toggle='tab', href='#tab-opportunity') Opportunity
+          li
+            a(data-toggle='tab', href='#tab-activity') Activity  
+        .tab-content
+          
+           #tab-details.tab-pane.active
+                {details}
+                .alert.alert-warning
+                  i.fa.fa-warning.fa-fw.fa-lg
+                  strong Warning!
+                  |  Please Fill the basic information first. 
+                {/details}
 
-                
-             #tab-opportunity.tab-pane
-                {opportunity}
-                .alert.alert-warning
-                  i.fa.fa-warning.fa-fw.fa-lg
-                  strong Warning!
-                  |  Please Fill the basic information first. 
-                {/opportunity}
-   
-             #tab-activity.tab-pane
-                {activity}
-                .alert.alert-warning
-                  i.fa.fa-warning.fa-fw.fa-lg
-                  strong Warning!
-                  |  Please Fill the basic information first. 
-                {/activity}
-     
-             
+              
+           #tab-opportunity.tab-pane
+              {opportunity}
+              .alert.alert-warning
+                i.fa.fa-warning.fa-fw.fa-lg
+                strong Warning!
+                |  Please Fill the basic information first. 
+              {/opportunity}
+ 
+           #tab-activity.tab-pane
+              {activity}
+              .alert.alert-warning
+                i.fa.fa-warning.fa-fw.fa-lg
+                strong Warning!
+                |  Please Fill the basic information first. 
+              {/activity}
+  {/}        

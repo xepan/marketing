@@ -13,7 +13,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 			$path=realpath(getcwd().'/vendor/xepan/marketing/templates/newsletter-templates');			
 			foreach (new \DirectoryIterator($path) as $template){
 				if($template->isDot() or !$template->isDir()) continue;
-				$template_name=$fileInfo->getFilename();
+				$template_name=$template->getFilename();
 				if(file_exists($path.'/'.$template_name. "/index.html")){
 					$content = file_get_contents($path.'/'.$template_name.'/index.html');
 					// replace rel 2 abs URL/Path

@@ -10,15 +10,14 @@ class page_newsletterdesign extends \xepan\base\Page{
 		$templates_vp = $this->add('VirtualPage');
 		$templates_vp->set(function($p){
 			$templates = [];
-			$path=realpath(getcwd().'/vendor/xepan/marketing/templates/newsletter-templates');
-			$tmps = scandir($path);
-			unset($tmps[0]);
-			unset($tmps[1]);
-			foreach ($tmps as $template) {
-				if(file_exists($path.'/'.$template. "/index.html")){
-					$content = file_get_contents($path.'/'.$template.'/index.html');
+			$path=realpath(getcwd().'/vendor/xepan/marketing/templates/newsletter-templates');			
+			foreach (new \DirectoryIterator("./websites/".$this->app->epan['name']."/www/".$path) as $template){
+				if($template->isDot() or !$template->isDir()) continue;
+				$template_name=$fileInfo->getFilename();
+				if(file_exists($path.'/'.$template_name. "/index.html")){
+					$content = file_get_contents($path.'/'.$template_name.'/index.html');
 					// replace rel 2 abs URL/Path
-					$domain = $this->app->pm->base_url.$this->app->pm->base_path.'vendor/xepan/marketing/templates/newsletter-templates/'.$template.'/';
+					$domain = $this->app->pm->base_url.$this->app->pm->base_path.'vendor/xepan/marketing/templates/newsletter-templates/'.$template_name.'/';
 					
 					$content = preg_replace("/(href|src)\s*\=\s*[\"\']([^(http)])(\/)?/", "$1=\"$domain$2", $content);
 					$content = preg_replace('/url\(\s*[\'"]?\/?(.+?)[\'"]?\s*\)/i', 'url('.$domain.'$1)', $content);

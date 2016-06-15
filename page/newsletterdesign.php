@@ -11,7 +11,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 		$templates_vp->set(function($p){
 			$templates = [];
 			$path=realpath(getcwd().'/vendor/xepan/marketing/templates/newsletter-templates');			
-			foreach (new \DirectoryIterator("./websites/".$this->app->epan['name']."/www/".$path) as $template){
+			foreach (new \DirectoryIterator($path) as $template){
 				if($template->isDot() or !$template->isDir()) continue;
 				$template_name=$fileInfo->getFilename();
 				if(file_exists($path.'/'.$template_name. "/index.html")){

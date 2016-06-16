@@ -20,6 +20,10 @@ class page_opportunity extends \xepan\base\Page{
 		$f = $crud->grid->addQuickSearch(['lead']);
 		$dropdown = $f->addField('dropdown','status')->setValueList(['Open'=>'Open','Converted'=>'Converted','Rejected'=>'Rejected'])->setEmptyText('Status');
 		$dropdown->js('change',$f->js()->submit());
+
+		if(!$crud->isEditing()){
+			$crud->grid->js('click')->_selector('.do-view-frame')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-lead-id]')->data('lead-id')]);
+		}
 	}
 
 }

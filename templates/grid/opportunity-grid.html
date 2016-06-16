@@ -21,7 +21,8 @@
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}
             {title}{/}
-            <div class="row"> <a href="{url}index.php?page=xepan_marketing_leaddetails&amp;contact_id={$lead_id}{/}"> <span class="user-subhead">{lead}Lead{/}</span></a></div>
+            <div class="row"> <a href="#" data-id="{$id}" data-lead-id="{$lead_id}" class="user-link do-view-frame"> <span class="user-subhead">{lead}Lead{/}</span></a>
+            </div>
           </td>
           <td><span sparkType="bar" sparkHeight="40px" sparkbarColor="lightgray" class="sparkline">{communication}40,10,30,30,10,5,20,40,10,30,30{/}    </span></td>
           <td><span class="small">{$description}    </span></td>

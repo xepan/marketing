@@ -32,8 +32,9 @@
                       {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
                       {/}
-                      a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}')
+                      a.user-link.do-view-frame(href='#',data-id="{$id}")
                         {name}Name{/}
+                      //- a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}')
                       span.user-subhead {source}Source{/}
                         h6 [{city}{/}]
                     td

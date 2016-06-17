@@ -9,7 +9,7 @@ class page_campaign extends \xepan\base\Page{
 		if($this->app->stickyGET('status'))
 			$campaign->addCondition('status',explode(",",$this->app->stickyGET('status')));
 				
-		$campaign->add('xepan\hr\Controller_SideBarStatusFilter');
+		$campaign->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addcampaign'],null,['grid/campaign-grid']);
 		$crud->setModel($campaign);
 

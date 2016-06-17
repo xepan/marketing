@@ -10,7 +10,7 @@ class page_sms extends \xepan\base\Page{
 		if($this->app->stickyGET('status'))
 			$sms->addCondition('status',explode(",",$this->app->stickyGET('status')));
 				
-		$sms->add('xepan\hr\Controller_SideBarStatusFilter');
+		$sms->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addsms'],null,['grid/sms-grid']);
 		$crud->setModel($sms);
 		

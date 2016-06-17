@@ -71,83 +71,110 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this['search_string'] = $search_string;
 	}
 
-	function quickSearch($app,$search_string,$view){
+	function quickSearch($app,$search_string,&$result_array){
 		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$this->addCondition('Relevance','>',0);
  		$this->setOrder('Relevance','Desc');
+ 		
  		if($this->count()->getOne()){
- 			$lc = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
- 			$lc->setModel($this);
-    		$lc->addHook('formatRow',function($g){
-    			$g->current_row_html['url'] = $this->app->url('xepan_marketing_leaddetails',['contact_id'=>$g->model->id]);	
-     		});	
- 		}
+ 			foreach ($this->getRows() as $data) { 				
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['name'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_marketing_leaddetails',['status'=>$data['status'],'contact_id'=>$data['id']])->getURL(),
+ 				];
+ 			}
+		}
 
 
  		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
 		$opportunity->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$opportunity->addCondition('Relevance','>',0);
  		$opportunity->setOrder('Relevance','Desc'); 		
+ 		
  		if($opportunity->count()->getOne()){
- 			$oc = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
- 			$oc->setModel($opportunity);	
- 			$oc->addHook('formatRow',function($g){
-     			$g->current_row_html['url'] = $this->app->url('xepan_marketing_leaddetails',['contact_id'=>$g->model['lead_id']]);
-     		});		
- 		}
+ 			foreach ($opportunity->getRows() as $data) { 				
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['title'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_marketing_leaddetails',['status'=>$data['status'],'contact_id'=>$data['id']])->getURL(),
+ 				];
+ 			}
+		}
 
  		$category = $this->add('xepan\marketing\Model_MarketingCategory');
 		$category->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$category->addCondition('Relevance','>',0);
  		$category->setOrder('Relevance','Desc');
+ 			
  		if($category->count()->getOne()){
- 			$cc = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
- 			$cc->setModel($category);
- 			$cc->addHook('formatRow',function($g){
-     			$g->current_row_html['url'] = $this->app->url('xepan_marketing_marketingcategory');
-     		});	
- 		}
+ 			foreach ($category->getRows() as $data) { 				
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['name'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_marketing_marketingcategory',['status'=>$data['status']])->getURL(),
+ 				];
+ 			}
+		}
 
  		$content = $this->add('xepan\marketing\Model_Content');
 		$content->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$content->addCondition('Relevance','>',0);
  		$content->setOrder('Relevance','Desc');
+ 		
  		if($content->count()->getOne()){
- 			$c = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
- 			$c->setModel($content);
- 			$c->addHook('formatRow',function($g){
- 				if($g->model['type'] =='Newsletter')
-     				$g->current_row_html['url'] = $this->app->url('xepan_marketing_newsletterdesign',['action'=>'view', 'document_id'=>$g->model->id]);
-     			if($g->model['type'] =='Sms');
-     				$g->current_row_html['url'] = $this->app->url('xepan_marketing_addsms',['action'=>'view', 'document_id'=>$g->model->id]);
-     			if($g->model['type'] =='SocialPost');	
-     				$g->current_row_html['url'] = $this->app->url('xepan_marketing_addsocialpost',['action'=>'view', 'document_id'=>$g->model->id]);
-     		});	 	
- 		}
+ 			foreach ($content->getRows() as $data) { 
+ 				if($data['type'] =='Newsletter')
+     				$url = $this->app->url('xepan_marketing_newsletterdesign',['status'=>$data['status'],'document_id'=>$data['id']])->getURL();
+     			if($data['type'] =='Sms');
+     				$url = $this->app->url('xepan_marketing_addsms',['status'=>$data['status'],'document_id'=>$data['id']])->getURL();
+     			if($data['type'] =='SocialPost');	
+     				$url = $this->app->url('xepan_marketing_addsocialpost',['status'=>$data['status'],'document_id'=>$data['id']])->getURL();				
+ 				
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['title'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$url,
+ 				];
+ 			}
+		}
 
  		$campaign = $this->add('xepan\marketing\Model_Campaign');
 		$campaign->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$campaign->addCondition('Relevance','>',0);
  		$campaign->setOrder('Relevance','Desc');
+	 		
  		if($campaign->count()->getOne()){
- 			$c = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
- 			$c->setModel($campaign); 
- 			$c->addHook('formatRow',function($g){
- 				$g->current_row_html['url'] = $this->app->url('xepan_marketing_campaign',['status'=>$g->model['status']]);
-     		});
- 		}
+ 			foreach ($campaign->getRows() as $data) {
+ 			 				 				
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['title'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_marketing_campaign',['status'=>$data['status']])->getURL(),
+ 				];
+ 			}
+		}
  		
  		$tele = $this->add('xepan\marketing\Model_TeleCommunication');
 		$tele->addExpression('Relevance')->set('MATCH(title, description, communication_type) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$tele->addCondition('Relevance','>',0);
  		$tele->setOrder('Relevance','Desc');
+ 		
  		if($tele->count()->getOne()){
- 			$c = $view->add('Completelister',null,null,['grid/quicksearch-marketing-grid']);
- 			$c->setModel($tele);
- 			$c->addHook('formatRow',function($g){
- 				$g->current_row_html['url'] = $this->app->url('xepan_marketing_telemarketing');
-     		}); 
- 		}
+ 			foreach ($tele->getRows() as $data) { 				
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['title'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_marketing_telemarketing',['status'=>$data['status']])->getURL(),
+ 				];
+ 			}
+		}
 	}
 	
 	function activate(){

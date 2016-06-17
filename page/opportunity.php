@@ -22,7 +22,7 @@ class page_opportunity extends \xepan\base\Page{
 		$dropdown->js('change',$f->js()->submit());
 
 		if(!$crud->isEditing()){
-			$crud->grid->js('click')->_selector('.do-view-frame')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-lead-id]')->data('lead-id')]);
+			$crud->grid->js('click')->_selector('.do-view-opportunity')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-lead-id]')->data('lead-id')]);
 		}
 	}
 

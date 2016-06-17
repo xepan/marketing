@@ -18,6 +18,11 @@ class page_leaddetails extends \xepan\base\Page {
 			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
 			$lead_view->document_view->effective_template->del('im_and_events_andrelation');
 			$lead_view->document_view->effective_template->del('email_and_phone');
+			$lead_view->document_view->effective_template->del('avatar_wrapper');
+			$lead_view->document_view->effective_template->del('contact_since_wrapper');
+			$lead_view->document_view->effective_template->del('send_email_sms_wrapper');
+			$lead_view->document_view->effective_template->del('online_status_wrapper');
+			$lead_view->document_view->effective_template->del('contact_type_wrapper');
 			$this->template->del('other_details');
 			$lead_view->setStyle(['width'=>'50%','margin'=>'auto']);
 		}else{

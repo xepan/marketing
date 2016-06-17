@@ -34,6 +34,16 @@ class page_leaddetails extends \xepan\base\Page {
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
 			$o->setModel($lead->ref('Opportunities'));
 			
+
+			$activity_view = $this->add('xepan\base\Grid',['no_records_message'=>'No activity found'],'activity',['view/activity/activity-grid']);
+			$activity_view->add('xepan\base\Paginator',null,'Paginator');
+
+			$activity=$this->add('xepan\base\Model_Activity')->setOrder('created_at','desc');
+			$activity->addCondition('contact_id',$_GET['contact_id']);
+			$activity->tryLoadAny();
+			$activity_view->setModel($activity);	
+
+
 			/*
 			*	
 			*	Lead <=> Category association form

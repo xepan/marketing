@@ -83,6 +83,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'title'=>$data['name'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_marketing_leaddetails',['status'=>$data['status'],'contact_id'=>$data['id']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
  				];
  			}
 		}
@@ -100,6 +101,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'title'=>$data['title'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_marketing_leaddetails',['status'=>$data['status'],'contact_id'=>$data['id']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
  				];
  			}
 		}
@@ -116,6 +118,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'title'=>$data['name'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_marketing_marketingcategory',['status'=>$data['status']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
  				];
  			}
 		}
@@ -139,6 +142,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'title'=>$data['title'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$url,
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
  				];
  			}
 		}
@@ -156,6 +160,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'title'=>$data['title'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_marketing_campaign',['status'=>$data['status']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
  				];
  			}
 		}
@@ -172,6 +177,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'title'=>$data['title'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_marketing_telemarketing',['status'=>$data['status']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
  				];
  			}
 		}

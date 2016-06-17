@@ -10,7 +10,7 @@ class page_newsletter extends \xepan\base\Page{
 		if($this->app->stickyGET('status'))
 			$newsletter->addCondition('status',explode(",",$this->app->stickyGET('status')));
 				
-		$newsletter->add('xepan\hr\Controller_SideBarStatusFilter');
+		$newsletter->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$newsletter->addCondition('is_template',false);
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_newslettertemplate', 'edit_page'=>'xepan_marketing_newsletterdesign'],null,['grid/newsletter-grid']);
 		$crud->setModel($newsletter);

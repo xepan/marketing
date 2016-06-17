@@ -10,7 +10,7 @@ class page_opportunity extends \xepan\base\Page{
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
 		if($status = $this->app->stickyGET('status'))
 			$opportunity->addCondition('status',$status);
-		$opportunity->add('xepan\hr\Controller_SideBarStatusFilter');
+		$opportunity->add('xepan\marketing\Controller_SideBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
 		$crud->setModel($opportunity);

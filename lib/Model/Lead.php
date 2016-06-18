@@ -71,8 +71,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this['search_string'] = $search_string;
 	}
 
-	function quickSearch($app,$search_string,&$result_array){
-		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+	function quickSearch($app,$search_string,&$result_array,$relevency_mode){
+		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$this->addCondition('Relevance','>',0);
  		$this->setOrder('Relevance','Desc');
  		
@@ -90,7 +90,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 
  		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
-		$opportunity->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$opportunity->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$opportunity->addCondition('Relevance','>',0);
  		$opportunity->setOrder('Relevance','Desc'); 		
  		
@@ -107,7 +107,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
 
  		$category = $this->add('xepan\marketing\Model_MarketingCategory');
-		$category->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$category->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$category->addCondition('Relevance','>',0);
  		$category->setOrder('Relevance','Desc');
  			
@@ -124,7 +124,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
 
  		$content = $this->add('xepan\marketing\Model_Content');
-		$content->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$content->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$content->addCondition('Relevance','>',0);
  		$content->setOrder('Relevance','Desc');
  		
@@ -148,7 +148,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
 
  		$campaign = $this->add('xepan\marketing\Model_Campaign');
-		$campaign->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$campaign->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$campaign->addCondition('Relevance','>',0);
  		$campaign->setOrder('Relevance','Desc');
 	 		
@@ -166,7 +166,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
  		
  		$tele = $this->add('xepan\marketing\Model_TeleCommunication');
-		$tele->addExpression('Relevance')->set('MATCH(title, description, communication_type) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+		$tele->addExpression('Relevance')->set('MATCH(title, description, communication_type) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$tele->addCondition('Relevance','>',0);
  		$tele->setOrder('Relevance','Desc');
  		

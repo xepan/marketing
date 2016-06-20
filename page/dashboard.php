@@ -26,8 +26,10 @@ class page_dashboard extends \xepan\base\Page{
 		$graph_stats = $this->add('xepan\marketing\View_GraphStats',null,'graph_stats');
 		
 		// SOCIAL ACTIVITY LISTER
-		$social_lister = $this->add('xepan\marketing\View_SocialLister');
+		$social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');
 		$social_lister->setModel('xepan\marketing\SocialPosters_Base_SocialConfig');
+
+		// 
 	}
 
 	function defaultTemplate(){

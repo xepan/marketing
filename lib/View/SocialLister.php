@@ -9,13 +9,13 @@ class View_SocialLister extends \CompleteLister{
 
 	}
 
-	function formatRow($model){
-		$m = parent::setModel($model);
+	function formatRow(){
+		// $m = parent::setModel($model);
 
-		$this->current_row_html[''] = $m[];
-		$this->current_row_html[''] = $m[];
+		// $this->current_row_html[''] = $m[];
+		// $this->current_row_html[''] = $m[];
 		
-		return parent::formatRow();
+		// return parent::formatRow();
 	}
 
 	function defaultTemplate(){

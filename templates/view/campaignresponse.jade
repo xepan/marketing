@@ -1,46 +1,48 @@
 .xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
-    .main-box-body.clearfix.table-responsive
-        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
-            {header}
-            thead.xepan-hover-hand
-                {cols}{col}
-                th.footable-visible.footable-first-column.footable-sortable
-                  | Campaign
-                th.footable-visible.footable-sortable
-                  | Completed On
-                th.footable-visible.footable-sortable(data-hide='phone')
-                  | Leads
-                th.text-center.footable-visible.footable-last-column.footable-sortable(data-hide='phone,tablet')
-                  | Response
-                {/}{/}
-            {/}
-            {$subheader}
+  .main-box-body.clearfix.table
+      table.table.user-list.table-hover(style="width:100%")
+          {header}
+          thead
+              {cols}{col}
+              th
+                span Campaign
+              th
+                span Completed On
+              th
+                span Leads
+              th
+                span Response    
+              {/}{/}
+          {/}
+          {$subheader}
 
-            tbody
-                {rows}{row}
-                tr(class="{$odd_even}" data-id="{$id}")
+          tbody
+              {rows}{row}
+              tr(class="{$odd_even}" data-id="{$id}")
                   {cols}
                   td
-
+                    span
                   td
-
+                    span
                   td
-
+                    span
                   td
-
+                    span        
                   {/}
-                {/}{/}
-                {not_found}
-                {$not_found_message}
-                {/}
+              {/}{/}
+              {not_found}
+              div.row
+                  .col-md-12.text-center.alert.alert-warning(role="alert")
+                      span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+              {/}
 
-            {totals}
-            tfoot
-                tr(class="totals")
-                    {cols}{col}
-                    <td {$tdparam}>
-                    {$content}
-                    </td>
-                    {/}{/}
-            {/}
-        {$Paginator}
+          {totals}
+          tfoot
+              tr(class="totals")
+                  {cols}{col}
+                  <td {$tdparam}>
+                  {$content}
+                  </td>
+                  {/}{/}
+          {/}
+      {$Paginator}

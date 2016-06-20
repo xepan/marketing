@@ -1,24 +1,25 @@
 
 <div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">
-  <div class="main-box-body clearfix table-responsive">
-    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
-      <thead class="xepan-hover-hand">{cols}{col}
-        <th class="footable-visible footable-first-column footable-sortable">Campaign</th>
-        <th class="footable-visible footable-sortable">Completed On</th>
-        <th data-hide="phone" class="footable-visible footable-sortable">Leads</th>
-        <th data-hide="phone,tablet" class="text-center footable-visible footable-last-column footable-sortable">Response</th>{/}{/}
+  <div class="main-box-body clearfix table">
+    <table style="width:100%" class="table user-list table-hover">{header}
+      <thead>{cols}{col}
+        <th><span>Campaign</span></th>
+        <th><span>Completed On</span></th>
+        <th><span>Leads</span></th>
+        <th><span>Response    </span></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>{/}
+          <td><span></span></td>
+          <td><span></span></td>
+          <td><span></span></td>
+          <td><span>       </span></td>{/}
         </tr>{/}{/}
         {not_found}
-        {$not_found_message}
-        {/}
+        <div class="row">
+          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+        </div>{/}
       </tbody>{totals}
       <tfoot>
         <tr class="totals">

@@ -1,16 +1,11 @@
 
 <div id="graph-bar" style="height: 240px; padding: 0px; position: relative;">
-  <script src="templates/js/jquery-jvectormap-1.2.2.min.js"></script>
-  <script src="templates/js/jquery-jvectormap-world-merc-en.js"></script>
-  <script src="templates/js/jquery.sparkline.min.js"></script>
-  <script src="templates/js/skycons.js"></script>
   <script src="templates/js/gdp-data.js"></script>
   <script src="templates/js/flot/jquery.flot.min.js"></script>
   <script src="templates/js/flot/jquery.flot.resize.min.js"></script>
   <script src="templates/js/flot/jquery.flot.time.min.js"></script>
   <script src="templates/js/flot/jquery.flot.threshold.js"></script>
   <script src="templates/js/flot/jquery.flot.axislabels.js"></script>
-  <script src="templates/js/pace.min.js"></script>
   <canvas style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 908px; height: 240px;" width="813" height="214" class="flot-base"></canvas>
   <div style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);" class="flot-text">
     <div style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;" class="flot-x-axis flot-x1-axis xAxis x1Axis">
@@ -148,74 +143,7 @@
     }).appendTo("body").fadeIn(200);
     }
     }
-    //WORLD MAP
-    $('#world-map').vectorMap({
-    map: 'world_merc_en',
-    backgroundColor: '#ffffff',
-    zoomOnScroll: false,
-    regionStyle: {
-    initial: {
-    fill: '#e1e1e1',
-    stroke: 'none',
-    "stroke-width": 0,
-    "stroke-opacity": 1
-    },
-    hover: {
-    "fill-opacity": 0.8
-    },
-    selected: {
-    fill: '#8dc859'
-    },
-    selectedHover: {
-    }
-    },
-    markerStyle: {
-    initial: {
-    fill: '#e84e40',
-    stroke: '#e84e40'
-    }
-    },
-    markers: [
-    {latLng: [38.35, -121.92], name: 'Los Angeles - 23'},
-    {latLng: [39.36, -73.12], name: 'New York - 84'},
-    {latLng: [50.49, -0.23], name: 'London - 43'},
-    {latLng: [36.29, 138.54], name: 'Tokyo - 33'},
-    {latLng: [37.02, 114.13], name: 'Beijing - 91'},
-    {latLng: [-32.59, 150.21], name: 'Sydney - 22'},
-    ],
-    series: {
-    regions: [{
-    values: gdpData,
-    scale: ['#6fc4fe', '#2980b9'],
-    normalizeFunction: 'polynomial'
-    }]
-    },
-    onRegionLabelShow: function(e, el, code){
-    el.html(el.html()+' ('+gdpData[code]+')');
-    }
-    });
-    /* SPARKLINE - graph in header */
-    var orderValues = [10,8,5,7,4,4,3,8,0,7,10,6,5,4,3,6,8,9];
-    $('.spark-orders').sparkline(orderValues, {
-    type: 'bar',
-    barColor: '#ced9e2',
-    height: 25,
-    barWidth: 6
-    });
-    var revenuesValues = [8,3,2,6,4,9,1,10,8,2,5,8,6,9,3,4,2,3,7];
-    $('.spark-revenues').sparkline(revenuesValues, {
-    type: 'bar',
-    barColor: '#ced9e2',
-    height: 25,
-    barWidth: 6
-    });
-    /* ANIMATED WEATHER */
-    var skycons = new Skycons({"color": "#03a9f4"});
-    // on Android, a nasty hack is needed: {"resizeClear": true}
-    // you can add a canvas by it's ID...
-    skycons.add("current-weather", Skycons.SNOW);
-    // start animation!
-    skycons.play();
+    
     });
   </script>
 </div>

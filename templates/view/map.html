@@ -1,0 +1,53 @@
+
+<div id="world-map" style="width:100%; height:auto;">
+  <script>
+    $(document).ready(function() {
+    //WORLD MAP
+    $('#world-map').vectorMap({
+    map: 'world_merc_en',
+    backgroundColor: '#ffffff',
+    zoomOnScroll: false,
+    regionStyle: {
+    initial: {
+    fill: '#e1e1e1',
+    stroke: 'none',
+    "stroke-width": 0,
+    "stroke-opacity": 1
+    },
+    hover: {
+    "fill-opacity": 0.8
+    },
+    selected: {
+    fill: '#8dc859'
+    },
+    selectedHover: {
+    }
+    },
+    markerStyle: {
+    initial: {
+    fill: '#e84e40',
+    stroke: '#e84e40'
+    }
+    },
+    markers: [
+    {latLng: [38.35, -121.92], name: 'Los Angeles - 23'},
+    {latLng: [39.36, -73.12], name: 'New York - 84'},
+    {latLng: [50.49, -0.23], name: 'London - 43'},
+    {latLng: [36.29, 138.54], name: 'Tokyo - 33'},
+    {latLng: [37.02, 114.13], name: 'Beijing - 91'},
+    {latLng: [-32.59, 150.21], name: 'Sydney - 22'},
+    ],
+    series: {
+    regions: [{
+    values: gdpData,
+    scale: ['#6fc4fe', '#2980b9'],
+    normalizeFunction: 'polynomial'
+    }]
+    },
+    onRegionLabelShow: function(e, el, code){
+    el.html(el.html()+' ('+gdpData[code]+')');
+    }
+    });
+    });
+  </script>
+</div>

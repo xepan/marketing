@@ -29,7 +29,8 @@ class page_dashboard extends \xepan\base\Page{
 		$social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');
 		$social_lister->setModel('xepan\marketing\SocialPosters_Base_SocialConfig');
 
-		// 
+		// MAP
+		$map = $this->add('xepan\marketing\View_Map',null,'map');
 	}
 
 	function defaultTemplate(){

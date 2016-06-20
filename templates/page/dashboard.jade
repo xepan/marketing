@@ -1,74 +1,16 @@
 .panel.panel-default
   .panel-body
-    .col-md-8
-      input#inputSuccess.form-control(type='text' placeholder="'How' Many 'Leads' Generated 'Within'")  
-    .col-md-2
-        .container
-          .dropdown.pull-right
-            button#menu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
-              | Filter Time Span
-              span.caret
-            ul.dropdown-menu(role='menu', aria-labelledby='menu1')
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') This Month
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Current Year
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Last Year
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Last 2 Years
-    .col-md-2
-      .container    
-          .dropdown.pull-right
-            button#menu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
-              | Category Filter
-              span.caret
-            ul.dropdown-menu(role='menu', aria-labelledby='menu1')
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Printing Industries
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Outsourcing
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Third Party
-              li(role='presentation')
-                a(role='menuitem', tabindex='-1', href='#') Category      
-
+    .col-md-12
+      {$form} 
 .row.xepan-push-large
-    img(src="img/samples/header.png" style="width:100%")
-
+  .panel.panel-default
+    .panel-body
+      .col-md-9
+        {$bar_chart}
+      .col-md-3  
+        {$graph_stats}
 .row.xepan-push-large
-    .col-md-4
-        .social-box.col-md-12.col-sm-4.facebook
-          i.fa.fa-facebook
-          .clearfix
-            span.social-count 1k
-            span.social-action likes &nbsp; 
-            span.social-count 70
-            span.social-action comments &nbsp;
-            span.social-count 25 
-            span.social-action Shares 
-          span.social-name Maximum Response From
-
-    .col-md-4
-        .social-box.col-md-12.col-sm-4.twitter
-          i.fa.fa-twitter
-          .clearfix
-            span.social-count 1k
-            span.social-action Tweets &nbsp; 
-            span.social-count 70
-            span.social-action Retweets &nbsp; 
-          span.social-name twitter
-    .col-md-4
-        .social-box.col-md-12.col-sm-4.google
-          i.fa.fa-google-plus
-          .clearfix
-            span.social-count 2k
-            span.social-action circles &nbsp;
-            span.social-count 1k
-            span.social-action posts &nbsp; 
-            span.social-count 70
-            span.social-action comments 
-          span.social-name google+
+    {$social_activity}
 
 .row.xepan-push-large.panel.panel-default.panel-body
     .col-md-5    

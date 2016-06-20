@@ -31,6 +31,12 @@ class page_dashboard extends \xepan\base\Page{
 
 		// MAP
 		$map = $this->add('xepan\marketing\View_Map',null,'map');
+
+		// LEAD RESPONSE
+		$lead_response = $this->add('xepan\marketing\View_LeadResponse',null,'lead_response');
+	
+		// CAMPAIGN REPONSE
+		$campaign_response = $this->add('xepan\marketing\View_CampaignResponse',null,'campaign_response');
 	}
 
 	function defaultTemplate(){

@@ -1,0 +1,46 @@
+.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    .main-box-body.clearfix.table-responsive
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
+            {header}
+            thead.xepan-hover-hand
+                {cols}{col}
+                th.footable-visible.footable-first-column.footable-sortable
+                  | Campaign
+                th.footable-visible.footable-sortable
+                  | Completed On
+                th.footable-visible.footable-sortable(data-hide='phone')
+                  | Leads
+                th.text-center.footable-visible.footable-last-column.footable-sortable(data-hide='phone,tablet')
+                  | Response
+                {/}{/}
+            {/}
+            {$subheader}
+
+            tbody
+                {rows}{row}
+                tr(class="{$odd_even}" data-id="{$id}")
+                  {cols}
+                  td
+
+                  td
+
+                  td
+
+                  td
+
+                  {/}
+                {/}{/}
+                {not_found}
+                {$not_found_message}
+                {/}
+
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
+        {$Paginator}

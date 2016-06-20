@@ -18,68 +18,7 @@
     .col-md-5    
         {$map}    
     .col-md-6
-        .row
-            .col-md-6
-                .main-box.infographic-box.colored.emerald-bg
-                  i.fa.fa-envelope
-                  span.headline Newsletter
-                  span.value 4k
-            .col-md-6
-                .main-box.infographic-box.colored.emerald-bg
-                  i.fa.fa-envelope
-                  span.headline SMS
-                  span.value 1k       
-        .row
-            .col-md-6
-                .main-box.infographic-box.colored.emerald-bg
-                  i.fa.fa-globe
-                  span.headline Social
-                  span.value 9k
-            .col-md-6
-                .main-box.infographic-box.colored.emerald-bg
-                  i.fa.fa-user
-                  span.headline Telecall
-                  span.value 4k                 
-            .col-md-12
-                .main-box.infographic-box.colored.emerald-bg
-                  i.fa.fa-user
-                  span.headline Personal Relation
-                  span.value 4k          
+        {$lead_response}         
 .row.xepan-push-large
-    .main-box-body.clearfix
-      table.table.footable.toggle-circle-filled.default.breakpoint.footable-loaded(data-filter-text-only='true', data-filter='#filter', data-page-size='6')
-        thead
-          tr
-            th.footable-visible.footable-first-column.footable-sortable
-              | Campaign
-              span.footable-sort-indicator
-            th.footable-visible.footable-sortable
-              | Completed On
-              span.footable-sort-indicator
-            th.footable-visible.footable-sortable(data-hide='phone')
-              | Leads
-              span.footable-sort-indicator
-            th.text-center.footable-visible.footable-last-column.footable-sortable(data-hide='phone,tablet')
-              | Response
-              span.footable-sort-indicator
-          
-          tr(style='display: table-row;')
-            td.footable-visible.footable-first-column
-              span.footable-toggle
-              a(href='#') Printing Companies (Jaipur)
-            td.footable-visible
-              | 2013/08/08
-            td.footable-visible
-              a(href='#') 900
-            td.text-center.footable-visible.footable-last-column
-              span.label.label-success Great
-          tr(style='display: table-row;')
-            td.footable-visible.footable-first-column
-              span.footable-toggle
-              a(href='#') Printing Companies (Udaipur)
-            td.footable-visible
-              | 2013/08/08
-            td.footable-visible
-              a(href='#') 500
-            td.text-center.footable-visible.footable-last-column
-              span.label.label-success Great    
+  {$campaign_response}
+      

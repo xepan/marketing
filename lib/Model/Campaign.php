@@ -24,8 +24,8 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$camp_j=$this->join('campaign.document_id');
 		$camp_j->addField('title');
 		$camp_j->addField('schedule')->defaultValue('[]');
-		$camp_j->addField('starting_date')->type('datetime');
-		$camp_j->addField('ending_date')->type('datetime');
+		$camp_j->addField('starting_date')->type('date');
+		$camp_j->addField('ending_date')->type('date');
 		$camp_j->addField('campaign_type')->enum(['subscription','campaign']);
 		
 		$camp_j->hasMany('xepan\marketing\Schedule','campaign_id');
@@ -35,6 +35,14 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$this->addCondition('type','Campaign');
 		$this->getElement('status')->defaultValue('Draft');
 		
+		$this->addExpression('active_duration')->set(function($m,$q){
+			return $m->dsql()->expr("DATEDIFF([1],[0])",[$m->getElement('starting_date'),$this->app->today]);
+		});
+
+		$this->addExpression('remaining_duration')->set(function($m,$q){
+			return $m->dsql()->expr("DATEDIFF([0],[1])",[$m->getElement('ending_date'),$this->app->today]);
+		});
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);

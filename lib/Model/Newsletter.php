@@ -15,6 +15,18 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			'message_blog|required'
 			]);
 
+		$this->addExpression('total_leads')->set(function($m,$q){
+			return "'todo'";
+		});
+
+		$this->addExpression('send_to')->set(function($m,$q){
+			return "'todo'";
+		});
+
+		$this->addExpression('remaining')->set(function($m,$q){
+			return "'todo'";
+		});
+
 	}
 
 	function page_test($p){

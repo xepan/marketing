@@ -14,5 +14,6 @@ class page_campaign extends \xepan\base\Page{
 		$crud->setModel($campaign);
 
 		$frm=$crud->grid->addQuickSearch(['title']);
+														
 	}
 }

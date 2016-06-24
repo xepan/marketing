@@ -16,8 +16,8 @@ $.each({
 				revert: true,      // will cause the event to go back to its
 				revertDuration: 0  //  original position after the drag
 			});
-
 		$element = this.jquery;
+		
 
 		var date = new Date();
 		var d = date.getDate();
@@ -52,7 +52,6 @@ $.each({
 			droppable: true, // this allows things to be dropped onto the calendar !!!
 			drop: function(date, allDay) { // this function is called when something is dropped
 				// alert($(this).text());
-
 				// // retrieve the dropped element's stored Event Object
 				// var originalEventObject = $(this).data('eventObject');
 				
@@ -72,7 +71,7 @@ $.each({
 				
 				// render the event on the calendar
 				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-				$('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id'),'contenttype':$(this).data('contenttype')}, true);
+				// $('#calendar').fullCalendar('renderEvent', {title:$(this).text(),'start':date,'document_id':$(this).data('id'),'contenttype':$(this).data('contenttype')}, true);
 				// is the "remove after drop" checkbox checked?
 				if ($('#drop-remove').is(':checked')) {
 					// if so, remove the element from the "Draggable Events" list

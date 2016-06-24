@@ -21,6 +21,5 @@ class page_addsocialpost extends \xepan\base\Page{
 	    		$attachment = $sv->addMany('Attachment',null,'attachment',['view/socialimage']);
 				$attachment->setModel($model_attachment);
 	    	}
-
 	}
 }

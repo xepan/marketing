@@ -16,7 +16,6 @@ class page_socialafterloginhandler extends \xepan\base\Page{
 			$this->add('View_Error')->set('Please click the above URL');
 
 		}else{
-			
 			$this->add('View_Info')->set('Access Token Updated');
 		}
 	}

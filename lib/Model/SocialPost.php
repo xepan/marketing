@@ -13,6 +13,20 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 		$this->addCondition('created_by_id',$this->app->employee->id);
 		$this->addCondition('type','SocialPost');
 
+		$this->addExpression('total_likes')->set(function($m,$q){
+			return "'ToDo'";
+		});
+
+		$this->addExpression('total_shares')->set(function($m,$q){
+			return "'ToDo'";
+		});
+
+		$this->addExpression('total_comments')->set(function($m,$q){
+			return "'ToDo'";
+		});
+
+		$this->hasMany('xepan\marketing\Model_SocialPosters_Base_SocialPosting','post_id');
+
 	}
 
 	function submit(){

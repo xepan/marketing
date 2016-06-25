@@ -12,7 +12,9 @@
 namespace xepan\marketing;
 
 class page_newsletterexec extends \xepan\base\Page {
+	
 	public $title='Cron to send NewsLetters';
+	public $debug = true;
 
 	function init(){
 		parent::init();
@@ -35,9 +37,10 @@ class page_newsletterexec extends \xepan\base\Page {
 		$schedule_j->addField('schedule_date','date');
 		$schedule_j->addField('schedule_day','day');
 
-		
-		$comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
-		$schedule_j->addField('date');
+		// May be this is done by 'last_sent_newsletter_from_schedule_row_days' expression
+		// $comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
+		// $comm_j->addField('communication_date','created_at');
+		// $comm_j->addField('sent_to','to_id');
 
 
 	// 	/***************************************************************************
@@ -53,16 +56,16 @@ class page_newsletterexec extends \xepan\base\Page {
 		***************************************************************************/
 		$leads->addExpression('sendable')->set(function($m,$q){
 			return $q->expr(
-					"IF([0]='campaign',
-						if([1]<='[2]',1,0),
-						if([3]>=[4],1,0)
+					"IF([campaign_type]='campaign',
+						if([schedule_date]<='[now]',1,0),
+						if([days_from_join]>=[schedule_day],1,0)
 						)",
 					[
-						/* 0 */ $m->getElement('campaign_type'),
-						/* 1 */ $m->getElement('schedule_date'),
-						/* 2 */ $this->app->now,
-						/* 3 */ $m->getElement('days_from_join'),
-						/* 4 */ $m->getElement('schedule_day')
+						'campaign_type'=> $m->getElement('campaign_type'),
+						'schedule_date'=> $m->getElement('schedule_date'),
+						'now' => $this->app->now,
+						'days_from_join'=> $m->getElement('days_from_join'),
+						'schedule_day' $m->getElement('schedule_day')
 					]
 					);
 		})->type('boolean');
@@ -79,7 +82,7 @@ class page_newsletterexec extends \xepan\base\Page {
 					->fieldQuery('created_at'),
 				$this->app->now
 				]);
-		});
+		})->caption('Last Newsletter Sent');
 
 
 	// 	/***************************************************************************
@@ -89,8 +92,18 @@ class page_newsletterexec extends \xepan\base\Page {
 			return $m->refSQL('document_id')->fieldQuery('message_blog');
 		});
 
-		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
 		$leads->addCondition('sendable',true);
+
+	// 	/***************************************************************************
+	// 		Must have a gap of N days between sending this Content/Newsletter again
+	// 	/***************************************************************************
+		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
+
+		if($this->debug){
+			$grid = $this->add('Grid');
+			$grid->setModel($lead,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
+			return;
+		}
 
 
 		/***************************************************************************

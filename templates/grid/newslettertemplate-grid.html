@@ -8,7 +8,7 @@
       </div>
     </div>
   </header>{/Pannel}
-  <div class="main-box-body clearfix">
+  <div class="main-box-body clearfix"> 
     <div class="row">
       {header}{cols}{col}{/}{/}{/}
       {rows}{row}
@@ -20,13 +20,19 @@
                 <div class="name"><a href="#">{$title}</a></div>
               </div>
               <div class="project-box-content">
-                <iframe style="height:250px; border1: none; pointer-events: none; -webkit-transform: scale(1); -moz-transform: scale(1); -ms-transform: scale(1); transform: scale(1); -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0;" src="index.php?page=xepan_marketing_newsletterpreview&amp;cut_page=1&amp;content_id={$id}" width="100%"> </iframe>
+                <iframe src="index.php?page=xepan_marketing_newsletterpreview&amp;cut_page=1&amp;content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0"></iframe>
               </div>
+              <div class="project-box-footer clearfix"><a href="#"><span class="value">{$total_leads}</span><span class="label">Total</span></a><a href="#"><span class="value">{$send_to}</span><span class="label">Sent To</span></a><a href="#"><span class="value">{$remaining}</span><span class="label">Remaining   </span></a></div>
               <div class="project-box-ultrafooter clearfix">
-                <div class="col-md-4"></div>
-                <div class="col-md-4"><a href="index.php?page=xepan_marketing_newsletterdesign&amp;action=add&amp;content_id={$id}" class="user-link">     
+                <div class="col-md-1"></div>
+                <div class="col-md-5 pull-left"><a href="index.php?page=xepan_marketing_newsletterdesign&amp;action=add&amp;content_id={$id}" class="user-link">     
                     <button style="" class="btn btn-primary atk-button"> Select</button></a></div>
-                <div class="col-md-4"> </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4 pull-right">
+                      
+                  {$edit}
+                  {$delete}    
+                </div>
               </div>
             </div>
           </div>
@@ -41,3 +47,8 @@
     </div>{$Paginator}
   </div>
 </div>
+<style type="text/css" media="screen">
+  .project-box-content {
+  padding: 0px 0px 0px !important;
+  }
+</style>

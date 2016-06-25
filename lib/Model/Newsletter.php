@@ -27,7 +27,6 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			return "'todo'";
 		});
 
-		$this->addHook('beforeSave',[$this,'appendvalues']);
 	}
 
 	function page_test($p){
@@ -129,18 +128,5 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
             ->addActivity("Approved Newsletter", $this->id)
             ->notifyWhoCan('reject,email,test','Approved');
 		$this->saveAndUnload(); 
-	}
-
-	function appendvalues($m){		
-		$pq = new \xepan\cms\phpQuery();
-		$dom = $pq->newDocument($m['message_blog']);
-
-		foreach ($dom['a'] as $anchor){
-			$a = $pq->pq($anchor);
-			$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_campaign_id'=>123,'xepan_post_id'=>'456'])->absolute()->getURL();
-			$a->attr('href',$url);
-		}
-		$m['message_blog'] = $dom->html();
-
 	}
 }

@@ -72,6 +72,8 @@ class Initiator extends \Controller_Addon {
         $news['message_blog']="No Content";
         $news['url']="xavoc.com";
         $news['title']="Empty";
+        $news['is_template']=true;
+
         $news->save();
         // Create default Company Department
 	}

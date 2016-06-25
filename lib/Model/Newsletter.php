@@ -129,5 +129,4 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
             ->notifyWhoCan('reject,email,test','Approved');
 		$this->saveAndUnload(); 
 	}
-
 }

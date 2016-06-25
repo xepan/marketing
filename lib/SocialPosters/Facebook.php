@@ -247,44 +247,58 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			$fb->setDefaultAccessToken($temp['user_obj']['access_token']);
 			//use link post
 			$data = [];
-			if($temp['post_obj']['url']){
-				// $linkData = [
-				//   'link' => 'http://www.example.com',
-				//   'message' => 'User provided message',
-				//   ];
-				$data['link'] = $temp['post_obj']['url'];
-				$data['message'] = $temp['post_obj']['message_blog'];
-				$end_point = "feed";
-			}else{	
+			if($temp['post_image_url']){
 				//use photo with message
 				// $data = [
 				//   'message' => 'My awesome photo upload example.',
 				//   'source' => $fb->fileToUpload('/path/to/photo.jpg'),
 				// ];
 				$data['message'] = $temp['post_obj']['message_blog'];
-				$data['source'] = $fb->fileToUpload($temp['post_obj']['url']);
-				$end_point = "photos";
-			}			
+				$data['source'] = $fb->fileToUpload($temp['post_image_url']);
+				$post_type = $end_point = "photos";
+			}else{
+					// $linkData = [
+					//   'link' => 'http://www.example.com',
+					//   'message' => 'User provided message',
+					//   ];
+				$data['message'] = $temp['post_obj']['message_blog'];
+				$post_type = $end_point = "feed";
+				if($temp['post_obj']['url']){
+					$data['link'] = $temp['post_obj']['url'];
+					$post_type = "link";
+				}
+			}
+
 
 			try {
 			  // Returns a `Facebook\FacebookResponse` object
 			  $response = $fb->post('/me/'.$end_point, $data, $temp['user_obj']['access_token']);
 			} catch(Facebook\Exceptions\FacebookResponseException $e) {
 			  echo 'Graph returned an error: ' . $e->getMessage();
-			  exit;
 			} catch(Facebook\Exceptions\FacebookSDKException $e) {
 			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
-			  exit;
 			}
 
 			$graphNode = $response->getGraphNode();
-			//todo save post id into database
-			
+
+			//todo save social posting record into database
+			$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+			$social_posting['user_id'] = $temp['user_id'];
+			$social_posting['post_id'] = $temp['post_id'];
+			$social_posting['campaign_id'] = $temp['campaign_id'];
+			$social_posting['post_type'] = $post_type;
+			$social_posting['postid_returned'] = $graphNode['id'];
+			$social_posting['posted_on'] = $this->app->now;
+			$social_posting->save();
+
+			//update posting_on in schedule table
+			if($temp['schedule_id']){
+				$schedule = $this->add('xepan\marketing\Model_Schedule')->tryLoad($temp['schedule_id']);
+				$schedule['posted_on'] = $this->app->now;
+				$schedule->save();
+			}
 		}
 
-
-
-	
 	}
 
 	function get_post_fields_using(){

@@ -1,28 +1,28 @@
-.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
+.xepan-grid.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
     {Pannel}
-    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block
+    header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block( style="100%")
             .pull-right {$grid_buttons} 
             .form-group.pull-right.xepan-filter-form
-                div(class="form-control pull-left")|{$quick_search}
+                span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix
-        .row
-            {header}{cols}{col}{/}{/}{/}
+    .gallery-photos-wrapper
+        ul(id="{$_name}").clearfix.gallery-photos.gallery-photos-hover.ui-sortable
+            {header}{/}
+            {$subheader}
             {rows}{row}
-            div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
-                {cols}
-                .row
-                    .col-md-3
-                        img(id='img_{$id}' src='{$file}' alt='' title='' style="max-width:100%; width:100%")
-            {/}
+            li.col-md-2.col-sm-3.col-xs-6(data-id="{$id}")
+                div.photo-box(style="background-image:url({$file})")
+                a.remove-photo-link(style="top:25px;left:30px;color:white;")
+                {$edit}
+                {$delete}
             {/}{/}
             {not_found}
             div.row
                 .col-md-12.text-center.alert.alert-warning(role="alert")
                     span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
             {/}
-
-            {totals}{cols}{col}{$content}{/}{/}{/}
+            {totals}
+            {/}
         {$Paginator}

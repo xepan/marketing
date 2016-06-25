@@ -18,6 +18,9 @@ class Initiator extends \Controller_Addon {
 		$model_landingresponse['campaign_id'] = $_GET['xepan_landing_campaign_id'];
 		$model_landingresponse['content_id'] = $_GET['xepan_landing_content_id'];
 		$model_landingresponse['emailsetting_id'] = $_GET['xepan_landing_emailsetting_id'];
+		$model_landingresponse['date'] = $this->app->now;
+		$model_landingresponse['type'] = "Newsletter Response";
+		$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
 		$model_landingresponse->save();
 	}
 

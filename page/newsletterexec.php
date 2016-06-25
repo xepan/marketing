@@ -154,7 +154,7 @@ class page_newsletterexec extends \xepan\base\Page {
 
 				foreach ($dom['a'] as $anchor){
 					$a = $pq->pq($anchor);
-					$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id']])->absolute()->getURL();
+					$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id']])->absolute()->getURL();
 					$a->attr('href',$url);
 				}
 				$email_body = $dom->html();

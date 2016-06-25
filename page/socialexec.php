@@ -32,6 +32,24 @@ class page_socialexec extends \xepan\base\Page{
 		// $social_post_array = ['Facebook'=>['user_id','user_obj'=>'user_object','post_id'=>11,'post_obj'=>'post_model']];
 		$social_post_array = [];
 		foreach ($all_postable_contents as $postable_content) {
+			$pq = new \xepan\cms\phpQuery();
+			$dom = $pq->newDocument($postable_content['message_blog']);
+
+			foreach ($dom['a'] as $anchor){
+				$a = $pq->pq($anchor);
+				$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
+				$a->attr('href',$url);
+			}
+			$postable_content['message_blog'] = $dom->html();
+
+			if($postable_content['url']){
+				$url_dom = $pq->newDocument($postable_content['url']);
+				$a = $pq->pq($url_dom['a']);
+				$new_url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
+				$a->attr('href',$new_url);
+				$postable_content['url'] = $url_dom->html();
+			}
+
 			$asso_users = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association')
 						->addCondition('campaign_id',$postable_content['schedule_campaign_id'])
 						->addCondition('is_active',true)

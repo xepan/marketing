@@ -65,7 +65,7 @@ class page_newsletterexec extends \xepan\base\Page {
 						'schedule_date'=> $m->getElement('schedule_date'),
 						'now' => $this->app->now,
 						'days_from_join'=> $m->getElement('days_from_join'),
-						'schedule_day' $m->getElement('schedule_day')
+						'schedule_day'=> $m->getElement('schedule_day')
 					]
 					);
 		})->type('boolean');
@@ -98,13 +98,6 @@ class page_newsletterexec extends \xepan\base\Page {
 	// 		Must have a gap of N days between sending this Content/Newsletter again
 	// 	/***************************************************************************
 		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
-
-		if($this->debug){
-			$grid = $this->add('Grid');
-			$grid->setModel($lead,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
-			return;
-		}
-
 
 		/***************************************************************************
 			Sending newsletter
@@ -147,15 +140,15 @@ class page_newsletterexec extends \xepan\base\Page {
 				/***************************************************
 		         APPENDING VALUES IN URL 
 		        ***************************************************/		
-				// $pq = new \xepan\cms\phpQuery();
-				// $dom = $pq->newDocument($email_body);
+				$pq = new \xepan\cms\phpQuery();
+				$dom = $pq->newDocument($email_body);
 
-				// foreach ($dom['a'] as $anchor){
-				// 	$a = $pq->pq($anchor);
-				// 	$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_campaign_id'=>123,'xepan_post_id'=>'456'])->absolute()->getURL();
-				// 	$a->attr('href',$url);
-				// }
-				// $m['message_blog'] = $dom->html();
+				foreach ($dom['a'] as $anchor){
+					$a = $pq->pq($anchor);
+					$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'lead_id'=>$lead->id,'xepan_campaign_id'=>$lead['campaign_id'],'xepan_post_id'=>$lead['document_id']])->absolute()->getURL();
+					$a->attr('href',$url);
+				}
+				$email_body = $dom->html();
 
 				$temp=$this->add('GiTemplate');
 				$temp->loadTemplateFromString($email_body);
@@ -169,7 +162,26 @@ class page_newsletterexec extends \xepan\base\Page {
 
 				$model_communication_newsletter->setSubject($subject_v->getHtml());
 				$model_communication_newsletter->setBody($body_v->getHtml());
-				$model_communication_newsletter->send($email_settings, $mailer);
+
+				if(!$this->debug){
+					$model_communication_newsletter->send($email_settings, $mailer);
+				}else{
+					// $grid->setModel($leads,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
+					foreach ($leads as $lead) {
+						echo"**********************************************************************************";
+						echo "name"." = ".$lead['name'];
+						echo "campaign"." = ".$lead['campaign_title'];
+						echo "campaign_type"." = ".$lead['campaign_type'];
+						echo "title"." = ".$lead['campaign_type'];
+						echo "title"." = ".$lead['title'];
+						echo "schedule_date"." = ".$lead['schedule_date'];
+						echo "schedule_day"." = ".$lead['schedule_day'];
+						echo "sendable"." = ".$lead['sendable'];
+						echo "last_send_nwl"." = ".$lead['last_sent_newsletter_from_schedule_row_days'];
+						echo "Body"." = ".$lead['body'];
+						echo"**********************************************************************************";
+					}
+				}
 			}
 
 			return $form->js()->univ()->successMessage('Newsletter Send')->execute();

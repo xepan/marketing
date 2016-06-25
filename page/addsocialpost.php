@@ -13,11 +13,9 @@ class page_addsocialpost extends \xepan\base\Page{
 		$sv = $this->add('xepan\hr\View_Document',['action'=>$action,'id_field_on_reload'=>'document_id'],null,['view/addsocialpost']);
 		
 	    $sv->setModel($social,['title','message_blog','url','marketing_category_id'],['title','message_blog','url','marketing_category_id']);
-
-	    	$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$_GET['document_id']);
-	    	$model_attachment->acl = 'xepan\marketing\Model_SocialPost';
-	   	 
 	    	if($_GET['document_id']){
+		    	$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$_GET['document_id']);
+		    	$model_attachment->acl = 'xepan\marketing\Model_SocialPost';
 	    		$attachment = $sv->addMany('Attachment',null,'attachment',['view/socialimage']);
 				$attachment->setModel($model_attachment);
 	    	}

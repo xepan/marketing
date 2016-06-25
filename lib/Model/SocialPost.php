@@ -15,6 +15,12 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 		$this->addCondition('created_by_id',$this->app->employee->id);
 		$this->addCondition('type','SocialPost');
 
+		$this->addExpression('total_posting')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting')
+					->addCondition('post_id',$q->getField('id'))
+					->count();
+		});
+
 		$this->addExpression('total_likes')->set(function($m,$q){
 			$model_socialposting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
 			$model_socialposting->addCondition('post_id',$q->getField('id'));

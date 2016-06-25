@@ -5,6 +5,23 @@ namespace xepan\marketing;
 class Initiator extends \Controller_Addon {
 	public $addon_name = 'xepan_marketing';
 
+	function init(){
+		parent::init();
+
+		$contact_id = $this->app->stickyGET('xepan_landing_contact_id');
+		$campaign_id = $this->app->stickyGET('xepan_landing_campaign_id');
+		$content_id = $this->app->stickyGET('xepan_landing_content_id');
+		$emailsetting_id = $this->app->stickyGET('xepan_landing_emailsetting_id');
+
+		$model_landingresponse['contact_id'] = $contact_id;
+		$model_landingresponse['campaign_id'] = $campaign_id;
+		$model_landingresponse['content_id'] = $content_id;
+		$model_landingresponse['emailsetting_id'] = $emailsetting_id;
+		$model_landingresponse->save();
+
+
+	}
+
 	function setup_admin(){
 
 		$this->routePages('xepan_marketing');

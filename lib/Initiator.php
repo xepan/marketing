@@ -13,6 +13,7 @@ class Initiator extends \Controller_Addon {
 		$content_id = $this->app->stickyGET('xepan_landing_content_id');
 		$emailsetting_id = $this->app->stickyGET('xepan_landing_emailsetting_id');
 
+		$model_landingresponse->add('xepan\marketing\Model_LandingResponse');
 		$model_landingresponse['contact_id'] = $contact_id;
 		$model_landingresponse['campaign_id'] = $campaign_id;
 		$model_landingresponse['content_id'] = $content_id;

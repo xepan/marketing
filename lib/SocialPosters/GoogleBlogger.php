@@ -8,9 +8,9 @@ class SocialPosters_GoogleBlogger extends SocialPosters_Base_Social{
 
 	function init(){
 		parent::init();
-
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/http.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/oauth/client/class.php');
+		return;
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/http.php');
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/oauth/client/class.php');
 		
 		$this->client_config = $client_config = $this->add('xepan/marketing/SocialPosters_GoogleBlogger_GoogleBloggerConfig')->tryLoadAny();
 		

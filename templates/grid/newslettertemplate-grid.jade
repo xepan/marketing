@@ -7,7 +7,7 @@
                 div(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix
+    .main-box-body.clearfix 
         .row
             {header}{cols}{col}{/}{/}{/}
             {rows}{row}
@@ -21,14 +21,28 @@
                           a(href='#')
                             | {$title}
                       .project-box-content
-                        iframe(style="height:250px; border1: none; pointer-events: none; -webkit-transform: scale(1); -moz-transform: scale(1); -ms-transform: scale(1); transform: scale(1); -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0;" src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}' width="100%") 
+                        iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0")
+                      .project-box-footer.clearfix
+                        a(href='#')
+                          span.value {$total_leads}
+                          span.label Total
+                        a(href='#')
+                          span.value {$send_to}
+                          span.label Sent To
+                        a(href='#')
+                          span.value {$remaining}
+                          span.label Remaining   
                       .project-box-ultrafooter.clearfix
-                        .col-md-4
-                        .col-md-4
+                        .col-md-1
+                        .col-md-5.pull-left
                           a.user-link(href='index.php?page=xepan_marketing_newsletterdesign&action=add&content_id={$id}')      
-                                button.btn.btn-primary.atk-button(style='')
-                                    |  Select
-                        .col-md-4  
+                            button.btn.btn-primary.atk-button(style='')
+                                |  Select
+                        .col-md-2
+                        .col-md-4.pull-right     
+                            {$edit}
+                            {$delete}    
+
       
                 
             {/}
@@ -41,4 +55,8 @@
 
             {totals}{cols}{col}{$content}{/}{/}{/}
         {$Paginator}
-        
+
+style(type='text/css', media='screen').
+  .project-box-content {
+  padding: 0px 0px 0px !important;
+  }

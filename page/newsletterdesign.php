@@ -35,6 +35,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 		$nwl_id = $this->app->stickyGET('content_id');
 
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter')->tryLoadBy('id',$this->api->stickyGET('document_id'));
+		
 		$newsletter->addCondition('created_by_id',$this->app->employee->id);
 		if($action !='view'){
 			$tmps = scandir(getcwd().'/../vendor/xepan/marketing/templates/newsletter-layout-chunks');
@@ -53,7 +54,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 		$newsletter->getElement('message_blog')->hint('{$first_name},{$last_name},{$name},{$organization},{$website},{$search_string},{$emails_str},{$contacts_str} ');
 		$nv = $this->add('xepan\hr\View_Document',['action'=>$action,'id_field_on_reload'=>'document_id'],null,['view/newsletterdesign']);
-		$nv->setModel($newsletter,['title','message_blog','marketing_category','created_by','created_at'],['title','message_blog','marketing_category_id']);
+		$nv->setModel($newsletter,['title','message_blog','marketing_category','created_by','created_at','is_template'],['title','message_blog','marketing_category_id','is_template']);
 		$nv->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'created_by','default_value'=>'']);
 		
 		if($action ==='add' && $nwl_id){

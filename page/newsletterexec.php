@@ -14,7 +14,7 @@ namespace xepan\marketing;
 class page_newsletterexec extends \xepan\base\Page {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = true;
+	public $debug = false;
 
 	function init(){
 		parent::init();
@@ -30,6 +30,7 @@ class page_newsletterexec extends \xepan\base\Page {
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
 		$camp_j->addField('campaign_title','title');
 		$camp_j->addField('campaign_type');
+		$camp_j->addField('lead_campaing_id','document_id');
 		
 		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
@@ -49,7 +50,6 @@ class page_newsletterexec extends \xepan\base\Page {
 		$leads->addExpression('days_from_join')->set(function($m,$q){
 			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
 		});
-
 
 		/***************************************************************************
 			Expression to find if the lead is 'Hot'/'sendable limit'
@@ -74,12 +74,19 @@ class page_newsletterexec extends \xepan\base\Page {
 	// 	/***************************************************************************
 	// 		To find the last newsletter sending time.
 	// 	***************************************************************************/	
+		$leads->addExpression('last_sent_newsletter_date')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Communication_Newsletter')
+					->addCondition('related_id',$m->getElement('document_id'))
+					->addCondition('to_id',$m->getElement('id'))
+					->setOrder('created_at','desc')
+					->setLimit(1)
+					->fieldQuery('created_at');
+		});
+
 		$leads->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
 			return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
 				[
-				$this->add('xepan\marketing\Model_Communication_Newsletter')
-					->addCondition('related_id',$m->getElement('document_id'))
-					->fieldQuery('created_at'),
+				$m->getElement('last_sent_newsletter_date'),
 				$this->app->now
 				]);
 		})->caption('Last Newsletter Sent');
@@ -105,10 +112,11 @@ class page_newsletterexec extends \xepan\base\Page {
 		
 		$model = $this->add('xepan\marketing\Model_MassMailing');/*Mass Email Active*/
 		
-		$form = $this->add('Form');
-		$form->addSubmit('Send Newsletter')->addClass('btn btn-primary');
+		// $form = $this->add('Form');
+		// $form->addSubmit('Send Newsletter')->addClass('btn btn-primary');
 
-		if($form->isSubmitted()){
+		// if($form->isSubmitted()){
+			
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
 			$mailer = new \Nette\Mail\SmtpMailer(array(
 			        'host' => $email_settings['email_host'],
@@ -121,6 +129,7 @@ class page_newsletterexec extends \xepan\base\Page {
 			        For each lead run this code
 		    *******************************************************************/
 			foreach ($leads as $lead) {
+				// throw new \Exception($lead->id, 1);
 				$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 				$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
 				// $email_lead=$this->add('xepan\marketing\Model_Lead')->load($lead->id);
@@ -145,7 +154,7 @@ class page_newsletterexec extends \xepan\base\Page {
 
 				foreach ($dom['a'] as $anchor){
 					$a = $pq->pq($anchor);
-					$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'lead_id'=>$lead->id,'xepan_campaign_id'=>$lead['campaign_id'],'xepan_post_id'=>$lead['document_id']])->absolute()->getURL();
+					$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id']])->absolute()->getURL();
 					$a->attr('href',$url);
 				}
 				$email_body = $dom->html();
@@ -154,6 +163,9 @@ class page_newsletterexec extends \xepan\base\Page {
 				$temp->loadTemplateFromString($email_body);
 				$body_v=$this->add('View',null,null,$temp);
 				$body_v->template->set($lead->get());
+
+				$model_communication_newsletter['to_id'] =$lead->id;
+				$model_communication_newsletter['related_id'] =$lead['document_id'];
 
 				foreach ($emails as $email) {	
 					$model_communication_newsletter->addTo($email);
@@ -166,26 +178,24 @@ class page_newsletterexec extends \xepan\base\Page {
 				if(!$this->debug){
 					$model_communication_newsletter->send($email_settings, $mailer);
 				}else{
-					// $grid->setModel($leads,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
-					foreach ($leads as $lead) {
-						echo"**********************************************************************************";
-						echo "name"." = ".$lead['name'];
-						echo "campaign"." = ".$lead['campaign_title'];
-						echo "campaign_type"." = ".$lead['campaign_type'];
-						echo "title"." = ".$lead['campaign_type'];
-						echo "title"." = ".$lead['title'];
-						echo "schedule_date"." = ".$lead['schedule_date'];
-						echo "schedule_day"." = ".$lead['schedule_day'];
-						echo "sendable"." = ".$lead['sendable'];
-						echo "last_send_nwl"." = ".$lead['last_sent_newsletter_from_schedule_row_days'];
-						echo "Body"." = ".$lead['body'];
-						echo"**********************************************************************************";
-					}
+					$model_communication_newsletter->save();
+					echo"**********************************************************************************<br/>";
+					echo "name"." = ".$lead['name'] ."<br/>";
+					echo "campaign"." = ".$lead['campaign_title'] ."<br/>";
+					echo "campaign_type"." = ".$lead['campaign_type'] ."<br/>";
+					echo "title"." = ".$lead['document'] ."<br/>";
+					echo "schedule_date"." = ".$lead['schedule_date'] ."<br/>";
+					echo "schedule_day"." = ".$lead['schedule_day'] ."<br/>";
+					echo "sendable"." = ".$lead['sendable'] ."<br/>";
+					echo "last_send_nwl"." = ".$lead['last_sent_newsletter_from_schedule_row_days'] ."<br/>";
+					echo "last_send_nwl_date"." = ".$lead['last_sent_newsletter_date'] ."<br/>";
+					echo "Body"." = ".$lead['body'] ."<br/>";
+					echo"**********************************************************************************<br/><br/><br/>";
 				}
 			}
 
-			return $form->js()->univ()->successMessage('Newsletter Send')->execute();
-		}
+			// return $form->js()->univ()->successMessage('Newsletter Send')->execute();
+		// }
 
 	}
 }

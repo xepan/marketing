@@ -99,13 +99,6 @@ class page_newsletterexec extends \xepan\base\Page {
 	// 	/***************************************************************************
 		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
 
-		if($this->debug){
-			$grid = $this->add('Grid');
-			$grid->setModel($leads,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
-			return;
-		}
-
-
 		/***************************************************************************
 			Sending newsletter
 		***************************************************************************/
@@ -169,7 +162,26 @@ class page_newsletterexec extends \xepan\base\Page {
 
 				$model_communication_newsletter->setSubject($subject_v->getHtml());
 				$model_communication_newsletter->setBody($body_v->getHtml());
-				$model_communication_newsletter->send($email_settings, $mailer);
+
+				if(!$this->debug){
+					$model_communication_newsletter->send($email_settings, $mailer);
+				}else{
+					// $grid->setModel($leads,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
+					foreach ($leads as $lead) {
+						echo"**********************************************************************************";
+						echo "name"." = ".$lead['name'];
+						echo "campaign"." = ".$lead['campaign_title'];
+						echo "campaign_type"." = ".$lead['campaign_type'];
+						echo "title"." = ".$lead['campaign_type'];
+						echo "title"." = ".$lead['title'];
+						echo "schedule_date"." = ".$lead['schedule_date'];
+						echo "schedule_day"." = ".$lead['schedule_day'];
+						echo "sendable"." = ".$lead['sendable'];
+						echo "last_send_nwl"." = ".$lead['last_sent_newsletter_from_schedule_row_days'];
+						echo "Body"." = ".$lead['body'];
+						echo"**********************************************************************************";
+					}
+				}
 			}
 
 			return $form->js()->univ()->successMessage('Newsletter Send')->execute();

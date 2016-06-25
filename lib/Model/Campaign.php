@@ -18,6 +18,8 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		'Onhold'=>['view','edit','delete','redesign']
 	];
 
+	public $title_field='title';
+
 	function init(){
 		parent::init();
 

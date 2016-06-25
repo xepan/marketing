@@ -21,6 +21,7 @@ class Initiator extends \Controller_Addon {
 		$model_landingresponse['date'] = $this->app->now;
 		$model_landingresponse['type'] = "Newsletter Response";
 		$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
+		$model_landingresponse['ip'] = $_SERVER['REMOTE_ADDR'];
 		$model_landingresponse->save();
 	}
 

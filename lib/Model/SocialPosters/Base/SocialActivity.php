@@ -4,7 +4,7 @@ namespace xepan\marketing;
 // Model Post Activity/Comments
 class Model_SocialPosters_Base_SocialActivity extends \xepan\base\Model_Table{
 	public $table = "marketingcampaign_socialpostings_activities";
-
+	public $acl=false;
 	function init(){
 		parent::init();
 

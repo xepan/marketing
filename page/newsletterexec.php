@@ -65,7 +65,7 @@ class page_newsletterexec extends \xepan\base\Page {
 						'schedule_date'=> $m->getElement('schedule_date'),
 						'now' => $this->app->now,
 						'days_from_join'=> $m->getElement('days_from_join'),
-						'schedule_day' $m->getElement('schedule_day')
+						'schedule_day'=> $m->getElement('schedule_day')
 					]
 					);
 		})->type('boolean');
@@ -101,7 +101,7 @@ class page_newsletterexec extends \xepan\base\Page {
 
 		if($this->debug){
 			$grid = $this->add('Grid');
-			$grid->setModel($lead,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
+			$grid->setModel($leads,['name','campaign_title','campaign_type','title','schedule_date','schedule_day','sendable','last_sent_newsletter_from_schedule_row_days']);
 			return;
 		}
 

@@ -14,7 +14,7 @@ namespace xepan\marketing;
 class page_newsletterexec extends \xepan\base\Page {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = false;
+	public $debug = true;
 
 	function init(){
 		parent::init();
@@ -50,7 +50,7 @@ class page_newsletterexec extends \xepan\base\Page {
 		$leads->addExpression('days_from_join')->set(function($m,$q){
 			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
 		});
-
+		
 		/***************************************************************************
 			Expression to find if the lead is 'Hot'/'sendable limit'
 		***************************************************************************/

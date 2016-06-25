@@ -28,7 +28,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 		$this->addExpression('total_comments')->set(function($m,$q){
 			$model_socialposting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
 			$model_socialposting->addCondition('post_id',$q->getField('id'));
-			return $model_socialposting->fieldQuery('total_comments');
+			return $model_socialposting->sum('total_comments');
 		});
 
 		$this->hasMany('xepan\marketing\Model_SocialPosters_Base_SocialPosting','post_id');

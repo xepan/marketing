@@ -20,10 +20,14 @@ class Model_LandingResponse extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->hasOne('xepan\marketing\Campaign','campaign_id');
-		$this->hasOne('xepan\marketing\Lead','lead_id');
-		$this->hasOne('xepan\marketing\Opportunity','opportunity_id');
+		$this->hasOne('xepan\marketing\Content','content_id');
+		$this->hasOne('xepan\base\Contact','contact_id');
+		
+		$this->hasOne('xepan\communication\Communication_EmailSetting','emailsetting_id');
+		$this->hasOne('xepan\marketing\SocialPosters_Base_SocialUsers','social_user_id');
+
 		$this->addField('date')->type('datetime');
-		$this->addField('action');
+		$this->addField('action'); // use as per requirement
 		$this->addField('type')->hint('call/newsletter/sitevisit/email....');
 		$this->addField('ip');
 		$this->addField('latitude');

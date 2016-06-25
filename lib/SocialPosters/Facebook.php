@@ -42,8 +42,36 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		}
 		
 		$helper = $facebook->getRedirectLoginHelper();
-		$permissions = ['email', 'user_likes']; // optional
-		// public_profile,user_friends,email,user_about_me,user_education_history,user_events,user_hometown,user_likes,user_location,user_managed_groups,user_photos,user_posts,user_tagged_places,user_videos,read_custom_friendlists,read_insights,read_audience_network_insights,read_page_mailboxes,manage_pages,publish_pages,publish_actions,rsvp_event,pages_show_list,pages_manage_cta,pages_manage_instant_articles,ads_read,ads_management,pages_messaging,pages_messaging_phone_number
+		
+		$permissions = ['email',
+			'user_hometown',
+			'user_religion_politics',
+			'publish_actions',
+			'user_likes',
+			'user_status',
+			'user_about_me',
+			'user_location',
+			'user_tagged_places',
+			'user_birthday',
+			'user_photos',
+			'user_videos',
+			'user_education_history',
+			'user_posts',
+			'user_website',
+			'user_friends',
+			'user_relationship_details',
+			'user_work_history',
+			'user_games_activity',
+			'user_relationships',
+			'user_managed_groups',
+			'publish_pages',
+			'user_managed_groups',
+			'user_events',
+			'rsvp_event',
+			'read_insights',
+			'read_custom_friendlists'
+		];
+
 		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id;
 		$loginUrl = $helper->getLoginUrl($redirect_url, $permissions);
 		
@@ -241,7 +269,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			$fb = new \Facebook\Facebook([
 			  'app_id' => $temp['config_obj']['appId'],
 			  'app_secret' => $temp['config_obj']['secret'],
-			  'default_graph_version' => 'v2.2',
+			  'default_graph_version' => 'v2.6',
 			  ]);
 
 			$fb->setDefaultAccessToken($temp['user_obj']['access_token']);
@@ -348,67 +376,73 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 	}
 
 	function updateActivities($posting_model){
-		if(! $posting_model instanceof xepan/marketing\Model_SocialPosting and !$posting_model->loaded())
+		if(! $posting_model instanceof \xepan\marketing\Model_SocialPosting and !$posting_model->loaded())
 			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
-
+				
 		$user_model = $posting_model->ref('user_id');
 
 		$config_model = $user_model->ref('config_id');
 
   		$config = array(
-				      'appId' => $config_model['appId'],
-				      'secret' => $config_model['secret'],
-				      'fileUpload' => true, // optional
-				      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
-				  );
+		      'app_id' => $config_model['appId'],
+		      'app_secret' => $config_model['secret'],
+		      'default_graph_version' => 'v2.6'
+		  );
 
   		$post_content['access_token'] = $user_model['access_token'];
 
-  		$this->fb = $facebook = new \Facebook($config);
-		$this->fb->setFileUploadSupport(true);
+  		$fb = new \Facebook\Facebook([
+		  'app_id' => $config_model['appId'],
+		  'app_secret' => $config_model['secret'],
+		  'default_graph_version' => 'v2.6'
+		]);
 
-		$post_id_returned = explode("_", $posting_model['postid_returned']);
-		if(count($post_id_returned) !=2) return false;
+  		$fb->setDefaultAccessToken($user_model['access_token']);
+  		$requests = [
+		  'reactions' => $fb->request('GET', '/'.$posting_model['postid_returned'].'/reactions', [], $user_model['access_token']),
+		  'comments' => $fb->request('GET', '/'.$posting_model['postid_returned'].'/comments?filter=stream&fields=parent.fields(id),created_time,message,from,likes', [], $user_model['access_token'])
+		];
 
-		$post_id_returned = $post_id_returned[1];
+		try {
+		  $responses = $fb->sendBatchRequest($requests);
+		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+		  echo 'Graph returned an error: ' . $e->getMessage();
+		  exit;
+		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		  exit;
+		}
 
+		// decode all the data
+		$response_data = $responses->getDecodedBody();
+		
+		// index 0 for reactions because first batch process is reaction
+		if($response_data[0]['code'] === 200){
+			$reactions_data_array = json_decode($response_data[0]['body'],true);
+			$posting_model->updateLikesCount(count($reactions_data_array['data']));
+		}
+		
+		// index 1 for comments because second batch process is comments
+		if($response_data[1]['code'] === 200){
+			$comments_data_array = json_decode($response_data[1]['body'],true);
+			$comments = $comments_data_array['data'];
+			// echo "<pre>";
+			foreach ($comments as $key => $comment) {
+				$activity = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialActivity');
+				$activity->addCondition('posting_id',$posting_model->id);
+				$activity->addCondition('activityid_returned',$comment['id']);
+				$activity->addCondition('activity_type',"Comment");
+				$activity->tryLoadAny();
 
-  		$post_content['summary'] = 'true';
-
-  		// likes
-		$likes = $this->fb->api('/'. $post_id_returned .'/likes', 'GET',
-			  								$post_content
-		                                 );
-
-		$posting_model->updateLikesCount($likes['summary']['total_count']);
-
-		// shares
-		$share = $this->fb->api('/'. $post_id_returned .'/share', 'GET',
-			  								$post_content
-		                                 );
-
-		$posting_model->updateShareCount($share['summary']['total_count']);
-
-		// comments
-
-		$comments = $this->fb->api('/'. $post_id_returned .'/comments', 'GET',
-			  								$post_content
-		                                 );
-
-		foreach ($comments['data'] as $comment) {
-			$activity = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialActivity');
-			$activity->addCondition('posting_id',$posting_model->id);
-			$activity->addCondition('activityid_returned',$comment['id']);
-			$activity->tryLoadAny();
-
-			$activity['activity_type']='Comment';
-			$activity['activity_on']=$comment['created_time'];
-			$activity['activity_by']=$comment['from']['id'].'_'.$comment['from']['name'];
-			$activity['name']=$comment['message'];
-			if($comment['like_count']) $activity['name'] = $activity['name'] . '<br><i class="fa fa-thumbs-up">'.$comment['like_count'].'</i>';
-			$activity['action_allowed']=$comment['can_remove']?'can_remove':'';
-			$activity->save();
-
+				$activity['activity_on']=$comment['created_time'];
+				$activity['activity_by']=$comment['from']['id'].'-'.$comment['from']['name'];
+				$activity['name']=$comment['message'];
+				if($comment['likes']['data'])
+					$activity['name'] = $activity['name'] . '<br><i class="fa fa-thumbs-up">'.count($comment['likes']['data']).'</i>';
+				$activity['action_allowed']=$comment['can_remove']?'can_remove':'';
+				$activity->save();
+			}
+			
 		}
 
 	}

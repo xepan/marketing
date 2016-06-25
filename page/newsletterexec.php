@@ -192,10 +192,10 @@ class page_newsletterexec extends \xepan\base\Page {
 					echo "Body"." = ".$lead['body'] ."<br/>";
 					echo"**********************************************************************************<br/><br/><br/>";
 				}
-			// }
+			}
 
 			// return $form->js()->univ()->successMessage('Newsletter Send')->execute();
-		}
+		// }
 
 	}
 }

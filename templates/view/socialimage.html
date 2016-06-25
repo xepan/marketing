@@ -1,28 +1,26 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div class="filter-block">
+<div id="{$_name}" class="xepan-grid clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+  <header class="clearfix atk-actions  {$class} ">
+    <div style="100%" class="filter-block">
       <div class="pull-right">{$grid_buttons} </div>
-      <div class="form-group pull-right xepan-filter-form">
-        <div class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></div>
-      </div>
+      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
   </header>{/Pannel}
-  <div class="main-box-body clearfix">
-    <div class="row">
-      {header}{cols}{col}{/}{/}{/}
+  <div class="gallery-photos-wrapper">
+    <ul id="{$_name}" class="clearfix gallery-photos gallery-photos-hover ui-sortable">
+      {header}{/}
+      {$subheader}
       {rows}{row}
-      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
-        <div class="row">
-          <div class="col-md-3"><img id="img_{$id}" src="{$file}" alt="" title="" style="max-width:100%; width:100%"/></div>
-        </div>
-      </div>{/}
-      {/}{/}
+      <li data-id="{$id}" class="col-md-2 col-sm-3 col-xs-6">
+        <div style="background-image:url({$file})" class="photo-box"></div><a style="top:25px;left:30px;color:white;" class="remove-photo-link"></a>{$edit}
+        {$delete}
+      </li>{/}{/}
       {not_found}
       <div class="row">
         <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
       </div>{/}
-      {totals}{cols}{col}{$content}{/}{/}{/}
-    </div>{$Paginator}
+      {totals}
+      {/}
+    </ul>{$Paginator}
   </div>
 </div>

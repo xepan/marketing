@@ -12,7 +12,8 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('date')->type('datetime');
 		$this->addField('client_event_id');
 		$this->addField('day')->type('Number');
-
+		$this->addField('posted_on')->type('datetime');
+		
 	}
 
 	function campaign(){

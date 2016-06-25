@@ -118,11 +118,16 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
 	}
 
-	function getAssociatedUsers(){
+	function getAssociatedUsers($required_avtive_only=false){
+		if(!$this->loaded())
+			throw new \Exception("campaign model must loaded");
+			
+		$associated_users = $this->ref('xepan\marketing\Campaign_SocialUser_Association');
+		if($required_avtive_only)
+			$associated_users->addCondition('is_active',true);
 
-		$associated_users = $this->ref('xepan\marketing\Campaign_SocialUser_Association')
-								->_dsql()->del('fields')->field('socialuser_id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_users)),false);
+		$social_user_ids = $associated_users->_dsql()->del('fields')->field('socialuser_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($social_user_ids)),false);
 	}
 
 	function associateCategory($category){

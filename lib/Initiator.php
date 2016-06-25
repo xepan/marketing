@@ -8,19 +8,20 @@ class Initiator extends \Controller_Addon {
 	function init(){
 		parent::init();
 
-		$contact_id = $this->app->stickyGET('xepan_landing_contact_id');
-		$campaign_id = $this->app->stickyGET('xepan_landing_campaign_id');
-		$content_id = $this->app->stickyGET('xepan_landing_content_id');
-		$emailsetting_id = $this->app->stickyGET('xepan_landing_emailsetting_id');
+		if($_GET['xepan_landing_contact_id'] || $_GET['xepan_landing_campaign_id'] || $_GET['xepan_landing_content_id'] || $_GET['xepan_landing_emailsetting_id'])
+			$this->landingResponse();	
+	}
 
+	function landingResponse(){		
 		$model_landingresponse = $this->add('xepan\marketing\Model_LandingResponse');
-		$model_landingresponse['contact_id'] = $contact_id;
-		$model_landingresponse['campaign_id'] = $campaign_id;
-		$model_landingresponse['content_id'] = $content_id;
-		$model_landingresponse['emailsetting_id'] = $emailsetting_id;
+		$model_landingresponse['contact_id'] = $_GET['xepan_landing_contact_id'];
+		$model_landingresponse['campaign_id'] = $_GET['xepan_landing_campaign_id'];
+		$model_landingresponse['content_id'] = $_GET['xepan_landing_content_id'];
+		$model_landingresponse['emailsetting_id'] = $_GET['xepan_landing_emailsetting_id'];
+		$model_landingresponse['date'] = $this->app->now;
+		$model_landingresponse['type'] = "Newsletter Response";
+		$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
 		$model_landingresponse->save();
-
-
 	}
 
 	function setup_admin(){

@@ -9,29 +9,19 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th class="text-right"><a href="#" class="asc"><span>User</span></a></th>
-        <th class="text-right"><a href="#" class="asc"><span>Campaign                        </span></a></th>
-        <th><span>Post Type </span></th>
-        <th><a href="#" class="asc"><span>Posted On </span></a></th>
-        <th><a href="#" class="asc"><span>Likes </span></a></th>
-        <th><a href="#" class="asc"><span>Comments </span></a></th>
-        <th><a href="#" class="asc"><span>Unread Comments </span></a></th>
-        <th><span>Is Monitoring</span></th>
-        <th><span>Force Monitor</span></th>
+        <th><a href="#"><span>Comment By</span></a></th>
+        <th><a href="#" class="asc"><span>Comment</span></a></th>
+        <th><a href="#" class="asc"><span>Comment On</span></a></th>
+        <th><a href="#" class="asc"><span>is read</span></a></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><a href="#" data-id="{$id}" class="user-link do-view-employee">{$user}</a><span class="user-subhead">{$social_app} </span></td>
-          <td>{$campaign}</td>
-          <td>{$post_type}</td>
-          <td>{$posted_on}</td>
-          <td></td>{$likes}
-          <td><a href="?page=xepan_marketing_socialpostcomments&amp;posting_id={$id}" data-id="{$id}" target="_blank" class="do-view-post-comment">{$total_comments}</a></td>
-          <td><a href="?page=xepan_marketing_socialpostcomments&amp;posting_id={$id}" data-id="{$id}" class="do-view-post-comment">{$unread_comments}</a></td>
-          <td>{$is_monitoring}</td>
-          <td>{$force_monitor}</td>
+          <td><a href="#" data-id="{$id}" class="user-link do-view-employee">{$activity_by}</a></td>
+          <td>{$name}</td>
+          <td>{$is_read}</td>
+          <td>{$activity_on}</td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

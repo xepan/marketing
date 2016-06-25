@@ -12,9 +12,9 @@ class page_socialpost extends \xepan\base\Page{
 		$crud=$this->add('xepan\hr\CRUD',null,null,['grid/total-posting-grid']);
 		$crud->setModel($social);
 
-		if(!$crud->isEditing()){
-			$crud->grid->js('click')->_selector('.do-view-post-comment')->univ()->frameURL('Employee Details',[$this->api->url('xepan_marketing_socialpostcomments'),'posting_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
-		}
+		// if(!$crud->isEditing()){
+		// 	$crud->grid->js('click')->_selector('.do-view-post-comment')->univ()->newWindow($this->api->url('xepan_marketing_socialpostcomments',['posting_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]));
+		// }
 
 	}
 }

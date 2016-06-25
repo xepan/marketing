@@ -12,30 +12,18 @@
             {header}
             thead
                 {cols}{col}
-                th.text-right
-                    a.asc(href='#')
-                        span User
-                th.text-right
-                    a.asc(href='#')
-                        span Campaign                        
                 th
-                    span Post Type 
+                    a(href='#')
+                        span Comment By
                 th
                     a.asc(href='#')
-                     span Posted On 
+                        span Comment
                 th
                     a.asc(href='#')
-                     span Likes 
+                        span Comment On
                 th
                     a.asc(href='#')
-                     span Comments 
-                th
-                    a.asc(href='#')
-                     span Unread Comments 
-                th
-                    span Is Monitoring
-                th
-                    span Force Monitor
+                        span is read
                 th 
                 {/}{/}
             {/}
@@ -46,26 +34,14 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                      a.user-link.do-view-employee(href='#',data-id="{$id}") {$user}
-                      span.user-subhead {$social_app} 
+                      a.user-link.do-view-employee(href='#',data-id="{$id}"){$activity_by}
+                       //- span.user-subhead {$social_app} 
                     td
-                      | {$campaign}
+                      | {$name}
                     td
-                      | {$post_type}
+                        | {$is_read}
                     td
-                      | {$posted_on}
-                    td
-                    | {$likes}
-                    td
-                      a.do-view-post-comment(href="?page=xepan_marketing_socialpostcomments&posting_id={$id}" data-id="{$id}" target='_blank'){$total_comments}
-                    td
-                      a.do-view-post-comment(href="?page=xepan_marketing_socialpostcomments&posting_id={$id}" data-id="{$id}"){$unread_comments}
-                    td
-                      | {$is_monitoring}
-                    td
-                      | {$force_monitor}
-                    //- td
-                    //-     | {action}Action Here{/}
+                        | {$activity_on}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

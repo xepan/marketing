@@ -14,7 +14,7 @@ namespace xepan\marketing;
 class page_newsletterexec extends \xepan\base\Page {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = false;
+	public $debug = true;
 
 	function init(){
 		parent::init();

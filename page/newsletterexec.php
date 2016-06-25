@@ -147,15 +147,15 @@ class page_newsletterexec extends \xepan\base\Page {
 				/***************************************************
 		         APPENDING VALUES IN URL 
 		        ***************************************************/		
-				// $pq = new \xepan\cms\phpQuery();
-				// $dom = $pq->newDocument($email_body);
+				$pq = new \xepan\cms\phpQuery();
+				$dom = $pq->newDocument($email_body);
 
-				// foreach ($dom['a'] as $anchor){
-				// 	$a = $pq->pq($anchor);
-				// 	$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_campaign_id'=>123,'xepan_post_id'=>'456'])->absolute()->getURL();
-				// 	$a->attr('href',$url);
-				// }
-				// $m['message_blog'] = $dom->html();
+				foreach ($dom['a'] as $anchor){
+					$a = $pq->pq($anchor);
+					$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'lead_id'=>$lead->id,'xepan_campaign_id'=>$lead['campaign_id'],'xepan_post_id'=>$lead['document_id']])->absolute()->getURL();
+					$a->attr('href',$url);
+				}
+				$email_body = $dom->html();
 
 				$temp=$this->add('GiTemplate');
 				$temp->loadTemplateFromString($email_body);

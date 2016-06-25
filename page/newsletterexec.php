@@ -14,7 +14,7 @@ namespace xepan\marketing;
 class page_newsletterexec extends \xepan\base\Page {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = true;
+	public $debug = false;
 
 	function init(){
 		parent::init();
@@ -30,7 +30,7 @@ class page_newsletterexec extends \xepan\base\Page {
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
 		$camp_j->addField('campaign_title','title');
 		$camp_j->addField('campaign_type');
-		$camp_j->addField('lead_campaing_id','id');
+		$camp_j->addField('lead_campaing_id','document_id');
 		
 		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');

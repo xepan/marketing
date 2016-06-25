@@ -21,7 +21,7 @@ class page_socialexec extends \xepan\base\Page{
 		$all_postable_contents->addCondition('status','Approved');
 		$all_postable_contents->addCondition('campaign_status','Approved');
 		$all_postable_contents->addCondition('ending_date','>=',$this->app->today);
-		// $all_postable_contents->addCondition('posted_on',null);
+		$all_postable_contents->addCondition('posted_on',null);
 
 		// $all_postable_contents->addExpression('socialUsers')->set(function($m,$q){
 		// 	$x = $m->add('xepan\marketing\Model_Campaign_SocialUser_Association',['table_alias'=>'users_str']);
@@ -61,9 +61,9 @@ class page_socialexec extends \xepan\base\Page{
 				$temp_array['post_id'] = $postable_content['id'];
 				$temp_array['post_obj'] = $post_model;
 				$temp_array['post_image_path'] = $post_image_path;
-				$temp_array['campaign_id'] = $postable_content['campaign_id'];
+				$temp_array['campaign_id'] = $postable_content['schedule_campaign_id'];
 				$temp_array['schedule_id'] = $postable_content['schedule_id'];
-
+				
 				array_push($social_post_array[$asso_user['type']], $temp_array);
 			}
 		}

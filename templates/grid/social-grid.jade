@@ -18,7 +18,7 @@
 						.main-box-body.clearfix  
 							.project-box-header.green-bg
 								.name
-									a(href='#')
+									a(href='?page=xepan_marketing_socialpost&post_id={$id}' target="_blank")
 										| {$title} 
 							.project-box-content
 								span
@@ -27,12 +27,12 @@
 									{message_blog}{/} 
 							.project-box-footer.clearfix
 								a(href='#')
+									span.value {total_posting}0{/}
+									span.label Post
+								a(href='#')
 									span.value {$total_likes}
 									span.label Likes
-								a(href='#')
-									span.value {$total_likes}
-									span.label Shares
-								a(href='#')
+								a(href="#")
 									span.value {$total_likes}
 									span.label Comments
 							.project-box-ultrafooter.clearfix

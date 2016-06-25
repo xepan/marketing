@@ -24,8 +24,8 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$camp_j=$this->join('campaign.document_id');
 		$camp_j->addField('title');
 		$camp_j->addField('schedule')->defaultValue('[]');
-		$camp_j->addField('starting_date')->type('datetime');
-		$camp_j->addField('ending_date')->type('datetime');
+		$camp_j->addField('starting_date')->type('date');
+		$camp_j->addField('ending_date')->type('date');
 		$camp_j->addField('campaign_type')->enum(['subscription','campaign']);
 		
 		$camp_j->hasMany('xepan\marketing\Schedule','campaign_id');
@@ -35,6 +35,14 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$this->addCondition('type','Campaign');
 		$this->getElement('status')->defaultValue('Draft');
 		
+		$this->addExpression('active_duration')->set(function($m,$q){
+			return $m->dsql()->expr("DATEDIFF([1],[0])",[$m->getElement('starting_date'),$this->app->today]);
+		});
+
+		$this->addExpression('remaining_duration')->set(function($m,$q){
+			return $m->dsql()->expr("DATEDIFF([0],[1])",[$m->getElement('ending_date'),$this->app->today]);
+		});
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
@@ -97,11 +105,16 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
 	}
 
-	function getAssociatedUsers(){
+	function getAssociatedUsers($required_avtive_only=false){
+		if(!$this->loaded())
+			throw new \Exception("campaign model must loaded");
+			
+		$associated_users = $this->ref('xepan\marketing\Campaign_SocialUser_Association');
+		if($required_avtive_only)
+			$associated_users->addCondition('is_active',true);
 
-		$associated_users = $this->ref('xepan\marketing\Campaign_SocialUser_Association')
-								->_dsql()->del('fields')->field('socialuser_id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_users)),false);
+		$social_user_ids = $associated_users->_dsql()->del('fields')->field('socialuser_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($social_user_ids)),false);
 	}
 
 	function associateCategory($category){

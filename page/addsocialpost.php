@@ -14,11 +14,12 @@ class page_addsocialpost extends \xepan\base\Page{
 		
 	    $sv->setModel($social,['title','message_blog','url','marketing_category_id'],['title','message_blog','url','marketing_category_id']);
 
-	    $model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$_GET['document_id']);
-	    $model_attachment->acl = 'xepan\marketing\Model_SocialPost';
-	    
-	    $attachment = $sv->addMany('Attachment',null,'attachment',null);
-		$attachment->setModel($model_attachment);
-
+	    	$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$_GET['document_id']);
+	    	$model_attachment->acl = 'xepan\marketing\Model_SocialPost';
+	   	 
+	    	if($_GET['document_id']){
+	    		$attachment = $sv->addMany('Attachment',null,'attachment',['view/socialimage']);
+				$attachment->setModel($model_attachment);
+	    	}
 	}
 }

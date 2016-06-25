@@ -8,8 +8,9 @@ class page_socialloginmanager extends \xepan\base\Page{
 
 		if($social = $_GET['social_login_to']){
 			$this->api->stickyGET('social_login_to');
-			$this->add('xepan/marketing/SocialPosters_'.$_GET['social_login_to'])->login_status();
-
+			$message = $this->add('xepan/marketing/SocialPosters_'.$_GET['social_login_to'])->login_status();
+					
+			$this->add('View')->setHtml($message);
 		}
 
 	}

@@ -14,8 +14,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookConfig.php');
 		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookPosting.php');
 		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/FacebookUsers.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/facebook.php');
-
+		// require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Facebook/facebook.php');
 		
 	}
 
@@ -29,42 +28,50 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		}
 
 		$config = array(
-		      'appId' => $config_model['appId'],
-		      'secret' => $config_model['secret'],
-		      'fileUpload' => true, // optional
-		      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
+		      'app_id' => $config_model['appId'],
+		      'app_secret' => $config_model['secret'],
+		      'default_graph_version' => 'v2.6'
 		  );
-
-		$this->fb = $facebook = new \Facebook($config);
+	      // 'fileUpload' => true, // optional
+	      // 'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
+		$this->fb = $facebook = new \Facebook\Facebook($config);
 
 		if(!$this->fb){
 			echo "Configuration Problem";
 			return false;
 		}
 		
-		$user_id = $this->fb->getUser();
-		if(!$user_id){
-			$login_url = $this->fb->getLoginUrl(
-										array(
-											'scope'=>'public_profile,user_friends,email,user_about_me,user_education_history,user_events,user_hometown,user_likes,user_location,user_managed_groups,user_photos,user_posts,user_tagged_places,user_videos,read_custom_friendlists,read_insights,read_audience_network_insights,read_page_mailboxes,manage_pages,publish_pages,publish_actions,rsvp_event,pages_show_list,pages_manage_cta,pages_manage_instant_articles,ads_read,ads_management,pages_messaging,pages_messaging_phone_number',
-											'redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id
-											));
+		$helper = $facebook->getRedirectLoginHelper();
+		$permissions = ['email', 'user_likes']; // optional
+		// public_profile,user_friends,email,user_about_me,user_education_history,user_events,user_hometown,user_likes,user_location,user_managed_groups,user_photos,user_posts,user_tagged_places,user_videos,read_custom_friendlists,read_insights,read_audience_network_insights,read_page_mailboxes,manage_pages,publish_pages,publish_actions,rsvp_event,pages_show_list,pages_manage_cta,pages_manage_instant_articles,ads_read,ads_management,pages_messaging,pages_messaging_phone_number
+		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id;
+		$loginUrl = $helper->getLoginUrl($redirect_url, $permissions);
+		
+		return '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+		
+		// $user_id = $this->fb->getUser();
+		// if(!$user_id){
+		// 	$login_url = $this->fb->getLoginUrl(
+		// 								array(
+		// 									'scope'=>'public_profile,user_friends,email,user_about_me,user_education_history,user_events,user_hometown,user_likes,user_location,user_managed_groups,user_photos,user_posts,user_tagged_places,user_videos,read_custom_friendlists,read_insights,read_audience_network_insights,read_page_mailboxes,manage_pages,publish_pages,publish_actions,rsvp_event,pages_show_list,pages_manage_cta,pages_manage_instant_articles,ads_read,ads_management,pages_messaging,pages_messaging_phone_number',
+		// 									'redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id
+		// 									));
 			
-		  	echo '<a class="btn btn-danger btn-xs" href="'.$login_url.'">Login</a>';
-		}else{
-			if($this->after_login_handler())
-				$this->add('View_Info')->set('Access Token Updated');
-			else
-				$this->add('View_Error')->set('Access Token Not Updated');
+		//   	echo '<a class="btn btn-danger btn-xs" href="'.$login_url.'">Login</a>';
+		// }else{
+		// 	if($this->after_login_handler())
+		// 		$this->add('View_Info')->set('Access Token Updated');
+		// 	else
+		// 		$this->add('View_Error')->set('Access Token Not Updated');
 
-			// $this->config['userid_returned'] = $user_id;
-			// $this->config->save();
-		 //  	return '<a class="btn btn-success btn-xs" href="#" onclick="javascript:'.$this->owner->js()->reload(array('facebook_logout'=>1)).'">Logout</a>';
-		}
+		// 	// $this->config['userid_returned'] = $user_id;
+		// 	// $this->config->save();
+		//  //  	return '<a class="btn btn-success btn-xs" href="#" onclick="javascript:'.$this->owner->js()->reload(array('facebook_logout'=>1)).'">Logout</a>';
+		// }
 
 	}
 
-	function after_login_handler(){		
+	function after_login_handler(){
 		$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
 		$config_model->tryLoad($_GET['for_config_id']);
 
@@ -72,60 +79,71 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			$this->add('View_Error')->set('Could not load Config Model');
 			return false;
 		}
-
 		
 		$config = array(
-		      'appId' => $config_model['appId'],
-		      'secret' => $config_model['secret'],
+		      'app_id' => $config_model['appId'],
+		      'app_secret' => $config_model['secret'],
 		      'fileUpload' => true, // optional
 		      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
 		  );
 
-		$this->fb = $facebook = new \Facebook($config);
+		$this->fb = $facebook = $fb = new \Facebook\Facebook($config);
 
 		if(!$this->fb){
 			return "Configuration Problem";
 		}
 
-		$user_id = $this->fb->getUser();
-		
-		if(!$user_id){
-			$login_url = $this->fb->getLoginUrl(array('scope'=>'publish_actions,status_update,publish_stream,user_groups','redirect_uri'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan/marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id));
-			echo "<a href='$login_url'>Login URL $login_url</a>";
-			return false;
-
+		$helper = $fb->getRedirectLoginHelper();
+		try {
+		  $accessToken = $helper->getAccessToken();
+		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+		  // When Graph returns an error
+		  echo 'Graph returned an error: ' . $e->getMessage();
+		  exit;
+		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		  // When validation fails or other local issues
+		  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		  exit;
 		}
 
-
-		$this->fb->setExtendedAccessToken();
-		$new_token = $this->fb->getAccessToken();
-
-		$fb_user = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookUsers');
-		$fb_user->addCondition('userid_returned',$user_id);
-		$fb_user->addCondition('config_id',$config_model->id);
-		$fb_user->tryLoadAny();
-
-		
-		$user_profile = $this->fb->api('/me','GET',array('access_token'=>$new_token));
-        $fb_user['name']= $user_profile['name'];
-        
-
-		$fb_user['access_token'] = $new_token;
-		$fb_user['is_access_token_valid']= true;
-		$fb_user->save();
-
-		return true;
+		if (isset($accessToken)) {
+		  // Logged in!
+		  $_SESSION['facebook_access_token'] = (string) $accessToken;
+			
+			$oAuth2Client = $fb->getOAuth2Client();
+			// Exchanges a short-lived access token for a long-lived one
+			$longLivedAccessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+			
+			$fb->setDefaultAccessToken($longLivedAccessToken);
+			try {
+			  $response = $fb->get('/me');
+			  $userNode = $response->getGraphUser();
+			} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			  // When Graph returns an error
+			  echo 'Graph returned an error: ' . $e->getMessage();
+			  exit;
+			} catch(Facebook\Exceptions\FacebookSDKException $e) {
+			  // When validation fails or other local issues
+			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			  exit;
+			}
+			$fb_user = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookUsers');
+			$fb_user->addCondition('userid_returned',$userNode->getId());
+			$fb_user->addCondition('config_id',$config_model->id);
+			$fb_user->tryLoadAny();
+			$fb_user['access_token'] = (string)$longLivedAccessToken;
+			$fb_user['is_access_token_valid']= true;
+			$fb_user->save();
+			return true;
+		}
+		return false;
 	}
 
 
 	function config_page(){
-		
-
 		$c=$this->owner->add('CRUD');
 		$model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
 		$c->setModel($model);
-
-		
 		$users_crud = $c->addRef('xepan/marketing/SocialPosters_Base_SocialUsers',array('label'=>'Users'));
 
 		if($c->grid and !$users_crud){
@@ -140,11 +158,9 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			      'fileUpload' => true, // optional
 			      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
 				);
-
-				$facebook = new \Facebook($config);
+				// $facebook = new \Facebook($config);
 				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan_marketing_socialloginmanager&social_login_to=Facebook&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xepan_marketing_socialloginmanager&social_login_to=Facebook&for_config_id='.$config_model->id);
 			}
-			// $c->add('Controller_FormBeautifier');
 		}
 
 	}
@@ -216,29 +232,59 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	}
 
-	function postAll($params,$under_campaign_id=0){ // all social post row as hash array or model
+	function postAll($postable_and_user_data){ 
 
-	  	try{
+		// echo $temp['user_obj']['userid_returned'] ." post==".$temp['post_id'];
+		foreach ($postable_and_user_data as $temp) {
+			$batch_array = [];
 
-	  		$groups_posted=array();
-	  		
-	  		$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
-	  		foreach ($config_model as $junk) {
-	  			
-		  		$users=$config_model->ref('xepan/marketing/SocialPosters_Base_SocialUsers');
-		  		$users->addCondition('is_active',true);
+			$fb = new \Facebook\Facebook([
+			  'app_id' => $temp['config_obj']['appId'],
+			  'app_secret' => $temp['config_obj']['secret'],
+			  'default_graph_version' => 'v2.2',
+			  ]);
 
-		  		foreach ($users as $junk) {
-		  			$this->postSingle($users,$params,$config_model['post_in_groups'], $groups_posted, $under_campaign_id);
-		  		}
-		  	}
+			$fb->setDefaultAccessToken($temp['user_obj']['access_token']);
+			//use link post
+			$data = [];
+			if($temp['post_obj']['url']){
+				// $linkData = [
+				//   'link' => 'http://www.example.com',
+				//   'message' => 'User provided message',
+				//   ];
+				$data['link'] = $temp['post_obj']['url'];
+				$data['message'] = $temp['post_obj']['message_blog'];
+				$end_point = "feed";
+			}else{	
+				//use photo with message
+				// $data = [
+				//   'message' => 'My awesome photo upload example.',
+				//   'source' => $fb->fileToUpload('/path/to/photo.jpg'),
+				// ];
+				$data['message'] = $temp['post_obj']['message_blog'];
+				$data['source'] = $fb->fileToUpload($temp['post_obj']['url']);
+				$end_point = "photos";
+			}			
 
-	  	}catch(\Exception $e){
+			try {
+			  // Returns a `Facebook\FacebookResponse` object
+			  $response = $fb->post('/me/'.$end_point, $data, $temp['user_obj']['access_token']);
+			} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			  echo 'Graph returned an error: ' . $e->getMessage();
+			  exit;
+			} catch(Facebook\Exceptions\FacebookSDKException $e) {
+			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			  exit;
+			}
 
-	  		echo "<h2>".$e->getMessage()."</h2>";
-	  		// print_r($post_content);
-	  	}
-	  	
+			$graphNode = $response->getGraphNode();
+			//todo save post id into database
+			
+		}
+
+
+
+	
 	}
 
 	function get_post_fields_using(){

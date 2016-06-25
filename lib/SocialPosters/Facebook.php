@@ -247,14 +247,14 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			$fb->setDefaultAccessToken($temp['user_obj']['access_token']);
 			//use link post
 			$data = [];
-			if($temp['post_image_url']){
+			if($temp['post_image_path']){
 				//use photo with message
 				// $data = [
 				//   'message' => 'My awesome photo upload example.',
 				//   'source' => $fb->fileToUpload('/path/to/photo.jpg'),
 				// ];
 				$data['message'] = $temp['post_obj']['message_blog'];
-				$data['source'] = $fb->fileToUpload($temp['post_image_url']);
+				$data['source'] = $fb->fileToUpload($temp['post_image_path']);
 				$post_type = $end_point = "photos";
 			}else{
 					// $linkData = [

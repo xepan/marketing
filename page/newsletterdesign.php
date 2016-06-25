@@ -66,6 +66,5 @@ class page_newsletterdesign extends \xepan\base\Page{
 			$field = $nv->form->getElement('message_blog');
 			$field->options=['templates'=> $templates_vp->getURL(),'relative_urls'=> true];
 		}
-
 	}
 }

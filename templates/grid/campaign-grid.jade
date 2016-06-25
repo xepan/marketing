@@ -22,14 +22,14 @@
                           .text-danger(style="font-size: 16px;") Remaining: {$remaining_duration}
                       .project-box-footer.clearfix
                         a(href='#')
-                          span.value 93
-                          span.text-success Posted To
+                          span.value {$posted}
+                          span.text-success Posted
                         a(href='#')
-                          span.value 3
+                          span.value {$remaining}
                           span.text-warning Remaining
                         a(href='#')
-                          span.value 5
-                          span.text-danger Unsuccessful
+                          span.value {$success_percent} %
+                          span.text-danger Success %
                       .project-box-ultrafooter.clearfix
                         .col-md-2
                         .col-md-4

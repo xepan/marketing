@@ -43,6 +43,19 @@ class Model_Campaign extends \xepan\base\Model_Document{
 			return $m->dsql()->expr("DATEDIFF([0],[1])",[$m->getElement('ending_date'),$this->app->today]);
 		});
 
+		$this->addExpression('posted')->set(function($m,$q){
+			return "'todo'";
+		});
+
+		$this->addExpression('remaining')->set(function($m,$q){
+			return "'todo'";
+		});
+
+		$this->addExpression('success_percent')->set(function($m,$q){
+			return "'todo'";
+		});
+
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);

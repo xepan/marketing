@@ -21,12 +21,7 @@ class page_socialexec extends \xepan\base\Page{
 		$all_postable_contents->addCondition('status','Approved');
 		$all_postable_contents->addCondition('campaign_status','Approved');
 		$all_postable_contents->addCondition('ending_date','>=',$this->app->today);
-		// $all_postable_contents->addCondition('posted_on',null);
-
-		// $all_postable_contents->addExpression('socialUsers')->set(function($m,$q){
-		// 	$x = $m->add('xepan\marketing\Model_Campaign_SocialUser_Association',['table_alias'=>'users_str']);
-		// 	return $x->addCondition('campaign_id',$q->getField('campaign_id'))->_dsql()->del('fields')->field($q->expr('group_concat([0] SEPARATOR ",")',[$x->getElement('')]));
-		// });
+		$all_postable_contents->addCondition('posted_on',null);
 
 		
 		// $social_post_array = ['Facebook'=>['user_id','user_obj'=>'user_object','post_id'=>11,'post_obj'=>'post_model']];
@@ -61,8 +56,8 @@ class page_socialexec extends \xepan\base\Page{
 
 				if($post_model['url']){
 					$url = $this->app->url($post_model['url'],['xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
-					$postable_content['url'] = $url;
-				}	
+					$post_model['url'] = $url;
+				}
 
 				$post_image_url = (string)$post_model->ref('Attachments')->setLimit(1)->fieldQuery('file');
 				$post_image_path = "";
@@ -80,8 +75,15 @@ class page_socialexec extends \xepan\base\Page{
 				$temp_array['post_image_path'] = $post_image_path;
 				$temp_array['campaign_id'] = $postable_content['schedule_campaign_id'];
 				$temp_array['schedule_id'] = $postable_content['schedule_id'];												
+				
+				$social_post_array[$asso_user['type']][] = $temp_array;
+
 			}
+
+
 		}
+
+
 		foreach ($social_post_array as $social_app => $value) {
 				$this->add('xepan/marketing/SocialPosters_'.$social_app)
 					->postAll($value);

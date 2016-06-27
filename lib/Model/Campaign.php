@@ -69,6 +69,8 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignSocialUserAssociation']);
 		$this->addHook('beforeDelete',[$this,'checkExistingSchedule']);
+		$this->addHook('beforeDelete',[$this,'checkExistingLandingResponses']);
+		$this->addHook('beforeDelete',[$this,'checkExistingSocialPostings']);
 	}
 
 	function updateSearchString($m){
@@ -98,25 +100,25 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function beforeSave($m){}
 
 	function checkExistingCampaignCategoryAssociation($m){
-		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
-		
-		if($campaign_catasso_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s  Category Assciation`s ');
+		$m->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();
 	}
 
 	function checkExistingCampaignSocialUserAssociation($m){
-		$cam_user_count = $m->ref('xepan\marketing\Campaign_SocialUser_Association')->count()->getOne();
-		
-		if($cam_user_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s  Social User`s ');	
+		$m->ref('xepan\marketing\Campaign_SocialUser_Association')->deleteAll();		
 	}
 
 	function checkExistingSchedule($m){
-		$schedule_count = $m->ref('xepan\marketing\Schedule')->count()->getOne();
+		$m->ref('xepan\marketing\Schedule')->deleteAll();
+	}
 
-		if($schedule_count)
-			throw $this->exception('Cannot Delete,first delete  Schedule`s ');
+	function checkExistingLandingResponses(){
+		$model_landingresponse = $this->add('xepan\marketing\Model_LandingResponse');
+		$model_landingresponse->addCondition('campaign_id',$this->id)->deleteAll();
+	}
 
+	function checkExistingSocialPostings(){
+		$model_socialposting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+		$model_socialposting->addCondition('campaign_id',$this->id)->deleteAll();
 	}
 
 	function getAssociatedCategories(){

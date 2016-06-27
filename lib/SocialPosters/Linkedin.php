@@ -159,7 +159,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		$parameters->visibility = new \stdClass;
 		$parameters->visibility->code = 'anyone';
   		if($post_model['message_blog']) 
-  			$parameters->comment = $post_model['message_blog'];
+  			$parameters->comment = strip_tags($post_model['message_blog']);
   		
 		if($post_model['url']){
 			$parameters->content = new \stdClass;

@@ -11,7 +11,7 @@ class page_lead extends \xepan\base\Page{
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
-
+		$lead->setOrder('total_visitor','desc');
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
 		$crud->setModel($lead);
 		$crud->grid->addPaginator(50);

@@ -22,15 +22,17 @@ class page_socialexec extends \xepan\base\Page{
 		$all_postable_contents->addCondition('campaign_status','Approved');
 		$all_postable_contents->addCondition('ending_date','>=',$this->app->today);
 		$all_postable_contents->addCondition('posted_on',null);
-
 		
 		// $social_post_array = ['Facebook'=>['user_id','user_obj'=>'user_object','post_id'=>11,'post_obj'=>'post_model']];
 		$social_post_array = [];
-		foreach ($all_postable_contents as $postable_content) {						
+		foreach ($all_postable_contents as $postable_content) {
 			$asso_users = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association')
 						->addCondition('campaign_id',$postable_content['schedule_campaign_id'])
 						->addCondition('is_active',true)
 						;
+			// echo $postable_content['schedule_campaign_id']."<br/>";
+			// echo $asso_users->count()->getOne()."<br/>";
+			// continue;
 
 			foreach ($asso_users as $asso_user) {
 				if(!isset($social_post_array[$asso_user['type']])){
@@ -80,10 +82,10 @@ class page_socialexec extends \xepan\base\Page{
 
 			}
 
-
 		}
 
-
+		// var_dump($social_post_array);
+		// throw new \Exception($all_postable_contents->count()->getOne());
 		foreach ($social_post_array as $social_app => $value) {
 				$this->add('xepan/marketing/SocialPosters_'.$social_app)
 					->postAll($value);

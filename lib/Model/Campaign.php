@@ -37,6 +37,12 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$this->addCondition('type','Campaign');
 		$this->getElement('status')->defaultValue('Draft');
 		
+		$this->addExpression('total_visitor')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_LandingResponse')
+					->addCondition('campaign_id',$q->getField('id'))
+					->count();
+		});
+
 		$this->addExpression('active_duration')->set(function($m,$q){
 			return $m->dsql()->expr("DATEDIFF([1],[0])",[$m->getElement('starting_date'),$this->app->today]);
 		});
@@ -45,24 +51,19 @@ class Model_Campaign extends \xepan\base\Model_Document{
 			return $m->dsql()->expr("DATEDIFF([0],[1])",[$m->getElement('ending_date'),$this->app->today]);
 		});
 
-		$this->addExpression('posted')->set(function($m,$q){
-			return "'todo'";
+		$this->addExpression('total_postings')->set(function($m,$q){			
+			return $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->addCondition('posted_on','<>',null)
+						->count();	
 		});
 
 		$this->addExpression('remaining')->set(function($m,$q){
-			return "'todo'";
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->addCondition('posted_on',null)
+						->count();
 		});
-
-		$this->addExpression('success_percent')->set(function($m,$q){
-			return "'todo'";
-		});
-
-		$this->addExpression('total_visitor')->set(function($m,$q){
-			return $this->add('xepan\marketing\Model_LandingResponse')
-					->addCondition('campaign_id',$q->getField('id'))
-					->count();
-		});
-
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);

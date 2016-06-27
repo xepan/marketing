@@ -53,7 +53,7 @@ $.each({
 			drop: function(date, allDay) { // this function is called when something is dropped
 				// alert($(this).text());
 				// // retrieve the dropped element's stored Event Object
-				var originalEventObject = $(this).data('eventSource');
+				var originalEventObject = $(this).data('eventsource');
 				
 				// // we need to copy it, so that multiple events don't have a reference to the same object
 				var copiedEventObject = $.extend({}, originalEventObject);

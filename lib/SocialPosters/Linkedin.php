@@ -41,7 +41,15 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		$login_url = $li->getLoginUrl(
 		  array(
 		    \LinkedIn\LinkedIn::SCOPE_BASIC_PROFILE, 
-		    \LinkedIn\LinkedIn::SCOPE_EMAIL_ADDRESS
+		    // \LinkedIn\LinkedIn::SCOPE_FULL_PROFILE,
+		    // \LinkedIn\LinkedIn::SCOPE_NETWORK,
+		    // \LinkedIn\LinkedIn::SCOPE_CONTACT_INFO,
+		    \LinkedIn\LinkedIn::SCOPE_EMAIL_ADDRESS,
+		    // \LinkedIn\LinkedIn::SCOPE_READ_WRITE_GROUPS,
+		    // \LinkedIn\LinkedIn::SCOPE_READ_WRTIE_UPDATES,
+		    // \LinkedIn\LinkedIn::SCOPE_WRITE_MESSAGES
+		    'w_share',
+		    'rw_company_admin'
 		  )
 		);
 		
@@ -71,13 +79,14 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		}
 		
 		if(!$_REQUEST['code']){
-			echo "linkedin code not found";
+			$this->add('View')->set("linkedin code not found");
+			$this->add('View')->set($_GET['error_description']);
+			$this->add('View')->set($_GET['error']);
 			return false;
 		}
 
 		$token = $li->getAccessToken($_REQUEST['code']);
 		$token_expires = $li->getAccessTokenExpiration();
-		
 		$info = $li->get('/people/~');
 
 		$linkedin_user = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');
@@ -147,93 +156,57 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 
 		$parameters = new \stdClass;
 		$parameters->visibility = new \stdClass;
-		// $parameters['visibility'] = [];
-		// $parameters['visibility']['code'] = 'anyone';
 		$parameters->visibility->code = 'anyone';
   		if($post_model['message_blog']) 
   			$parameters->comment = $post_model['message_blog'];
-  			// $parameters['comment'] = $post_model['message_blog'];
   		
 		if($post_model['url']){
 			$parameters->content = new \stdClass;
-			// $parameters['content'] = [];
-	  		$parameters->content->{'submitted-url'} = $params['url'];
-	  		// $parameters['content']['submitted-url'] = $post_model['url'];
+	  		$parameters->content->{'submitted-url'} = $post_model['url'];
+
 	  		if($post_model['title'])
 	  			$parameters->content->title = $post_model['title'];
-	  			// $parameters['content']['title'] = $post_model['title'];
 
 	  		if($post_image_path){
 	  			$parameters->content->{'submitted-image-url'} = $post_image_path;
-	  			// $parameters['content']['submitted-image-url'] = $post_image_path;
 	  		}
 		}
 		
 		$body_json = json_encode($parameters, true);
-
-		$client = new \Guzzle\Http\Client(['base_uri' => 'https://api.linkedin.com']);
-		$req = $client->post( '/v1/people/~/shares?format=json', 
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.linkedin.com']);
+		$response = $client->request( 'POST','/v1/people/~/shares?format=json', 
 							[
 		        				'headers'=> [
 		        							"Authorization" => "Bearer " . $user_model['access_token'],
 		                    				"Content-Type" => "application/json",
 		                            		"x-li-format"=>"json"
 		                            	],
-		        				'client_id' => $user_model['userid_returned'],
+		        				'client_id' => $config_model['app_id'],
 		       	 				'body'      => $body_json
 		    				]);
-		$respose = $req->send();
-		var_dump($respose);
-		// $info = $this->client->post('/people/~/'.$activity_type."?format=json",json_decode(json_encode($parameters),true));
-		// var_dump($info);
-		// if($post_in_groups){
-		// 	$success = $client->CallAPI(
-		// 				'http://api.linkedin.com/v1/people/~/group-memberships',
-		// 				'GET', null, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $groups);
 
-		// 	$groups = json_encode($groups);
-		// 	$groups = json_decode($groups,true);
-		// 	// echo "<pre>";
-		// 	// print_r($groups['group-membership']);
-		// 	$parameters->title = $parameters->content->title;
-		// 	$parameters->summary = $parameters->comment;
+		// $_SESSION['POSTRESPONSE'] = $response;
+		$stream = $response->getBody();
+		// std class object
+		$response_data = json_decode((string)$stream);
+		// $this->app->memorize('response_data',$response_data);
+		// $response = $this->app->recall("response_data");
 
-		// 	unset($parameters->visibility);
-		// 	unset($parameters->comment);
+		//todo save social posting record into database
+		$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+		$social_posting['user_id'] = $user_model['id'];
+		$social_posting['post_id'] = $post_model['id'];
+		$social_posting['campaign_id'] = $campaign_id;
+		$social_posting['post_type'] = "Share";
+		$social_posting['postid_returned'] = $response_data->updateKey;
+		$social_posting['posted_on'] = $this->app->now;
+		$social_posting->save();
 
-		// 	if(isset($groups['group-membership'])){
-		// 		foreach ($groups['group-membership'] as $grp) {
-		// 			// print_r($grp);
-		// 			$grp_id= $grp['group']['id'];
-		// 			// echo $grp_id ."<br/>";
-		// 			if(!in_array($grp_id, $groups_posted) OR !$this->client_config['filter_repeated_posts']){
-		// 				try{
-
-		// 					$success = $client->CallAPI(
-		// 						'http://api.linkedin.com/v1/groups/'.$grp_id.'/posts?format=json',
-		// 						'POST', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $group_post, $headers);
-		// 					// echo $headers['location'];
-		// 					$success = $client->Finalize($success);
-		// 					$groups_posted[] = $grp_id;
-
-		// 					// Get Grup post URL 
-		// 					$group_post_id = explode("/",$headers['location']);
-		// 					$group_post_id = $group_post_id[count($group_post_id)-1];
-		// 					$success = $client->CallAPI(
-		// 						'http://api.linkedin.com/v1/posts/'.$group_post_id.':(site-group-post-url)?format=json',
-		// 						'GET', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $group_post_url, $headers_2);
-
-		// 					$social_posting_save->create($user_model->id, $params->id, $group_post_url->siteGroupPostUrl, 'Group Post', $headers['location'], $grp['group']['name'], $under_campaign_id);
-		// 				}catch(\Exception $e){
-		// 					print_r($headers);
-		// 					throw $e;
-		// 					continue;
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-
-		// }
+		if($schedule_id){
+			$schedule = $this->add('xepan\marketing\Model_Schedule')->tryLoad($schedule_id);
+			$schedule['posted_on'] = $this->app->now;
+			$schedule->save();
+		}
 
 	}
 

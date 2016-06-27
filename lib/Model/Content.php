@@ -58,8 +58,7 @@ class Model_Content extends \xepan\base\Model_Document{
 		$schedule_count = $m->ref('xepan/marketing/Schedule')->count()->getOne();
 
 		if($schedule_count)
-			throw $this->exception('Cannot Delete,first delete  Schedule`s ');
+			throw new \Exception('Remove it from schedule first');
+			
 	}	
-
-
 } 

@@ -10,10 +10,6 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 
 	function init(){
 		parent::init();
-
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/http.php');
-		require_once(getcwd().'/../vendor/xepan/marketing/lib/SocialPosters/Base/oauth/client/class.php');
-				
 	}
 
 	function setup_client($client_config_id){
@@ -38,114 +34,77 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	}
 
 	function login_status(){
-		$this->setup_client($_GET['for_config_id']);
+		// $this->setup_client($_GET['for_config_id']);
+		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig')->load($_GET['for_config_id']);
+		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$config_model->id;
+		$li = new \LinkedIn\LinkedIn(
+		  array(
+		    'api_key' => $config_model['appId'], 
+		    'api_secret' => $config_model['secret'], 
+		    'callback_url' => $redirect_url
+		  )
+		);
 
-		$client = $this->client;
-
-		$client->ResetAccessToken();
-
-		if(($success = $client->Initialize()))
-		{
-			if(($success = $client->Process()))
-			{
-				if(strlen($client->access_token))
-				{
-					$success = $client->CallAPI(
-						'http://api.linkedin.com/v1/people/~', 
-						'GET', array(
-							'format'=>'json'
-						), array('FailOnAccessError'=>true), $user);
-				}
-			}
-			$success = $client->Finalize($success);
-		}
-		if($client->exit){
-			exit;
-		}
+		$login_url = $li->getLoginUrl(
+		  array(
+		    \LinkedIn\LinkedIn::SCOPE_BASIC_PROFILE, 
+		    \LinkedIn\LinkedIn::SCOPE_EMAIL_ADDRESS
+		  )
+		);
 		
-		if(strlen($client->authorization_error))
-		{
-			$client->error = $client->authorization_error;
-			$success = false;
-		}
-
-		if($success){
-			// echo $this->client->access_token;
-			$this->client_config['access_token'] = $this->client->access_token;
-			$this->client_config->save();
-			return;
-		}else{
-			echo $client->authorization_error;
-		}
-
-		$client->Output();
-
+		return '<a href="' . $login_url . '">Log in with Linkedin!</a>';
+		
 	}
 
 	function after_login_handler(){
-		$this->setup_client($_GET['client_config_id']);
+		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig')->load($_GET['client_config_id']);
+
+		if(!$config_model->loaded()){
+			$this->add('View_Error')->set('Could not load Config Model');
+			return false;
+		}		
+
+		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$config_model->id;
+		$li = new \LinkedIn\LinkedIn(
+		  array(
+		    'api_key' => $config_model['appId'], 
+		    'api_secret' => $config_model['secret'], 
+		    'callback_url' => $redirect_url
+		  )
+		);
 		
-		if(!$this->client){
+		if(!$li){
 			return "Configuration Problem";
 		}
-
-		$client = $this->client;
-
-		if(($success = $client->Initialize()))
-		{
-			if(($success = $client->Process()))
-			{
-				if(strlen($client->access_token))
-				{
-					$success = $client->CallAPI(
-						'http://api.linkedin.com/v1/people/~', 
-						'GET', array(
-							'format'=>'json'
-						), array('FailOnAccessError'=>true), $user);
-				}
-			}
-			$success = $client->Finalize($success);
-		}
-		if($client->exit)
-			exit;
-		if(strlen($client->authorization_error))
-		{
-			$client->error = $client->authorization_error;
-			$success = false;
-		}
-
-		if($success){
-			// print_r($this->client);
-
-			$fetched_url=$user->siteStandardProfileRequest->url;
-
-			preg_match_all("/.*\?id=(\d*).*/", $fetched_url,$user_id);
-			// echo "dadsa" .$user_id[1][0];
-			// echo $this->client->access_token;
-			
-			$li_user= $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');
-			$li_user->addCondition('userid_returned',$user_id[1][0]);
-			$li_user->addCondition('config_id',$this->client_config->id);
-			$li_user->tryLoadAny();
-
-			$li_user['name'] = $user->firstName;
-			$li_user['access_token'] = $this->client->access_token;
-			$li_user['access_token_secret'] = $this->client->access_token_secret;
-			$li_user['access_token_expiry'] = $this->client->access_token_expiry;
-			$li_user->save();
-			return true;
-		}
-		throw new \Exception("Error Processing Request", 1);
 		
-		return false;
+		if(!$_REQUEST['code']){
+			echo "linkedin code not found";
+			return false;
+		}
 
+		$token = $li->getAccessToken($_REQUEST['code']);
+		$token_expires = $li->getAccessTokenExpiration();
+		
+		$info = $li->get('/people/~');
+
+		$linkedin_user = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');
+		$linkedin_user->addCondition('userid_returned',$info['id']);
+		$linkedin_user->addCondition('config_id',$config_model->id);
+		$linkedin_user->tryLoadAny();
+
+		$linkedin_user['name'] = $info['firstName'];
+		$linkedin_user['access_token'] = $token;
+		// $li_user['access_token_secret'] = $this->client->access_token_secret;
+		$linkedin_user['access_token_expiry'] = $token_expires;
+		$linkedin_user->save();		
+		return true;
 	}
 
 
 	function config_page(){
 		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
 
-		$c=$this->owner->add('CRUD',array('allow_add'=>true,'allow_del'=>true));
+		$c = $this->owner->add('CRUD',array('allow_add'=>true,'allow_del'=>true));
 		$c->setModel($config_model);
 		
 		$users_crud = $c->addRef('xepan/marketing/Model_SocialPosters_SocialUsers',array('label'=>'Users'));
@@ -159,8 +118,6 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id);
 			}
 		}
-
-		// $c->add('Controller_FormBeautifier');
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, $groups_posted=array(),$under_campaign_id=0){

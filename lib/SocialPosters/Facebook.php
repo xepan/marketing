@@ -72,7 +72,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			'read_custom_friendlists'
 		];
 
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
 		$redirect_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id;
 		$loginUrl = $helper->getLoginUrl($redirect_url, $permissions);
 		

@@ -61,6 +61,7 @@ $.each({
 				// // assign it the date that was reported
 				copiedEventObject.start = date;
 				copiedEventObject.allDay = allDay;
+				copiedEventObject.contenttype = $(this).data('contenttype');
 				
 				// // copy label class from the event object
 				var labelClass = $(this).data('eventclass');
@@ -71,7 +72,9 @@ $.each({
 				
 				// render the event on the calendar
 				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+				// {title:$(this).text(),'start':date,'document_id':$(this).data('id'),'contenttype':$(this).data('contenttype')}
+				$('#calendar').fullCalendar('renderEvent',copiedEventObject , true);
+				// 
 				// is the "remove after drop" checkbox checked?
 				if ($('#drop-remove').is(':checked')) {
 					// if so, remove the element from the "Draggable Events" list

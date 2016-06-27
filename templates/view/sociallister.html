@@ -1,8 +1,8 @@
 
 <div id="{$_name}" class="{$class}">{rows}{row}
   <div class="col-md-4">
-    <div class="social-box col-md-12 col-sm-4 facebook"><i class="fa fa-facebook"></i>
-      <div class="clearfix"><span class="social-count">1k</span><span class="social-action">likes &nbsp; </span><span class="social-count">70</span><span class="social-action">comments &nbsp;</span><span class="social-count">25 </span><span class="social-action">Shares </span></div><span class="social-name">Maximum Response From</span>
+    <div class="social-box col-md-12 col-sm-4 {$platform}"><i class="fa {$icon}"></i>
+      <div class="clearfix"><span class="social-count">{$likes}</span><span class="social-action">likes &nbsp; </span><span class="social-count">{$comments}</span><span class="social-action">comments &nbsp;</span><span class="social-count">{$shares} </span><span class="social-action">Shares </span></div><span class="social-name">Maximum Response From : {$max_user} </span><span class="social-name">Minimum Response From : {$min_user} </span>
     </div>
   </div>{/}{/}		
 </div>

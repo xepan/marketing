@@ -72,7 +72,8 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			'read_custom_friendlists'
 		];
 
-		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id;
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+		$redirect_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Facebook&for_config_id='.$config_model->id;
 		$loginUrl = $helper->getLoginUrl($redirect_url, $permissions);
 		
 		return '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
@@ -289,7 +290,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 					//   'link' => 'http://www.example.com',
 					//   'message' => 'User provided message',
 					//   ];
-				$data['message'] = $temp['post_obj']['message_blog'];
+				$data['message'] = strip_tags($temp['post_obj']['message_blog']);
 				$post_type = $end_point = "feed";
 				if($temp['post_obj']['url']){
 					$data['link'] = $temp['post_obj']['url'];

@@ -1,23 +1,30 @@
 .main-box.clearfix(id="{$_name}" class="{$class}")
-    .main-box-body.clearfix.row.col-md-6
+    .main-box-body.clearfix.row.col-md-12
         {header}{cols}{col}{/}{/}{/}
         header.main-box-header.clearfix
-          h1 Posts
+          .main-box.small-graph-box(class="{response}green-bg{/}")
+            span.value {$post_title}
+            span.subinfo
+              {$post_content}
+            span.subinfo
+              |URL : {$post_url}      
         {rows}{row}
         div(class="{$odd_even}" data-id="{$id}")
         {cols}    
-        .conversation-wrapper.panel.panel-default
-          .conversation-content
-            .slimScrollDiv(style='')
-              .conversation-inner(style='')
-                .conversation-item.item-left.clearfix
-                  .conversation-body
-                    .name
-                      a.user-link.do-view-employee(href='#',data-id="{$id}") {$user}
-                    .time.hidden-xs
-                      | {$posted_on}
-                    .text
-                      |Likes Comments Shares
+        .main-box
+          .clearfix
+            .infographic-box.merged.merged-top.pull-left
+              span.value.green {$user}
+              span.headline {$social_app}
+              span.value.green Posted On
+              span.headline {$posted_on}
+            .infographic-box.merged.merged-top.merged-right.pull-left  
+              span.headline.green  Likes : {$likes}
+              span.headline.green  Shares : {$share}
+              span.headline.green.post-comments(href='#',data-id="{$id}" style="cursor:pointer; cursor: hand;")  Comments : {$total_comments}
+              span.headline.green  Post Type : {$post_type}
+              span.headline.green  Monitoring : {$monitoring}
+              span.headline.green  Force Monitor : {$forcemonitoring}      
         {/}
         {/}{/}
         {not_found}
@@ -28,7 +35,7 @@
         {/}
 
         {totals}{cols}{col}{$content}{/}{/}{/}
-    {$Paginator}                    
+    {$Paginator}
 
 style(type='text/css', media='screen').
   .conversation-wrapper .conversation-body {

@@ -61,7 +61,7 @@ class page_socialexec extends \xepan\base\Page{
 
 				if($post_model['url']){
 					$url = $this->app->url($post_model['url'],['xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
-					$postable_content['url'] = $url;
+					$post_model['url'] = $url;
 				}	
 
 				$post_image_url = (string)$post_model->ref('Attachments')->setLimit(1)->fieldQuery('file');
@@ -79,7 +79,8 @@ class page_socialexec extends \xepan\base\Page{
 				$temp_array['post_obj'] = $post_model;
 				$temp_array['post_image_path'] = $post_image_path;
 				$temp_array['campaign_id'] = $postable_content['schedule_campaign_id'];
-				$temp_array['schedule_id'] = $postable_content['schedule_id'];												
+				$temp_array['schedule_id'] = $postable_content['schedule_id'];
+																												
 			}
 		}
 		foreach ($social_post_array as $social_app => $value) {

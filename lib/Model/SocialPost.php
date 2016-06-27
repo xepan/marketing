@@ -10,7 +10,6 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 		
 
 		$this->getElement('status')->defaultValue('Draft');
-		$this->getElement('message_blog')->display(['form'=>'text']);
 
 		$this->addCondition('created_by_id',$this->app->employee->id);
 		$this->addCondition('type','SocialPost');

@@ -11,10 +11,10 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><span></span></td>
-          <td><span></span></td>
-          <td><span></span></td>
-          <td><span>       </span></td>{/}
+          <td><span>{$title}</span></td>
+          <td><span>{$ending_date}</span></td>
+          <td><span>{$lead_count}</span></td>
+          <td><span>{$response}       </span></td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

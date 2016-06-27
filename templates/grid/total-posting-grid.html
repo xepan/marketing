@@ -1,23 +1,14 @@
 
 <div id="{$_name}" class="main-box clearfix {$class}">
-  <div class="main-box-body clearfix row col-md-6">{header}{cols}{col}{/}{/}{/}
+  <div class="main-box-body clearfix row col-md-12">{header}{cols}{col}{/}{/}{/}
     <header class="main-box-header clearfix">
-      <h1>Posts</h1>
+      <div class="main-box small-graph-box {response}green-bg{/}"><span class="value">{$post_title}</span><span class="subinfo">{$post_content}</span><span class="subinfo">URL : {$post_url}      </span></div>
     </header>{rows}{row}
     <div data-id="{$id}" class="{$odd_even}"></div>{cols}    
-    <div class="conversation-wrapper panel panel-default">
-      <div class="conversation-content">
-        <div style="" class="slimScrollDiv">
-          <div style="" class="conversation-inner">
-            <div class="conversation-item item-left clearfix">
-              <div class="conversation-body">
-                <div class="name"><a href="#" data-id="{$id}" class="user-link do-view-employee">{$user}</a></div>
-                <div class="time hidden-xs">{$posted_on}</div>
-                <div class="text">Likes Comments Shares</div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="main-box">
+      <div class="clearfix">
+        <div class="infographic-box merged merged-top pull-left"><span class="value green">{$user}</span><span class="headline">{$social_app}</span><span class="value green">Posted On</span><span class="headline">{$posted_on}</span></div>
+        <div class="infographic-box merged merged-top merged-right pull-left"> <span class="headline green"> Likes : {$likes}</span><span class="headline green"> Shares : {$share}</span><span href="#" data-id="{$id}" style="cursor:pointer; cursor: hand;" class="headline green post-comments"> Comments : {$total_comments}</span><span class="headline green"> Post Type : {$post_type}</span><span class="headline green"> Monitoring : {$monitoring}</span><span class="headline green"> Force Monitor : {$forcemonitoring}      </span></div>
       </div>
     </div>{/}
     {/}{/}
@@ -26,7 +17,7 @@
       <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
     </div>{/}
     {totals}{cols}{col}{$content}{/}{/}{/}
-  </div>{$Paginator}                    
+  </div>{$Paginator}
 </div>
 <style type="text/css" media="screen">
   .conversation-wrapper .conversation-body {

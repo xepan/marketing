@@ -6,7 +6,6 @@ class page_dashboard extends \xepan\base\Page{
 	public $title = "Marketing Dashboard";
 	function init(){
 		parent::init();
-
 		// HEADER FORM
 		$form = $this->add('Form',null,'form');
 		$form->setLayout('view\dashboard_form');
@@ -33,10 +32,11 @@ class page_dashboard extends \xepan\base\Page{
 		$map = $this->add('xepan\marketing\View_Map',null,'map');
 
 		// LEAD RESPONSE
-		$lead_response = $this->add('xepan\marketing\View_LeadResponse',null,'lead_response');
-	
+		$lead_response = $this->add('xepan\marketing\View_LeadResponse',null,'lead_response',['view/leadresponse']);
+		
 		// CAMPAIGN REPONSE
-		$campaign_response = $this->add('xepan\marketing\View_CampaignResponse',null,'campaign_response');
+		$campaign_response = $this->add('xepan\hr\Grid',null,'campaign_response',['view/campaignresponse']);
+		$campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
 	}
 
 	function defaultTemplate(){

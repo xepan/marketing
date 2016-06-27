@@ -43,6 +43,12 @@ class Model_Lead extends \xepan\base\Model_Contact{
 						->count();
 		});
 
+		$this->addExpression('total_visitor')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_LandingResponse')
+					->addCondition('contact_id',$q->getField('id'))
+					->count();
+		});
+
 		$lead_j->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$lead_j->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		

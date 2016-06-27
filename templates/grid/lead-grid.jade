@@ -19,6 +19,8 @@
                     span Category
                 th
                     span Opportunities
+                th
+                    span Total Visitor
                 th 
                 {/}{/}
             {/}
@@ -49,6 +51,9 @@
                     td
                       span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
                         {$open_count},{$converted_count},{$rejected_count}
+                    td
+                        a.do-view-lead-visitor(href="#" data-id="{$id}")
+                            span.alert.alert-success{$total_visitor}
                     td
                         {$action}
                     td(style="width: 15%;")

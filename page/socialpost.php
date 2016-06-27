@@ -5,11 +5,30 @@ class page_socialpost extends \xepan\base\Page{
 	function init(){
 		parent::init();
 		
-		$post_id=$this->app->stickyGET('post_id');
+		$post_id = $this->app->stickyGET('post_id');
 		$social = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
 		$social->addCondition('post_id',$post_id);
 		$social->tryLoadAny();
-		$crud=$this->add('xepan\hr\Grid',null,null,['grid/total-posting-grid']);
-		$crud->setModel($social);
+		$grid = $this->add('xepan\hr\Grid',null,'grid',['grid/total-posting-grid']);
+		$grid->setModel($social);
+
+		$model_post = $this->add('xepan\marketing\Model_SocialPost')->load($post_id);		
+		$grid->template->trySet('post_title',$model_post['title']);
+		$grid->template->trySetHtml('post_content',$model_post['message_blog']);
+		$grid->template->trySet('post_url',$model_post['url']);	
+		
+		$grid->addHook('formatRow',function($g){
+ 			$g->current_row['monitoring']= $g->model['is_monitoring'];
+ 			$g->current_row['forcemonitoring']= $g->model['force_monitor'];
+ 		});
+
+		$comment_view = $this->add('xepan\marketing\View_PostComments',null,'view',['view\postcomments']);
+		$comment_view_url = $this->api->url(null,['cut_object'=>$comment_view->name]);
+
+		$grid->js('click',$comment_view->js()->reload(['posting_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$comment_view_url))->_selector('.post-comments');
+	}
+
+	function defaultTemplate(){
+		return ['page\socialposting'];
 	}
 }

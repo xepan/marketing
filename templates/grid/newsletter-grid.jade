@@ -1,94 +1,54 @@
-.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
-    {Pannel}
-    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block( style="100%")
-            .pull-right {$grid_buttons} 
-            .form-group.pull-right.xepan-filter-form
-                span(class="form-control pull-left")|{$quick_search}
-                    i(class="fa fa-search search-icon")
-    {/Pannel}
-    .main-box-body.clearfix.table
-        table.table.user-list.table-hover(style="width:100%")
-            {header}
-            thead
-                {cols}{col}
-                th.text-right
-                    a.asc(href='#')
-                        span User
-                th.text-right
-                    a.asc(href='#')
-                        span Campaign                        
-                th
-                    span Post Type 
-                th
-                    a.asc(href='#')
-                     span Posted On 
-                th
-                    a.asc(href='#')
-                     span Likes 
-                th
-                    a.asc(href='#')
-                     span Comments 
-                th
-                    a.asc(href='#')
-                     span Unread Comments 
-                th
-                    span Is Monitoring
-                th
-                    span Force Monitor
-                th 
-                {/}{/}
-            {/}
-            {$subheader}
-
-            tbody
-                {rows}{row}
-                tr(class="{$odd_even}" data-id="{$id}")
-                    {cols}
-                    td
-                      a.user-link.do-view-employee(href='#',data-id="{$id}") {$user}
-                      span.user-subhead {$social_app} 
-                    td
-                      | {$campaign}
-                    td
-                      | {$post_type}
-                    td
-                      | {$posted_on}
-                    td
-                    | {$likes}
-                    td
-                      a.do-view-post-comment(href="?page=xepan_marketing_socialpostcomments&posting_id={$id}" data-id="{$id}" target='_blank'){$total_comments}
-                    td
-                      a.do-view-post-comment(href="?page=xepan_marketing_socialpostcomments&posting_id={$id}" data-id="{$id}"){$unread_comments}
-                    td
-                      | {$is_monitoring}
-                    td
-                      | {$force_monitor}
-                    //- td
-                    //-     | {action}Action Here{/}
-                    td(style="width: 15%;")
-                        {$edit}
-                        {$delete}
-                    
-                    {/}
-                {/}{/}
-                {not_found}
-                div.row
-                    .col-md-12.text-center.alert.alert-warning(role="alert")
-                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
-                {/}
-
-            {totals}
-            tfoot
-                tr(class="totals")
-                    {cols}{col}
-                    <td {$tdparam}>
-                    {$content}
-                    </td>
-                    {/}{/}
-            {/}
-        {$Paginator}
-style.
- .user-list tbody td .user-link{
-   margin-left:0px!important;
- }
+.xepan-grid.main-box.clearfix(id='{$_name}', class='{$class}')
+  | {Pannel}
+  header.main-box-header.clearfix.atk-actions(class='{$class}')
+    .filter-block
+      .pull-right {$grid_buttons} 
+      .form-group.pull-right.xepan-filter-form
+        .form-control.pull-left
+          | {$quick_search}
+          i.fa.fa-search.search-icon
+  | {/Pannel}
+  .main-box-body.clearfix
+    .row
+      | {rows}{row}
+      div(data-id='{$id}', class='{$odd_even} col-md-{col-width}4{/}')
+        | {cols}
+        .col-lg-12.col-md-6.col-sm-6
+          .main-box.clearfix.project-box.green-box
+            .main-box-body.clearfix
+              .project-box-header.green-bg
+                .name
+                  a(href='#') {$title}
+              .project-box-content
+                iframe(src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}', style=' height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);', frameborder='0')
+              .project-box-footer.clearfix
+                a(href='#')
+                  span.value {$total_leads}
+                  span.label Total
+                  span.label Visitor : {$total_visitor}
+                a(href='#')
+                  span.value {$send_to}
+                  span.label Sent To
+                a(href='#')
+                  span.value {$remaining}
+                  span.label Remaining   
+              .project-box-ultrafooter.clearfix
+                .col-md-1
+                .col-md-5.pull-left {$action}
+                .col-md-2
+                .col-md-4.pull-right
+                  | {$edit}
+                  | {$delete}
+      | {/}
+      |       {/}{/}
+      |       {not_found}
+      .row
+        .col-md-12.text-center.alert.alert-warning(role='alert')
+          span.icon-attention.fa.fa-exclamation-triangle   {$not_found_message}
+      | {/}
+      |       {totals}{cols}{col}{$content}{/}{/}{/}
+    | {$Paginator}
+style(type='text/css', media='screen').
+  .project-box-content {
+  padding: 0px 0px 0px !important;
+  }

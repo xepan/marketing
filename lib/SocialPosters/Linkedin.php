@@ -29,7 +29,8 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	function login_status(){
 		// $this->setup_client($_GET['for_config_id']);
 		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig')->load($_GET['for_config_id']);
-		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$config_model->id;
+		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+		$redirect_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$config_model->id;
 		$li = new \LinkedIn\LinkedIn(
 		  array(
 		    'api_key' => $config_model['appId'], 

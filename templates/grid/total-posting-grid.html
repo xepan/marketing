@@ -1,61 +1,37 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div style="100%" class="filter-block">
-      <div class="pull-right">{$grid_buttons} </div>
-      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
-    </div>
-  </header>{/Pannel}
-  <div class="main-box-body clearfix table">
-    <table style="width:100%" class="table user-list table-hover">{header}
-      <thead>{cols}{col}
-        <th class="text-right"><a href="#" class="asc"><span>User</span></a></th>
-        <th class="text-right"><a href="#" class="asc"><span>Campaign                        </span></a></th>
-        <th><span>Post Type </span></th>
-        <th><a href="#" class="asc"><span>Posted On </span></a></th>
-        <th><a href="#" class="asc"><span>Likes </span></a></th>
-        <th><a href="#" class="asc"><span>Comments </span></a></th>
-        <th><a href="#" class="asc"><span>Unread Comments </span></a></th>
-        <th><span>Is Monitoring</span></th>
-        <th><span>Force Monitor</span></th>
-        <th> </th>{/}{/}
-      </thead>{/}
-      {$subheader}
-      <tbody>{rows}{row}
-        <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><a href="#" data-id="{$id}" class="user-link do-view-employee">{$user}</a><span class="user-subhead">{$social_app} </span></td>
-          <td>{$campaign}</td>
-          <td>{$post_type}</td>
-          <td>{$posted_on}</td>
-          <td></td>{$likes}
-          <td><a href="?page=xepan_marketing_socialpostcomments&amp;posting_id={$id}" data-id="{$id}" target="_blank" class="do-view-post-comment">{$total_comments}</a></td>
-          <td><a href="?page=xepan_marketing_socialpostcomments&amp;posting_id={$id}" data-id="{$id}" class="do-view-post-comment">{$unread_comments}</a></td>
-          <td>{$is_monitoring}</td>
-          <td>{$force_monitor}</td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}
-          </td>{/}
-        </tr>{/}{/}
-        {not_found}
-        <div class="row">
-          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
-        </div>{/}
-      </tbody>{totals}
-      <tfoot>
-        <tr class="totals">
-          {cols}{col}
-          <td {$tdparam}>
-          {$content}
-          </td>
-          {/}{/}
-        </tr>
-      </tfoot>{/}
-    </table>{$Paginator}
-  </div>
+<div id="{$_name}" class="main-box clearfix {$class}">
+  <div class="main-box-body clearfix row col-md-6">{header}{cols}{col}{/}{/}{/}
+    <header class="main-box-header clearfix">
+      <h1>Posts</h1>
+    </header>{rows}{row}
+    <div data-id="{$id}" class="{$odd_even}"></div>{cols}    
+    <div class="conversation-wrapper panel panel-default">
+      <div class="conversation-content">
+        <div style="" class="slimScrollDiv">
+          <div style="" class="conversation-inner">
+            <div class="conversation-item item-left clearfix">
+              <div class="conversation-body">
+                <div class="name"><a href="#" data-id="{$id}" class="user-link do-view-employee">{$user}</a></div>
+                <div class="time hidden-xs">{$posted_on}</div>
+                <div class="text">Likes Comments Shares</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>{/}
+    {/}{/}
+    {not_found}
+    <div class="row">
+      <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+    </div>{/}
+    {totals}{cols}{col}{$content}{/}{/}{/}
+  </div>{$Paginator}                    
 </div>
-<style>
-  .user-list tbody td .user-link{
-    margin-left:0px!important;
-  }
+<style type="text/css" media="screen">
+  .conversation-wrapper .conversation-body {
+  background-color: #ffffff !important;
+  margin-left: 0px !important;
+  padding: 0px 0px 0px 0px !important;
+  }    
 </style>

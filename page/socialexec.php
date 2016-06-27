@@ -32,21 +32,6 @@ class page_socialexec extends \xepan\base\Page{
 		// $social_post_array = ['Facebook'=>['user_id','user_obj'=>'user_object','post_id'=>11,'post_obj'=>'post_model']];
 		$social_post_array = [];
 		foreach ($all_postable_contents as $postable_content) {						
-			$pq = new \xepan\cms\phpQuery();
-			$dom = $pq->newDocument($postable_content['message_blog']);
-			
-			foreach ($dom['a'] as $anchor){
-				$a = $pq->pq($anchor);
-				$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
-				$a->attr('href',$url);
-			}
-			$postable_content['message_blog'] = $dom->html();
-
-			if($postable_content['url']){
-				$url = $this->app->url($postable_content['url'],['xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
-				$postable_content['url'] = $url;
-			}			
-
 			$asso_users = $this->add('xepan\marketing\Model_Campaign_SocialUser_Association')
 						->addCondition('campaign_id',$postable_content['schedule_campaign_id'])
 						->addCondition('is_active',true)
@@ -62,6 +47,23 @@ class page_socialexec extends \xepan\base\Page{
 					continue;
 					
 				$post_model = $this->add('xepan\marketing\Model_SocialPost')->load($postable_content['id']);
+				
+				// APPENDING VALUES IN URL
+				$pq = new \xepan\cms\phpQuery();
+				$dom = $pq->newDocument($post_model['message_blog']);
+				
+				foreach ($dom['a'] as $anchor){
+					$a = $pq->pq($anchor);
+					$url = $this->app->url($a->attr('href'),['action'=>null,'document_id'=>null,'xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
+					$a->attr('href',$url);
+				}
+				$post_model['message_blog'] = $dom->html();
+
+				if($post_model['url']){
+					$url = $this->app->url($post_model['url'],['xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
+					$postable_content['url'] = $url;
+				}	
+
 				$post_image_url = (string)$post_model->ref('Attachments')->setLimit(1)->fieldQuery('file');
 				$post_image_path = "";
 				if($post_image_url){

@@ -1,6 +1,6 @@
 
 <div id="{$_name}" class="xepan-grid main-box clearfix {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
+  <header class="main-box-header clearfix atk-actions {$class}">
     <div class="filter-block">
       <div class="pull-right">{$grid_buttons} </div>
       <div class="form-group pull-right xepan-filter-form">
@@ -8,10 +8,8 @@
       </div>
     </div>
   </header>{/Pannel}
-  <div class="main-box-body clearfix"> 
-    <div class="row">
-      {header}{cols}{col}{/}{/}{/}
-      {rows}{row}
+  <div class="main-box-body clearfix">
+    <div class="row">{rows}{row}
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
         <div class="col-lg-12 col-md-6 col-sm-6">
           <div class="main-box clearfix project-box green-box">
@@ -22,32 +20,31 @@
               <div class="project-box-content">
                 <iframe src="index.php?page=xepan_marketing_newsletterpreview&amp;cut_page=1&amp;content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0"></iframe>
               </div>
-              <div class="project-box-footer clearfix"><a href="#"><span class="value">{$total_leads}</span><span class="label">Total</span></a><a href="#"><span class="value">{$send_to}</span><span class="label">Sent To</span></a><a href="#"><span class="value">{$remaining}</span><span class="label">Remaining   </span></a></div>
+              <div class="project-box-footer clearfix"><a href="#"><span class="value">{$total_leads}</span><span class="label">Total</span><span class="label">Visitor : {$total_visitor}</span></a><a href="#"><span class="value">{$send_to}</span><span class="label">Sent To</span></a><a href="#"><span class="value">{$remaining}</span><span class="label">Remaining   </span></a></div>
               <div class="project-box-ultrafooter clearfix">
                 <div class="col-md-1"></div>
                 <div class="col-md-5 pull-left">{$action}</div>
                 <div class="col-md-2"></div>
                 <div class="col-md-4 pull-right">
-                      
                   {$edit}
-                  {$delete}    
+                  {$delete}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>{/}
-      {/}{/}
-      {not_found}
+            {/}{/}
+            {not_found}
       <div class="row">
-        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle">  {$not_found_message}</span></div>
       </div>{/}
-      {totals}{cols}{col}{$content}{/}{/}{/}
+            {totals}{cols}{col}{$content}{/}{/}{/}
     </div>{$Paginator}
   </div>
 </div>
 <style type="text/css" media="screen">
   .project-box-content {
   padding: 0px 0px 0px !important;
-  }        
+  }
 </style>

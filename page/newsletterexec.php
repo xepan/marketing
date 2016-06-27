@@ -11,7 +11,7 @@
 
 namespace xepan\marketing;
 
-class page_newsletterexec extends \xepan\base\Page {
+class page_newsletterexec extends \Page {
 	
 	public $title='Cron to send NewsLetters';
 	public $debug = false;
@@ -117,7 +117,9 @@ class page_newsletterexec extends \xepan\base\Page {
 
 		// if($form->isSubmitted()){
 			
-			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
+			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')
+			->addCondition('mass_mail',true)
+			->tryLoadAny();
 			$mailer = new \Nette\Mail\SmtpMailer(array(
 			        'host' => $email_settings['email_host'],
 			        'username' => $email_settings['email_username'],

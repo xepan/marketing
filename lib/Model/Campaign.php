@@ -57,6 +57,12 @@ class Model_Campaign extends \xepan\base\Model_Document{
 			return "'todo'";
 		});
 
+		$this->addExpression('total_visitor')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_LandingResponse')
+					->addCondition('campaign_id',$q->getField('id'))
+					->count();
+		});
+
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);

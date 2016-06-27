@@ -20,17 +20,16 @@
                         i.fa.fa-bullhorn.emerald-bg
                         span.headline.text-success(style="font-size: 16px;") Active: {$active_duration}
                           .text-danger(style="font-size: 16px;") Remaining: {$remaining_duration}
-                          .text-primary(style="font-size: 16px;") Visitor: {$total_visitor}
                       .project-box-footer.clearfix
                         a(href='#')
-                          span.value {$posted}
-                          span.text-success Posted
+                          span.value {$total_postings}
+                          span.text-success Total Postings
                         a(href='#')
                           span.value {$remaining}
                           span.text-warning Remaining
                         a(href='#')
-                          span.value {$success_percent} %
-                          span.text-danger Success %
+                          span.value {$total_visitor}
+                          span.text-danger Visitors
                       .project-box-ultrafooter.clearfix
                         .col-md-2
                         .col-md-4

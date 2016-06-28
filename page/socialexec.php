@@ -87,11 +87,11 @@ class page_socialexec extends \Page{
 		}
 
 		// var_dump($social_post_array);
-		// throw new \Exception($all_postable_contents->count()->getOne());
 		foreach ($social_post_array as $social_app => $value) {
 				$this->add('xepan/marketing/SocialPosters_'.$social_app)
 					->postAll($value);
 			}
 		}
+		echo $all_postable_contents->count()->getOne(). ' Posts done' ;
 	}
 	

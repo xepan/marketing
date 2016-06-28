@@ -12,6 +12,7 @@ class page_socialexec extends \xepan\base\Page{
 		$schedule_j->addField('posted_on');
 		$schedule_j->addField('schedule_campaign_id','campaign_id');
 		$schedule_j->addField('schedule_id','id');
+		$schedule_j->addField('scheduled_datetime','date');
 
 		$campaign_j = $schedule_j->join('campaign.document_id','campaign_id');
 		$campain_document_j = $campaign_j->join('document','document_id');
@@ -21,6 +22,7 @@ class page_socialexec extends \xepan\base\Page{
 		$all_postable_contents->addCondition('status','Approved');
 		$all_postable_contents->addCondition('campaign_status','Approved');
 		$all_postable_contents->addCondition('ending_date','>=',$this->app->today);
+		$all_postable_contents->addCondition('scheduled_datetime','<=',$this->app->now);
 		$all_postable_contents->addCondition('posted_on',null);
 		
 		// $social_post_array = ['Facebook'=>['user_id','user_obj'=>'user_object','post_id'=>11,'post_obj'=>'post_model']];

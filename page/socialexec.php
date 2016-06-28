@@ -90,8 +90,9 @@ class page_socialexec extends \Page{
 		foreach ($social_post_array as $social_app => $value) {
 				$this->add('xepan/marketing/SocialPosters_'.$social_app)
 					->postAll($value);
-			}
 		}
+		
 		echo $all_postable_contents->count()->getOne(). ' Posts done' ;
+		}
 	}
 	

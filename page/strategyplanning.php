@@ -105,6 +105,14 @@ class page_strategyplanning extends \xepan\base\Page{
 		$this->js(true)->_css('mindchart/jquery.orgchart');
 
 		$audience_view = $audience_tab->add('View')->set('Audience');
-		$audience_view->js(true)->xepan_mindchart([]);
+		$audience_view->js(true)->xepan_mindchart(
+									[
+										"Labels"=>[
+													["add"=>'Add Category'],
+													["add"=>'Add Subcategory'],
+													["add"=>'Add Example']
+												]
+									]);
+
 	}
 }

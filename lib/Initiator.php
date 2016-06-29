@@ -28,7 +28,7 @@ class Initiator extends \Controller_Addon {
 	function setup_admin(){
 
 		$this->routePages('xepan_marketing');
-		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
+		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('../vendor/xepan/marketing/');
 
 		$m = $this->app->top_menu->addMenu('Marketing');

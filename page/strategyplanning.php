@@ -98,7 +98,13 @@ class page_strategyplanning extends \xepan\base\Page{
 		$competetors_crud = $competetor_tab->add('xepan\base\CRUD',['frame_options'=>['width'=>'600px'],'entity_name'=>'Competetor']);
 		$competetors_crud->setModel($competetors_model);
 
+		
+		$this->js(true)
+				->_load('mindchart/jquery.orgchart')
+				->_load('mindchart/mindchart');
+		$this->js(true)->_css('mindchart/jquery.orgchart');
 
-
+		$audience_view = $audience_tab->add('View')->set('Audience');
+		$audience_view->js(true)->xepan_mindchart([]);
 	}
 }

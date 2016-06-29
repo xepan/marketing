@@ -53,8 +53,8 @@ div.orgChart div.node {
   border : 1px solid #e7e7e7;
   display : inline-block;
   padding : 5px;
-  min-width : 100px;
-  min-height : 60px;
+  min-width : 200px;
+  min-height : 80px;
   background: #ffffff; /* Old browsers */
   background: -moz-linear-gradient(top, #ffffff 0%, #fbfbfb 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #fbfbfb)); /* Chrome,Safari4+ */
@@ -99,6 +99,6 @@ div.orgChart div.node {
   right: 5px;
 }
 
-.org-input { width: 90px; }
+.org-input { width: 100%; }
 
 .org-confirm-del-button { display: none; }

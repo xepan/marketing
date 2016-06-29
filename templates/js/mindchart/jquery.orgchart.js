@@ -1,11 +1,11 @@
 (function($) {
     $.fn.orgChart = function(options) {
         var opts = $.extend({}, $.fn.orgChart.defaults, options);
-        return new OrgChart($(this), opts);        
+        return new OrgChart($(this), opts);
     }
 
     $.fn.orgChart.defaults = {
-        data: [{id:1, name:'Root', parent: 0}],
+        data: [{id:1, name:'Root', parent: 0, level: 0}],
         showControls: false,
         allowEdit: false,
         onAddNode: null,
@@ -23,6 +23,8 @@
         var self = this;
 
         this.draw = function(){
+            // console.log("Draw Options");
+            // console.log(opts);
             $container.empty().append(rootNodes[0].render(opts));
             $container.find('.node').click(function(){
                 if(self.opts.onClickNode !== null){
@@ -96,14 +98,18 @@
                 nextId++;
             }
 
-            self.addNode({id: nextId, name: '', parent: parentId});
+            parent_node =  nodes[parentId];
+            parent_node_level =  parseInt(parent_node.data.level) +  1;
+            self.addNode({id: nextId, name: '', parent: parentId, level: parent_node_level});
         }
 
         this.addNode = function(data){
             var newNode = new Node(data);
             nodes[data.id] = newNode;
             nodes[data.parent].addChild(newNode);
-            
+
+            // console.log("new add node");
+            // console.log(newNode);
             self.draw();
             self.startEdit(data.id);
         }
@@ -153,6 +159,8 @@
 
         this.addChild = function(childNode){
             this.children.push(childNode);
+            // console.log("add node");
+            // console.log(childNode);
         }
 
         this.removeChild = function(id){
@@ -219,12 +227,38 @@
             if(typeof data.description !== 'undefined'){
                 descString = '<p>'+self.data.description+'</p>';
             }
-            if(opts.showControls){
-                var buttonsHtml = "<div class='org-add-button'>"+opts.newNodeText+"</div><div class='org-del-button'></div>";
+
+
+            var new_node_level = (parseInt(this.data.level) - 1);
+
+            console.log(new_node_level);
+
+            if(opts.Labels[new_node_level] != undefined){
+                if(opts.Labels[new_node_level].add === undefined){
+                    newNodeText = opts.newNodeText;
+                }else
+                    newNodeText = opts.Labels[new_node_level].add;
+            }else
+                newNodeText = opts.newNodeText;
+            
+            // console.log("data id "+this.data.id);
+            // console.log("parent id "+this.data.parent);
+            // console.log(this.data);
+            // console.log(opts.Labels);
+            // add button 
+            if(opts.showControls && (( parseInt(opts.addbutton_false_at_level) ) != new_node_level + 1 ) ){
+
+                var buttonsHtml = "<div class='org-add-button'>"+newNodeText+"</div>";
             }
             else{
                 buttonsHtml = '';
             }
+
+            // delete button 
+            if(opts.showControls && (opts.deletebutton_false_at_level != new_node_level ) ){
+                buttonsHtml = buttonsHtml + "<div class='org-del-button'></div>"
+            } 
+
             return "<div class='node' node-id='"+this.data.id+"'>"+nameString+descString+buttonsHtml+"</div>";
         }
     }

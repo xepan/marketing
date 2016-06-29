@@ -25,7 +25,9 @@
         this.draw = function(){
             // console.log("Draw Options");
             // console.log(opts);
-            $container.empty().append(rootNodes[0].render(opts));
+            container_empty = $container.empty();
+            this.saveButton(container_empty,opts);
+            container_empty.append(rootNodes[0].render(opts));
             $container.find('.node').click(function(){
                 if(self.opts.onClickNode !== null){
                     self.opts.onClickNode(nodes[$(this).attr('node-id')]);
@@ -66,7 +68,44 @@
             });
         }
 
+        this.saveButton = function(container,options){
+            save_button = $('<div class="btn btn-primary xepan-strategy-panning-save-button">Save</div>').appendTo(container);
+            $(save_button).click(function(event){
+                console.log(options);
+                // console.log(JSON.stringify(nodes));
+
+                $.ajax({
+                    url: 'index.php?page=xepan_marketing_strategysave',
+                    type: 'POST',
+                    datatype: "json",
+                    data: { 
+                            nodes:JSON.stringify(nodes),
+                            config_key:options.config_key
+                        },
+                })
+                .done(function(ret) {
+                    if($.isNumeric(ret)){
+                        $.univ().successMessage('Saved Successfully');
+                    }else if(ret.indexOf('false')===0){
+                        $.univ().errorMessage('Not Saved, some thing wrong');
+                    }else{
+                        eval(ret);
+                    }
+                })
+                .fail(function() {
+                    console.log("mind chart error");
+                })
+                .always(function() {
+                    // console.log("complete");
+                });
+            });
+        }
+
         this.startEdit = function(id){
+            // if( parseInt(id) === 1){
+            //     $.univ().errorMessage("not allowed");
+            //     return;
+            // }
             var inputElement = $('<input class="org-input" type="text" value="'+nodes[id].data.name+'"/>');
             $container.find('div[node-id='+id+'] h2').replaceWith(inputElement);
             var commitChange = function(){
@@ -231,7 +270,7 @@
 
             var new_node_level = (parseInt(this.data.level) - 1);
 
-            console.log(new_node_level);
+            // console.log(new_node_level);
 
             if(opts.Labels[new_node_level] != undefined){
                 if(opts.Labels[new_node_level].add === undefined){
@@ -247,7 +286,6 @@
             // console.log(opts.Labels);
             // add button 
             if(opts.showControls && (( parseInt(opts.addbutton_false_at_level) ) != new_node_level + 1 ) ){
-
                 var buttonsHtml = "<div class='org-add-button'>"+newNodeText+"</div>";
             }
             else{

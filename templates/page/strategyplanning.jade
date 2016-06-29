@@ -1,0 +1,84 @@
+.row(id='{$_name}')
+  .col-xs-2.col-sm-2.col-md-2.col-lg-2
+    ul.nav.nav-tabs.tabs-left.strategy-vertical-tabs
+      li.active.text-center(title="Business Target Audience")
+        a(href='#strategy-audience-v', data-toggle='tab')
+          i.fa.fa-users.fa-2x.btn.btn-primary
+          div Audience
+      li.text-center(title="Target/ Business Location")
+        a(href='#strategy-location-v', data-toggle='tab') 
+          i.fa.fa-map-marker.fa-2x.btn.btn-primary
+          div Location
+      li.text-center(title="Describe Your Business")
+        a(href='#strategy-business-v', data-toggle='tab')
+          i.fa.fa-pencil-square-o.fa-2x.btn.btn-primary
+          div Business Description
+      li.text-center(title="Your Business Digital Presence")
+        a(href='#strategy-digitalmarketing-v', data-toggle='tab')
+          i.fa.fa-globe.fa-2x.btn.btn-primary
+          div Digital Presence
+      li.text-center(title="Your Competetors")
+        a(href='#strategy-competetor-v', data-toggle='tab')
+          i.fa.fa-fighter-jet.fa-2x.btn.btn-primary
+          div Competetors
+  .col-xm-10.col-sm-10.col-md-10.col-lg-10(style="overflow:scroll")
+    .tab-content
+      #strategy-audience-v.tab-pane.active {$audience}
+      #strategy-location-v.tab-pane {$location}
+      #strategy-business-v.tab-pane.container(style="width:50%;margin:0 auto;") {$business}
+      #strategy-digitalmarketing-v.tab-pane {$digital}
+      #strategy-competetor-v.tab-pane {$competetor}
+  style(type='text/css').
+    .tabs-left, .tabs-right {
+    border-bottom: none;
+    padding-top: 2px;
+    }
+    .tabs-left {
+    border-right: 1px solid #ddd;
+    }
+    .tabs-right {
+    border-left: 1px solid #ddd;
+    }
+    .tabs-left>li, .tabs-right>li {
+    float: none;
+    margin-bottom: 2px;
+    }
+    .tabs-left>li {
+    margin-right: -1px;
+    }
+    .tabs-right>li {
+    margin-left: -1px;
+    }
+    .tabs-left>li.active>a,
+    .tabs-left>li.active>a:hover,
+    .tabs-left>li.active>a:focus {
+    border-bottom-color: #ddd;
+    border-right-color: transparent;
+    }
+    .tabs-right>li.active>a,
+    .tabs-right>li.active>a:hover,
+    .tabs-right>li.active>a:focus {
+    border-bottom: 1px solid #ddd;
+    border-left-color: transparent;
+    }
+    .tabs-left>li>a {
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    display:block;
+    }
+    .tabs-right>li>a {
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+    }
+  
+    //- font size
+    .strategy-vertical-tabs > li > a > div{
+      font-size:12px;
+    }
+    .strategy-vertical-tabs > li > a > i{
+      border-radius: 50%; 
+      height: 60px; 
+      line-height: 50px; 
+      text-align: center;
+      width:60px;
+    }

@@ -1,0 +1,65 @@
+.xepan-tool-options(id='{$_name}' style="display:none" for-xepan-component='xepan/marketing/Tool_Subscription')
+	h3 Subscription Options
+	.xepan-tool-option
+		.xepan-tool-option-title Ask Name
+		.xepan-tool-option-value 
+			select#ask_name(data-attr='ask_name')
+				option true																					
+				option false
+	.xepan-tool-option
+		.xepan-tool-option-title Send Thank You Mail
+		.xepan-tool-option-value 
+			select#send_mail(data-attr='send_mail')
+				option true																					
+				option false
+	.xepan-tool-option
+		.xepan-tool-option-title On Success
+		.xepan-tool-option-value 
+			select#send_mail(data-attr='on_success')
+				option Same Page																					
+				option Redirect			
+	.xepan-tool-option
+		.xepan-tool-option-title Success Page
+		.xepan-tool-option-value 
+			input#success_url(data-attr='success_url')
+
+	div.panel.panel-heading.panel-primary.collapsed(data-toggle="collapse" data-target="#lead_category" aria-expanded="false")
+					span Category
+				#lead_category.xepan-cms-tools-bar-panel.row-fluid.collapse
+					table.table.table-condensed.table-hover
+						tr
+							.xepan-tool-option
+								td.xepan-tool-option-value(colspan="2")
+									select.chosen-select.item-list-option-category-multiselect(id="{$_name}_multiselect" style="width:350px;" multiple="" data-attr='lead_category' multiselect)					
+	<link rel="stylesheet" type="text/css" href="vendor/xepan/commerce/templates/css/chosen.css"/>
+	script(src="vendor/xepan/commerce/templates/js/chosen.jquery.js")
+	script.
+		$.ajax({
+			url: 'index.php?page=xepan_marketing_getcategory',
+			type: 'GET',
+			data: { },
+			success: function ( data ){
+				$('\#{$_name}_multiselect').html(data);
+				
+				$('\#{$_name}_multiselect').chosen();
+				$('\#{$_name}_multiselect').chosen({allow_single_deselect: true });
+			}
+		});
+
+		$('\#{$_name} [data-attr]').on('change',function(){
+			$(current_selected_component).attr($(this).data('attr'),$(this).val());
+		});
+
+		$('\#{$_name}').on('show',function(event){
+			$('\#{$_name} [data-attr]').each(function(index,value){
+				$(this).val($(current_selected_component).attr($(this).data('attr')));				
+			});
+
+			//- chosen multiselect options
+			if(typeof $(current_selected_component).attr('lead_category') === 'undefined' ){
+				$("\#{$_name}_multiselect").val("\{\}").trigger("chosen:updated");
+			}else{
+				var str = $(current_selected_component).attr('lead_category');
+				$("\#{$_name}_multiselect").val(str.split(',')).trigger("chosen:updated");
+			}
+		})

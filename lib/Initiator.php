@@ -62,6 +62,12 @@ class Initiator extends \Controller_Addon {
 		$this->routePages('xepan_marketing');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 		->setBaseURL('./vendor/xepan/marketing/');
+
+		if($this->app->isEditing){
+			
+			$this->app->exportFrontEndTool('xepan\marketing\Tool_Subscription','Marketing');
+		}
+
 		return $this;
 	}
 

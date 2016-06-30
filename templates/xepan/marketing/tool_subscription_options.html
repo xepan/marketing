@@ -1,0 +1,81 @@
+
+<div id="{$_name}" style="display:none" for-xepan-component="xepan/marketing/Tool_Subscription" class="xepan-tool-options">
+  <h3>Subscription Options</h3>
+  <div class="xepan-tool-option">
+    <div class="xepan-tool-option-title">Ask Name</div>
+    <div class="xepan-tool-option-value"> 
+      <select id="ask_name" data-attr="ask_name">
+        <option>true																					</option>
+        <option>false</option>
+      </select>
+    </div>
+  </div>
+  <div class="xepan-tool-option">
+    <div class="xepan-tool-option-title">Send Thank You Mail</div>
+    <div class="xepan-tool-option-value"> 
+      <select id="send_mail" data-attr="send_mail">
+        <option>true																					</option>
+        <option>false</option>
+      </select>
+    </div>
+  </div>
+  <div class="xepan-tool-option">
+    <div class="xepan-tool-option-title">On Success</div>
+    <div class="xepan-tool-option-value"> 
+      <select id="send_mail" data-attr="on_success">
+        <option>Same Page																					</option>
+        <option>Redirect			</option>
+      </select>
+    </div>
+  </div>
+  <div class="xepan-tool-option">
+    <div class="xepan-tool-option-title">Success Page</div>
+    <div class="xepan-tool-option-value"> 
+      <input id="success_url" data-attr="success_url"/>
+    </div>
+  </div>
+  <div data-toggle="collapse" data-target="#lead_category" aria-expanded="false" class="panel panel-heading panel-primary collapsed"><span>Category</span></div>
+  <div id="lead_category" class="xepan-cms-tools-bar-panel row-fluid collapse">
+    <table class="table table-condensed table-hover">
+      <tr>
+        <div class="xepan-tool-option">
+          <td colspan="2" class="xepan-tool-option-value">
+            <select id="{$_name}_multiselect" style="width:350px;" multiple="" data-attr="lead_category" multiselect="multiselect" class="chosen-select item-list-option-category-multiselect">					</select>
+          </td>
+        </div>
+      </tr>
+    </table>
+  </div><link rel="stylesheet" type="text/css" href="vendor/xepan/commerce/templates/css/chosen.css"/>
+  <script src="vendor/xepan/commerce/templates/js/chosen.jquery.js"></script>
+  <script>
+    $.ajax({
+    	url: 'index.php?page=xepan_marketing_getcategory',
+    	type: 'GET',
+    	data: { },
+    	success: function ( data ){
+    		$('#{$_name}_multiselect').html(data);
+    		
+    		$('#{$_name}_multiselect').chosen();
+    		$('#{$_name}_multiselect').chosen({allow_single_deselect: true });
+    	}
+    });
+    
+    $('#{$_name} [data-attr]').on('change',function(){
+    	$(current_selected_component).attr($(this).data('attr'),$(this).val());
+    });
+    
+    $('#{$_name}').on('show',function(event){
+    	$('#{$_name} [data-attr]').each(function(index,value){
+    		$(this).val($(current_selected_component).attr($(this).data('attr')));				
+    	});
+    
+    	//- chosen multiselect options
+    	if(typeof $(current_selected_component).attr('lead_category') === 'undefined' ){
+    		$("#{$_name}_multiselect").val("\{\}").trigger("chosen:updated");
+    	}else{
+    		var str = $(current_selected_component).attr('lead_category');
+    		$("#{$_name}_multiselect").val(str.split(',')).trigger("chosen:updated");
+    	}
+    })
+  </script>
+</div>

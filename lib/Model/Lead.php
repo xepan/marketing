@@ -49,6 +49,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					->count();
 		});
 
+		$this->addCondition('type','Lead');
+		
 		$lead_j->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$lead_j->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		

@@ -23,12 +23,12 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		$form->setLayout('tool/subscription');
 
 		if($this->options['ask_name']){
-			$form->addField('first_name');
-			$form->addField('last_name');
+			$form->addField('first_name')->addClass('form-control');
+			$form->addField('last_name')->addClass('form-control');;
 		}
 
-		$form->addField('email');
-		$form->addSubmit('Submit');
+		$form->addField('email')->addClass('form-control');;
+		$form->addSubmit('Submit')->addClass('btn btn-primary btn-block');
 		
 		if($form->isSubmitted()){
 			$lead = $this->add('xepan\marketing\Model_Lead');

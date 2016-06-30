@@ -1,13 +1,28 @@
 
-<div class="row">
-  <div class="col-md-6">
-    {$first_name}
-    {$last_name}
+<div class="xepan-subscription-form jumbotron well">
+  <div class="row">
+    <div class="col-md-12">{$first_name}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      		
+      {$last_name}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">{$email}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">{$FormButtons}		</div>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-12">{$email}</div>
-</div>
-<div class="row">
-  <div class="col-md-12">{$FormButtons}		</div>
-</div>
+<style type="text/css" media="screen">
+  .xepan-subscription-form input{
+  width: 100%;
+  margin-bottom:5px;
+  }
+  .xepan-subscription-form .row{
+  margin-top:5px;
+  margin-bottom:5px;
+  }
+</style>

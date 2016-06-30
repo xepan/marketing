@@ -8,6 +8,7 @@ class page_lead extends \xepan\base\Page{
 		parent::init();
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
+
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');

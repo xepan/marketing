@@ -11,7 +11,7 @@
 
 namespace xepan\marketing;
 
-class Controller_newsLetterExec extends \AbstractController {
+class Controller_NewsLetterExec extends \AbstractController {
 	
 	public $title='Cron to send NewsLetters';
 	public $debug = false;
@@ -143,7 +143,7 @@ class Controller_newsLetterExec extends \AbstractController {
 		        ***************************************************/	
 				// var_dump($emails);
 				// exit;			         
-				$email_subject=$this->app->add('GiTemplate');
+				$email_subject=$this->add('GiTemplate');
 				$email_subject->loadTemplateFromString($subject);
 				$subject_v=$this->add('View',null,null,$email_subject);
 				$subject_v->template->set($lead->get());
@@ -156,7 +156,7 @@ class Controller_newsLetterExec extends \AbstractController {
 
 				foreach ($dom['a'] as $anchor){
 					$a = $pq->pq($anchor);
-					$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id']])->absolute()->getURL();
+					$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
 					$a->attr('href',$url);
 				}
 				$email_body = $dom->html();

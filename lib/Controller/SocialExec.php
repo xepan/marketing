@@ -59,7 +59,7 @@ class Controller_SocialExec extends \AbstractController{
 				$post_model['message_blog'] = $dom->html();
 
 				if($post_model['url']){
-					$url = $this->app->url($post_model['url'],['xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id']])->absolute()->getURL();
+					$url = $this->app->url($post_model['url'],['xepan_landing_campaign_id'=>$postable_content['schedule_campaign_id'],'xepan_landing_content_id'=>$postable_content['id'],'source'=>'Social'])->absolute()->getURL();
 					$post_model['url'] = $url;
 				}
 

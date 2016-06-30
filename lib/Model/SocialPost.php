@@ -11,7 +11,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 
 		$this->getElement('status')->defaultValue('Draft');
 
-		$this->addCondition('created_by_id',$this->app->employee->id);
+		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
 		$this->addCondition('type','SocialPost');
 
 		$this->addExpression('total_posting')->set(function($m,$q){

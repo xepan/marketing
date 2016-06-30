@@ -19,7 +19,7 @@ class Initiator extends \Controller_Addon {
 		$model_landingresponse['content_id'] = $_GET['xepan_landing_content_id'];
 		$model_landingresponse['emailsetting_id'] = $_GET['xepan_landing_emailsetting_id'];
 		$model_landingresponse['date'] = $this->app->now;
-		$model_landingresponse['type'] = "Newsletter Response";
+		$model_landingresponse['type'] = $_GET['source']?:"Unknown";
 		$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
 		$model_landingresponse['ip'] = $_SERVER['REMOTE_ADDR'];
 		$model_landingresponse->save();
@@ -28,11 +28,12 @@ class Initiator extends \Controller_Addon {
 	function setup_admin(){
 
 		$this->routePages('xepan_marketing');
-		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
+		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('../vendor/xepan/marketing/');
 
 		$m = $this->app->top_menu->addMenu('Marketing');
 		$m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],'xepan_marketing_dashboard');
+		$m->addItem(['Strategy Planning','icon'=>'fa fa-gavel'],'xepan_marketing_strategyplanning');
 		$m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
 		$m->addItem(['Lead','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_lead',['status'=>'Active']));
 		$m->addItem(['Opportunity','icon'=>'fa fa-user'],$this->api->url('xepan_marketing_opportunity',['status'=>'Open']));
@@ -62,6 +63,26 @@ class Initiator extends \Controller_Addon {
 		$this->routePages('xepan_marketing');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 		->setBaseURL('./vendor/xepan/marketing/');
+
+		$this->app->addHook('cron_exector',function($app){
+			
+			$now = \DateTime::createFromFormat('Y-m-d H:i:s', $this->app->now);
+
+			$job2 = new \Cron\Job\ShellJob();
+			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+			if(!$job2->getSchedule() || $job2->getSchedule()->valid($now)){	
+				echo " Executing Newsletter exec <br/>";
+				$this->add('xepan\marketing\Controller_NewsLetterExec');
+			}
+
+			$job3 = new \Cron\Job\ShellJob();
+			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+			if(!$job3->getSchedule() || $job3->getSchedule()->valid($now)){	
+				echo " Executing Social exec <br/>";
+				$this->add('xepan\marketing\Controller_SocialExec');
+			}
+
+		});
 
 		if($this->app->isEditing){
 			

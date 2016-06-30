@@ -52,7 +52,6 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$lead_j->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$lead_j->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		
-		$this->addCondition('type','Lead');
 		$this->getElement('status')->defaultValue('Active');
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);

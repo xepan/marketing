@@ -62,6 +62,21 @@ class Initiator extends \Controller_Addon {
 		$this->routePages('xepan_marketing');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 		->setBaseURL('./vendor/xepan/marketing/');
+
+		$this->app->addHook('cron_exector',function($app,$resolver){
+
+			$job2 = new \Cron\Job\ShellJob();
+			$job2->setCommand('wget http://'.$this->app->current_website_name.'.epan.in/?page=xepan_communication_cron');
+			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+
+			$job3 = new \Cron\Job\ShellJob();
+			$job3->setCommand('wget http://'.$this->app->current_website_name.'.epan.in/?page=xepan_communication_cron');
+			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('0 * * * *'));
+
+			$resolver->addJob($job2);
+			$resolver->addJob($job3);
+		});
+
 		return $this;
 	}
 

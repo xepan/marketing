@@ -71,12 +71,14 @@ class Initiator extends \Controller_Addon {
 			$job2 = new \Cron\Job\ShellJob();
 			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
 			if(!$job2->getSchedule() || $job2->getSchedule()->valid($now)){	
+				echo " Executing Newsletter exec <br/>";
 				$this->add('xepan\marketing\Controller_NewsLetterExec');
 			}
 
 			$job3 = new \Cron\Job\ShellJob();
 			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
 			if(!$job3->getSchedule() || $job3->getSchedule()->valid($now)){	
+				echo " Executing Social exec <br/>";
 				$this->add('xepan\marketing\Controller_SocialExec');
 			}
 

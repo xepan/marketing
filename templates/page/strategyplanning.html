@@ -1,0 +1,81 @@
+
+<div id="{$_name}" class="row">
+  <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+    <ul class="nav nav-tabs tabs-left strategy-vertical-tabs">
+      <li title="Business Target Audience" class="active text-center"><a href="#strategy-audience-v" data-toggle="tab"><i class="fa fa-users fa-2x btn btn-primary"></i>
+          <div>Audience</div></a></li>
+      <li title="Target/ Business Location" class="text-center"><a href="#strategy-location-v" data-toggle="tab"> <i class="fa fa-map-marker fa-2x btn btn-primary"></i>
+          <div>Location</div></a></li>
+      <li title="Describe Your Business" class="text-center"><a href="#strategy-business-v" data-toggle="tab"><i class="fa fa-pencil-square-o fa-2x btn btn-primary"></i>
+          <div>Business Description</div></a></li>
+      <li title="Your Business Digital Presence" class="text-center"><a href="#strategy-digitalmarketing-v" data-toggle="tab"><i class="fa fa-globe fa-2x btn btn-primary"></i>
+          <div>Digital Presence</div></a></li>
+      <li title="Your Competetors" class="text-center"><a href="#strategy-competetor-v" data-toggle="tab"><i class="fa fa-fighter-jet fa-2x btn btn-primary"></i>
+          <div>Competetors</div></a></li>
+    </ul>
+  </div>
+  <div style="overflow:scroll" class="col-xm-10 col-sm-10 col-md-10 col-lg-10">
+    <div class="tab-content">
+      <div id="strategy-audience-v" class="tab-pane active">{$audience}</div>
+      <div id="strategy-location-v" class="tab-pane">{$location}</div>
+      <div id="strategy-business-v" style="width:50%;margin:0 auto;" class="tab-pane container">{$business}</div>
+      <div id="strategy-digitalmarketing-v" class="tab-pane">{$digital}</div>
+      <div id="strategy-competetor-v" class="tab-pane">{$competetor}</div>
+    </div>
+  </div>
+  <style type="text/css">
+    .tabs-left, .tabs-right {
+    border-bottom: none;
+    padding-top: 2px;
+    }
+    .tabs-left {
+    border-right: 1px solid #ddd;
+    }
+    .tabs-right {
+    border-left: 1px solid #ddd;
+    }
+    .tabs-left>li, .tabs-right>li {
+    float: none;
+    margin-bottom: 2px;
+    }
+    .tabs-left>li {
+    margin-right: -1px;
+    }
+    .tabs-right>li {
+    margin-left: -1px;
+    }
+    .tabs-left>li.active>a,
+    .tabs-left>li.active>a:hover,
+    .tabs-left>li.active>a:focus {
+    border-bottom-color: #ddd;
+    border-right-color: transparent;
+    }
+    .tabs-right>li.active>a,
+    .tabs-right>li.active>a:hover,
+    .tabs-right>li.active>a:focus {
+    border-bottom: 1px solid #ddd;
+    border-left-color: transparent;
+    }
+    .tabs-left>li>a {
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    display:block;
+    }
+    .tabs-right>li>a {
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+    }
+    
+    //- font size
+    .strategy-vertical-tabs > li > a > div{
+      font-size:12px;
+    }
+    .strategy-vertical-tabs > li > a > i{
+      border-radius: 50%; 
+      height: 60px; 
+      line-height: 50px; 
+      text-align: center;
+      width:60px;
+    }
+  </style>
+</div>

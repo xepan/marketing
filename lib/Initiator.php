@@ -28,11 +28,12 @@ class Initiator extends \Controller_Addon {
 	function setup_admin(){
 
 		$this->routePages('xepan_marketing');
-		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
+		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('../vendor/xepan/marketing/');
 
 		$m = $this->app->top_menu->addMenu('Marketing');
 		$m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],'xepan_marketing_dashboard');
+		$m->addItem(['Strategy Planning','icon'=>'fa fa-gavel'],'xepan_marketing_strategyplanning');
 		$m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
 		$m->addItem(['Lead','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_lead',['status'=>'Active']));
 		$m->addItem(['Opportunity','icon'=>'fa fa-user'],$this->api->url('xepan_marketing_opportunity',['status'=>'Open']));

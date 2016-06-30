@@ -85,6 +85,11 @@ class Initiator extends \Controller_Addon {
 
 		});
 
+		if($this->app->isEditing){
+			
+			$this->app->exportFrontEndTool('xepan\marketing\Tool_Subscription','Marketing');
+		}
+
 		return $this;
 	}
 

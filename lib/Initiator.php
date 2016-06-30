@@ -64,18 +64,22 @@ class Initiator extends \Controller_Addon {
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 		->setBaseURL('./vendor/xepan/marketing/');
 
-		$this->app->addHook('cron_exector',function($app,$resolver){
+		$this->app->addHook('cron_exector',function($app){
+			
+			$now = \DateTime::createFromFormat('Y-m-d H:i:s', $this->app->now);
 
 			$job2 = new \Cron\Job\ShellJob();
-			$job2->setCommand('wget http://'.$this->app->current_website_name.'.epan.in/?page=xepan_communication_cron');
 			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+			if(!$job2->getSchedule() || $job2->getSchedule()->valid($now)){	
+				$this->add('xepan\marketing\Controller_NewsLetterExec');
+			}
 
 			$job3 = new \Cron\Job\ShellJob();
-			$job3->setCommand('wget http://'.$this->app->current_website_name.'.epan.in/?page=xepan_communication_cron');
 			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+			if(!$job3->getSchedule() || $job3->getSchedule()->valid($now)){	
+				$this->add('xepan\marketing\Controller_SocialExec');
+			}
 
-			$resolver->addJob($job2);
-			$resolver->addJob($job3);
 		});
 
 		return $this;

@@ -64,9 +64,11 @@ class Initiator extends \Controller_Addon {
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 		->setBaseURL('./vendor/xepan/marketing/');
 
-		$this->app->addHook('cron_exector',function($app){
+		$this->app->addHook('cron_executor',function($app){
 			
 			$now = \DateTime::createFromFormat('Y-m-d H:i:s', $this->app->now);
+			echo "Testing in Marketing<br/>";
+			var_dump($now);
 
 			$job2 = new \Cron\Job\ShellJob();
 			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));

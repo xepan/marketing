@@ -71,7 +71,7 @@ class Initiator extends \Controller_Addon {
 
 			$job3 = new \Cron\Job\ShellJob();
 			$job3->setCommand('wget http://'.$this->app->current_website_name.'.epan.in/?page=xepan_communication_cron');
-			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('0 * * * *'));
+			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
 
 			$resolver->addJob($job2);
 			$resolver->addJob($job3);

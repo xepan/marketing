@@ -1,25 +1,20 @@
 .panel.panel-default
-	.panel-heading Add New Sms
+	.panel-heading Add/Edit Sms
 	.panel-body
 		.row.col-lg-12.xepan-push
 		.row.col-lg-12
-			.col-lg-3
-				span 
-				strong Category:
-				div 
-					cite {$marketing_category}{$marketing_category_id}
-			.col-lg-3
-				span
-				strong Name: 
-				div 
-					cite something else here
-			.col-lg-3
+			.col-lg-6
 				span 
 				strong Title: 
 				div 
 					cite {$title}
-			.col-lg-3
+			.col-lg-6
+				span 
+				strong Category:
+				div 
+					cite {$marketing_category}{$marketing_category_id}
+		.row.col-lg-12
 				span 
 				strong Message: 
 				div 
-					cite {$message_255}
+					cite {$message_blog}

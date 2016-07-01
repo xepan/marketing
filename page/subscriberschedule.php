@@ -148,6 +148,7 @@ class page_subscriberschedule extends \xepan\base\Page{
 		$event = json_decode($m['schedule']?:"[]",true);
 
 		$this->js(true)->_load('subscriptioncalendar');
+			
 		$this->js(true)->_selector('#daycalendar')->xepan_subscriptioncalander(['days'=>$event]);
 		parent::render();
 	}

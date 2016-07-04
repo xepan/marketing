@@ -36,13 +36,13 @@
                           canvas(height='130', width='130')
                       .project-box-footer.clearfix
                         a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") {$response}  
+                          span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$source_graph}  
                           span.text-success Platform
                         a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                          span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
                           span.text-success   Timings   
                         a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                          span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") 1,2,3  
                           span.text-success Location
                       .project-box-ultrafooter.clearfix
                         .col-md-4

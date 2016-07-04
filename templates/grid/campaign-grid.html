@@ -14,21 +14,27 @@
       {rows}{row}
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
         <div class="col-lg-12 col-md-6 col-sm-6">
-          <div class="main-box clearfix project-box panel panel-default">
-            <div class="main-box infographic-box">
-              <h1 style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</h1><i class="fa fa-bullhorn emerald-bg"></i><span style="font-size: 16px;" class="headline text-success">Active: {$active_duration}
-                <div style="font-size: 16px;" class="text-danger">Remaining: {$remaining_duration}</div></span>
+          <div class="main-box clearfix project-box">
+            <div class="project-box-header">
+              <div class="name text-center"><a href="{$id}">
+                  <h1 style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</h1></a></div>
             </div>
-            <div class="project-box-footer clearfix"><a href="#"><span class="value">{$total_postings}</span><span class="text-success">Total Postings</span></a><a href="#"><span class="value">{$remaining}</span><span class="text-warning">Remaining</span></a><a href="#"><span class="value">{$total_visitor}</span><span class="text-danger">Visitors</span></a></div>
+            <div class="row text-muted"> 
+              <div class="col-md-4"><span>&nbsp; Visitors : {$total_visitor}</span></div>
+              <div class="col-md-4"><span>Postings : {$total_postings}</span></div>
+              <div class="col-md-4"> <span>Remaining : {$remaining} </span></div>
+            </div>
+            <hr/>
+            <div class="project-box-content"><span data-bar-color="#2ecc71" data-percent="{$completed_percentage}" class="chart"><span class="percent">{$completed_percentage}</span>%<br/><span class="lbl">completed</span>
+                <canvas height="130" width="130"></canvas></span></div>
+            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">{$response}  </span><span class="text-success">Platform</span></a><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3  </span><span class="text-success">  Timings   </span></a><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3  </span><span class="text-success">Location</span></a></div>
             <div class="project-box-ultrafooter clearfix">
-              <div class="col-md-2"></div>
               <div class="col-md-4">{$action}</div>
-              <div class="col-md-4">
-                 
+              <div class="col-md-3"> </div>
+              <div class="col-md-3 pull-right">
                 {$edit}
                 {$delete}
               </div>
-              <div class="col-md-2"></div>
             </div>
           </div>
         </div>
@@ -42,3 +48,45 @@
     </div>{$Paginator}
   </div>
 </div>
+<script>
+  $('.chart').easyPieChart({
+  easing: 'Linear',
+  onStep: function(from, to, percent) {
+    console.log(percent);
+    $(this.el).find('.percent').text(Math.round(percent));
+  },
+  barColor: '#3498db',
+  trackColor: '#f2f2f2',
+  scaleColor: false,
+  lineWidth: 8,
+  size: 130,
+  animate: 1500
+  });
+  
+</script>
+<style type="text/css" media="screen">
+  .project-box-content {
+  padding-top : 0px !important;
+  padding-bottom : 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important;
+  }
+  .project-box .project-box-header .name a{
+  padding-top : 0px !important;
+  padding-bottom : 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important; 
+  }    
+  
+  hr{
+  margin-top : 5px !important;
+  margin-bottom : 5px !important;
+  margin-left : 0px !important;
+  margin-right : 0px !important;
+  }
+  
+  .project-box .project-box-footer a{
+  padding: 0px 15px !important;
+  margin: 10px 0; !important;
+  }
+</style>

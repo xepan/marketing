@@ -14,30 +14,43 @@
             div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
                 {cols}
                 .col-lg-12.col-md-6.col-sm-6
-                  .main-box.clearfix.project-box.panel.panel-default
-                      .main-box.infographic-box
-                        h1(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
-                        i.fa.fa-bullhorn.emerald-bg
-                        span.headline.text-success(style="font-size: 16px;") Active: {$active_duration}
-                          .text-danger(style="font-size: 16px;") Remaining: {$remaining_duration}
+                  .main-box.clearfix.project-box
+                      .project-box-header
+                        .name.text-center
+                          a(href='{$id}')
+                            h1(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
+                      .row.text-muted 
+                        .col-md-4
+                          span &nbsp; Visitors : {$total_visitor}
+                        .col-md-4
+                          span Postings : {$total_postings}
+                        .col-md-4  
+                          span Remaining : {$remaining} 
+                      hr
+                      .project-box-content
+                        span.chart(data-bar-color='#2ecc71', data-percent='{$completed_percentage}')
+                          span.percent {$completed_percentage}
+                          | %
+                          br
+                          span.lbl completed
+                          canvas(height='130', width='130')
                       .project-box-footer.clearfix
                         a(href='#')
-                          span.value {$total_postings}
-                          span.text-success Total Postings
+                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") {$response}  
+                          span.text-success Platform
                         a(href='#')
-                          span.value {$remaining}
-                          span.text-warning Remaining
+                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                          span.text-success   Timings   
                         a(href='#')
-                          span.value {$total_visitor}
-                          span.text-danger Visitors
+                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                          span.text-success Location
                       .project-box-ultrafooter.clearfix
-                        .col-md-2
                         .col-md-4
                           {$action}
-                        .col-md-4 
+                        .col-md-3 
+                        .col-md-3.pull-right
                           {$edit}
                           {$delete}
-                        .col-md-2
 
             {/}
             {/}{/}
@@ -49,3 +62,44 @@
 
             {totals}{cols}{col}{$content}{/}{/}{/}
         {$Paginator}
+
+script.
+  $('.chart').easyPieChart({
+  easing: 'Linear',
+  onStep: function(from, to, percent) {
+    console.log(percent);
+    $(this.el).find('.percent').text(Math.round(percent));
+  },
+  barColor: '#3498db',
+  trackColor: '#f2f2f2',
+  scaleColor: false,
+  lineWidth: 8,
+  size: 130,
+  animate: 1500
+  });
+
+style(type='text/css', media='screen').
+  .project-box-content {
+  padding-top : 0px !important;
+  padding-bottom : 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important;
+  }
+  .project-box .project-box-header .name a{
+  padding-top : 0px !important;
+  padding-bottom : 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important; 
+  }    
+
+  hr{
+  margin-top : 5px !important;
+  margin-bottom : 5px !important;
+  margin-left : 0px !important;
+  margin-right : 0px !important;
+  }
+
+  .project-box .project-box-footer a{
+  padding: 0px 15px !important;
+  margin: 10px 0; !important;
+  }

@@ -20,6 +20,18 @@ class page_socialcontent extends \xepan\base\Page{
 			return $q->expr("(select GROUP_CONCAT(concat(tmp.visits,'/',tmp.type)) from [sql] as tmp where tmp.content_id = [0])",[$q->getField('id'),'sql'=>$lr->_dsql()]);
 		});
 
+		$social->addExpression('timing_graph_data')->set(function($m,$q){
+			$lr = $m->add('xepan\marketing\Model_LandingResponse');
+			$lr->_dsql()->del('fields');
+			$lr->_dsql()->field('count(*) visits');
+			$lr->_dsql()->field('content_id');
+			$lr->_dsql()->field('HOUR(date) timeslot');
+			$lr->_dsql()->group('content_id');
+			$lr->_dsql()->group('HOUR(date)');
+
+			return $q->expr("(select GROUP_CONCAT(concat(tmp.visits,'/',tmp.timeslot)) from [sql] as tmp where tmp.content_id = [0])",[$q->getField('id'),'sql'=>$lr->_dsql()]);
+		});
+
 		if($this->app->stickyGET('status'))
 			$social->addCondition('status',explode(",",$this->app->stickyGET('status')));
 				
@@ -42,8 +54,18 @@ class page_socialcontent extends \xepan\base\Page{
 				$source_labels[] = $dt[1];
 			}
 
+			$timing_data = explode(",", $g->model['timing_graph_data']);
+			$timing_values=[];
+			$timing_labels = [];
+			foreach ($timing_data as $dt) {
+				$dt= explode("/", $dt);
+				$timing_values[] =$dt[0];
+				$timing_labels[] =$dt[1];
+			}
+
 			$g->current_row_html['source_graph'] = $g->model['source_graph'];
-			$g->js(true)->_selector('.sparkline[data-id='.$g->model->id.']')->sparkline($source_values, ['enableTagOptions' => true,'tooltipFormat'=>'{{offset:offset}} ({{percent.1}}%)','tooltipValueLookups'=>['offset'=>$source_labels]]);
+			$g->js(true)->_selector('.sparkline.source_graph[data-id='.$g->model->id.']')->sparkline($source_values, ['enableTagOptions' => true,'tooltipFormat'=>'{{offset:offset}} ({{percent.1}}%)','tooltipValueLookups'=>['offset'=>$source_labels]]);
+			$g->js(true)->_selector('.sparkline.timing_graph[data-id='.$g->model->id.']')->sparkline($timing_values, ['enableTagOptions' => true,'tooltipFormat'=>'{{offset:offset}} ({{percent.1}}%)','tooltipValueLookups'=>['offset'=>$timing_labels]]);
 		});
 		$crud->grid->js(true)->_load('jquery.sparkline.min');
 	}

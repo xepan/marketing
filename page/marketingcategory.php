@@ -14,11 +14,17 @@ class page_marketingcategory extends \xepan\base\Page{
 		$crud->setModel($m);
 	    $crud->grid->addQuickSearch(['name']);
 	    $crud->grid->addPaginator(50);
+		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 	}
 
 	function defaultTemplate(){
 
 		return['page/marketingcampaign'];
 	}
+
+	function render(){
+		$this->app->jui->addStaticInclude('jquery.easypiechart.min');
+		parent::render();
+	}	
 
 }

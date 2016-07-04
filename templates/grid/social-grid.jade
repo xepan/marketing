@@ -31,7 +31,7 @@
                         span.text-muted(style="width: 80%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$msg} 
                       .project-box-footer.clearfix
                         a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3
+                          span.sparkline(sparkType="pie" data-id="{$id}" sparkHeight="50px" sparksliceColors="[orange,green,red]") {$source_graph}
                           span.text-success Platform
                         a(href='#')
                           span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  

@@ -12,7 +12,6 @@ class page_leaddetails extends \xepan\base\Page {
 
 		$action = $this->api->stickyGET('action')?:'view';
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
-		
 		if($action=="add"){
 
 			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
@@ -95,6 +94,7 @@ class page_leaddetails extends \xepan\base\Page {
 				});
 			
 			}
+		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);		
 
 		}
 			/*
@@ -107,4 +107,9 @@ class page_leaddetails extends \xepan\base\Page {
 	function defaultTemplate(){
 		return ['page/leadprofile'];
 	}
+
+	function render(){
+		$this->app->jui->addStaticInclude('jquery.easypiechart.min');
+		parent::render();
+	}	
 }

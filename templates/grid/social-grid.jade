@@ -1,59 +1,86 @@
 .xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
-	{Pannel}
-	header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-		div.filter-block
-			.pull-right {$grid_buttons} 
-			.form-group.pull-right.xepan-filter-form
-				div(class="form-control pull-left")|{$quick_search}
-					i(class="fa fa-search search-icon")
-	{/Pannel}
-	.main-box-body.clearfix
-		.row
-			{header}{cols}{col}{/}{/}{/}
-			{rows}{row}
-			div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
-				{cols}
-				.col-lg-12.col-md-6.col-sm-6
-					.main-box.clearfix.project-box.green-box
-						.main-box-body.clearfix  
-							.project-box-header.green-bg
-								.name
-									a(href='?page=xepan_marketing_socialpost&post_id={$id}' target="_blank")
-										| {$title} 
-							.project-box-content
-								span
-									{message_160}{/}
-									{message_250}{/}
-									{message_blog}{/} 
-							.project-box-footer.clearfix
-								a(href='#')
-									span.value {total_posting}0{/}
-									span.label Post
-									
-									span.label Visitor : {total_visitor}0{/}
+    {Pannel}
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                div(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+    {/Pannel}
+    .main-box-body.clearfix
+        .row
+            {header}{cols}{col}{/}{/}{/}
+            {rows}{row}
+            div(class="{$odd_even} col-md-{col-width}4{/}" data-id="{$id}")
+                {cols}
+                .col-lg-12.col-md-6.col-sm-6
+                  .main-box.clearfix.project-box
+                      .project-box-header
+                        .name.text-center
+                          a(href='?page=xepan_marketing_socialpost&post_id={$id}' target="_blank")
+                            h1(title ="{$title}" style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
+                      .row.text-muted 
+                        .col-md-4
+                          span &nbsp; Visitors : {$total_visitor}
+                        .col-md-4
+                          span Likes : {$total_like}
+                        .col-md-4  
+                          span Comments : {$total_comments} 
+                      hr
+                      .project-box-content
+                        span(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$msg} 
+                      .project-box-footer.clearfix
+                        a(href='#')
+                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3
+                          span.text-success Platform
+                        a(href='#')
+                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                          span.text-success   Timings   
+                        a(href='#')
+                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                          span.text-success Location
+                      .project-box-ultrafooter.clearfix
+                        .col-md-4
+                          {$action}
+                        .col-md-4 
+                        .col-md-4.pull-right
+                          {$edit}
+                          {$delete}
 
-								a(href='#')
-									span.value {$total_likes}
-									span.label Likes
-								a(href="#")
-									span.value {$total_likes}
-									span.label Comments
-							.project-box-ultrafooter.clearfix
-								.col-md-1
-								.col-md-5.pull-left
-									{$action}
-								.col-md-2
-								.col-md-4.pull-right     
-									{$edit}
-									{$delete}
+            {/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
 
-			{/}
-			{/}{/}
-			{not_found}
-			div.row
-				.col-md-12.text-center.alert.alert-warning(role="alert")
-					span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
-			{/}
+            {totals}{cols}{col}{$content}{/}{/}{/}
+        {$Paginator}
 
-			{totals}{cols}{col}{$content}{/}{/}{/}
-		{$Paginator}
+script.
+  $('.chart').easyPieChart({
+  easing: 'Linear',
+  onStep: function(from, to, percent) {
+    console.log(percent);
+    $(this.el).find('.percent').text(Math.round(percent));
+  },
+  barColor: '#3498db',
+  trackColor: '#f2f2f2',
+  scaleColor: false,
+  lineWidth: 8,
+  size: 130,
+  animate: 1500
+  });
+
+style(type='text/css', media='screen').
+  .project-box .project-box-header .name a{
+  padding-top : 0px !important;
+  padding-bottom : 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important; 
+  }    
+
+  .project-box .project-box-footer a{
+  padding: 0px 15px !important;
+  }

@@ -15,5 +15,11 @@ class page_socialcontent extends \xepan\base\Page{
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addsocialpost'],null,['grid/social-grid']);
 		$crud->setModel($social);
 		$frm=$crud->grid->addQuickSearch(['title']);
+		
+		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
+		
+		$crud->grid->addHook('formatRow',function($g){
+			$g->current_row_html['msg'] = $g->model['message_blog'];
+		});
 	}
 }

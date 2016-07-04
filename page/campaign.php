@@ -12,7 +12,10 @@ class page_campaign extends \xepan\base\Page{
 		$campaign->addExpression('completed_percentage')->set(function($m, $q){
 			return $m->dsql()->expr("ROUND(([1]-[0])/[1]*100,0)",[$m->getElement('total_postings'),$m->getElement('remaining')]);
 		});
-		
+
+		$landing_response = $this->add('xepan\marketing\Model_LandingResponse');
+		$response = $landing_response->getRows();
+
 		$campaign->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addcampaign'],null,['grid/campaign-grid']);
 		$crud->setModel($campaign);

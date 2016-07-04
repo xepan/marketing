@@ -14,25 +14,25 @@
       {rows}{row}
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
         <div class="col-lg-12 col-md-6 col-sm-6">
-          <div class="main-box clearfix project-box green-box">
-            <div class="main-box-body clearfix"> 
-              <div class="project-box-header green-bg">
-                <div class="name"><a href="?page=xepan_marketing_socialpost&amp;post_id={$id}" target="_blank">{$title} </a></div>
-              </div>
-              <div class="project-box-content"><span>
-                  {message_160}{/}
-                  {message_250}{/}
-                  {message_blog}{/} </span></div>
-              <div class="project-box-footer clearfix"><a href="#"><span class="value">{total_posting}0{/}</span><span class="label">Post</span><span class="label">Visitor : {total_visitor}0{/}</span></a><a href="#"><span class="value">{$total_likes}</span><span class="label">Likes</span></a><a href="#"><span class="value">{$total_likes}</span><span class="label">Comments</span></a></div>
-              <div class="project-box-ultrafooter clearfix">
-                <div class="col-md-1"></div>
-                <div class="col-md-5 pull-left">{$action}</div>
-                <div class="col-md-2"></div>
-                <div class="col-md-4 pull-right">
-                      
-                  {$edit}
-                  {$delete}
-                </div>
+          <div class="main-box clearfix project-box">
+            <div class="project-box-header">
+              <div class="name text-center"><a href="?page=xepan_marketing_socialpost&amp;post_id={$id}" target="_blank">
+                  <h1 title="{$title}" style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</h1></a></div>
+            </div>
+            <div class="row text-muted"> 
+              <div class="col-md-4"><span>&nbsp; Visitors : {$total_visitor}</span></div>
+              <div class="col-md-4"><span>Likes : {$total_like}</span></div>
+              <div class="col-md-4"> <span>Comments : {$total_comments} </span></div>
+            </div>
+            <hr/>
+            <div class="project-box-content"><span style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$msg} </span></div>
+            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3</span><span class="text-success">Platform</span></a><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3  </span><span class="text-success">  Timings   </span></a><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3  </span><span class="text-success">Location</span></a></div>
+            <div class="project-box-ultrafooter clearfix">
+              <div class="col-md-4">{$action}</div>
+              <div class="col-md-4"> </div>
+              <div class="col-md-4 pull-right">
+                {$edit}
+                {$delete}
               </div>
             </div>
           </div>
@@ -47,3 +47,31 @@
     </div>{$Paginator}
   </div>
 </div>
+<script>
+  $('.chart').easyPieChart({
+  easing: 'Linear',
+  onStep: function(from, to, percent) {
+    console.log(percent);
+    $(this.el).find('.percent').text(Math.round(percent));
+  },
+  barColor: '#3498db',
+  trackColor: '#f2f2f2',
+  scaleColor: false,
+  lineWidth: 8,
+  size: 130,
+  animate: 1500
+  });
+  
+</script>
+<style type="text/css" media="screen">
+  .project-box .project-box-header .name a{
+  padding-top : 0px !important;
+  padding-bottom : 0px !important;
+  padding-left : 0px !important;
+  padding-right : 0px !important; 
+  }    
+  
+  .project-box .project-box-footer a{
+  padding: 0px 15px !important;
+  }
+</style>

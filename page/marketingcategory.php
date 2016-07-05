@@ -11,8 +11,7 @@ class page_marketingcategory extends \xepan\base\Page{
 
 		$m->addExpression('weakly_communication')->set(function($m,$q){
 			$comm = $m->add('xepan/marketing/Model_Schedule');
-			$comm->addExpression('campaign_id',$q->getField('id'));
-			$comm->addExpression('date','>',date('Y-m-d',strtotime('-8 week')));
+			$comm->addCondition('date','>',date('Y-m-d',strtotime('-8 week')));
 			$comm->_dsql()->del('fields');
 			$comm->_dsql()->field('count(*) shcedules_count');
 			$comm->_dsql()->field('campaign_id');

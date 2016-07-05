@@ -28,7 +28,7 @@
                           span Comments : {$total_comments} 
                       hr
                       .project-box-content
-                        span.text-muted(style="width: 80%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$msg} 
+                        .text-muted(style="height:57px; overflow: hidden; text-overflow: ellipsis;") {$msg} 
                       .project-box-footer.clearfix
                         a(href='#')
                           span.sparkline.source_graph(sparkType="pie" data-id="{$id}" sparkHeight="50px") {$source_graph}

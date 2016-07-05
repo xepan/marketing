@@ -3,6 +3,7 @@
 namespace xepan\marketing;
 
 class page_leaddetails extends \xepan\base\Page {
+	
 	public $title ='Lead Details';
 	public $breadcrumb=['Home'=>'index','Lead'=>'xepan_marketing_lead','Details'=>'#'];
 
@@ -11,9 +12,10 @@ class page_leaddetails extends \xepan\base\Page {
 		parent::init();
 
 		$action = $this->api->stickyGET('action')?:'view';
-		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
+		$lead= $this->add('xepan\marketing\Model_Lead');
+
 		
-		$lead->addExpression('weakly_communication')->set(function($m,$q){
+		$lead->addExpression('weekly_communication')->set(function($m,$q){
 			$comm = $m->add('xepan/communication/Model_Communication');
 			// $comm->addCondition('sent_on','>',date('Y-m-d',strtotime('-8 week')));
 			$comm->_dsql()->del('fields');
@@ -23,6 +25,8 @@ class page_leaddetails extends \xepan\base\Page {
 
 			return $q->expr("(select GROUP_CONCAT(tmp.communication_count) from [sql] as tmp where tmp.to_id = [0])",[$m->getElement('id'),'sql'=>$comm->_dsql()]);
 		});
+
+		$lead->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 		
 		if($action=="add"){
 
@@ -43,8 +47,7 @@ class page_leaddetails extends \xepan\base\Page {
 		$lead_view->setModel($lead);
 
 			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
-			$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark'],['source','remark']);//,'marketing_category_id','communication','opportunities'
-			$detail->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
+			$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark','weekly_communication'],['source','remark']);//,'marketing_category_id','communication','opportunities'
 		if($lead->loaded()){
 			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
@@ -109,11 +112,8 @@ class page_leaddetails extends \xepan\base\Page {
 			}
 
 		}
-			/*
-			*	
-			*	Lead <=> Category association form
-			*	
-			*/
+		
+		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 	}
 
 	function defaultTemplate(){
@@ -121,7 +121,7 @@ class page_leaddetails extends \xepan\base\Page {
 	}
 
 	function render(){
-		$this->app->jui->addStaticInclude('jquery.easypiechart.min');
+		// $this->app->jui->addStaticInclude('jquery.easypiechart.min');
 		parent::render();
 	}	
 }

@@ -12,6 +12,11 @@ class page_leaddetails extends \xepan\base\Page {
 
 		$action = $this->api->stickyGET('action')?:'view';
 		$lead= $this->add('xepan\marketing\Model_Lead')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
+		
+		$lead->addExpression('weakly_communication')->set(function($m,$q){
+			return "'1,2,3,4,5,6,7'";	
+		});	
+
 		if($action=="add"){
 
 			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
@@ -32,6 +37,7 @@ class page_leaddetails extends \xepan\base\Page {
 
 			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
 			$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark'],['source','remark']);//,'marketing_category_id','communication','opportunities'
+			$detail->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		if($lead->loaded()){
 			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
@@ -94,7 +100,6 @@ class page_leaddetails extends \xepan\base\Page {
 				});
 			
 			}
-		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);		
 
 		}
 			/*

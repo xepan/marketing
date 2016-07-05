@@ -11,7 +11,7 @@ class page_campaign extends \xepan\base\Page{
 			$lr = $m->add('xepan\marketing\Model_LandingResponse');
 			$lr->_dsql()->del('fields');
 			$lr->_dsql()->field('count(*) visits');
-			$lr->_dsql()->field('campaign_id');
+			$lr->_dsql()->field('IFNULL(campaign_id,0)');
 			$lr->_dsql()->field('type');
 			$lr->_dsql()->group('campaign_id');
 			$lr->_dsql()->group('type');
@@ -19,6 +19,8 @@ class page_campaign extends \xepan\base\Page{
 			return $q->expr("(select GROUP_CONCAT(concat(tmp.visits,'/',tmp.type)) from [sql] as tmp where tmp.campaign_id = [0])",[$q->getField('id'),'sql'=>$lr->_dsql()]);
 		});
 
+		throw new \Exception(var_dump($campaign['source_graph_data']));
+		
 		$campaign->addExpression('timing_graph_data')->set(function($m,$q){
 			$lr = $m->add('xepan\marketing\Model_LandingResponse');
 			$lr->_dsql()->del('fields');

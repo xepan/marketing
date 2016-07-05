@@ -10,7 +10,15 @@ class page_marketingcategory extends \xepan\base\Page{
 		$m = $this->add('xepan\marketing\Model_MarketingCategory');
 
 		$m->addExpression('weakly_communication')->set(function($m,$q){
-			return "'1,2,3,4,5,6,7'";	
+			$comm = $m->add('xepan/marketing/Model_Schedule');
+			$comm->addExpression('campaign_id',$q->getField('id'));
+			$comm->addExpression('date','>',date('Y-m-d',strtotime('-8 week')));
+			$comm->_dsql()->del('fields');
+			$comm->_dsql()->field('count(*) shcedules_count');
+			$comm->_dsql()->field('campaign_id');
+			$comm->_dsql()->group('campaign_id');
+
+			return $q->expr("(select GROUP_CONCAT(tmp.shcedules_count) from [sql] as tmp where tmp.campaign_id = [0])",[$q->getField('id'),'sql'=>$comm->_dsql()]);
 		});
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);

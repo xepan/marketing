@@ -284,10 +284,9 @@ class Model_Lead extends \xepan\base\Model_Contact{
 				$a->attr('href',$url);
 			}
 			$email_body = $dom->html();
-
 			$temp=$this->add('GiTemplate');
 			$temp->loadTemplateFromString($email_body);
-			$body_v=$this->add('View',null,null,$temp->render());
+			$body_v=$this->add('View',null,null,$temp);
 			$body_v->template->set($this->get());
 
 			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);

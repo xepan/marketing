@@ -268,10 +268,32 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
 			$mail = $this->add('xepan\communication\Model_Communication_Email');
 
+			$subject = $newsletter_model['title'] ;		    		    
+			$email_subject=$this->add('GiTemplate');
+			
+			$email_body = $newsletter_model['message_blog'];
+			$email_subject->loadTemplateFromString($subject);
+			$subject_v=$this->add('View',null,null,$email_subject);
+			$subject_v->template->set($this->get());
+
+			$pq = new \xepan\cms\phpQuery();
+			$dom = $pq->newDocument($email_body);
+			foreach ($dom['a'] as $anchor){
+				$a = $pq->pq($anchor);
+				$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$this->id,'xepan_landing_campaign_id'=>$this['lead_campaing_id'],'xepan_landing_content_id'=>$this['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
+				$a->attr('href',$url);
+			}
+			$email_body = $dom->html();
+
+			$temp=$this->add('GiTemplate');
+			$temp->loadTemplateFromString($email_body);
+			$body_v=$this->add('View',null,null,$temp->render());
+			$body_v->template->set($this->get());
+
 			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
 			$mail->addTo($this['emails_str']);
-			$mail->setSubject($newsletter_model['title']);
-			$mail->setBody($newsletter_model['message_blog']);
+			$mail->setSubject($subject_v->getHtml());
+			$mail->setBody($body_v->getHtml());
 			$mail->send($email_settings);
 
 			return $f->js(true,$f->js()->univ()->successMessage('Mail Send Successfully'))->reload();				

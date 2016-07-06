@@ -20,7 +20,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		}		
 
 		$form = $this->add('Form');
-		$form->setLayout('tool/subscription');
+		$form->setLayout('view/tool/subscription');
 
 		if($this->options['ask_name']){
 			$form->addField('first_name')->addClass('form-control');

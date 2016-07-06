@@ -35,8 +35,7 @@
                     td 
                       | {$leads_count}
                     td
-                      span.sparkline(sparkType="bar" sparkHeight="40px" sparkbarColor="lightgray")
-                        {communication}40,10,30,30,10,5,20,40,10,30,30{/}       
+                      .sparkline(sparkType = "bar") {$weakly_communication}    
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

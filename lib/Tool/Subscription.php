@@ -8,7 +8,8 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 				'send_mail'=>false,
 				'on_success'=>'Same Page',
 				'success_url'=>'',
-				'lead_category'=>''
+				'lead_category'=>'',
+				'submit_button_name'=>'Submit'
 			];	
 
 	function init(){
@@ -28,7 +29,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		}
 
 		$form->addField('email')->addClass('form-control');;
-		$form->addSubmit('Submit')->addClass('btn btn-primary btn-block');
+		$form->addSubmit($this->options['submit_button_name'])->addClass('btn btn-primary btn-block');
 		
 		if($form->isSubmitted()){
 			$lead = $this->add('xepan\marketing\Model_Lead');

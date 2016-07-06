@@ -6,7 +6,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	public $status = ['Active','InActive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate','communication'],
+					'Active'=>['view','edit','delete','deactivate','communication','send'],
 					'InActive'=>['view','edit','delete','activate','communication']
 					];
 
@@ -242,6 +242,40 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		     			->addCondition('marketing_category_id',$category)
 			 			->tryLoadAny()	
 			 			->save();
+	}
+
+	function page_send($page){
+		$newsletter_m=$page->add('xepan\marketing\Model_Newsletter');
+		$newsletter_m->addCondition('status','Approved');
+
+		$f=$page->add('Form',null,null,['form/empty']);
+		$newsletter_field=$f->addField('Dropdown','newsletter')->validate('required')->setEmptyText('Please Select Newsletter');
+		$newsletter_field->setModel($newsletter_m);
+
+		$f->addSubmit('Send Newsletter')->addClass('btn btn-primary');
+		
+		if($this->app->stickyGET('newsletter')){
+			$newsletter_m->tryLoad($this->app->stickyGET('newsletter'));
+		}
+		$view=$page->add('View')->addClass('xepan-padding-large');
+		$view->setHtml($newsletter_m['title']."<br>".$newsletter_m['message_blog']);
+		$newsletter_field->js('change',$view->js()->reload(['newsletter'=>$newsletter_field->js()->val()]));
+		
+		if($f->isSubmitted()){
+			$newsletter_model=$page->add('xepan\marketing\Model_Newsletter');
+			$newsletter_model->tryLoad($f['newsletter']);
+			
+			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
+			$mail = $this->add('xepan\communication\Model_Communication_Email');
+
+			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
+			$mail->addTo($this['emails_str']);
+			$mail->setSubject($newsletter_model['title']);
+			$mail->setBody($newsletter_model['message_blog']);
+			$mail->send($email_settings);
+
+			return $f->js(true,$f->js()->univ()->successMessage('Mail Send Successfully'))->reload();				
+		}
 	}
 
 } 

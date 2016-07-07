@@ -149,12 +149,13 @@ class page_strategyplanning extends \xepan\base\Page{
 					[
 						'fields'=>[
 									'name'=>"Line",
+									'url'=>"Line",
 									'description' => "text"
 									],
 						'config_key'=>'STRATEGY_PLANNING_COMETETORS'
 					]);
 		$competetors_crud = $this->add('xepan\base\CRUD',['frame_options'=>['width'=>'600px'],'entity_name'=>'Competetor'],'competetor');
-		$competetors_crud->setModel($competetors_model);
+		$competetors_crud->setModel($competetors_model,['name','url','description']);
 
 	}
 

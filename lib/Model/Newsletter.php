@@ -33,6 +33,9 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			return "'todo'";
 		});
 
+		$this->addExpression('name')->set($this->dsql()->expr('[0]',[$this->getElement('title')]));
+
+
 	}
 
 	function page_test($p){

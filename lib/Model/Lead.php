@@ -6,7 +6,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	public $status = ['Active','InActive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate','communication'],
+					'Active'=>['view','edit','delete','deactivate','communication','send'],
 					'InActive'=>['view','edit','delete','activate','communication']
 					];
 
@@ -242,6 +242,61 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		     			->addCondition('marketing_category_id',$category)
 			 			->tryLoadAny()	
 			 			->save();
+	}
+
+	function page_send($page){
+		$newsletter_m=$page->add('xepan\marketing\Model_Newsletter');
+		$newsletter_m->addCondition('status','Approved');
+
+		$f=$page->add('Form',null,null,['form/empty']);
+		$newsletter_field=$f->addField('Dropdown','newsletter')->validate('required')->setEmptyText('Please Select Newsletter');
+		$newsletter_field->setModel($newsletter_m);
+
+		$f->addSubmit('Send Newsletter')->addClass('btn btn-primary');
+		
+		if($this->app->stickyGET('newsletter')){
+			$newsletter_m->tryLoad($this->app->stickyGET('newsletter'));
+		}
+		$view=$page->add('View')->addClass('xepan-padding-large');
+		$view->setHtml($newsletter_m['title']."<br>".$newsletter_m['message_blog']);
+		$newsletter_field->js('change',$view->js()->reload(['newsletter'=>$newsletter_field->js()->val()]));
+		
+		if($f->isSubmitted()){
+			$newsletter_model=$page->add('xepan\marketing\Model_Newsletter');
+			$newsletter_model->tryLoad($f['newsletter']);
+			
+			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
+			$mail = $this->add('xepan\communication\Model_Communication_Email');
+
+			$subject = $newsletter_model['title'] ;		    		    
+			$email_subject=$this->add('GiTemplate');
+			
+			$email_body = $newsletter_model['message_blog'];
+			$email_subject->loadTemplateFromString($subject);
+			$subject_v=$this->add('View',null,null,$email_subject);
+			$subject_v->template->set($this->get());
+
+			$pq = new \xepan\cms\phpQuery();
+			$dom = $pq->newDocument($email_body);
+			foreach ($dom['a'] as $anchor){
+				$a = $pq->pq($anchor);
+				$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$this->id,'xepan_landing_campaign_id'=>$this['lead_campaing_id'],'xepan_landing_content_id'=>$this['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
+				$a->attr('href',$url);
+			}
+			$email_body = $dom->html();
+			$temp=$this->add('GiTemplate');
+			$temp->loadTemplateFromString($email_body);
+			$body_v=$this->add('View',null,null,$temp);
+			$body_v->template->set($this->get());
+
+			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
+			$mail->addTo($this['emails_str']);
+			$mail->setSubject($subject_v->getHtml());
+			$mail->setBody($body_v->getHtml());
+			$mail->send($email_settings);
+
+			return $f->js(true,$f->js()->univ()->successMessage('Mail Send Successfully'))->reload();				
+		}
 	}
 
 } 

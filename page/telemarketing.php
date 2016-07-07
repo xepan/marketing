@@ -53,7 +53,7 @@ class page_telemarketing extends \xepan\base\Page{
 		
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 
-		$form->setModel($model_telecommunication,['title','description','contacts_str',]);
+		$form->setModel($model_telecommunication,['title','description']);
 		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
 
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');

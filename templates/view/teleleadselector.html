@@ -10,8 +10,7 @@
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Lead {$name_sort}</span></th>
         <th>Contact</th>
-        <th>Detail</th>
-        <th> </th>{/}{/}
+        <th>Detail</th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -23,8 +22,7 @@
           </td>
           <td>{$contacts_str} </td>
           <td><a id="lead" href="" data-id="{$id}">
-              <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-chevron-right fa fa-stack-1x fa-inverse"></i></span></a></td>
-          <td style="width: 15%;"></td>{/}
+              <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-chevron-right fa fa-stack-1x fa-inverse"></i></span></a></td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

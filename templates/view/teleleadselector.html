@@ -9,12 +9,21 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Lead {$name_sort}</span></th>
+        <th>Contact</th>
+        <th>Detail</th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}<a id="lead" href="" data-id="{$id}"><span class="user-subhead">{$name}</span></a></td>
+          <td>{$avatar}<a href="" data-id="{$id}" class="do-view-lead"><span class="user-subhead">{$name}</span></a>
+            <div class="user-subhead">
+              <h6>[{city}{/}] - [{$type}]</h6>
+            </div>
+          </td>
+          <td>{$contacts_str} </td>
+          <td><a id="lead" href="" data-id="{$id}">
+              <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-chevron-right fa fa-stack-1x fa-inverse"></i></span></a></td>
           <td style="width: 15%;"></td>{/}
         </tr>{/}{/}
         {not_found}

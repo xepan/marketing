@@ -4,12 +4,16 @@
 			h1.text-center {$name}
 			hr
 		.row 	
-			.col-md-6
+			.col-md-12
+				{$title}
+			.col-md-12		
+				.row.xepan-push-small
 				{$description}	
-			.col-md-6		
+			.col-md-3
 				.row.xepan-push-small
-					{$title}
+				{$FormButtons}
+			.col-md-3		
 				.row.xepan-push-small
-					{$FormButtons}
-				.row.xepan-push-small
-					{$btn-opportunity}
+				{$btn-opportunity}
+			.col-md-3		
+			.col-md-3		

@@ -17,10 +17,25 @@ class page_telemarketing extends \xepan\base\Page{
 
 		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector']);
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
-		$view_lead->setModel($model_lead, ['name']);
+		$view_lead->setModel($model_lead, ['name','type','city','contacts_str']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
-		$view_lead->addPaginator(7);
-		$view_lead->addQuickSearch(['name']);
+		$view_lead->addPaginator(10);
+		$frm = $view_lead->addQuickSearch(['name','contacts_str']);
+
+		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
+		$status->setModel('xepan\marketing\MarketingCategory');
+
+		$frm->addHook('applyFilter',function($f,$m){
+			if($f['marketing_category_id']){
+				$cat_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
+				$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
+				$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
+			}
+		});
+		
+		$status->js('change',$frm->js()->submit());
+
+		$view_lead->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 
 		/*
 				FORM FOR ADDING CONVERSATION 
@@ -29,7 +44,7 @@ class page_telemarketing extends \xepan\base\Page{
 
 
 		$model_telecommunication = $this->add('xepan\marketing\Model_TeleCommunication');
-		
+		// $model_telecommunication->getElement('direction')->defaultValue('Out');
 		$view_teleform = $this->add('View',null,'top');
 		$view_teleform_url = $this->api->url(null,['cut_object'=>$view_teleform->name]);
 		
@@ -38,13 +53,11 @@ class page_telemarketing extends \xepan\base\Page{
 		
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 
-		$form->setModel($model_telecommunication,['title','description']);
+		$form->setModel($model_telecommunication,['title','description','contacts_str',]);
 		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
 
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
-
-									
 		
 		/*
 				GRID FOR SHOWING PREVIOUS CONVERSATION 
@@ -56,7 +69,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_conversation = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'bottom',['view\teleconversationlister']);
 		$view_conversation->setModel($model_communication,['title','description','created_at','from'],['title','description','created_at','from_id']);
 		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
-		$view_conversation->grid->addPaginator(7);
+		$view_conversation->grid->addPaginator(10);
 		$view_conversation->grid->addQuickSearch(['name']);
 		
 		/*

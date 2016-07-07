@@ -13,6 +13,8 @@
                 {cols}{col}
                 th(id="{$name_sortid}")
                     span Lead {$name_sort}
+                th Contact
+                th Detail
                 th 
                 {/}{/}
             {/}
@@ -24,9 +26,18 @@
                     {cols}
                     td
                       {$avatar}
-                      a#lead(href='' data-id="{$id}")
+                      a.do-view-lead(href='' data-id="{$id}")
                         span.user-subhead
                             {$name}
+                      .user-subhead
+                        h6 [{city}{/}] - [{$type}]
+                    td {$contacts_str} 
+                    td
+                        a#lead(href='' data-id="{$id}")
+                            .area-hidden(style="display: none;") {$name}
+                            span.fa-stack
+                                i.fa.fa-square.fa-stack-2x
+                                i.fa-chevron-right.fa.fa-stack-1x.fa-inverse
                     td(style="width: 15%;")
                     {/}
                 {/}{/}

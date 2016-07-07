@@ -7,5 +7,6 @@ class Model_TeleCommunication extends \xepan\communication\Model_Communication{
 		parent::init();
 
 		$this->addCondition('communication_type','Telemarketing');
+		$this->getElement('direction')->defaultValue('Out');
 	}
 }

@@ -18,7 +18,7 @@ class page_lead extends \xepan\base\Page{
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_Avatar');
 		
-		$frm=$crud->grid->addQuickSearch(['name']);
+		$frm=$crud->grid->addQuickSearch(['name','website','contacts_str']);
 				
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');

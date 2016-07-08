@@ -65,11 +65,11 @@ class page_telemarketing extends \xepan\base\Page{
 				GRID FOR SHOWING PREVIOUS CONVERSATION 
 		*/							
 
-		$model_communication = $this->add('xepan\communication\Model_Communication')
-									->addCondition('communication_type','TeleMarketing')
-									->addCondition('to_id',$lead_id);
-		$view_conversation = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'bottom',['view\teleconversationlister']);
-		$view_conversation->setModel($model_communication,['title','description','created_at','from_id','to_raw'],['title','description','created_at','from','to_raw']);
+		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
+									->addCondition('to_id',$lead_id); 	
+		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister']);
+		// $view_conversation->setModel($model_communication,['title','description','created_at','from_id','to_raw'],['title','description','created_at','from','to_raw']);
+		$view_conversation->setModel($model_communication->debug());
 		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
 		$view_conversation->grid->addPaginator(10);
 		$view_conversation->grid->addQuickSearch(['name']);

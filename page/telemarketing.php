@@ -69,7 +69,7 @@ class page_telemarketing extends \xepan\base\Page{
 									->addCondition('to_id',$lead_id); 	
 		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister']);
 		// $view_conversation->setModel($model_communication,['title','description','created_at','from_id','to_raw'],['title','description','created_at','from','to_raw']);
-		$view_conversation->setModel($model_communication->debug());
+		$view_conversation->setModel($model_communication);
 		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
 		$view_conversation->grid->addPaginator(10);
 		$view_conversation->grid->addQuickSearch(['name']);

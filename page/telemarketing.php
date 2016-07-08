@@ -44,7 +44,6 @@ class page_telemarketing extends \xepan\base\Page{
 
 
 		$model_telecommunication = $this->add('xepan\marketing\Model_TeleCommunication');
-		// $model_telecommunication->getElement('direction')->defaultValue('Out');
 		$view_teleform = $this->add('View',null,'top');
 		$view_teleform_url = $this->api->url(null,['cut_object'=>$view_teleform->name]);
 		
@@ -53,7 +52,10 @@ class page_telemarketing extends \xepan\base\Page{
 		
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 
-		$form->setModel($model_telecommunication,['title','description']);
+		$form->addField('Line','title');
+		$form->addField('Text','description');
+		$form->addField('Line','from_number');
+		$form->addField('Line','to_number');
 		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
 
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
@@ -63,15 +65,20 @@ class page_telemarketing extends \xepan\base\Page{
 				GRID FOR SHOWING PREVIOUS CONVERSATION 
 		*/							
 
-		$model_communication = $this->add('xepan\communication\Model_Communication')
-									->addCondition('communication_type','telemarketing')
-									->addCondition('to_id',$lead_id);
-		$view_conversation = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'bottom',['view\teleconversationlister']);
-		$view_conversation->setModel($model_communication,['title','description','created_at','from'],['title','description','created_at','from_id']);
+		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
+									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
+		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister']);
+		$view_conversation->setModel($model_communication,['title','description','to_raw'],['title','description','created_at','from','to_raw']);
+		// $view_conversation->setModel($model_communication);
 		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
 		$view_conversation->grid->addPaginator(10);
 		$view_conversation->grid->addQuickSearch(['name']);
+
 		
+		$view_conversation->grid->addHook('formatRow',function($g){	
+			$data = json_decode($g->model['to_raw'],true);
+			$g->current_row_html['last_call_no'] = $data[0]['number'];
+		});		
 		/*
 				JS FOR RELOAD WITH SPECIFIC ID 
 		*/
@@ -97,13 +104,17 @@ class page_telemarketing extends \xepan\base\Page{
 				return $form->js()->univ()->errorMessage('Please Select A Lead First')->execute();
 			}
 
-			$form->model['title'] = $form['title']; 
-			$form->model['description'] = $form['description']; 
-			$form->model->addCondition('from_id', $this->app->employee->id);
-			$form->model->addCondition('to_id', $lead_id); 
-			$form->save();
+			$model_telecommunication->unload();
 
-			return $view_conversation->js(true,$form->js()->univ()->successMessage("Added"))->univ()->reload()->execute();
+			$model_telecommunication['title'] = $form['title']; 
+			$model_telecommunication['description'] = $form['description']; 
+			$model_telecommunication['from_id']=$this->app->employee->id;
+			$model_telecommunication['to_id'] = $lead_id;
+			$model_telecommunication['from_raw'] = json_encode(['name'=>'','number'=>$form['from_number']]); 
+			$model_telecommunication['to_raw'] = json_encode([['name'=>'','number'=>$form['to_number']]]); 
+			$model_telecommunication->save();
+
+			return $view_conversation->js(true,$form->js()->univ()->reload()->successMessage("Added"))->univ()->reload()->execute();
 			  
 		}
 

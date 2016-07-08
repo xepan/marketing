@@ -11,6 +11,7 @@
       <thead>{cols}{col}
         <th><span>Title</span></th>
         <th><span>Description</span></th>
+        <th> <span>Last Call</span></th>
         <th><span>Created By    </span></th>
         <th><span>Created On    </span></th>
         <th> </th>{/}{/}
@@ -20,6 +21,10 @@
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{$title}</td>
           <td>{$description}</td>
+          <td>
+             
+            {$to_raw}
+          </td>
           <td>{$from} </td>
           <td>{$created_at}  </td>
           <td style="width: 15%;">

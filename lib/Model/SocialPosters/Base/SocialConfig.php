@@ -20,6 +20,10 @@ class Model_SocialPosters_Base_SocialConfig extends \xepan\base\Model_Table{
 		$this->addField('post_in_groups')->type('boolean')->defaultValue(true);
 		$this->addField('filter_repeated_posts')->type("boolean")->defaultValue(true);
 
+		$this->addField('type')->defaultValue("SocialPosters_Base_SocialConfig");
+		$this->addField('created_by_id')->defaultValue($this->app->employee->id);
+		$this->addField('status')->setValueList(['Active'=>"Active","Inactive"=>"Inactive"])->defaultValue('Active');
+
 		$this->hasMany('xepan/marketing/SocialPosters_Base_SocialUsers','config_id');
 
 		$this->addHook('beforeDelete',$this);
@@ -31,4 +35,11 @@ class Model_SocialPosters_Base_SocialConfig extends \xepan\base\Model_Table{
 		$this->ref('xepan/marketing/SocialPosters_Base_SocialUsers')->deleteAll();
 	}
 
+	function inactive(){
+		
+	}
+
+	function active(){
+		
+	}
 }

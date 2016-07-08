@@ -105,8 +105,8 @@ class page_telemarketing extends \xepan\base\Page{
 			$model_telecommunication['description'] = $form['description']; 
 			$model_telecommunication['from_id']=$this->app->employee->id;
 			$model_telecommunication['to_id'] = $lead_id;
-			$model_telecommunication['from_raw'] = $form['from_number']; 
-			$model_telecommunication['to_raw'] = $form['to_number']; 
+			$model_telecommunication['from_raw'] = json_encode(['name'=>'','phone'=>$form['from_number']); 
+			$model_telecommunication['to_raw'] = json_encode([['name'=>'','phone'=>$form['to_number']]]); 
 			$model_telecommunication->save();
 
 			return $view_conversation->js(true,$form->js()->univ()->successMessage("Added"))->univ()->reload()->execute();

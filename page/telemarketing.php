@@ -66,14 +66,19 @@ class page_telemarketing extends \xepan\base\Page{
 		*/							
 
 		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
-									->addCondition('to_id',$lead_id); 	
+									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
 		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister']);
-		$view_conversation->setModel($model_communication,['title','description'],['title','description','created_at','from']);
+		$view_conversation->setModel($model_communication,['title','description','to_raw'],['title','description','created_at','from','to_raw']);
 		// $view_conversation->setModel($model_communication);
 		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
 		$view_conversation->grid->addPaginator(10);
 		$view_conversation->grid->addQuickSearch(['name']);
+
 		
+		$view_conversation->grid->addHook('formatRow',function($g){	
+			$data = json_decode($g->model['to_raw'],true);
+			$g->current_row_html['last_call_no'] = $data[0]['number'];
+		});		
 		/*
 				JS FOR RELOAD WITH SPECIFIC ID 
 		*/
@@ -105,8 +110,8 @@ class page_telemarketing extends \xepan\base\Page{
 			$model_telecommunication['description'] = $form['description']; 
 			$model_telecommunication['from_id']=$this->app->employee->id;
 			$model_telecommunication['to_id'] = $lead_id;
-			$model_telecommunication['from_raw'] = json_encode(['name'=>'','phone'=>$form['from_number']]); 
-			$model_telecommunication['to_raw'] = json_encode([['name'=>'','phone'=>$form['to_number']]]); 
+			$model_telecommunication['from_raw'] = json_encode(['name'=>'','number'=>$form['from_number']]); 
+			$model_telecommunication['to_raw'] = json_encode([['name'=>'','number'=>$form['to_number']]]); 
 			$model_telecommunication->save();
 
 			return $view_conversation->js(true,$form->js()->univ()->reload()->successMessage("Added"))->univ()->reload()->execute();

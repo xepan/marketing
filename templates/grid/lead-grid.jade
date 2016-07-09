@@ -19,8 +19,10 @@
                     span Category
                 th
                     span Opportunities
+                th(id="{$score_sortid}")
+                    span Total Score {$score_sort}
                 th
-                    span Total Visitor
+                    span Total Visits
                 th 
                 {/}{/}
             {/}
@@ -51,6 +53,9 @@
                     td
                       span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
                         {$open_count},{$converted_count},{$rejected_count}
+                    td
+                        a.do-view-lead-score(href="#" data-id="{$id}")
+                            span.alert.alert-warning{score}0{/}
                     td
                         a.do-view-lead-visitor(href="#" data-id="{$id}")
                             span.alert.alert-success{$total_visitor}

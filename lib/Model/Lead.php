@@ -49,6 +49,12 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					->count();
 		});
 
+		$this->addExpression('score')->set(function($m,$q){
+			$ps=$m->add('xepan\base\Model_PointSystem');
+			$ps->addCondition('contact_id',$q->getField('id'));
+			return $q->expr('IFNULL([0],0)',[$ps->sum('score')]);
+		})->sortable(true);
+
 		
 		$this->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$this->hasMany('xepan\marketing\Lead_Category_Association','lead_id');

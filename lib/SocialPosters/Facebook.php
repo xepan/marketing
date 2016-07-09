@@ -7,6 +7,7 @@ namespace xepan\marketing;
 class SocialPosters_Facebook extends SocialPosters_Base_Social {
 	public $fb=null;
 	public $config=null;
+	public $default_graph_version = "v2.6";
 
 	function init(){
 		parent::init();
@@ -30,7 +31,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		$config = array(
 		      'app_id' => $config_model['appId'],
 		      'app_secret' => $config_model['secret'],
-		      'default_graph_version' => 'v2.6'
+		      'default_graph_version' => $this->default_graph_version
 		  );
 	      // 'fileUpload' => true, // optional
 	      // 'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
@@ -43,7 +44,8 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		
 		$helper = $facebook->getRedirectLoginHelper();
 		
-		$permissions = ['email',
+		$permissions = [
+			'email',
 			'user_hometown',
 			'user_religion_politics',
 			'publish_actions',
@@ -69,7 +71,13 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			'user_events',
 			'rsvp_event',
 			'read_insights',
-			'read_custom_friendlists'
+			'read_custom_friendlists',
+			'manage_pages',
+			'pages_show_list',
+			'read_page_mailboxes',
+			'pages_show_list',
+			'pages_manage_instant_articles'
+
 		];
 
 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
@@ -156,10 +164,12 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
 			  exit;
 			}
+
 			$fb_user = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookUsers');
 			$fb_user->addCondition('userid_returned',$userNode->getId());
 			$fb_user->addCondition('config_id',$config_model->id);
 			$fb_user->tryLoadAny();
+			$fb_user['name'] = $userNode['name'];
 			$fb_user['access_token'] = (string)$longLivedAccessToken;
 			$fb_user['is_access_token_valid']= true;
 			$fb_user->save();
@@ -170,28 +180,12 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 
 	function config_page(){
-		$c=$this->owner->add('CRUD');
+		$c = $this->owner->add('xepan\hr\CRUD',
+							['frame_options'=>['width'=>'600px'],'entity_name'=>"Facebook App"],
+							null,
+							['view/social/config']);
 		$model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
-		$c->setModel($model);
-		$users_crud = $c->addRef('xepan/marketing/SocialPosters_Base_SocialUsers',array('label'=>'Users'));
-
-		if($c->grid and !$users_crud){
-			$f = $c->addFrame('Login URL');
-
-			if($f){
-				$config_model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
-				$config_model->load($c->id);
-				$config = array(
-			      'appId' => $config_model['appId'],
-			      'secret' => $config_model['secret'],
-			      'fileUpload' => true, // optional
-			      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
-				);
-				// $facebook = new \Facebook($config);
-				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan_marketing_socialloginmanager&social_login_to=Facebook&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xepan_marketing_socialloginmanager&social_login_to=Facebook&for_config_id='.$config_model->id);
-			}
-		}
-
+		$c->setModel($model,['name','appId','secret','post_in_groups','filter_repeated_posts','status']);
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, $groups_posted=array(),$under_campaign_id=0){
@@ -270,7 +264,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 			$fb = new \Facebook\Facebook([
 			  'app_id' => $temp['config_obj']['appId'],
 			  'app_secret' => $temp['config_obj']['secret'],
-			  'default_graph_version' => 'v2.6',
+			  'default_graph_version' => $this->default_graph_version,
 			  ]);
 
 			$fb->setDefaultAccessToken($temp['user_obj']['access_token']);
@@ -298,28 +292,54 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 				}
 			}
 
-
+			// get all Postable Pages ['page_id'] = ['name'=>"some thing","access_token"=>"page token"] etc.
+			$user_model = $temp['user_obj'];
+			$postable_page = $user_model->getFBPages($only_postable_page=true);
+			
 			try {
 			  // Returns a `Facebook\FacebookResponse` object
-			  $response = $fb->post('/me/'.$end_point, $data, $temp['user_obj']['access_token']);
+				if($user_model['post_on_timeline'])
+			  		$response = $fb->post('/me/'.$end_point, $data, $temp['user_obj']['access_token']);
+			  
+			  $page_responses = [];
+			  // post on all postable pages
+			  foreach ($postable_page as $page_id => $page_info) {
+			  		$page_responses[] = $fb->post('/'.$page_id."/".$end_point,$data,$page_info['access_token']);
+			  }
+
 			} catch(Facebook\Exceptions\FacebookResponseException $e) {
 			  echo 'Graph returned an error: ' . $e->getMessage();
 			} catch(Facebook\Exceptions\FacebookSDKException $e) {
 			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
 			}
 
-			$graphNode = $response->getGraphNode();
 
-			//todo save social posting record into database
-			$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
-			$social_posting['user_id'] = $temp['user_id'];
-			$social_posting['post_id'] = $temp['post_id'];
-			$social_posting['campaign_id'] = $temp['campaign_id'];
-			$social_posting['post_type'] = $post_type;
-			$social_posting['postid_returned'] = $graphNode['id'];
-			$social_posting['posted_on'] = $this->app->now;
-			$social_posting->save();
+			if($user_model['post_on_timeline']){
+				$graphNode = $response->getGraphNode();
 
+				//todo save social posting record into database
+				$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+				$social_posting['user_id'] = $temp['user_id'];
+				$social_posting['post_id'] = $temp['post_id'];
+				$social_posting['campaign_id'] = $temp['campaign_id'];
+				$social_posting['post_type'] = $post_type;
+				$social_posting['postid_returned'] = $graphNode['id'];
+				$social_posting['posted_on'] = $this->app->now;
+				$social_posting->save();
+			}
+
+			foreach ($page_responses as $page_response) {
+				$graphNode = $page_response->getGraphNode();
+				//todo save social posting record into database
+				$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+				$social_posting['user_id'] = $temp['user_id'];
+				$social_posting['post_id'] = $temp['post_id'];
+				$social_posting['campaign_id'] = $temp['campaign_id'];
+				$social_posting['post_type'] = "Page_".$post_type; // for recognization of posting page 
+				$social_posting['postid_returned'] = $graphNode['id'];
+				$social_posting['posted_on'] = $this->app->now;
+				$social_posting->save();	
+			}
 			//update posting_on in schedule table
 			if($temp['schedule_id']){
 				$schedule = $this->add('xepan\marketing\Model_Schedule')->tryLoad($temp['schedule_id']);
@@ -387,7 +407,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
   		$config = array(
 		      'app_id' => $config_model['appId'],
 		      'app_secret' => $config_model['secret'],
-		      'default_graph_version' => 'v2.6'
+		      'default_graph_version' => $this->default_graph_version
 		  );
 
   		$post_content['access_token'] = $user_model['access_token'];
@@ -395,7 +415,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
   		$fb = new \Facebook\Facebook([
 		  'app_id' => $config_model['appId'],
 		  'app_secret' => $config_model['secret'],
-		  'default_graph_version' => 'v2.6'
+		  'default_graph_version' => $this->default_graph_version
 		]);
 
   		$fb->setDefaultAccessToken($user_model['access_token']);
@@ -483,4 +503,45 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		$this->updateActivities($posting_model);
 	}
 
+	function getPage($user_model){
+		if( !$user_model instanceof \xepan\marketing\Model_SocialPosters_Base_SocialUsers)
+			throw new \Exception("must pass instance of social user");
+
+		// get Facebook Config 
+		$config_model = $user_model->appConfig();
+		$config = array(
+		      'app_id' => $config_model['appId'],
+		      'app_secret' => $config_model['secret'],
+		      'default_graph_version' => $this->default_graph_version
+		  );
+
+		$this->fb = $facebook = $fb = new \Facebook\Facebook($config);
+		if(!$this->fb){
+			return "Configuration Problem";
+		}
+		
+		$fb->setDefaultAccessToken($user_model['access_token']);
+		// get all  pages 
+		// https://graph.facebook.com/$user_id_returned/accounts/?access_token=$access_token
+		$requests = [
+					$facebook->request('GET', '/'.$user_model['userid_returned'].'/accounts')
+				];
+ 		try {
+ 			$responses = $fb->sendBatchRequest($requests);
+		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+		  echo 'Graph returned an error: ' . $e->getMessage();
+		  exit;
+		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		  exit;
+		}
+
+		// decode all the data
+		$response_data = $responses->getDecodedBody();		
+		if($response_data[0]['code'] === 200){
+			return $response_data[0]['body'];
+		}else
+			throw new \Exception("some thing wrong return code = ".$response_data[0]['code']);
+		
+	}
 }

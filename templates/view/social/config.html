@@ -1,30 +1,29 @@
 
 <div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
   <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div style="100%" class="filter-block"> 
+    <div style="100%" class="filter-block">
+      <div class="pull-right">{$grid_buttons} </div>
       <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
   </header>{/Pannel}
-  <div class="main-box-body clearfix table">
-    <table style="width:100%" class="table user-list table-hover">{header}
+  <div class="main-box-body clearfix table-responsive">
+    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
-        <th id="{$name_sortid}"><span>Lead {$name_sort}</span></th>
-        <th>Contact</th>
-        <th id="{$score_sortid}"> <span>Score {$score_sort}</span></th>
-        <th>Detail</th>{/}{/}
+        <th id="{$name_sortid}"><span>Name</span></th>
+        <th id="{$appid_sortid}"><span>App Id</span></th>
+        <th><span>Action</span></th>
+        <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}<a href="" data-id="{$id}" class="do-view-lead"><span class="user-subhead">{$name}</span></a>
-            <div class="user-subhead">
-              <h6>[{city}{/}] - [{$type}]</h6>
-            </div>
-          </td>
-          <td>{$contacts_str} </td>
-          <td>{score}xyz{/}</td>
-          <td><a id="lead" href="" data-id="{$id}">
-              <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-chevron-right fa fa-stack-1x fa-inverse"></i></span></a></td>{/}
+          <td id="{$name_sortid}">{avatar}<img src="{profile_pic}img/samples/scarlet-159.png{/}" alt=""/>{/}</td>
+          <td>{$appId}</td>
+          <td>{action}{/}</td>
+          <td style="width: 15%;">
+            {$edit}
+            {$delete}
+          </td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

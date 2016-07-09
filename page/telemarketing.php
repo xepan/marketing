@@ -84,6 +84,7 @@ class page_telemarketing extends \xepan\base\Page{
 		*/
 		
 		$view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
+			
 
 			$js_array = [
 					$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
@@ -92,6 +93,11 @@ class page_telemarketing extends \xepan\base\Page{
 					];
 			return $js_array;
 		});
+		if($lead_id){
+			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication){
+				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication]]);
+			});
+		}
 		
 		
 		/*

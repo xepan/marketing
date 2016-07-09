@@ -104,7 +104,11 @@ class page_telemarketing extends \xepan\base\Page{
 		});
 		if($lead_id){
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication){
-				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication]]);
+				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);
+			});
+			
+			$form->on('click','.negative-lead',function($js,$data)use($lead_model,$model_communication){
+				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication],'score'=>false]);
 			});
 		}
 		

@@ -181,11 +181,11 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	function config_page(){
 		$c = $this->owner->add('xepan\hr\CRUD',
-							null,
+							['frame_options'=>['width'=>'600px'],'entity_name'=>"Facebook App"],
 							null,
 							['view/social/config']);
 		$model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
-		$c->setModel($model);
+		$c->setModel($model,['name','appId','secret','post_in_groups','filter_repeated_posts','status']);
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, $groups_posted=array(),$under_campaign_id=0){

@@ -36,10 +36,10 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 	function page_users($page){
 		$config_id = $this->id;
 
-		$user_crud = $page->add("xepan\base\CRUD");
+		$user_crud = $page->add("xepan\base\CRUD",['frame_options'=>['width'=>'600'],'entity_name'=>"Facebook User"]);
 		$user_model = $page->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');
 		$user_model->addCondition('config_id',$config_id);
-		$user_crud->setModel($user_model);
+		$user_crud->setModel($user_model,['name','userid','userid_returned','access_token','access_token_secret','access_token_expiry','is_access_token_valid','extra'],['name','userid','userid_returned','is_access_token_valid']);
 
 		$user_crud->grid->add('VirtualPage')
 			->addColumn('facebook_page')
@@ -60,13 +60,13 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 
 				}
 
+				$page_crud = $page->add('xepan\base\Grid');
 				$form = $page->add('Form');
 				$send_post_on_page = $form->addField('hidden','send_post_on_page')->set(json_encode($saved_post_page_for_form));
-				$form->addSubmit('Update');				
+				$form->addSubmit('Update');
 
 				$model = $this->add('Model');
 				$model->setSource("Array",$saved_page_array_for_grid);
-				$page_crud = $page->add('xepan\base\Grid');
 				$page_crud->setModel($model);
 				$page_crud->addSelectable($send_post_on_page);
 

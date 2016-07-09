@@ -14,6 +14,8 @@
                 th(id="{$name_sortid}")
                     span Lead {$name_sort}
                 th Contact
+                th(id="{$score_sortid}") 
+                    span Score {$score_sort}
                 th Detail
                 {/}{/}
             {/}
@@ -31,6 +33,7 @@
                       .user-subhead
                         h6 [{city}{/}] - [{$type}]
                     td {$contacts_str} 
+                    td {score}xyz{/}
                     td
                         a#lead(href='' data-id="{$id}")
                             .area-hidden(style="display: none;") {$name}

@@ -3,7 +3,7 @@
 namespace xepan\marketing;
 	
 class page_leadvisitor extends \xepan\base\Page{
-	public $title = "Total Visitors";
+	public $title = "Total Visits";
 	function init(){
 		parent::init();
 

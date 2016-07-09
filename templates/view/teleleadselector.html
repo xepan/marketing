@@ -10,6 +10,7 @@
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Lead {$name_sort}</span></th>
         <th>Contact</th>
+        <th id="{$score_sortid}"> <span>Score {$score_sort}</span></th>
         <th>Detail</th>{/}{/}
       </thead>{/}
       {$subheader}
@@ -21,6 +22,7 @@
             </div>
           </td>
           <td>{$contacts_str} </td>
+          <td>{score}xyz{/}</td>
           <td><a id="lead" href="" data-id="{$id}">
               <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-chevron-right fa fa-stack-1x fa-inverse"></i></span></a></td>{/}
         </tr>{/}{/}

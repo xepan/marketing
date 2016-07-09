@@ -39,7 +39,7 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 		$user_crud = $page->add("xepan\base\CRUD",['frame_options'=>['width'=>'600'],'entity_name'=>"Facebook User"]);
 		$user_model = $page->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers');
 		$user_model->addCondition('config_id',$config_id);
-		$user_crud->setModel($user_model,['name','userid','userid_returned','access_token','access_token_secret','access_token_expiry','is_access_token_valid','extra'],['name','userid','userid_returned','is_access_token_valid']);
+		$user_crud->setModel($user_model,['name','userid','userid_returned','access_token','access_token_secret','access_token_expiry','is_access_token_valid','post_on_pages','post_on_timeline'],['name','userid','userid_returned','is_access_token_valid','post_on_pages','post_on_timeline']);
 
 		$user_crud->grid->add('VirtualPage')
 			->addColumn('facebook_page')

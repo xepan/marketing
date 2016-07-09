@@ -181,11 +181,11 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 
 	function config_page(){
 		$c = $this->owner->add('xepan\hr\CRUD',
-							null,
+							['frame_options'=>['width'=>'600px'],'entity_name'=>"Facebook App"],
 							null,
 							['view/social/config']);
 		$model = $this->add('xepan/marketing/SocialPosters_Facebook_FacebookConfig');
-		$c->setModel($model);
+		$c->setModel($model,['name','appId','secret','post_in_groups','filter_repeated_posts','status']);
 	}
 
 	function postSingle($user_model,$params,$post_in_groups=true, $groups_posted=array(),$under_campaign_id=0){
@@ -292,28 +292,54 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 				}
 			}
 
-
+			// get all Postable Pages ['page_id'] = ['name'=>"some thing","access_token"=>"page token"] etc.
+			$user_model = $temp['user_obj'];
+			$postable_page = $user_model->getFBPages($only_postable_page=true);
+			
 			try {
 			  // Returns a `Facebook\FacebookResponse` object
-			  $response = $fb->post('/me/'.$end_point, $data, $temp['user_obj']['access_token']);
+				if($user_model['post_on_timeline'])
+			  		$response = $fb->post('/me/'.$end_point, $data, $temp['user_obj']['access_token']);
+			  
+			  $page_responses = [];
+			  // post on all postable pages
+			  foreach ($postable_page as $page_id => $page_info) {
+			  		$page_responses[] = $fb->post('/'.$page_id."/".$end_point,$data,$page_info['access_token']);
+			  }
+
 			} catch(Facebook\Exceptions\FacebookResponseException $e) {
 			  echo 'Graph returned an error: ' . $e->getMessage();
 			} catch(Facebook\Exceptions\FacebookSDKException $e) {
 			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
 			}
 
-			$graphNode = $response->getGraphNode();
 
-			//todo save social posting record into database
-			$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
-			$social_posting['user_id'] = $temp['user_id'];
-			$social_posting['post_id'] = $temp['post_id'];
-			$social_posting['campaign_id'] = $temp['campaign_id'];
-			$social_posting['post_type'] = $post_type;
-			$social_posting['postid_returned'] = $graphNode['id'];
-			$social_posting['posted_on'] = $this->app->now;
-			$social_posting->save();
+			if($user_model['post_on_timeline']){
+				$graphNode = $response->getGraphNode();
 
+				//todo save social posting record into database
+				$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+				$social_posting['user_id'] = $temp['user_id'];
+				$social_posting['post_id'] = $temp['post_id'];
+				$social_posting['campaign_id'] = $temp['campaign_id'];
+				$social_posting['post_type'] = $post_type;
+				$social_posting['postid_returned'] = $graphNode['id'];
+				$social_posting['posted_on'] = $this->app->now;
+				$social_posting->save();
+			}
+
+			foreach ($page_responses as $page_response) {
+				$graphNode = $page_response->getGraphNode();
+				//todo save social posting record into database
+				$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+				$social_posting['user_id'] = $temp['user_id'];
+				$social_posting['post_id'] = $temp['post_id'];
+				$social_posting['campaign_id'] = $temp['campaign_id'];
+				$social_posting['post_type'] = "Page_".$post_type; // for recognization of posting page 
+				$social_posting['postid_returned'] = $graphNode['id'];
+				$social_posting['posted_on'] = $this->app->now;
+				$social_posting->save();	
+			}
 			//update posting_on in schedule table
 			if($temp['schedule_id']){
 				$schedule = $this->add('xepan\marketing\Model_Schedule')->tryLoad($temp['schedule_id']);
@@ -490,14 +516,6 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		  );
 
 		$this->fb = $facebook = $fb = new \Facebook\Facebook($config);
-		// $request = new \Facebook\FacebookRequest(
-		// 				  $config,
-		// 				  'GET',
-		// 				  '/'.$user_model['userid_returned'].'/accounts'
-		// 				);
-		// 				$response = $request->execute();
-		// 				$graphObject = $response->getGraphObject();
-		// 				/* handle the result */
 		if(!$this->fb){
 			return "Configuration Problem";
 		}

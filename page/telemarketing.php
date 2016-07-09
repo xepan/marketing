@@ -15,9 +15,9 @@ class page_telemarketing extends \xepan\base\Page{
 				GRID FOR SHOWING ALL LEAD 
 		*/
 
-		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector']);
+		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
-		
+		$view_lead->js('reload')->reload();
 		// $model_lead->addExpression('score')->set(function($m,$q){
 		// 	// return "'123'";
 		// 	$ps=$m->add('xepan\base\Model_PointSystem');
@@ -103,12 +103,24 @@ class page_telemarketing extends \xepan\base\Page{
 			return $js_array;
 		});
 		if($lead_id){
-			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication){
+			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);
+			$js_array = [
+				$js->univ()->successMessage('Positive Marking Done'),
+				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
+
+				];
+			return $js_array;
 			});
 			
-			$form->on('click','.negative-lead',function($js,$data)use($lead_model,$model_communication){
+			$form->on('click','.negative-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication],'score'=>false]);
+				$js_array = [
+				$js->univ()->successMessage('Negative Marking Done'),
+				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
+
+				];
+			return $js_array;
 			});
 		}
 		

@@ -258,6 +258,12 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$newsletter_field=$f->addField('Dropdown','newsletter')->validate('required')->setEmptyText('Please Select Newsletter');
 		$newsletter_field->setModel($newsletter_m);
 
+	
+		$source_mail = explode("<br/>",$this['emails_str']);
+		foreach ($source_mail as $index => $email) {
+			$email_for_letter = $f->addField('CheckBox',"email_".$index,$email);
+		}
+
 		$f->addSubmit('Send Newsletter')->addClass('btn btn-primary');
 		
 		if($this->app->stickyGET('newsletter')){
@@ -296,7 +302,13 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			$body_v->template->set($this->get());
 
 			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
-			$mail->addTo($this['emails_str']);
+
+			$source_mail = explode("<br/>",$this['emails_str']);
+			foreach ($source_mail as $index => $email) {				
+				if($f['email_'.$index])
+					$mail->addTo($email);
+			}
+			
 			$mail->setSubject($subject_v->getHtml());
 			$mail->setBody($body_v->getHtml());
 			$mail->send($email_settings);

@@ -42,4 +42,15 @@ class Model_SocialPosters_Base_SocialConfig extends \xepan\base\Model_Table{
 	function active(){
 		
 	}
+
+	function getJsonModel($json=null){
+		$model = $this->add('Model');
+		if(!$json)
+			$json = $this['extra'];
+		
+		$config_data = json_decode(($josn)?:'{}',true);
+		$model->setSource("Array",$config_data);
+
+		return $model;
+	}
 }

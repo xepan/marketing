@@ -42,28 +42,26 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 		$user_crud->setModel($user_model);
 
 		$user_crud->grid->add('VirtualPage')
-			->addColumn('user_page')
+			->addColumn('facebook_page')
 			->set(function($page){
 
 				$id = $_GET[$page->short_name.'_id'];
 				$user_model = $page->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers')->load($id);
 				
 				$saved_data_array = json_decode($user_model['extra'],true);
-
 				$saved_post_page_for_form = [];
 				$saved_page_array_for_grid = [];
 				$saved_pages = $saved_data_array['data'];
 				foreach ($saved_pages as $key => $fb_page) {
 					$new_key = 	$fb_page['name']."-".$fb_page['id'];
 					$saved_page_array_for_grid[$new_key] = ['fb_page_id'=>$fb_page['id'],"name"=>$fb_page['name'],"access_token"=>$fb_page['access_token'],'send_post'=>$fb_page['send_post']];
-
 					if($fb_page['send_post'])
-						$saved_post_page_for_form[$new_key] = [];
+						$saved_post_page_for_form[] = $new_key;
 
 				}
 
 				$form = $page->add('Form');
-				$send_post_on_page = $form->addField('Text','send_post_on_page')->set(json_encode($saved_post_page_for_form));
+				$send_post_on_page = $form->addField('hidden','send_post_on_page')->set(json_encode($saved_post_page_for_form));
 				$form->addSubmit('Update');				
 
 				$model = $this->add('Model');
@@ -76,12 +74,16 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 					$selected_pages_array = json_decode($form['send_post_on_page']);
 
 					foreach ($saved_pages as $key => $fb_page) {
-						$send_post = false;
-						if(isset($selected_pages_array[$fb_page['name']."-".$fb_page['id']])){
-							$send_post = true;
+						$send_post = 0;
+						if(in_array($fb_page['name']."-".$fb_page['id'], $selected_pages_array)){
+							$send_post = 1;
 						}
-						$saved_pages[$fb_page['id']]['send_post'] = $send_post;
+						$saved_pages[$key]['send_post'] = $send_post;
 					}
+
+					$user_model['extra'] = json_encode(['data'=>$saved_pages]);
+					$user_model->save();
+					$form->js(null,$form->js()->reload())->univ()->successMessage("successfully saved")->execute();
 				}
 			});
 	}
@@ -135,7 +137,7 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 					unset($saved_page_array[$new_page['id']]);
 				}
 
-				$new_page_array[$new_page['id']]['send_post'] = $send_post;
+				$new_page_array['data'][$key]['send_post'] = $send_post;
 			}
 
 			$user_model['extra'] = json_encode($new_page_array);
@@ -146,4 +148,15 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 
 	}
 
+	function getFBPageArray($json){	
+		$data = [];
+		$data_array = json_decode($json,true);
+		$saved_pages = isset($data_array['data'])?$data_array['data']:[];
+
+		foreach ($saved_pages as $key => $page) {
+			$saved_page_array[$page['id']] = $page;
+		}
+
+		return $data;
+	}
 }

@@ -490,14 +490,6 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 		  );
 
 		$this->fb = $facebook = $fb = new \Facebook\Facebook($config);
-		// $request = new \Facebook\FacebookRequest(
-		// 				  $config,
-		// 				  'GET',
-		// 				  '/'.$user_model['userid_returned'].'/accounts'
-		// 				);
-		// 				$response = $request->execute();
-		// 				$graphObject = $response->getGraphObject();
-		// 				/* handle the result */
 		if(!$this->fb){
 			return "Configuration Problem";
 		}

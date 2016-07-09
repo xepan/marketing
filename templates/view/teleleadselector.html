@@ -6,12 +6,11 @@
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix table">
-    <table style="width:100%" class="table user-list table-hover">{header}
+    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Lead {$name_sort}</span></th>
-        <th>Contact</th>
-        <th id="{$score_sortid}"> <span>Score {$score_sort}</span></th>
-        <th>Detail</th>{/}{/}
+        <th data-hide="desktop,phone,tablet">Contact</th>
+        <th id="{$score_sortid}"> <span>Score {$score_sort}</span></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -22,9 +21,8 @@
             </div>
           </td>
           <td>{$contacts_str} </td>
-          <td>{score}xyz{/}</td>
-          <td><a id="lead" href="" data-id="{$id}">
-              <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-chevron-right fa fa-stack-1x fa-inverse"></i></span></a></td>{/}
+          <td>{score}xyz{/}<a id="lead" href="" data-id="{$id}">
+              <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-phone fa fa-stack-1x fa-inverse"></i></span></a></td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">
@@ -43,3 +41,11 @@
     </table>{$Paginator}
   </div>
 </div>
+<style>
+  .view-lead-grid .table{
+      height:534px;
+      max-height:534px;
+      overflow-x:hidden;
+      overflow-y:scroll;
+  }
+</style>

@@ -18,12 +18,6 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
 		$view_lead->js('reload')->reload();
-		// $model_lead->addExpression('score')->set(function($m,$q){
-		// 	// return "'123'";
-		// 	$ps=$m->add('xepan\base\Model_PointSystem');
-		// 	$ps->addCondition('contact_id',$q->getField('id'));
-		// 	return $ps->sum('score');
-		// })->sortable(true);	
 
 		$view_lead->setModel($model_lead, ['name','type','city','contacts_str','score']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
@@ -77,31 +71,31 @@ class page_telemarketing extends \xepan\base\Page{
 		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
 									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
 		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister']);
-		$view_conversation->setModel($model_communication,['title','description','to_raw'],['title','description','created_at','from','to_raw']);
-		// $view_conversation->setModel($model_communication);
-		$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
-		$view_conversation->grid->addPaginator(10);
-		$view_conversation->grid->addQuickSearch(['name']);
-
-		
-		$view_conversation->grid->addHook('formatRow',function($g){	
-			$data = json_decode($g->model['to_raw'],true);
-			$g->current_row_html['last_call_no'] = $data[0]['number'];
-		});		
+			$view_conversation->setModel($model_communication,['title','description'],['title','description','created_at','from','to_raw']);
+			$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
+			$view_conversation->grid->addPaginator(10);
+			$view_conversation->grid->addQuickSearch(['name']);
+			
+			$view_conversation->grid->addHook('formatRow',function($g){	
+				$data = json_decode($g->model['to_raw'],true);
+				$g->current_row_html['last_call_no'] = $data[0]['number'];
+			});		
 		/*
 				JS FOR RELOAD WITH SPECIFIC ID 
 		*/
-		
-		$view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
-			
+				
+		$view_lead->js('click',
+			[$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
+			$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
+	
+		// $view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
+		// 	$js_array = [
+		// 			$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
+		// 			$view_teleform->js()->reload(['lead_id'=>$data['id']],null,$view_teleform_url),
 
-			$js_array = [
-					$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
-					$view_teleform->js()->reload(['lead_id'=>$data['id']],null,$view_teleform_url),
-
-					];
-			return $js_array;
-		});
+		// 			];
+		// 	return $js_array;
+		// });
 		if($lead_id){
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);

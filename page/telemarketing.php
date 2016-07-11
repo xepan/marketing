@@ -70,8 +70,8 @@ class page_telemarketing extends \xepan\base\Page{
 
 		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
 									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
-		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister']);
-			$view_conversation->setModel($model_communication,['title','description'],['title','description','created_at','from','to_raw']);
+		$view_conversation = $this->add('xepan\hr\CRUD',null, 'bottom',['view\teleconversationlister'])->addClass('fliter-grid');
+			$view_conversation->setModel($model_communication,['title','description','to_raw'],['title','description','created_at','from','to_raw']);
 			$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
 			$view_conversation->grid->addPaginator(10);
 			$view_conversation->grid->addQuickSearch(['name']);
@@ -85,8 +85,10 @@ class page_telemarketing extends \xepan\base\Page{
 		*/
 				
 		$view_lead->js('click',
-			[$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
-			$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
+			[	
+			// $view_conversation->js()->addClass('hidden'),
+				$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
+				$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
 	
 		// $view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
 		// 	$js_array = [

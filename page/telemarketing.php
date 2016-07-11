@@ -84,20 +84,21 @@ class page_telemarketing extends \xepan\base\Page{
 				JS FOR RELOAD WITH SPECIFIC ID 
 		*/
 				
-		$view_lead->js('click',
-			[	
-			// $view_conversation->js()->addClass('hidden'),
-				$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
-				$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
+		// $view_lead->js('click',
+		// 	[	
+		// 	// $view_conversation->js()->addClass('hidden'),
+		// 		$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
+		// 		$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
 	
-		// $view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
-		// 	$js_array = [
-		// 			$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
-		// 			$view_teleform->js()->reload(['lead_id'=>$data['id']],null,$view_teleform_url),
+		$view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
+			$js_array = [
+					$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
+					$view_teleform->js()->reload(['lead_id'=>$data['id']],null,$view_teleform_url),
 
-		// 			];
-		// 	return $js_array;
-		// });
+					];
+			return $js_array;
+		});
+		
 		if($lead_id){
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);

@@ -24,6 +24,7 @@ class Controller_SocialExec extends \AbstractController{
 		$all_postable_contents->addCondition('ending_date','>=',$this->app->today);
 		$all_postable_contents->addCondition('scheduled_datetime','<=',$this->app->now);
 		$all_postable_contents->addCondition('posted_on',null);
+
 		
 		// $social_post_array = ['Facebook'=>['user_id','user_obj'=>'user_object','post_id'=>11,'post_obj'=>'post_model']];
 		$social_post_array = [];
@@ -86,12 +87,10 @@ class Controller_SocialExec extends \AbstractController{
 
 		}
 
-		// var_dump($social_post_array);
-		foreach ($social_post_array as $social_app => $value) {
+		foreach ($social_post_array as $social_app => $value) {				
 				$this->add('xepan/marketing/SocialPosters_'.$social_app)
 					->postAll($value);
 		}
-		
 		echo $all_postable_contents->count()->getOne(). ' Posts done' ;
 		}
 	}

@@ -48,7 +48,7 @@ class page_schedule extends \xepan\base\Page{
 		*/
 
 		 $user_assoc_grid = $this->add('xepan/base/Grid',null,'SocialUsers',['view\schedulesocialuser']);
-		 $model_assoc_user = $this->add('xepan/marketing/Model_SocialUser');
+		 $model_assoc_user = $this->add('xepan/marketing/Model_SocialUser')->addCondition('is_active',true);
 
 		 $user_assoc_grid->setModel($model_assoc_user);
 		 $user_assoc_grid->addSelectable($usr_ass_field);

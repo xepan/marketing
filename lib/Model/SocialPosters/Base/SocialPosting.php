@@ -34,6 +34,8 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 
 		$this->addField('likes')->sortable(true)->defaultValue(0); // Change Caption in subsequent extended social controller, if nesecorry
 		$this->addField('share')->sortable(true)->defaultValue(0); // Change Caption in subsequent extended social controller, if nesecorry
+		$this->addField('return_data');
+
 		$this->addExpression('total_comments')->set(function($m,$q){
 			return $m->refSQL('xepan/marketing/SocialPosters_Base_SocialActivity')->count();
 		})->sortable(true);

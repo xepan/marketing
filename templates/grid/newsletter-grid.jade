@@ -24,16 +24,15 @@
                 iframe(src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}', style=' max-height: 300px; height: 300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);', frameborder='0')
               .project-box-footer.clearfix
                 a(href='#')
-                  span.value {$total_leads}
-                  span.label Total
-                  span.label Visitor : {$total_visitor}
+                  span.sparkline.source_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$source_graph}  
+                  span.text-success   Score    
                 a(href='#')
-                  span.value {$send_to}
-                  span.label Sent To
+                  span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
+                  span.text-success   Timings   
                 a(href='#')
-                  span.value {$remaining}
-                  span.label Remaining   
-              .project-box-ultrafooter.clearfix 
+                  span.label.text-center(style="height:50px; max-height:50px; font-size:32px;") {$total_visitor}
+                  span.text-success Visits  
+              .project-box-ultrafooter.clearfix
                 .col-md-1
                 .col-md-5.pull-left {$action}
                 .col-md-2

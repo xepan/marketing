@@ -12,7 +12,15 @@ class page_newsletter extends \xepan\base\Page{
 		});
 		
 		$newsletter->addExpression('timing_graph_data')->set(function($m,$q){
-			return "'1,2,3'";
+			$lr = $m->add('xepan\marketing\Model_LandingResponse');
+			$lr->_dsql()->del('fields');
+			$lr->_dsql()->field('count(*) visits');
+			$lr->_dsql()->field('content_id');
+			$lr->_dsql()->field('HOUR(date) timeslot');
+			$lr->_dsql()->group('content_id');
+			$lr->_dsql()->group('HOUR(date)');
+
+			return $q->expr("(select GROUP_CONCAT(concat(tmp.visits,'/',tmp.timeslot)) from [sql] as tmp where tmp.content_id = [0])",[$q->getField('id'),'sql'=>$lr->_dsql()]);
 		});
 
 		if($this->app->stickyGET('status'))

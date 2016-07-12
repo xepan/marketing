@@ -22,8 +22,8 @@
               <div class="project-box-content">
                 <iframe src="index.php?page=xepan_marketing_newsletterpreview&amp;cut_page=1&amp;content_id={$id}" style=" max-height: 300px; height: 300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0"></iframe>
               </div>
-              <div class="project-box-footer clearfix"><a href="#"><span class="value">{$total_leads}</span><span class="label">Total</span><span class="label">Visitor : {$total_visitor}</span></a><a href="#"><span class="value">{$send_to}</span><span class="label">Sent To</span></a><a href="#"><span class="value">{$remaining}</span><span class="label">Remaining   </span></a></div>
-              <div class="project-box-ultrafooter clearfix"> 
+              <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline source_graph">{$source_graph}  </span><span class="text-success">  Score    </span></a><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a><a href="#"><span style="height:50px; max-height:50px; font-size:32px;" class="label text-center">{$total_visitor}</span><span class="text-success">Visits  </span></a></div>
+              <div class="project-box-ultrafooter clearfix">
                 <div class="col-md-1"></div>
                 <div class="col-md-5 pull-left">{$action}</div>
                 <div class="col-md-2"></div>

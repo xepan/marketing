@@ -16,7 +16,7 @@ class page_newsletter extends \xepan\base\Page{
 		});
 
 		if($this->app->stickyGET('status'))
-			$newsletter->addCondition('status',explode(",",$this->app->stickyGET('status')));
+			$newsletter->addCondition('statterus',explode(",",$this->app->stickyGET('status')));
 				
 		$newsletter->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$newsletter->addCondition('is_template',false);

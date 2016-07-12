@@ -13,9 +13,9 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	}
 
 	function setup_client($config_model,$user_model){
-
 		// $config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig')->load($_GET['for_config_id']);
-		$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$config_model->id;
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+		$redirect_url = 'http://'.$protocol.$_SERVER['PHP_SELF'].'?page=xepan_marketing_socialafterloginhandler&xfrom=Linkedin&client_config_id='.$config_model->id;
 		$this->client = new \LinkedIn\LinkedIn(
 		  array(
 		    'api_key' => $config_model['appId'], 
@@ -97,7 +97,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		$linkedin_user->tryLoadAny();		
 		$linkedin_user['name'] = $info['firstName'];
 		$linkedin_user['access_token'] = $token;
-		// $li_user['access_token_secret'] = $this->client->access_token_secret;
+		// $linkedin_user['access_token_secret'] = $this->client->access_token_secret;
 		$linkedin_user['access_token_expiry'] = $token_expires;
 		$linkedin_user->save();		
 		return true;
@@ -105,22 +105,13 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 
 
 	function config_page(){
-		$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
 
-		$c = $this->owner->add('CRUD',array('allow_add'=>true,'allow_del'=>true));
-		$c->setModel($config_model);
-		
-		// $users_crud = $c->addRef('xepan/marketing/Model_SocialPosters_SocialUsers',array('label'=>'Users'));
-
-		if($c->grid){
-			$f=$c->addFrame('Login URL');
-			if($f){
-				$config_model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
-				$config_model->load($c->id);
-
-				$f->add('View')->setElement('a')->setAttr('href','index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id)->setAttr('target','_blank')->set('index.php?page=xepan_marketing_socialloginmanager&social_login_to=Linkedin&for_config_id='.$config_model->id);
-			}
-		}
+		$c = $this->owner->add('xepan\hr\CRUD',
+							['frame_options'=>['width'=>'600px'],'entity_name'=>"LinkedIn App"],
+							null,
+							['view/social/config']);
+		$model = $this->add('xepan/marketing/SocialPosters_Linkedin_LinkedinConfig');
+		$c->setModel($model,['name','appId','secret','post_in_groups','filter_repeated_posts','status']);
 	}
 
 
@@ -393,5 +384,29 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 
 	function get_post_fields_using(){
 		return array('title','url','image','255');
+	}
+
+	function getCompany($config_model,$user_model){
+
+		if( !$config_model instanceof \xepan\marketing\SocialPosters_Linkedin_LinkedinConfig)
+			throw new \Exception("must pass instance of Linkedin Config");
+		
+		if( !$user_model instanceof \xepan\marketing\Model_SocialPosters_Base_SocialUsers)
+			throw new \Exception("must pass instance of social user");
+
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.linkedin.com']);
+		$response = $client->request( 'Get','/v1/companies?format=json&is-company-admin=true',
+							[
+		        				'headers'=> [
+		        							"Authorization" => "Bearer " . $user_model['access_token'],
+		                    				"Content-Type" => "application/json",
+		                            		"x-li-format"=>"json"
+		                            	],
+		        				'client_id' => $config_model['appId']
+		    				]);
+		$stream = $response->getBody();
+		// std class object
+		$response_data = json_decode((string)$stream);
+		return $response_data;
 	}
 }

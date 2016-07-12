@@ -167,7 +167,9 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		
 		$body_json = json_encode($parameters, true);
 		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.linkedin.com']);
-		$response = $client->request( 'POST','/v1/people/~/shares?format=json', 
+
+		if($user_model['post_on_timeline']){
+			$response = $client->request( 'POST','/v1/people/~/shares?format=json', 
 							[
 		        				'headers'=> [
 		        							"Authorization" => "Bearer " . $user_model['access_token'],
@@ -177,24 +179,62 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		        				'client_id' => $config_model['app_id'],
 		       	 				'body'      => $body_json
 		    				]);
+			// $_SESSION['POSTRESPONSE'] = $response;
+			$stream = $response->getBody();
+			// std class object
+			$response_data = json_decode((string)$stream);
+			// $this->app->memorize('response_data',$response_data);
+			// $response = $this->app->recall("response_data");
 
-		// $_SESSION['POSTRESPONSE'] = $response;
-		$stream = $response->getBody();
-		// std class object
-		$response_data = json_decode((string)$stream);
-		// $this->app->memorize('response_data',$response_data);
-		// $response = $this->app->recall("response_data");
+			//todo save social posting record into database
+			$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+			$social_posting['user_id'] = $user_model['id'];
+			$social_posting['post_id'] = $post_model['id'];
+			$social_posting['campaign_id'] = $campaign_id;
+			$social_posting['post_type'] = "Share";
+			$social_posting['postid_returned'] = $response_data->updateKey;
+			$social_posting['posted_on'] = $this->app->now;
+			$social_posting->save();
+		}
 
-		//todo save social posting record into database
-		$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
-		$social_posting['user_id'] = $user_model['id'];
-		$social_posting['post_id'] = $post_model['id'];
-		$social_posting['campaign_id'] = $campaign_id;
-		$social_posting['post_type'] = "Share";
-		$social_posting['postid_returned'] = $response_data->updateKey;
-		$social_posting['posted_on'] = $this->app->now;
-		$social_posting->save();
+		//  geting all postable pages
+		$postable_page = $user_model->getLinkedinCompany();
+		$page_responses = [];
 
+///////////////////////////////////////////////////////////////////////////////////
+// post on all postable pages
+		foreach ($postable_page as $page_id => $page_info) {
+			// https://api.linkedin.com/v1/companies/{id}/shares?format=json
+		  	$response = $client->request( 'POST','/v1/companies/'.$page_id.'/shares?format=json', 
+							[
+		        				'headers'=> [
+		        							"Authorization" => "Bearer " . $user_model['access_token'],
+		                    				"Content-Type" => "application/json",
+		                            		"x-li-format"=>"json"
+		                            	],
+		        				'client_id' => $config_model['app_id'],
+		       	 				'body'      => $body_json
+		    				]);
+			// $_SESSION['POSTRESPONSE'] = $response;
+			$stream = $response->getBody();
+			// std class object
+			$response_data = json_decode((string)$stream);
+			$page_responses[] = $response_data;
+		}
+
+		foreach ($page_responses as $page_response) {
+			$social_posting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+			$social_posting['user_id'] = $user_model['id'];
+			$social_posting['post_id'] = $post_model['id'];
+			$social_posting['campaign_id'] = $campaign_id;
+			$social_posting['post_type'] = "Page_Share";
+			$social_posting['postid_returned'] = $page_response->updateKey;
+			$social_posting['posted_on'] = $this->app->now;
+			$social_posting['return_data'] = json_encode($page_response);
+			$social_posting->save();
+		}
+//end of postable page
+///////////////////////////////////////////////////////////////////////////////
 		if($schedule_id){
 			$schedule = $this->add('xepan\marketing\Model_Schedule')->tryLoad($schedule_id);
 			$schedule['posted_on'] = $this->app->now;

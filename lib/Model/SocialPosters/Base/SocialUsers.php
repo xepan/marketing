@@ -57,4 +57,24 @@ class Model_SocialPosters_Base_SocialUsers extends \xepan\base\Model_Table{
 		}
 		return $saved_page_array;
 	}
+
+	function getLinkedinCompany($only_postable_page=false){
+		if(!$this->loaded())
+			throw new \Exception("social user must loaded");
+			
+		$pages = json_decode($this['extra'],true);
+		$saved_page_array = [];
+		$saved_pages = isset($pages['values'])?$pages['values']:[];
+
+
+		foreach ($saved_pages as $key => $page) {
+			if($only_postable_page){
+				if($page['send_post'])
+					$saved_page_array[$page['id']] = ["name"=>$page['name'],'send_post'=>$page['send_post']];
+			}else
+				$saved_page_array[$page['id']] = ["name"=>$page['name'],'send_post'=>$page['send_post']];
+		}
+		return $saved_page_array;	
+	}
+
 }

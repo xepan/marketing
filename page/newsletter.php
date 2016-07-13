@@ -33,6 +33,19 @@ class page_newsletter extends \xepan\base\Page{
 		
 		$frm=$crud->grid->addQuickSearch(['title']);
 
+		$vp = $this->add('VirtualPage');
+		$vp->set(function($p){
+			$newsletter_model = $this->add('xepan\marketing\Model_Newsletter')->load($_GET['newsletter_id']);
+			
+			$nv = $p->add('View')->set('hi');
+			$nv->template->trySetHTML('Content',$newsletter_model['message_blog']);
+		});	
+
+
+		$this->on('click','.newsletter-preview',function($js,$data)use($vp){
+				return $js->univ()->dialogURL("NEWSLETTER PREVIEW",$this->api->url($vp->getURL(),['newsletter_id'=>$data['id']]));
+		});
+
 		$crud->grid->addHook('formatRow',function($g){			
 			$source_data = explode(",",$g->model['source_graph_data']);
 			$source_values=[];

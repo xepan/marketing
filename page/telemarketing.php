@@ -149,6 +149,7 @@ class page_telemarketing extends \xepan\base\Page{
 		/*
 				VIRTUAL PAGE TO SEE AND ADD OPPORTUNITIES 
 		*/	
+
  		$button->add('VirtualPage')
 			->bindEvent('Opportunities','click')
 			->set(function($page){
@@ -163,8 +164,11 @@ class page_telemarketing extends \xepan\base\Page{
 
 			});
 
-		$this->js(true)->_load('jquery.sparkline.min');	
-		$this->js(true)->_selector('.sparkline')->sparkline();
+		/*
+				ANALYTICAL GRAPHS 
+		*/
+
+		$view_graph = $this->add('xepan\marketing\View_TeleGraph',null,'graph');
 	}
 
 	function defaultTemplate(){

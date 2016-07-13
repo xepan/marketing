@@ -1,0 +1,16 @@
+.col-md-12.panel.panel-default
+	.panel-heading
+		h5 Call And Score Analysis
+	.panel-body
+		.col-md-4
+			a(href='#')
+				span.sparkline.daily_graph(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") {$daily_analysis} 
+				div.text-success Daily
+		.col-md-4
+			a(href='#')
+				span.sparkline.weekly_graph(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") {$weekly_analysis}  
+				div.text-success Weekly
+		.col-md-4
+			a(href='#')
+				span.sparkline.monthly_graph(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") {$monthly_analysis}
+				div.text-success Monthly		

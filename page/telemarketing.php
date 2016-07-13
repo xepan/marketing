@@ -18,7 +18,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
 		$view_lead->js('reload')->reload();
-
+		
 		$view_lead->setModel($model_lead, ['name','type','city','contacts_str','score']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$view_lead->addPaginator(10);
@@ -162,6 +162,9 @@ class page_telemarketing extends \xepan\base\Page{
 				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
 
 			});
+
+		$this->js(true)->_load('jquery.sparkline.min');	
+		$this->js(true)->_selector('.sparkline')->sparkline();
 	}
 
 	function defaultTemplate(){

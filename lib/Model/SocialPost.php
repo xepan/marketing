@@ -67,7 +67,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 		$this['status']='Approved';
         $this->app->employee
             ->addActivity("Approved Newsletter", $this->id)
-            ->notifyWhoCan('email,reject,test','Approved');
+            ->notifyWhoCan('schedule,reject,test','Approved');
 		$this->saveAndUnload(); 
 	}
 }

@@ -112,7 +112,51 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 
 			return $this->api->js()->univ()->successMessage('Email Send SuccessFully')->closeDialog();
 		}
+	}
+	
+	function page_schedule($p){
+		if(!$this->loaded())
+			throw new \Exception('Model not loaded');		
+		
+		$form = $p->add('Form');
+		$form->setLayout('view\schedule-form');
+		
+		$form->addField('Dropdown','campaign')->setEmptyText('Please select a campaign')->setModel('xepan\marketing\Model_Campaign');
+		$form->addField('DatePicker','date');
+		$form->addField('TimePicker','time');
+		$form->addSubmit('Schedule')->addClass('btn btn-primary btn-block');
 
+		if($form->isSubmitted()){						
+			$schedule_time = date("H:i:s", strtotime($form['time']));
+			$schedule_date = $form['date'].' '.$schedule_time;
+			
+			$campaign = $this->add('xepan\marketing\Model_Campaign');
+			$schedule = $this->add('xepan\marketing\Model_Schedule');
+
+			$schedule['campaign_id'] = $form['campaign'];
+			$schedule['document_id'] = $this->id;
+			$schedule['date'] = $schedule_date; 
+			$schedule['client_event_id'] = '_fc'.uniqid(); 
+			$schedule->save();
+			
+			
+			$campaign->tryLoadBy('id',$form['campaign']);
+			
+			$old_schedule = json_decode($campaign['schedule'],true);
+			$temp = Array ( 
+				'title' => $this['title'], 
+				'start' => $schedule_date, 
+				'document_id' => $this->id, 
+				'client_event_id' => $schedule['client_event_id'] 
+			);
+			
+			$old_schedule[] = $temp;
+
+			$campaign['schedule'] = json_encode($old_schedule);
+			$campaign->save();
+
+			return $form->js()->univ()->successMessage('Newsletter Scheduled')->execute();
+		}
 	}
 
 	function submit(){
@@ -135,7 +179,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this['status']='Approved';
         $this->app->employee
             ->addActivity("Approved Newsletter", $this->id)
-            ->notifyWhoCan('reject,email,test','Approved');
+            ->notifyWhoCan('reject,schedule,test','Approved');
 		$this->saveAndUnload(); 
 	}
 }

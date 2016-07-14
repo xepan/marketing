@@ -33,7 +33,7 @@ class Model_Sms extends \xepan\marketing\Model_Content{
 		$this['status']='Approved';
         $this->app->employee
             ->addActivity("Approved Sms", $this->id)
-            ->notifyWhoCan('email,reject,test','Approved');
+            ->notifyWhoCan('schedule,reject,test','Approved');
 		$this->saveAndUnload(); 
 	}
 }

@@ -118,15 +118,18 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		if(!$this->loaded())
 			throw new \Exception('Model not loaded');		
 		
-		$form = $p->add('Form');
-		$form->setLayout('view\schedule-form');
-		
-		$form->addField('Dropdown','campaign')->setEmptyText('Please select a campaign')->setModel('xepan\marketing\Model_Campaign');
-		$form->addField('DatePicker','date');
-		$form->addField('TimePicker','time');
+		$form = $p->add('Form');		
+		$campaign_field = $form->addField('Dropdown','campaign');
+		$campaign_field->validate('required');
+		$campaign_field->setEmptyText('Please select a campaign')->setModel('xepan\marketing\Model_Campaign');
+		$form->addField('DatePicker','date')->validate('required');
+		$form->addField('TimePicker','time')->validate('required');
 		$form->addSubmit('Schedule')->addClass('btn btn-primary btn-block');
 
-		if($form->isSubmitted()){						
+		if($form->isSubmitted()){
+			if(!$form['date'])				
+				$form->error('date','Date field is mandatory');
+
 			$schedule_time = date("H:i:s", strtotime($form['time']));
 			$schedule_date = $form['date'].' '.$schedule_time;
 			
@@ -138,7 +141,6 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			$schedule['date'] = $schedule_date; 
 			$schedule['client_event_id'] = '_fc'.uniqid(); 
 			$schedule->save();
-			
 			
 			$campaign->tryLoadBy('id',$form['campaign']);
 			
@@ -155,7 +157,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			$campaign['schedule'] = json_encode($old_schedule);
 			$campaign->save();
 
-			return $form->js()->univ()->successMessage('Newsletter Scheduled')->execute();
+			return $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Newsletter Scheduled')->execute();
 		}
 	}
 

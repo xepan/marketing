@@ -289,14 +289,13 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 	}
 
 	function updateActivities($posting_model){
-		if(! $posting_model instanceof xepan/marketing\Model_SocialPosting and !$posting_model->loaded())
+		if(! $posting_model instanceof \xepan\marketing\Model_SocialPosting and !$posting_model->loaded())
 			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
-
 		
 		$user_model = $posting_model->ref('user_id');
 		$config_model = $user_model->ref('config_id');
 
-		$this->setup_client($config_model->id);
+		$this->setup_client($config_model,$user_model);
 
   		$client = $this->client;
   		$client->access_token = $user_model['access_token'];
@@ -323,7 +322,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 			// print_r($likes_comments);
 			// echo"</pre>";
 
-			$likes_count=$likes_comments['likes']['_total'];
+			$likes_count =$likes_comments['likes']['_total'];
 			$posting_model->updateLikesCount($likes_count);
 			if($likes_comments['updateComments']['_total']){
 				foreach ($likes_comments['updateComments']['values'] as $comment) {

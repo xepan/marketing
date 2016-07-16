@@ -471,38 +471,36 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 	}
 
 	function comment($posting_model,$msg){
-		if(! $posting_model instanceof xepan/marketing\Model_SocialPosting and !$posting_model->loaded())
+
+		if(! $posting_model instanceof \xepan\marketing\Model_SocialPosters_Base_SocialPosting and !$posting_model->loaded())
 			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
 
 		$user_model = $posting_model->ref('user_id');
 
 		$config_model = $user_model->ref('config_id');
 
-  		$config = array(
-				      'appId' => $config_model['appId'],
-				      'secret' => $config_model['secret'],
-				      'fileUpload' => true, // optional
-				      'allowSignedRequest' => false, // optional, but should be set to false for non-canvas apps
-				  );
+		$fb = new \Facebook\Facebook([
+			'app_id' => $config_model['appId'],
+			'app_secret' => $config_model['secret'],
+			'default_graph_version' => $this->default_graph_version,
+		]);
 
-  		$post_content['access_token'] = $user_model['access_token'];
+		$fb->setDefaultAccessToken($user_model['access_token']);
 
-  		$this->fb = $facebook = new \Facebook($config);
-		$this->fb->setFileUploadSupport(true);
+		$data['message'] = $msg;
 
-		$post_id_returned = explode("_", $posting_model['postid_returned']);
-		if(count($post_id_returned) !=2) return false;
+		try {
+		  	$response = $fb->post('/'.$posting_model['postid_returned'].'/comments/', $data, $user_model['access_token']);
+			} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			  echo 'Graph returned an error: ' . $e->getMessage();
+			} catch(Facebook\Exceptions\FacebookSDKException $e) {
+			  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		}
 
-		$post_id_returned = $post_id_returned[1];
-
-
-  		$post_content['message'] = $msg;
-
-  		// response
-		$response = $this->fb->api('/'. $post_id_returned .'/comments', 'POST',
-			  								$post_content
-		                                 );
 		$this->updateActivities($posting_model);
+
+		// $this->app->memorize('comment',$response);
+		// var_dump($response);
 	}
 
 	function getPage($user_model){

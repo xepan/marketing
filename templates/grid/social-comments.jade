@@ -7,17 +7,17 @@
                 div(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix(style="height:300px; overflow:scroll;")
-        .row
+    .main-box-body.clearfix(style="height:300px; overflow-y:auto;")
+        div
             h2 Comments
             {header}{cols}{col}{/}{/}{/}
             {rows}{row}
             div(class="{$odd_even}" data-id="{$id}")
                 {cols}
                 .main-box.clearfix
-                  header.main-box-header.clearfix
+                  header.clearfix
                     .main-box-body.clearfix
-                      .conversation-wrapper
+                      .conversation-wrapper(style="padding:5px;")
                         .conversation-content
                           .conversation-item.item-left.clearfix
                             .conversation-body

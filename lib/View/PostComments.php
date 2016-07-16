@@ -16,10 +16,10 @@ class View_PostComments extends \View{
 		$model_posting_activity->addCondition('posting_id', $posting_id);
 
 		$form = $this->add('Form',null,'form');
-		$form->addField('text','add_comment');
-		$form->addSubmit('Add')->addClass('btn btn-primary');
+		$form->addField('text','add_comment')->addClass('xepan-push-small');
+		$form->addSubmit('Add')->addClass('btn btn-primary btn-block');
 
-		$comment_grid = $this->add('xepan\hr\grid',null,'grid',null);
+		$comment_grid = $this->add('xepan\hr\grid',null,'grid',['grid\social-comments']);
 		$comment_grid->setModel($model_posting_activity);
 	}
 }

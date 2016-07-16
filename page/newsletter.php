@@ -31,13 +31,13 @@ class page_newsletter extends \xepan\base\Page{
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_newslettertemplate', 'edit_page'=>'xepan_marketing_newsletterdesign'],null,['grid/newsletter-grid']);
 		$crud->setModel($newsletter);
 		
-		$frm=$crud->grid->addQuickSearch(['title']);
+		$frm=$crud->grid->addQuickSearch(['title','content_name']);
 
 		$vp = $this->add('VirtualPage');
 		$vp->set(function($p){
 			$newsletter_model = $this->add('xepan\marketing\Model_Newsletter')->load($_GET['newsletter_id']);
 			
-			$nv = $p->add('View')->set('hi');
+			$nv = $p->add('View');
 			$nv->template->trySetHTML('Content',$newsletter_model['message_blog']);
 		});	
 

@@ -26,6 +26,7 @@ class Model_Content extends \xepan\base\Model_Document{
 		$cont_j->addField('message_blog')->type('text')->display(['form'=>'xepan\base\RichText']);
 		$cont_j->addField('url');
 		$cont_j->addField('title');
+		$cont_j->addField('content_name');
 		$cont_j->addField('is_template')->type('boolean')->defaultValue(false);
 		$cont_j->hasMany('xepan/marketing/Schedule','document_id');
 

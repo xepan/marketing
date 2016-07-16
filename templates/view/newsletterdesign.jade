@@ -1,12 +1,18 @@
 .email-detail-nano-content(tabindex='0', style='right: -13px;')
   #email-detail-inner
     #email-detail-subject.clearfix
-      .col-md-1
-        span.subject Subject: 
-      .col-md-8
-        .atk-form-row{$title}
-      .col-md-3.pull-right  
-        span.atk-form-row Category: {$marketing_category}{$marketing_category_id}
+      .row
+        .col-md-1
+          span.subject Name:
+        .col-md-11  
+          {$content_name}
+      .row
+        .col-md-1
+          span.subject Subject: 
+        .col-md-8
+          .atk-form-row{$title}
+        .col-md-3.pull-right  
+          span.atk-form-row Category: {$marketing_category}{$marketing_category_id}
     #email-detail-sender.clearfix
       .picture.hidden-xs 
         {$avatar} 

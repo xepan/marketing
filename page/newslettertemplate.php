@@ -10,6 +10,6 @@ class page_newslettertemplate extends \xepan\base\Page{
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter');
 		$newsletter->addCondition('is_template',true);
 		$crud=$this->add('xepan\hr\CRUD',['entity_name'=>'Newsletter Template'],null,['grid/newslettertemplate-grid']);
-		$crud->setModel($newsletter,['title','message_blog','marketing_category_id']);
+		$crud->setModel($newsletter,['content_name','message_blog','marketing_category_id']);
 	}
 }

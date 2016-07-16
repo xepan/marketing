@@ -11,6 +11,7 @@ class page_socialpost extends \xepan\base\Page{
 		$social->tryLoadAny();
 		$grid = $this->add('xepan\hr\Grid',null,'grid',['grid/total-posting-grid']);
 		$grid->setModel($social);
+		$grid->add('xepan\hr\Controller_ACL');
 
 		$model_post = $this->add('xepan\marketing\Model_SocialPost')->load($post_id);		
 		$grid->template->trySet('post_title',$model_post['title']);
@@ -26,6 +27,16 @@ class page_socialpost extends \xepan\base\Page{
 		$comment_view_url = $this->api->url(null,['cut_object'=>$comment_view->name]);
 
 		$grid->js('click',$comment_view->js()->reload(['posting_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$comment_view_url))->_selector('.post-comments');
+		
+		$grid->on('click','.update-activity-button',function($js,$data)use($grid,$post_id){
+			$model_post = $this->add('xepan\marketing\Model_SocialPost')->load($post_id);
+			if(!$model_post->loaded()){
+				throw new \Exception("No posts to update");
+			}
+
+			$model_post->updateActivity();
+			return $this->js()->univ()->successMessage('Updated');
+		});
 	}
 
 	function defaultTemplate(){

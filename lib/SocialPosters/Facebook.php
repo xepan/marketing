@@ -325,6 +325,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 				$social_posting['post_type'] = $post_type;
 				$social_posting['postid_returned'] = $graphNode['id'];
 				$social_posting['posted_on'] = $this->app->now;
+				$social_posting['status'] = "Posted";
 				$social_posting->save();
 			}
 
@@ -338,6 +339,7 @@ class SocialPosters_Facebook extends SocialPosters_Base_Social {
 				$social_posting['post_type'] = "Page_".$post_type; // for recognization of posting page 
 				$social_posting['postid_returned'] = $graphNode['id'];
 				$social_posting['posted_on'] = $this->app->now;
+				$social_posting['status'] = "Posted";
 				$social_posting->save();	
 			}
 			//update posting_on in schedule table

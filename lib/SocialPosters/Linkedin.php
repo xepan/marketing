@@ -194,6 +194,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 			$social_posting['post_type'] = "Share";
 			$social_posting['postid_returned'] = $response_data->updateKey;
 			$social_posting['posted_on'] = $this->app->now;
+			$social_posting['status'] = "Posted";
 			$social_posting->save();
 		}
 
@@ -231,6 +232,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 			$social_posting['postid_returned'] = $page_response->updateKey;
 			$social_posting['posted_on'] = $this->app->now;
 			$social_posting['return_data'] = json_encode($page_response);
+			$social_posting['status'] = "Posted";
 			$social_posting->save();
 		}
 //end of postable page

@@ -220,9 +220,10 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	//activate Lead
 
 	function checkExistingOpportunities($m){
-		$opp_count = $this->ref('Opportunities')->count()->getOne();
-		if($opp_count)
-			throw $this->exception('Cannot Delete,first delete Opportunitie`s ');	
+		$this->ref('Opportunities')->each(function($o){
+			$o->delete();
+		});
+
 	}
 
 	function checkExistingCategoryAssociation($m){

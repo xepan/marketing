@@ -43,6 +43,11 @@ class page_socialcontent extends \xepan\base\Page{
 		
 		
 		$crud->grid->addHook('formatRow',function($g){
+			$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$g->model->id);
+    		$model_attachment->tryLoadAny();
+    		$g->current_row_html['first_image'] = $model_attachment['file'];
+
+
 			$g->current_row_html['msg'] = $g->model['message_blog'];
 
 			$source_data = explode(",",$g->model['source_graph_data']);

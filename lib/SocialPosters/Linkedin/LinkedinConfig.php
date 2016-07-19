@@ -42,7 +42,7 @@ class SocialPosters_Linkedin_LinkedinConfig extends \xepan\marketing\Model_Socia
 
 				$saved_post_page_for_form = [];
 				$saved_page_array_for_grid = [];
-				$saved_pages = $saved_data_array['values'];
+				$saved_pages = isset($saved_data_array['values'])?$saved_data_array['values']:[];
 				foreach ($saved_pages as $key => $fb_page) {
 					$new_key = 	$fb_page['name']."-".$fb_page['id'];
 					$saved_page_array_for_grid[$new_key] = ['fb_page_id'=>$fb_page['id'],"name"=>$fb_page['name'],'send_post'=>$fb_page['send_post']];
@@ -105,11 +105,11 @@ class SocialPosters_Linkedin_LinkedinConfig extends \xepan\marketing\Model_Socia
 	
 			$user_model = $page->add('xepan/marketing/Model_SocialPosters_Base_SocialUsers')->load($form['user']);
 			$linkedin = $this->add('xepan\marketing\SocialPosters_Linkedin');
-			// try{
-			// 	$company_pages = $linkedin->getCompany($config_model,$user_model);
-			// }catch(\Exception $e){
-			// 	throw $e;
-			// }
+			try{
+				$company_pages = $linkedin->getCompany($config_model,$user_model);
+			}catch(\Exception $e){
+				throw $e;
+			}
 
 			// managing previous saved page with send_post or not
 			//1.	get saved pages array of id with send_post and other info
@@ -122,7 +122,7 @@ class SocialPosters_Linkedin_LinkedinConfig extends \xepan\marketing\Model_Socia
 			}
 
 			// //2.	adding send_post option to new page array
-			$company_pages = $this->app->recall("link_company");
+			// $company_pages = $this->app->recall("link_company");
 			$company_pages = json_encode($company_pages);
 
 			$new_page_array = json_decode($company_pages,true);

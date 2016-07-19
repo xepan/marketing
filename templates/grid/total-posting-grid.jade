@@ -7,7 +7,8 @@
             span.subinfo
               {$post_content}
             span.subinfo
-              |URL : {$post_url}      
+              |URL : {$post_url}
+          .btn.btn-success.btn-sm.btn-block.update-activity-button(title="Fetch Comments, likes and shares") Update Activities          
         {rows}{row}
         div(class="{$odd_even}" data-id="{$id}")
         {cols}    
@@ -24,7 +25,8 @@
               span.headline.green.post-comments(href='#',data-id="{$id}" style="cursor:pointer; cursor: hand;")  Comments : {$total_comments}
               span.headline.green  Post Type : {$post_type}
               span.headline.green  Monitoring : {$monitoring}
-              span.headline.green  Force Monitor : {$forcemonitoring}      
+              span.headline.green  Force Monitor : {$forcemonitoring}
+              {$action}      
         {/}
         {/}{/}
         {not_found}

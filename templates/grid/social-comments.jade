@@ -1,0 +1,57 @@
+.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
+    {Pannel}
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                div(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+    {/Pannel}
+    .main-box-body.clearfix(style="height:300px; overflow-y:auto;")
+        div
+            h2 Comments
+            {header}{cols}{col}{/}{/}{/}
+            {rows}{row}
+            div(class="{$odd_even}" data-id="{$id}")
+                {cols}
+                .main-box.clearfix
+                  header.clearfix
+                    .main-box-body.clearfix
+                      .conversation-wrapper(style="padding:5px;")
+                        .conversation-content
+                          .conversation-item.item-left.clearfix
+                            .conversation-body
+                              .row
+                                .col-md-9
+                                  small.text.text-muted
+                                    {$name}                
+                                .col-md-3  
+                                  .time.hidden-xs
+                                    small.text-muted {$activity_on}
+            {/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
+
+            {totals}{cols}{col}{$content}{/}{/}{/}
+        {$Paginator}
+
+style(type='text/css', media='screen').
+  .main-box .main-box-header{
+  padding: 0px 0px 0px 0px !important; 
+  }
+
+  .main-box .main-box-body{
+  padding: 0px 10px 0px 10px !important; 
+  }
+
+  .conversation-wrapper .conversation-body::before{
+  border-color:#ffffff !important;
+  }
+
+  .conversation-wrapper .conversation-item{
+  padding: 0px;
+  }

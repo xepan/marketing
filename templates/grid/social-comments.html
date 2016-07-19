@@ -1,0 +1,62 @@
+
+<div id="{$_name}" class="xepan-grid main-box clearfix {$class}">{Pannel}
+  <header class="main-box-header clearfix atk-actions  {$class} ">
+    <div class="filter-block">
+      <div class="pull-right">{$grid_buttons} </div>
+      <div class="form-group pull-right xepan-filter-form">
+        <div class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></div>
+      </div>
+    </div>
+  </header>{/Pannel}
+  <div style="height:300px; overflow-y:auto;" class="main-box-body clearfix">
+    <div>
+      <h2>Comments</h2>{header}{cols}{col}{/}{/}{/}
+      {rows}{row}
+      <div data-id="{$id}" class="{$odd_even}">{cols}
+        <div class="main-box clearfix">
+          <header class="clearfix">
+            <div class="main-box-body clearfix">
+              <div style="padding:5px;" class="conversation-wrapper">
+                <div class="conversation-content">
+                  <div class="conversation-item item-left clearfix">
+                    <div class="conversation-body">
+                      <div class="row">
+                        <div class="col-md-9"><small class="text text-muted">{$name}                </small></div>
+                        <div class="col-md-3"> 
+                          <div class="time hidden-xs"><small class="text-muted">{$activity_on}</small></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+        </div>
+      </div>{/}
+      {/}{/}
+      {not_found}
+      <div class="row">
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+      </div>{/}
+      {totals}{cols}{col}{$content}{/}{/}{/}
+    </div>{$Paginator}
+  </div>
+</div>
+<style type="text/css" media="screen">
+  .main-box .main-box-header{
+  padding: 0px 0px 0px 0px !important; 
+  }
+  
+  .main-box .main-box-body{
+  padding: 0px 10px 0px 10px !important; 
+  }
+  
+  .conversation-wrapper .conversation-body::before{
+  border-color:#ffffff !important;
+  }
+  
+  .conversation-wrapper .conversation-item{
+  padding: 0px;
+  }
+</style>

@@ -10,7 +10,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 		
 
 		$this->getElement('status')->defaultValue('Draft');
-
+		
 		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
 		$this->addCondition('type','SocialPost');
 
@@ -69,5 +69,14 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
             ->addActivity("Approved Newsletter", $this->id)
             ->notifyWhoCan('schedule,reject,test','Approved');
 		$this->saveAndUnload(); 
+	}
+
+	function updateActivity(){
+		$model_socialposting = $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting');
+		$model_socialposting->addCondition('post_id',$this->id);
+
+		foreach ($model_socialposting as $posting) {
+			$model_socialposting->updateActivity();
+		}
 	}
 }

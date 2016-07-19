@@ -27,8 +27,13 @@
                         .col-md-4  
                           span Comments : {$total_comments} 
                       hr
-                      .project-box-content
-                        .text-muted(style="height:57px; overflow: hidden; text-overflow: ellipsis;") {$msg} 
+                      small.text-primary URL : {$url}
+                      .row
+                        .col-md-5
+                          img(src="{$first_image}" alt="No Image" style="max-width:100%; width:100px; height:58px;" ) 
+                        .col-md-7  
+                          .project-box-content
+                            .text-muted(style="height:57px; overflow: hidden; text-overflow: ellipsis;") {$msg} 
                       .project-box-footer.clearfix
                         a(href='#')
                           span.sparkline.source_graph(sparkType="pie" data-id="{$id}" sparkHeight="50px") {$source_graph}
@@ -83,4 +88,19 @@ style(type='text/css', media='screen').
 
   .project-box .project-box-footer a{
   padding: 0px 15px !important;
+  margin: 0px 0px 0px 0px !important;
   }
+
+  .project-box .project-box-footer {
+    border-top: 1px solid #e9eef0;
+    margin-top:10px !important;
+  }
+
+  .project-box .project-box-content{
+    padding: 0px 0px 0px 0px !important;
+  }
+
+  hr{
+    margin: 2px 0px 5px 0px !important;
+  }
+

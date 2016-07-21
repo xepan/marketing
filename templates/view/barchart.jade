@@ -1,148 +1,150 @@
-#graph-bar(style='height: 240px; padding: 0px; position: relative;')
-  script(src='templates/js/gdp-data.js')
-  script(src='templates/js/flot/jquery.flot.min.js')
-  script(src='templates/js/flot/jquery.flot.resize.min.js')
-  script(src='templates/js/flot/jquery.flot.time.min.js')
-  script(src='templates/js/flot/jquery.flot.threshold.js')
-  script(src='templates/js/flot/jquery.flot.axislabels.js')
-  canvas.flot-base(style='direction: ltr; position: absolute; left: 0px; top: 0px; width: 908px; height: 240px;', width='813', height='214')
-  .flot-text(style='position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);')
-    .flot-x-axis.flot-x1-axis.xAxis.x1Axis(style='position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;')
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 871px; text-align: center;')
-        | Dec
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 39px; text-align: center;')
-        | Jan
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 115px; text-align: center;')
-        | Feb
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 184px; text-align: center;')
-        | Mar
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 263px; text-align: center;')
-        | Apr
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 336px; text-align: center;')
-        | May
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 416px; text-align: center;')
-        | Jun
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 493px; text-align: center;')
-        | Jul
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 566px; text-align: center;')
-        | Aug
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 644px; text-align: center;')
-        | Sep
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 720px; text-align: center;')
-        | Oct
-      .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 796px; text-align: center;')
-        | Nov
-    .flot-y-axis.flot-y1-axis.yAxis.y1Axis(style='position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;')
-      .flot-tick-label.tickLabel(style='position: absolute; top: 211px; left: 20px; text-align: right;')
-        | 0
-      .flot-tick-label.tickLabel(style='position: absolute; top: 169px; left: 7px; text-align: right;')
-        | 250
-      .flot-tick-label.tickLabel(style='position: absolute; top: 127px; left: 7px; text-align: right;') 500
-      .flot-tick-label.tickLabel(style='position: absolute; top: 84px; left: 7px; text-align: right;') 750
-      .flot-tick-label.tickLabel(style='position: absolute; top: 42px; left: 0px; text-align: right;') 1000
-      .flot-tick-label.tickLabel(style='position: absolute; top: 0px; left: 0px; text-align: right;') 1250
-  canvas.flot-overlay(style='direction: ltr; position: absolute; left: 0px; top: 0px; width: 908px; height: 240px;', width='813', height='214')
-  .legend
-    div(style='position: absolute; width: 72px; height: 31px; top: 13px; right: 17px; background-color: rgb(255, 255, 255); opacity: 0.85;')  
-    table(style='position:absolute;top:13px;right:17px;;font-size:smaller;color:#545454')
-      tbody
-        tr
-          td.legendColorBox
-            div(style='border:1px solid #000000;padding:1px')
-              div(style='width:4px;height:0;border:5px solid rgb(3,169,244);overflow:hidden')
-          td.legendLabel Leads
-        tr
-          td.legendColorBox
-            div(style='border:1px solid #000000;padding:1px')
-              div(style='width:4px;height:0;border:5px solid #e84e40;overflow:hidden')
-          td.legendLabel Opportunities
-  script.
-    $(document).ready(function() {
-    //CHARTS
-    function gd(year, day, month) {
-    return new Date(year, month - 1, day).getTime();
-    }
-    if ($('#graph-bar').length) {
-    var data1 = [
-    [gd(2015, 1, 1), 838], [gd(2015, 1, 2), 749], [gd(2015, 1, 3), 634], [gd(2015, 1, 4), 1080], [gd(2015, 1, 5), 850], [gd(2015, 1, 6), 465], [gd(2015, 1, 7), 453], [gd(2015, 1, 8), 646], [gd(2015, 1, 9), 738], [gd(2015, 1, 10), 899], [gd(2015, 1, 11), 830], [gd(2015, 1, 12), 789]
-    ];
-    var data2 = [
-    [gd(2015, 1, 1), 342], [gd(2015, 1, 2), 721], [gd(2015, 1, 3), 493], [gd(2015, 1, 4), 403], [gd(2015, 1, 5), 657], [gd(2015, 1, 6), 782], [gd(2015, 1, 7), 609], [gd(2015, 1, 8), 543], [gd(2015, 1, 9), 599], [gd(2015, 1, 10), 359], [gd(2015, 1, 11), 783], [gd(2015, 1, 12), 680]
-    ];
-    var series = new Array();
-    series.push({
-    data: data1,
-    bars: {
-    show : true,
-    barWidth: 24 * 60 * 60 * 12000,
-    lineWidth: 1,
-    fill: 1,
-    align: 'center'
-    },
-    label: 'Leads'
-    });
-    series.push({
-    data: data2,
-    color: '#e84e40',
-    lines: {
-    show : true,
-    lineWidth: 3,
-    },
-    points: {
-    fillColor: "#e84e40",
-    fillColor: '#ffffff',
-    pointWidth: 1,
-    show: true
-    },
-    label: 'Opportunities'
-    });
-    $.plot("#graph-bar", series, {
-    colors: ['#03a9f4', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#95a5a6'],
-    grid: {
-    tickColor: "#f2f2f2",
-    borderWidth: 0,
-    hoverable: true,
-    clickable: true
-    },
-    legend: {
-    noColumns: 1,
-    labelBoxBorderColor: "#000000",
-    position: "ne"
-    },
-    shadowSize: 0,
-    xaxis: {
-    mode: "time",
-    tickSize: [1, "month"],
-    tickLength: 0,
-    // axisLabel: "Date",
-    axisLabelUseCanvas: true,
-    axisLabelFontSizePixels: 12,
-    axisLabelFontFamily: 'Open Sans, sans-serif',
-    axisLabelPadding: 10
-    }
-    });
-    var previousPoint = null;
-    $("#graph-bar").bind("plothover", function (event, pos, item) {
-    if (item) {
-    if (previousPoint != item.dataIndex) {
-    previousPoint = item.dataIndex;
-    $("#flot-tooltip").remove();
-    var x = item.datapoint[0],
-    y = item.datapoint[1];
-    showTooltip(item.pageX, item.pageY, item.series.label, y );
-    }
-    }
-    else {
-    $("#flot-tooltip").remove();
-    previousPoint = [0,0,0];
-    }
-    });
-    function showTooltip(x, y, label, data) {
-    $('<div id="flot-tooltip">' + '<b>' + label + ': </b><i>' + data + '</i>' + '</div>').css({
-    top: y + 5,
-    left: x + 20
-    }).appendTo("body").fadeIn(200);
-    }
-    }
-   
-    });
+div(id="{$id}" class="{$class}" style="{$style}")
+  {$Content}
+  #graph-bar(style='height: 240px; padding: 0px; position: relative;')
+    script(src='templates/js/gdp-data.js')
+    script(src='templates/js/flot/jquery.flot.min.js')
+    script(src='templates/js/flot/jquery.flot.resize.min.js')
+    script(src='templates/js/flot/jquery.flot.time.min.js')
+    script(src='templates/js/flot/jquery.flot.threshold.js')
+    script(src='templates/js/flot/jquery.flot.axislabels.js')
+    canvas.flot-base(style='direction: ltr; position: absolute; left: 0px; top: 0px; width: 908px; height: 240px;', width='813', height='214')
+    .flot-text(style='position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);')
+      .flot-x-axis.flot-x1-axis.xAxis.x1Axis(style='position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;')
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 871px; text-align: center;')
+          | Dec
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 39px; text-align: center;')
+          | Jan
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 115px; text-align: center;')
+          | Feb
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 184px; text-align: center;')
+          | Mar
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 263px; text-align: center;')
+          | Apr
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 336px; text-align: center;')
+          | May
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 416px; text-align: center;')
+          | Jun
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 493px; text-align: center;')
+          | Jul
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 566px; text-align: center;')
+          | Aug
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 644px; text-align: center;')
+          | Sep
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 720px; text-align: center;')
+          | Oct
+        .flot-tick-label.tickLabel(style='position: absolute; max-width: 64px; top: 224px; left: 796px; text-align: center;')
+          | Nov
+      .flot-y-axis.flot-y1-axis.yAxis.y1Axis(style='position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;')
+        .flot-tick-label.tickLabel(style='position: absolute; top: 211px; left: 20px; text-align: right;')
+          | 0
+        .flot-tick-label.tickLabel(style='position: absolute; top: 169px; left: 7px; text-align: right;')
+          | 250
+        .flot-tick-label.tickLabel(style='position: absolute; top: 127px; left: 7px; text-align: right;') 500
+        .flot-tick-label.tickLabel(style='position: absolute; top: 84px; left: 7px; text-align: right;') 750
+        .flot-tick-label.tickLabel(style='position: absolute; top: 42px; left: 0px; text-align: right;') 1000
+        .flot-tick-label.tickLabel(style='position: absolute; top: 0px; left: 0px; text-align: right;') 1250
+    canvas.flot-overlay(style='direction: ltr; position: absolute; left: 0px; top: 0px; width: 908px; height: 240px;', width='813', height='214')
+    .legend
+      div(style='position: absolute; width: 72px; height: 31px; top: 13px; right: 17px; background-color: rgb(255, 255, 255); opacity: 0.85;')  
+      table(style='position:absolute;top:13px;right:17px;;font-size:smaller;color:#545454')
+        tbody
+          tr
+            td.legendColorBox
+              div(style='border:1px solid #000000;padding:1px')
+                div(style='width:4px;height:0;border:5px solid rgb(3,169,244);overflow:hidden')
+            td.legendLabel Leads
+          tr
+            td.legendColorBox
+              div(style='border:1px solid #000000;padding:1px')
+                div(style='width:4px;height:0;border:5px solid #e84e40;overflow:hidden')
+            td.legendLabel Opportunities
+    script.
+      $(document).ready(function() {
+      //CHARTS
+      function gd(year, day, month) {
+      return new Date(year, month - 1, day).getTime();
+      }
+      if ($('#graph-bar').length) {
+      var data1 = [
+      [gd(2015, 1, 1), 838], [gd(2015, 1, 2), 749], [gd(2015, 1, 3), 634], [gd(2015, 1, 4), 1080], [gd(2015, 1, 5), 850], [gd(2015, 1, 6), 465], [gd(2015, 1, 7), 453], [gd(2015, 1, 8), 646], [gd(2015, 1, 9), 738], [gd(2015, 1, 10), 899], [gd(2015, 1, 11), 830], [gd(2015, 1, 12), 789]
+      ];
+      var data2 = [
+      [gd(2015, 1, 1), 342], [gd(2015, 1, 2), 721], [gd(2015, 1, 3), 493], [gd(2015, 1, 4), 403], [gd(2015, 1, 5), 657], [gd(2015, 1, 6), 782], [gd(2015, 1, 7), 609], [gd(2015, 1, 8), 543], [gd(2015, 1, 9), 599], [gd(2015, 1, 10), 359], [gd(2015, 1, 11), 783], [gd(2015, 1, 12), 680]
+      ];
+      var series = new Array();
+      series.push({
+      data: data1,
+      bars: {
+      show : true,
+      barWidth: 24 * 60 * 60 * 12000,
+      lineWidth: 1,
+      fill: 1,
+      align: 'center'
+      },
+      label: 'Leads'
+      });
+      series.push({
+      data: data2,
+      color: '#e84e40',
+      lines: {
+      show : true,
+      lineWidth: 3,
+      },
+      points: {
+      fillColor: "#e84e40",
+      fillColor: '#ffffff',
+      pointWidth: 1,
+      show: true
+      },
+      label: 'Opportunities'
+      });
+      $.plot("#graph-bar", series, {
+      colors: ['#03a9f4', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#95a5a6'],
+      grid: {
+      tickColor: "#f2f2f2",
+      borderWidth: 0,
+      hoverable: true,
+      clickable: true
+      },
+      legend: {
+      noColumns: 1,
+      labelBoxBorderColor: "#000000",
+      position: "ne"
+      },
+      shadowSize: 0,
+      xaxis: {
+      mode: "time",
+      tickSize: [1, "month"],
+      tickLength: 0,
+      // axisLabel: "Date",
+      axisLabelUseCanvas: true,
+      axisLabelFontSizePixels: 12,
+      axisLabelFontFamily: 'Open Sans, sans-serif',
+      axisLabelPadding: 10
+      }
+      });
+      var previousPoint = null;
+      $("#graph-bar").bind("plothover", function (event, pos, item) {
+      if (item) {
+      if (previousPoint != item.dataIndex) {
+      previousPoint = item.dataIndex;
+      $("#flot-tooltip").remove();
+      var x = item.datapoint[0],
+      y = item.datapoint[1];
+      showTooltip(item.pageX, item.pageY, item.series.label, y );
+      }
+      }
+      else {
+      $("#flot-tooltip").remove();
+      previousPoint = [0,0,0];
+      }
+      });
+      function showTooltip(x, y, label, data) {
+      $('<div id="flot-tooltip">' + '<b>' + label + ': </b><i>' + data + '</i>' + '</div>').css({
+      top: y + 5,
+      left: x + 20
+      }).appendTo("body").fadeIn(200);
+      }
+      }
+     
+      });

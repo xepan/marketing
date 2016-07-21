@@ -24,15 +24,31 @@ class page_dashboard extends \xepan\base\Page{
 		// LEAD VS SCORE INCREMENT GRAPH
 		$from_date = "2001-01-01";
 		$to_date = $this->app->today;
-		$time_stamp = "Year";
+		$group_by = "Date"; //'Date','Week','Month','Year','Hours'
+
+		$lead_score_data=[];
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		$lead->addCondition('created_at',">=",$from_date);
 		$lead->addCondition('created_at',"<=",$to_date);
-		$lead->addExpression('');
+		$lead->addExpression('Date','DATE(created_at)');
+		$lead->addExpression('Month','MONTH(created_at)');
+		$lead->addExpression('Year','YEAR(created_at)');
+		$lead->addExpression('Week','WEEK(created_at)');
+		$lead->addExpression('Hours','HOUR(created_at)');
+		$lead->_dsql()->group($lead->dsql()->expr('[0]',[$lead->getElement($group_by)]));
+
+		$lead->_dsql()->del('fields')->field('count(*)leads_count')->field($lead->dsql()->expr('[0]'.$group_by,[$lead->getElement($group_by)]));
+		foreach ( $lead->_dsql() as $ld) {
+			$lead_score_data[$ld[$group_by]] = [$group_by=>$ld[$group_by],'Lead Count'=>$ld['leads_count']];
+		}
+
+		echo "<pre>";
+		var_dump($lead_score_data);
+		exit;
 
 		$tax_data = [
-			["Year"=> "2001", "Score"=> 20,'Lead'=>78],
+			'2001'=>["Year"=> "2001", "Score"=> 20,'Lead'=>78],
 			["Year"=> "2001", "Score"=> 33, "Lead"=> 629],
 			["Year"=> "2003", "Score"=> 30, "Lead"=> 67],
 			["Year"=> "2004", "Score"=> 40, "Lead"=> 676],

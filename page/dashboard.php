@@ -98,18 +98,18 @@ class page_dashboard extends \xepan\base\Page{
 		
 		
 		$lead->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
-			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')->addCondition('contact_id',$m->id)->setLimit(1)->setOrder('date','desc')->tryLoadAny();
-			return $q->expr("IFNULL([0],1970-01-01)",[$landing_response->fieldQuery('date')]);
+			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')->addCondition('contact_id',$m->getElement('id'))->setLimit(1)->setOrder('date','desc');
+			return $q->expr("COALESCE([0],1970-01-01)",[$landing_response->fieldQuery('date')]);
 		});
 
 		$lead->addExpression('last_communication_date_from_lead')->set(function($m,$q){
-			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('from_id',$m->id)->addCondition('direction','In')->setLimit(1)->setOrder('created_at','desc')->tryLoadAny();
-			return $q->expr("IFNULL([0],1970-01-01)",[$communication->fieldQuery('created_at')]);
+			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('from_id',$m->getElement('id'))->addCondition('direction','In')->setLimit(1)->setOrder('created_at','desc');
+			return $q->expr("COALESCE([0],1970-01-01)",[$communication->fieldQuery('created_at')]);
 		});
 
 		$lead->addExpression('last_communication_date_from_company')->set(function($m,$q){
-			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->id)->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc')->tryLoadAny();
-			return $q->expr("IFNULL([0],1970-01-01)",[$communication->fieldQuery('created_at')]);
+			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->getElement('id'))->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc');
+			return $q->expr("COALESCE([0],1970-01-01)",[$communication->fieldQuery('created_at')]);
 		});
 
 		// current date - max from last_landing_from_lead, last_communication_form_lead or last_communication_form_employee

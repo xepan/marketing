@@ -28,6 +28,7 @@ class page_dashboard extends \xepan\base\Page{
 
 		$lead_score_data=[];
 
+		// Calculating Lead Count
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		$lead->addCondition('created_at',">=",$from_date);
 		$lead->addCondition('created_at',"<=",$to_date);
@@ -40,32 +41,53 @@ class page_dashboard extends \xepan\base\Page{
 
 		$lead->_dsql()->del('fields')->field('count(*)leads_count')->field($lead->dsql()->expr('[0]'.$group_by,[$lead->getElement($group_by)]));
 		foreach ( $lead->_dsql() as $ld) {
-			$lead_score_data[$ld[$group_by]] = [$group_by=>$ld[$group_by],'Lead Count'=>$ld['leads_count']];
+			$lead_score_data[$ld[$group_by]] = [$group_by=>$ld[$group_by],'Lead Count'=>$ld['leads_count'], 'Score Count'=> null];
 		}
 
-		echo "<pre>";
-		var_dump($lead_score_data);
-		exit;
-
-		$tax_data = [
-			'2001'=>["Year"=> "2001", "Score"=> 20,'Lead'=>78],
-			["Year"=> "2001", "Score"=> 33, "Lead"=> 629],
-			["Year"=> "2003", "Score"=> 30, "Lead"=> 67],
-			["Year"=> "2004", "Score"=> 40, "Lead"=> 676],
-			["Year"=> "2005", "Score"=> 50, "Lead"=> 681],
-			["Year"=> "2006", "Score"=> 60, "Lead"=> 620],
-			["Year"=> "2007", "Score"=> 10, "Lead"=> 987],
-			["Year"=> "2008", "Score"=> 90, "Lead"=> 89]
-		];
+		// Calculating Score Count
+		$point_system = $this->add('xepan\base\Model_PointSystem');
+		$point_system->addCondition('created_at',">=",$from_date);
+		$point_system->addCondition('created_at',"<=",$to_date);
+		$point_system->addExpression('Date','DATE(created_at)');
+		$point_system->addExpression('Month','MONTH(created_at)');
+		$point_system->addExpression('Year','YEAR(created_at)');
+		$point_system->addExpression('Week','WEEK(created_at)');
+		$point_system->addExpression('Hours','HOUR(created_at)');
+		$point_system->_dsql()->group($point_system->dsql()->expr('[0]',[$point_system->getElement($group_by)]));
+		$point_system->_dsql()->del('fields')->field('sum(score)score_count')->field($point_system->dsql()->expr('[0]'.$group_by,[$point_system->getElement($group_by)]));
+		
+		foreach ($point_system->_dsql() as $ld) {
+			// echo $ld[$group_by]."<br/>";
+			if(!isset($lead_score_data[$ld[$group_by]])){
+				$lead_score_data[$ld[$group_by]] = [$group_by=>$ld[$group_by],'Lead Count'=> null];
+			}
+			$lead_score_data[$ld[$group_by]]['Score Count'] = $ld['score_count'];
+			// if(isset($lead_score_data[$ld[$group_by]]))
+			// 	$lead_score_data[$ld[$group_by]] = 	
+		}
+		
+		// echo "<pre>";
+		// print_r($lead_score_data);
+		// exit;
+		// $tax_data = [
+		// 	'2001'=>["Year"=> "2001", "Score"=> 20,'Lead'=>78],
+		// 	["Year"=> "2001", "Score"=> 33, "Lead"=> 629],
+		// 	["Year"=> "2003", "Score"=> 30, "Lead"=> 67],
+		// 	["Year"=> "2004", "Score"=> 40, "Lead"=> 676],
+		// 	["Year"=> "2005", "Score"=> 50, "Lead"=> 681],
+		// 	["Year"=> "2006", "Score"=> 60, "Lead"=> 620],
+		// 	["Year"=> "2007", "Score"=> 10, "Lead"=> 987],
+		// 	["Year"=> "2008", "Score"=> 90, "Lead"=> 89]
+		// ];
 
 		$lead_vs_score = $this->add('xepan\base\View_Chart');
 		$lead_vs_score->setChartType("Line");
 		$lead_vs_score->setLibrary("Morris");
-		$lead_vs_score->setXAxis('Year');
-		$lead_vs_score->setYAxis(['Score','Lead']);
-		$lead_vs_score->setData($tax_data);
+		$lead_vs_score->setXAxis('Date');
+		$lead_vs_score->setYAxis(['Lead Count','Score Count']);
+		$lead_vs_score->setData(array_values($lead_score_data));
 		$lead_vs_score->setOption('behaveLikeLine',true);
-		$lead_vs_score->setLabels(['Score', 'Lead']);
+		$lead_vs_score->setLabels(['Lead Count', 'Score Count']);
 
 		// GRAPH AND CHART VIEWS
 		$bar_chart = $this->add('xepan\marketing\View_BarChart');

@@ -1,23 +1,31 @@
 
 <div class="panel panel-default">
+  {$Content}
   <div class="panel-body">
-    <div class="col-md-12">{$form} </div>
+    <div class="col-md-12">
+    {form_layout}
+      <!-- <div class="col-md-6">Date Range{$range}</div> -->
+      <div class="col-md-3 atk-form-row">From Date{$from_date}</div>
+      <div class="col-md-3 atk-form-row">To Date{$to_date}</div>
+      <div class="col-md-3 atk-form-row">Group {$group}</div>
+      <div class="col-md-3 "></div>
+    {/}
+    </div>
   </div>
 </div>
 <div class="row xepan-push-large">
   <div class="panel panel-default">
     <div class="panel-body">
-      <div class="col-md-9">{$bar_chart}</div>
-      <div class="col-md-3">
-         
-        {$graph_stats}
+      <div class="col-md-6">{$lead_vs_score}</div>
+      <div class="col-md-6"> 
+        {$ratio_filter}
       </div>
     </div>
   </div>
 </div>
 <div class="row xepan-push-large">
   <div class="panel panel-default">
-    <div class="panel-body">{$social_lister}</div>
+    <div class="panel-body">{$hot_lead}</div>
   </div>
 </div>
 <div class="row xepan-push-large panel panel-default panel-body">

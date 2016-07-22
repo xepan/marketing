@@ -44,9 +44,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	function convert(){
 		$this['status']='Converted';
-
 		$this->app->employee
-			->addActivity("Converted Opportunity", $this->id, $this['lead_id'])
+			->addActivity("Converted Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 			->notifyWhoCan('reject,open','Converted');
 		$this->saveAndUnload();	
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
@@ -55,7 +54,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 	function reject(){
 		$this['status']='Rejected';
 		$this->app->employee
-			->addActivity("Rejected Opportunity", $this->id, $this['lead_id'])
+			->addActivity("Rejected Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 			->notifyWhoCan('convert,open','Rejected');
 		$this->saveAndUnload();
 		// $this->saveAs('xepan\marketing\Model_Opportunity');
@@ -64,7 +63,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 	function open(){
 		$this['status']='Open';
 		$this->app->employee
-			->addActivity("Opened Opportunity", $this->id, $this['lead_id'])
+			->addActivity("Opened Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 			->notifyWhoCan('reject,convert','Open');
 		$this->saveAndUnload();
 		// $this->saveAs('xepan\marketing\Model_Opportunity');

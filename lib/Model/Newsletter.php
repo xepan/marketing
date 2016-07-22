@@ -164,7 +164,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	function submit(){
 		$this['status']='Submitted';
         $this->app->employee
-            ->addActivity("Submitted Newsletter", $this->id)
+            ->addActivity("Newsletter '".$this['title']."' has been submitted ", $this->id)
             ->notifyWhoCan('reject,approve,test','Submitted');
         $this->saveAndUnload();    
 	}
@@ -172,7 +172,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	function reject(){
 		$this['status']='Rejected';
         $this->app->employee
-            ->addActivity("Rejected Newsletter", $this->id)
+            ->addActivity("Newsletter '".$this['title']."' rejected ", $this->id)
             ->notifyWhoCan('submit,test','Rejected');
         $this->saveAndUnload();     
 	}
@@ -180,7 +180,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	function approve(){
 		$this['status']='Approved';
         $this->app->employee
-            ->addActivity("Approved Newsletter", $this->id)
+            ->addActivity("Newsletter '".$this['title']."' approved ", $this->id)
             ->notifyWhoCan('reject,schedule,test','Approved');
 		$this->saveAndUnload(); 
 	}

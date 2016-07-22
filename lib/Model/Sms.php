@@ -16,15 +16,15 @@ class Model_Sms extends \xepan\marketing\Model_Content{
 	function submit(){
 		$this['status']='Submitted';
         $this->app->employee
-            ->addActivity("Submitted Sms", $this->id)
-            ->notifyWhoCan('approve,reject,test','Submitted');
+            ->addActivity("Sms '".$this['title']."' has been submitted ", $this->id)
+            ->notifyWhoCan('reject,approve,test','Submitted');
         $this->saveAndUnload();    
 	}
 
 	function reject(){
 		$this['status']='Rejected';
         $this->app->employee
-            ->addActivity("Rejected Sms", $this->id)
+            ->addActivity("Sms '".$this['title']."' rejected ", $this->id)
             ->notifyWhoCan('submit,test','Rejected');
         $this->saveAndUnload();     
 	}
@@ -32,8 +32,8 @@ class Model_Sms extends \xepan\marketing\Model_Content{
 	function approve(){
 		$this['status']='Approved';
         $this->app->employee
-            ->addActivity("Approved Sms", $this->id)
-            ->notifyWhoCan('schedule,reject,test','Approved');
+            ->addActivity("Sms '".$this['title']."' approved ", $this->id)
+            ->notifyWhoCan('reject,schedule,test','Approved');
 		$this->saveAndUnload(); 
 	}
 }

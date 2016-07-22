@@ -6,34 +6,59 @@ class page_dashboard extends \xepan\base\Page{
 	public $title = "Marketing Dashboard";
 	function init(){
 		parent::init();
-		// HEADER FORM
-		// $form = $this->add('Form',null,'form');
-		// $form->setLayout('view\dashboard_form');
-		// $form->addField('line','search','')->setAttr(['placeholder'=>'NLP Search']);
-		// $cat_d = $form->addField('dropdown','category','');
-		// $cat_d->setEmptyText('All');
-		// $cat_d->setModel('xepan\marketing\Model_MarketingCategory');
-		// $form->addField('line','daterange','')->setAttr(['placeholder'=>'Date range form field']);
 
-		// // HEADER FORM SUBMISSION
-		// if($form->isSubmitted()){
-		// 	throw new \Exception("SHOW RESULTS IN FRAME URL WITH GRAPHS");
-		// }
+		// HEADER FORM
+		$form = $this->add('Form',null,'form_layout');
+		$form->setLayout(['page\dashboard','form_layout']);
+		$field_from_date = $form->addField('DatePicker','from_date')->validate('required');
+		$field_to_date = $form->addField('DatePicker','to_date')->validate('required');
+		// $form->addField('DateRangePicker','range')->validate('required');
+		$field_group = $form->addField('dropdown','group')->setValueList(['Hours'=>'Hours','Date'=>'Date','Week'=>'Week','Month'=>'Month','Year'=>'Year'])->set('Week');
+		$form->addSubmit("Filter")->addClass('btn btn-primary');
+		if($form->isSubmitted()){
+			if(!$form['from_date'])
+				$form->error('from_date','must not be empty');
+			
+			if(!$form['to_date'])
+				$form->error('to_date','must not be empty');
+			
+			$form->app->redirect($this->app->url(null,['from_date'=>$form['from_date'],'to_date'=>$form['to_date'],'group'=>$form['group']]));
+		}
 
 		//GRAPH 1
 		// LEAD VS SCORE INCREMENT GRAPH
-		$from_date = "2001-01-01";
+
+		$custom_date = strtotime( date('Y-m-d', strtotime($this->app->today)) ); 
+		$week_start = date('Y-m-d', strtotime('this week last monday', $custom_date));
+		$week_end = date('Y-m-d', strtotime('this week next sunday', $custom_date));
+
+		$from_date = $week_start;
+		
+		if($this->app->stickyGET('from_date')){
+			$from_date = $_GET['from_date'];
+			$field_from_date->set($from_date);
+		}
+
 		$to_date = $this->app->today;
-		$group_by = "Month"; //'Date','Week','Month','Year','Hours'
+		if($_GET['to_date']){
+			$to_date = $_GET['to_date'];
+			$field_to_date->set($to_date);
+		}
+
+		$group_by = "Week"; //'Date','Week','Month','Year','Hours'
+		if($_GET['group']){
+			$group_by = $_GET['group'];
+			$field_group->set($group_by);
+		}
 
 		$lead_score_data=[];
-
 		// Calculating Lead Count
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		$lead->addCondition('created_at',">=",$from_date);
 		$lead->addCondition('created_at',"<=",$to_date);
 		$lead->addExpression('Date','DATE(created_at)');
-		$lead->addExpression('Month','MONTH(created_at)');
+		// $lead->addExpression('Month','MONTH(created_at)');
+		$lead->addExpression('Month','DATE_FORMAT(created_at,"%Y %M")');
 		$lead->addExpression('Year','YEAR(created_at)');
 		$lead->addExpression('Week','WEEK(created_at)');
 		$lead->addExpression('Hours','HOUR(created_at)');
@@ -49,7 +74,8 @@ class page_dashboard extends \xepan\base\Page{
 		$point_system->addCondition('created_at',">=",$from_date);
 		$point_system->addCondition('created_at',"<=",$to_date);
 		$point_system->addExpression('Date','DATE(created_at)');
-		$point_system->addExpression('Month','MONTH(created_at)');
+		$point_system->addExpression('Month','DATE_FORMAT(created_at,"%Y %M")');
+		// $point_system->addExpression('Month','MONTH(created_at)');
 		$point_system->addExpression('Year','YEAR(created_at)');
 		$point_system->addExpression('Week','WEEK(created_at)');
 		$point_system->addExpression('Hours','HOUR(created_at)');
@@ -80,7 +106,7 @@ class page_dashboard extends \xepan\base\Page{
 		// 	[$group_by=> "208", "Score"=> 90, "Lead"=> 89]
 		// ];
 
-		$lead_vs_score = $this->add('xepan\base\View_Chart');
+		$lead_vs_score = $this->add('xepan\base\View_Chart',null,'lead_vs_score');
 		$lead_vs_score->setChartType("Line");
 		$lead_vs_score->setLibrary("Morris");
 		$lead_vs_score->setXAxis($group_by);
@@ -88,7 +114,7 @@ class page_dashboard extends \xepan\base\Page{
 		$lead_vs_score->setData(array_values($lead_score_data));
 		$lead_vs_score->setOption('behaveLikeLine',true);
 		$lead_vs_score->setLabels(['Lead Count', 'Score Count']);
-
+		$lead_vs_score->setXLabelAngle(35);
 		// GRAPH AND CHART VIEWS
 		// $bar_chart = $this->add('xepan\marketing\View_BarChart');
 		// $graph_stats = $this->add('xepan\marketing\View_GraphStats',null,'graph_stats');
@@ -96,25 +122,27 @@ class page_dashboard extends \xepan\base\Page{
 		// HOT LEAD VIEW
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
-		
 		$lead->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
-			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')->addCondition('contact_id',$m->getElement('id'))->setLimit(1)->setOrder('date','desc');
-			return $q->expr("IFNULL([0],'".$this->app->now."')",[$landing_response->fieldQuery('date')]);
+			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')
+									->addCondition('contact_id',$m->getElement('id'))
+									->setLimit(1)
+									->setOrder('date','desc');
+			return $q->expr("[0]",[$landing_response->fieldQuery('date')]);
 		});
 
 		$lead->addExpression('last_communication_date_from_lead')->set(function($m,$q){
 			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('from_id',$m->getElement('id'))->addCondition('direction','In')->setLimit(1)->setOrder('created_at','desc');
-			return $q->expr("IFNULL([0],'".$this->app->now."')",[$communication->fieldQuery('created_at')]);
+			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
 		});
 
 		$lead->addExpression('last_communication_date_from_company')->set(function($m,$q){
 			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->getElement('id'))->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc');
-			return $q->expr("IFNULL([0],'".$this->app->now."')",[$communication->fieldQuery('created_at')]);
+			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
 		});
 
 		// current date - max from last_landing_from_lead, last_communication_form_lead or last_communication_form_employee
 		$lead->addExpression('days_ago')->set(function($m,$q){
-			return $q->expr("DATEDIFF([0], GREATEST([1],[2],[3]))",
+			return $q->expr("DATEDIFF([0], IFNULL(GREATEST([1],COALESCE([2],0),COALESCE([3],0)),[0]))",
 								[
 									'"'.$this->app->now.'"',
 									$m->getElement('last_landing_response_date_from_lead'),
@@ -130,10 +158,14 @@ class page_dashboard extends \xepan\base\Page{
 			return $q->expr('[0] * [1] * [2]',[$m->getElement('days_ago'),$m->getElement('score'),$k]);
 		});
 
+		$lead->addCondition('score','>',0);
+		$lead->setOrder('last_communication_date_from_company','desc');
+		$lead->setOrder('last_communication_date_from_lead','desc');
+		$lead->setOrder('last_landing_response_date_from_lead','desc');
+		$lead->setOrder('score','desc');
 		$lead->setOrder('priority','desc');
-
-		$lead->setLimit(10);
-		$this->add('Grid')->setModel($lead,['name','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
+		// $lead->setLimit(10);
+		$this->add('Grid',null,'hot_lead')->setModel($lead,['name','score','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
 
 		// SOCIAL ACTIVITY LISTER
 		// $social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');
@@ -150,8 +182,8 @@ class page_dashboard extends \xepan\base\Page{
 		// $campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
 	}
 
-	// function defaultTemplate(){
-	// 	return['page/dashboard'];
-	// }
+	function defaultTemplate(){
+		return['page/dashboard'];
+	}
 
 }

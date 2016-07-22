@@ -136,8 +136,8 @@ class page_dashboard extends \xepan\base\Page{
 		$lead->setOrder('last_communication_date_from_company','desc');
 		$lead->setOrder('last_communication_date_from_lead','desc');
 		$lead->setOrder('last_landing_response_date_from_lead','desc');
-		$lead->setOrder('priority','desc');
 		$lead->setOrder('score','desc');
+		$lead->setOrder('priority','desc');
 		// $lead->setLimit(10);
 		$this->add('Grid')->setModel($lead,['name','score','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
 

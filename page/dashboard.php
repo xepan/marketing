@@ -96,25 +96,27 @@ class page_dashboard extends \xepan\base\Page{
 		// HOT LEAD VIEW
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
-		
 		$lead->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
-			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')->addCondition('contact_id',$m->getElement('id'))->setLimit(1)->setOrder('date','desc');
-			return $q->expr("IFNULL([0],'".$this->app->now."')",[$landing_response->fieldQuery('date')]);
+			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')
+									->addCondition('contact_id',$m->getElement('id'))
+									->setLimit(1)
+									->setOrder('date','desc');
+			return $q->expr("[0]",[$landing_response->fieldQuery('date')]);
 		});
 
 		$lead->addExpression('last_communication_date_from_lead')->set(function($m,$q){
 			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('from_id',$m->getElement('id'))->addCondition('direction','In')->setLimit(1)->setOrder('created_at','desc');
-			return $q->expr("IFNULL([0],'".$this->app->now."')",[$communication->fieldQuery('created_at')]);
+			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
 		});
 
 		$lead->addExpression('last_communication_date_from_company')->set(function($m,$q){
 			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->getElement('id'))->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc');
-			return $q->expr("IFNULL([0],'".$this->app->now."')",[$communication->fieldQuery('created_at')]);
+			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
 		});
 
 		// current date - max from last_landing_from_lead, last_communication_form_lead or last_communication_form_employee
 		$lead->addExpression('days_ago')->set(function($m,$q){
-			return $q->expr("DATEDIFF([0], GREATEST([1],[2],[3]))",
+			return $q->expr("DATEDIFF([0], IFNULL(GREATEST([1],COALESCE([2],0),COALESCE([3],0)),[0]))",
 								[
 									'"'.$this->app->now.'"',
 									$m->getElement('last_landing_response_date_from_lead'),
@@ -130,10 +132,14 @@ class page_dashboard extends \xepan\base\Page{
 			return $q->expr('[0] * [1] * [2]',[$m->getElement('days_ago'),$m->getElement('score'),$k]);
 		});
 
+		$lead->addCondition('score','>',0);
+		$lead->setOrder('last_communication_date_from_company','desc');
+		$lead->setOrder('last_communication_date_from_lead','desc');
+		$lead->setOrder('last_landing_response_date_from_lead','desc');
 		$lead->setOrder('priority','desc');
-
-		$lead->setLimit(10);
-		$this->add('Grid')->setModel($lead,['name','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
+		$lead->setOrder('score','desc');
+		// $lead->setLimit(10);
+		$this->add('Grid')->setModel($lead,['name','score','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
 
 		// SOCIAL ACTIVITY LISTER
 		// $social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');

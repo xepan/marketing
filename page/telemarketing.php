@@ -24,11 +24,11 @@ class page_telemarketing extends \xepan\base\Page{
 									->addCondition('to_id',$g->model->id)
 									->setOrder('id','desc')
 									->tryLoadAny();
-															
- 			$g->current_row['last_communication']= substr($communication['description'],0,38).'...';
-			
-			if($communication['description'])
+
+			if($communication['description']){
+ 				$g->current_row['last_communication']= substr($communication['description'],0,41).'...';
 				$g->current_row['date']= $communication['created_at']; 			
+			}
  		});
 		
 		$view_lead->setModel($model_lead, ['name','type','city','contacts_str','score']);

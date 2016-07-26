@@ -47,6 +47,7 @@ class page_newsletter extends \xepan\base\Page{
 		});
 
 		$crud->grid->addHook('formatRow',function($g){			
+			$g->current_row_html['source_graph'] = substr($g->model['title'],0,49).'...';
 			$source_data = explode(",",$g->model['source_graph_data']);
 			$source_values=[];
 			$source_labels =[];

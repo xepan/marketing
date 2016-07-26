@@ -288,7 +288,7 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 		throw $this->exception('Define in extnding class');
 	}
 
-	function updateActivities($posting_model){
+	function updateActivities($posting_model){		
 		if(! $posting_model instanceof \xepan\marketing\Model_SocialPosting and !$posting_model->loaded())
 			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
 		
@@ -301,89 +301,68 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
   		$client->access_token = $user_model['access_token'];
 		$client->access_token_secret = $user_model['access_token_secret'];
 
-
-		$parameters=array();
-
-  		// likes
-  		$likes_count = 0;
-
-  		$post_id_returned_array = explode("-", $posting_model['postid_returned']);
-		$topic_id = $post_id_returned_array[count($post_id_returned_array)-1];
-		// echo "testing ". $posting_model['postid_returned'] .' '. count($post_id_returned_array).'<br/>';
-		if(count($post_id_returned_array) ==3){
-	  		// For network-updates
-			// UPDATE-384280894-5949163916801175552 Its a share/ network-update
-			$success = $client->CallAPI(
-					'http://api.linkedin.com/v1/people/~/network/updates/key='.$posting_model['postid_returned'].':(likes,update-comments)?format=json',
-					'GET', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $likes_comments, $headers);
-			$likes_comments = json_encode($likes_comments);
-			$likes_comments = json_decode($likes_comments,true);
-			// echo"<pre>";
-			// print_r($likes_comments);
-			// echo"</pre>";
-
-			$likes_count =$likes_comments['likes']['_total'];
-			$posting_model->updateLikesCount($likes_count);
-			if($likes_comments['updateComments']['_total']){
-				foreach ($likes_comments['updateComments']['values'] as $comment) {
-					$activity = $this->add('xepan/marketing/Model_Activity');
-					$activity->addCondition('posting_id',$posting_model->id);
-					$activity->addCondition('activityid_returned',$comment['id']);
-					$activity->tryLoadAny();
-
-					$activity['activity_type']='Comment';
-					$activity['activity_on']=date('Y-m-d H:i:s',$comment['timestamp']);
-					$activity['activity_by']=$comment['person']['id'].'_'.$comment['person']['firstName'] .' '. $comment['person']['lastName'];
-					$activity['name']=$comment['comment'];
-					$activity['action_allowed']="";
-					$activity->save();
-				}
-			}
-
+		
+		// get comment and like of share of company page
+		if( explode("_",$posting_model['post_type'])[0] === "Page" ){
+			$company_id = explode("-",$posting_model['postid_returned']);
+			$company_id = substr($company_id[1], 1);
+			// to get only comments
+			// $path = '/v1/companies/'.$company_id.'/updates/key='.$posting_model['postid_returned'].'/updat-comment?format=json';
+			$path = '/v1/companies/'.$company_id.'/updates/key='.$posting_model['postid_returned'].'/?format=json';
 		}else{
-	  		// For group posts
-	  		$post_id_array = explode("/",$posting_model['group_id']);
-	  		$post_id= $post_id_array[count($post_id_array)-1];
+			throw new \Exception("on wall of linkedini page todo ");
+		}
+		
+		$client = new \GuzzleHttp\Client(['base_uri'=>'https://api.linkedin.com']);
+		$response = $client->request( 'GET',$path,
+						[
+	        				'headers' => [
+	        							"Authorization" => "Bearer " . $user_model['access_token'],
+	                    				"Content-Type" => "application/json",
+	                            		"x-li-format"=>"json"
+	                            	],
+	        				'client_id' => $config_model['app_id'],
+	    				]);
+		$stream = $response->getBody();
+		// std class object
+		$response_data = json_decode((string)$stream);
 
-			$success = $client->CallAPI(
-								'http://api.linkedin.com/v1/posts/'.$post_id.':(id,type,category,creator,title,summary,creation-timestamp,relation-to-viewer:(is-following,is-liked,available-actions),likes,comments,attachment,site-group-post-url)?format=json',
-								'GET', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $group_post_details, $headers_2);
-			$group_post_details = json_encode($group_post_details);
-			$group_post_details = json_decode($group_post_details,true);
-			// echo"<pre>";
-			// print_r($group_post_details);
-			// echo"</pre>";
-			// exit;
-			// echo "Found likes ".$group_post_details['likes']['_total'];
-			// save likes count
-			if(isset($group_post_details['likes']))
-				$posting_model->updateLikesCount($group_post_details['likes']['_total']);
+		$response_comments = $response_data->updateComments;
+		$response_likes = $response_data->likes;
+		
+		// echo "<pre>";
+		// print_r($response_data);
+		// updating comments
+		if(isset($response_comments->values)){
+			$comments = $response_comments->values;
+			foreach ($comments as $key => $comment) {
+				$activity = $this->add('xepan/marketing/Model_SocialPosters_Base_SocialActivity');
+				$activity->addCondition('posting_id',$posting_model->id);
+				$activity->addCondition('activityid_returned',$comment->id);
+				$activity->addCondition('activity_type',"Comment");
+				$activity->tryLoadAny();
 
-			// echo "passed";
-			// save shares count
-			// save all comments
-			if(isset($group_post_details['comments']) and $group_post_details['comments']['_total']){
-				foreach ($group_post_details['comments']['values'] as $comment) {
-					$activity = $this->add('xepan/marketing/Model_Activity');
-					$activity->addCondition('posting_id',$posting_model->id);
-					$activity->addCondition('activityid_returned',$comment['id']);
-					$activity->tryLoadAny();
+				// converting milisecond time stamp to date format
+				$mil = $comment->timestamp;
+				$seconds = $mil / 1000;
+				$date = date("Y-m-d H:i:s", $seconds);
 
-					$activity['activity_type']='Comment';
-					$activity['activity_on']=date('Y-m-d H:i:s',$comment['creationTimestamp']);
-					$activity['activity_by']=$comment['creator']['id'].'_'.$comment['creator']['firstName'] .' '. $comment['creator']['lastName'];
-					$activity['name']=$comment['text'];
-					if($comment['relationToViewer']['availableActions']['_total']){
-						$action_allowed = array();
-						foreach ($comment['relationToViewer']['availableActions']['values'] as $acts) {
-							$action_allowed[] = $acts['code'];
-						}
-						$activity['action_allowed']=implode(" ", $action_allowed);
-					}
-					$activity->save();
+				$activity['activity_on'] = $date;
+
+				$activity['name'] = $comment->comment;
+
+				if(isset($comment->person)){
+					$activity['activity_by'] = $comment->person->id." - ".$comment->person->firstName." ".$comment->person->lastName." ( ".$comment->person->headline." )";
+				}elseif(isset($comment->company)){
+					$activity['activity_by'] = $comment->company->id." - ".$comment->company->name;
 				}
+				$activity->save();
 			}
 		}
+
+		// updating likes
+		$posting_model->updateLikesCount($response_likes->_total);
+
 	}
 
 	function comment($posting_model,$msg){

@@ -18,6 +18,18 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
 		$view_lead->js('reload')->reload();
+
+		$view_lead->addHook('formatRow',function($g){
+ 			$communication = $this->add('xepan\marketing\Model_TeleCommunication')
+									->addCondition('to_id',$g->model->id)
+									->setOrder('id','desc')
+									->tryLoadAny();
+
+			if($communication['description']){
+ 				$g->current_row['last_communication']= substr($communication['description'],0,41).'...';
+				$g->current_row['date']= $communication['created_at']; 			
+			}
+ 		});
 		
 		$view_lead->setModel($model_lead, ['name','type','city','contacts_str','score']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
@@ -43,8 +55,6 @@ class page_telemarketing extends \xepan\base\Page{
 		/*
 				FORM FOR ADDING CONVERSATION 
 		*/
-
-
 
 		$model_telecommunication = $this->add('xepan\marketing\Model_TeleCommunication');
 		$view_teleform = $this->add('View',null,'top');

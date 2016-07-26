@@ -160,7 +160,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function submit(){
 		$this['status']='Submitted';
         $this->app->employee
-            ->addActivity("Submitted Campaign", $this->id,null)
+            ->addActivity("Submitted Campaign", $this->id,null,null,null,"xepan_marketing_subscriberschedule&campaign_id=".$this->id."")
             ->notifyWhoCan('approve,redesign','Submitted',$this);
         $this->saveAndUnload();    
 	}
@@ -168,7 +168,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function redesign(){
 		$this['status']='Redesign';
         $this->app->employee
-            ->addActivity("Rejected Campaign", $this->id,null)
+            ->addActivity("Rejected Campaign", $this->id,null,null,null,"xepan_marketing_subscriberschedule&campaign_id".$this->id."")
             ->notifyWhoCan('submit,schedule','Redesign',$this);
         $this->saveAndUnload();     
 	}
@@ -177,7 +177,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function onhold(){
 		$this['status']='Onhold';
         $this->app->employee
-            ->addActivity("Put Campaign onhold", $this->id,null)
+            ->addActivity("Put Campaign onhold", $this->id,null,null,null,"xepan_marketing_subscriberschedule&campaign_id".$this->id."")
             ->notifyWhoCan('redesign','Onhold',$this);
 		$this->saveAndUnload(); 	
 		
@@ -186,7 +186,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 	function approve(){
 		$this['status']='Approved';
         $this->app->employee
-            ->addActivity("Approved Campaign", $this->id,null)
+            ->addActivity("Approved Campaign", $this->id,null,null,null,"xepan_marketing_subscriberschedule&campaign_id".$this->id."")
             ->notifyWhoCan('redesign,onhold','Approved',$this);
 		$this->saveAndUnload(); 
 	}

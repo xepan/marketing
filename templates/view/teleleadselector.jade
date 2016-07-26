@@ -32,13 +32,17 @@
                             {$name}
                       .user-subhead
                         h6 [{city}{/}] - [{$type}]
+                      div  
+                        small.text-muted {$last_communication} 
+                      div
+                        small.text-muted{$date}
                     td {$contacts_str} 
                     td {score}xyz{/}
                         a#lead(href='' data-id="{$id}")
                             .area-hidden(style="display: none;") {$name}
                             span.fa-stack
                                 i.fa.fa-square.fa-stack-2x
-                                i.fa-phone.fa.fa-stack-1x.fa-inverse
+                                i.fa-phone.fa.fa-stack-1x.fa-inverse            
                     {/}
                 {/}{/}
                 {not_found}

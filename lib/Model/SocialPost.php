@@ -50,7 +50,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 	function submit(){
 		$this['status']='Submitted';
         $this->app->employee
-            ->addActivity("Submitted Newsletter", $this->id)
+        	->addActivity("'".$this['title']."' named social post has been submitted ", $this->id,null,null,null,"xepan_marketing_socialpost&post_id=".$this->id."")
             ->notifyWhoCan('approve,reject,test','Submitted');
         $this->saveAndUnload();    
 	}
@@ -58,7 +58,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 	function reject(){
 		$this['status']='Rejected';
         $this->app->employee
-            ->addActivity("Rejected Newsletter", $this->id)
+        	->addActivity("'".$this['title']."' named social post rejected ", $this->id,null,null,null,"xepan_marketing_socialpost&post_id=".$this->id."")
             ->notifyWhoCan('submit,test','Rejected');
         $this->saveAndUnload();     
 	}
@@ -66,7 +66,7 @@ class Model_SocialPost extends \xepan\marketing\Model_Content{
 	function approve(){
 		$this['status']='Approved';
         $this->app->employee
-            ->addActivity("Approved Newsletter", $this->id)
+        	->addActivity("'".$this['title']."' named social post approved ", $this->id,null,null,null,"xepan_marketing_socialpost&post_id=".$this->id."")
             ->notifyWhoCan('schedule,reject,test','Approved');
 		$this->saveAndUnload(); 
 	}

@@ -180,6 +180,7 @@ class page_dashboard extends \xepan\base\Page{
 		$lead_score_grid = $this->add('xepan\base\Grid',null,'ratio_filter',['view\leadscore']);	
 		$lead_score_grid->setModel($lead,['name','score'])->setOrder('id','desc');
 		$lead_score_grid->addPaginator(5);
+		$lead_score_grid->template->trySet('heading','Recent Scores');
 		
 	}
 

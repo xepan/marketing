@@ -116,9 +116,6 @@ class page_dashboard extends \xepan\base\Page{
 		$lead_vs_score->setLabels(['Lead Count', 'Score Count']);
 		$lead_vs_score->setXLabelAngle(35);
 		// GRAPH AND CHART VIEWS
-		// $bar_chart = $this->add('xepan\marketing\View_BarChart');
-		// $graph_stats = $this->add('xepan\marketing\View_GraphStats',null,'graph_stats');
-		
 		// HOT LEAD VIEW
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
@@ -180,6 +177,8 @@ class page_dashboard extends \xepan\base\Page{
 		// // CAMPAIGN REPONSE
 		// $campaign_response = $this->add('xepan\hr\Grid',null,'campaign_response',['view/campaignresponse']);
 		// $campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
+		$lead_score_grid = $this->add('Grid',null,'ratio_filter',null);	
+		$lead_score_grid->setModel($lead,['name','count','last_communication_date_from_company'])->setLimit(5);
 	}
 
 	function defaultTemplate(){

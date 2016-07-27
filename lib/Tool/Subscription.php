@@ -35,8 +35,25 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 			$ei = $this->add('xepan\base\Model_Contact_Email');
 			$ei->tryLoadBy('value',$form['email']);
 
-			if($ei->loaded())				
-				return $form->js()->univ()->errorMessage('Already Subscribed')->execute();
+			if($ei->loaded()){
+				
+				$l_id = $ei['contact_id'];
+				$l_model = $this->add('xepan\marketing\Model_Lead')->load($l_id);
+				$cat_arr = $l_model->getAssociatedCategories();
+
+				$cat_diff = array_merge(array_diff($cat_arr, $selected_category),array_diff($selected_category, $cat_arr));
+				if(!count($cat_diff))
+					return $form->js()->univ()->errorMessage('Already Subscribed')->execute();
+								
+				foreach ($cat_diff as $category) {					
+					$association = $this->add('xepan\marketing\Model_Lead_Category_Association');
+					
+					$association['lead_id'] = $l_model->id;
+					$association['marketing_category_id'] = $category;  
+					$association->save();
+					return $form->js()->univ()->successMessage('Done')->execute();
+				}
+			}				
 
 			$lead = $this->add('xepan\marketing\Model_Lead');
 			

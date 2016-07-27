@@ -13,7 +13,7 @@ class SocialPosters_Linkedin_LinkedinConfig extends \xepan\marketing\Model_Socia
 
 		$this->getElement('social_app')->defaultValue('Linkedin');
 		$this->addCondition('social_app','Linkedin');
-
+		$this->addCondition('type','SocialPosters_Linkedin_LinkedinConfig');
 	}
 
 	function page_login_url($page){

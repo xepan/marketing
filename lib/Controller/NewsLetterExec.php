@@ -156,6 +156,9 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 				foreach ($dom['a'] as $anchor){
 					$a = $pq->pq($anchor);
+					echo 'lead'.$lead['document_id'];
+					throw new \Exception($lead['document_id']);
+					
 					$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
 					$a->attr('href',$url);
 				}

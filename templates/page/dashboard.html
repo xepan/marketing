@@ -1,15 +1,12 @@
 
-<div class="panel panel-default">
-  {$Content}
+<div class="panel panel-default">{$Content}
   <div class="panel-body">
-    <div class="col-md-12">
-    {form_layout}
-      <!-- <div class="col-md-6">Date Range{$range}</div> -->
+    <div class="col-md-12">{form_layout}
+      <!-- <div class="col-md-6">Date Range{$range}</div>-->
       <div class="col-md-3 atk-form-row">From Date{$from_date}</div>
       <div class="col-md-3 atk-form-row">To Date{$to_date}</div>
       <div class="col-md-3 atk-form-row">Group {$group}</div>
-      <div class="col-md-3 "></div>
-    {/}
+      <div class="col-md-3"></div>    {/}
     </div>
   </div>
 </div>
@@ -17,9 +14,7 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="col-md-6">{$lead_vs_score}</div>
-      <div class="col-md-6"> 
-        {$ratio_filter}
-      </div>
+      <div class="col-md-6">{$ratio_filter}</div>
     </div>
   </div>
 </div>
@@ -29,10 +24,7 @@
   </div>
 </div>
 <div class="row xepan-push-large panel panel-default panel-body">
-  <div class="col-md-5">
-       
-    {$map}    
-  </div>
+  <div class="col-md-5">{$map}</div>
   <div class="col-md-6">{$lead_response}         </div>
 </div>
 <div class="row xepan-push-large">{$campaign_response}</div>

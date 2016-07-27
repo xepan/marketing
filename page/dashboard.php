@@ -7,13 +7,18 @@ class page_dashboard extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		$from_date = date("Y-m-d", strtotime('-1 months', strtotime($this->app->today))); 		
+		$custom_date = strtotime(date("Y-m-d", strtotime('-1 month', strtotime($this->app->today)))); 		
+		$week_start = date('Y-m-d', strtotime('this week last monday', $custom_date));
+		$week_end = date('Y-m-d', strtotime('this week next sunday', $custom_date));
+		
 		// HEADER FORM
 		$form = $this->add('Form',null,'form_layout');
 		$form->setLayout(['page\dashboard','form_layout']);
-		$field_from_date = $form->addField('DatePicker','from_date')->validate('required');
-		$field_to_date = $form->addField('DatePicker','to_date')->validate('required');
+		$field_from_date = $form->addField('DatePicker','from_date')->validate('required')->set($custom_date);
+		$field_to_date = $form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
 		// $form->addField('DateRangePicker','range')->validate('required');
-		$field_group = $form->addField('dropdown','group')->setValueList(['Hours'=>'Hours','Date'=>'Date','Week'=>'Week','Month'=>'Month','Year'=>'Year'])->set('Week');
+		$field_group = $form->addField('dropdown','group')->setValueList(['Hours'=>'Hours','Date'=>'Date','Week'=>'Week','Month'=>'Month','Year'=>'Year'])->set('Date');
 		$form->addSubmit("Filter")->addClass('btn btn-primary');
 		if($form->isSubmitted()){
 			if(!$form['from_date'])
@@ -27,12 +32,6 @@ class page_dashboard extends \xepan\base\Page{
 
 		//GRAPH 1
 		// LEAD VS SCORE INCREMENT GRAPH
-
-		$custom_date = strtotime( date('Y-m-d', strtotime($this->app->today)) ); 
-		$week_start = date('Y-m-d', strtotime('this week last monday', $custom_date));
-		$week_end = date('Y-m-d', strtotime('this week next sunday', $custom_date));
-
-		$from_date = $week_start;
 		
 		if($this->app->stickyGET('from_date')){
 			$from_date = $_GET['from_date'];
@@ -45,7 +44,7 @@ class page_dashboard extends \xepan\base\Page{
 			$field_to_date->set($to_date);
 		}
 
-		$group_by = "Week"; //'Date','Week','Month','Year','Hours'
+		$group_by = "Date"; //'Date','Week','Month','Year','Hours'
 		if($_GET['group']){
 			$group_by = $_GET['group'];
 			$field_group->set($group_by);
@@ -116,9 +115,6 @@ class page_dashboard extends \xepan\base\Page{
 		$lead_vs_score->setLabels(['Lead Count', 'Score Count']);
 		$lead_vs_score->setXLabelAngle(35);
 		// GRAPH AND CHART VIEWS
-		// $bar_chart = $this->add('xepan\marketing\View_BarChart');
-		// $graph_stats = $this->add('xepan\marketing\View_GraphStats',null,'graph_stats');
-		
 		// HOT LEAD VIEW
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
@@ -181,6 +177,11 @@ class page_dashboard extends \xepan\base\Page{
 		// // CAMPAIGN REPONSE
 		// $campaign_response = $this->add('xepan\hr\Grid',null,'campaign_response',['view/campaignresponse']);
 		// $campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
+		$lead_score_grid = $this->add('xepan\base\Grid',null,'ratio_filter',['view\leadscore']);	
+		$lead_score_grid->setModel($lead,['name','score'])->setOrder('id','desc');
+		$lead_score_grid->addPaginator(5);
+		$lead_score_grid->template->trySet('heading','Recent Scores');
+		
 	}
 
 	function defaultTemplate(){

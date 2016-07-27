@@ -118,6 +118,7 @@ class page_dashboard extends \xepan\base\Page{
 		// HOT LEAD VIEW
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		
+		
 		$lead->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
 			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')
 									->addCondition('contact_id',$m->getElement('id'))
@@ -161,7 +162,7 @@ class page_dashboard extends \xepan\base\Page{
 		$lead->setOrder('score','desc');
 		$lead->setOrder('priority','desc');
 		// $lead->setLimit(10);
-		$this->add('Grid',null,'hot_lead')->setModel($lead,['name','score','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
+		$this->add('xepan\hr\Grid',null,'hot_lead',['view\dashboard\hot-lead-grid'])->setModel($lead,['name','score','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
 
 		// SOCIAL ACTIVITY LISTER
 		// $social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');

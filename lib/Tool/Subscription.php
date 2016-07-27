@@ -35,8 +35,8 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 			$ei = $this->add('xepan\base\Model_Contact_Email');
 			$ei->tryLoadBy('value',$form['email']);
 
-			if($ei->loaded())
-				return $form->js()->univ()->errorMessage('Already Subscribed');
+			if($ei->loaded())				
+				return $form->js()->univ()->errorMessage('Already Subscribed')->execute();
 
 			$lead = $this->add('xepan\marketing\Model_Lead');
 			

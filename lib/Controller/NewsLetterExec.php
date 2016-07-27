@@ -37,7 +37,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 		$schedule_j->addField('schedule_date','date');
 		$schedule_j->addField('schedule_day','day');
-
+		
 		// May be this is done by 'last_sent_newsletter_from_schedule_row_days' expression
 		// $comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
 		// $comm_j->addField('communication_date','created_at');
@@ -134,6 +134,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 				// throw new \Exception($lead->id, 1);
 				$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 				$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
+				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
 				// $email_lead=$this->add('xepan\marketing\Model_Lead')->load($lead->id);
 				$emails = $lead->getEmails();
 			    $subject = $lead['document'] ;		    		    
@@ -155,10 +156,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 				$dom = $pq->newDocument($email_body);
 
 				foreach ($dom['a'] as $anchor){
-					$a = $pq->pq($anchor);
-					echo 'lead'.$lead['document_id'];
-					throw new \Exception($lead['document_id']);
-					
+					$a = $pq->pq($anchor);					
 					$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$lead->id,'xepan_landing_campaign_id'=>$lead['lead_campaing_id'],'xepan_landing_content_id'=>$lead['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
 					$a->attr('href',$url);
 				}

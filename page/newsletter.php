@@ -46,8 +46,21 @@ class page_newsletter extends \xepan\base\Page{
 				return $js->univ()->dialogURL("NEWSLETTER PREVIEW",$this->api->url($vp->getURL(),['newsletter_id'=>$data['id']]));
 		});
 
-		$crud->grid->addHook('formatRow',function($g){			
+		$crud->grid->addHook('formatRow',function($g){
+			$com = $this->add('xepan\communication\Model_Communication');
+			$com->addCondition('related_document_id',$g->model->id);
+			$sent = $com->count()->getOne();
+			$g->current_row_html['total_sent'] = $sent;
 			$g->current_row_html['source_graph'] = 'Subject: '.substr($g->model['title'],0,49).'...';
+			
+			if($g->model['total_visitor'] == 0)
+				$g->current_row_html['success_ratio'] = '0';
+			else{
+				$sr = round(($sent/$g->model['total_visitor'])*100);
+				$g->current_row_html['success_ratio'] = $sr;
+			}
+				
+			
 			$source_data = explode(",",$g->model['source_graph_data']);
 			$source_values=[];
 			$source_labels =[];

@@ -13,7 +13,6 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function landingResponse(){		
-		echo "GET".$_GET['xepan_landing_content_id'];
 		$model_landingresponse = $this->add('xepan\marketing\Model_LandingResponse');
 		$model_landingresponse['contact_id'] = $_GET['xepan_landing_contact_id'];
 		$model_landingresponse['campaign_id'] = $_GET['xepan_landing_campaign_id'];

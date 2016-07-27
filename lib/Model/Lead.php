@@ -293,7 +293,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			$dom = $pq->newDocument($email_body);
 			foreach ($dom['a'] as $anchor){
 				$a = $pq->pq($anchor);
-				$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$this->id,'xepan_landing_campaign_id'=>$this['lead_campaing_id'],'xepan_landing_content_id'=>$this['document_id'],'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
+				$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$this->id,'xepan_landing_campaign_id'=>$this['lead_campaing_id'],'xepan_landing_content_id'=>$newsletter_model->id,'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
 				$a->attr('href',$url);
 			}
 			$email_body = $dom->html();
@@ -310,6 +310,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					$mail->addTo($email);
 			}
 			
+			$mail['related_document_id'] = $newsletter_model->id;
 			$mail->setSubject($subject_v->getHtml());
 			$mail->setBody($body_v->getHtml());
 			$mail->send($email_settings);

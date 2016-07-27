@@ -1,0 +1,47 @@
+
+<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+  <header class="main-box-header clearfix atk-actions  {$class} ">
+    <div style="100%" class="filter-block">
+      <div class="pull-right">{$grid_buttons} </div>
+      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
+    </div>
+  </header>{/Pannel}
+  <div class="main-box-body clearfix table-responsive">
+    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
+      <thead class="xepan-hover-hand">{cols}{col}
+        <th>Name</th>
+        <th>Score</th>
+        <th>Days Ago</th>
+        <th>Priority</th>
+        <th>Last Landing Response</th>
+        <th>Last Communication Date</th>
+        <th>Last Communication Date</th>{/}{/}
+      </thead>{/}
+      {$subheader}
+      <tbody>{rows}{row}
+        <tr data-id="{$id}" class="{$odd_even}">{cols}
+          <td style="cursor:pointer; cursor: hand; max-width:600px;" onclick="javascript:$.univ().frameURL('Document Detail','?page=xepan_marketing_leaddetails&amp;contact_id={$id}');">{$name}</td>
+          <td>{$score}</td>
+          <td>{$days_ago}</td>
+          <td>{$priority}</td>
+          <td>{$last_landing_response_date_from_lead}</td>
+          <td>{$last_communication_date_from_lead}</td>
+          <td>{$last_communication_date_from_company}</td>{/}
+        </tr>{/}{/}
+        {not_found}
+        <div class="row">
+          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+        </div>{/}
+      </tbody>{totals}
+      <tfoot>
+        <tr class="totals">
+          {cols}{col}
+          <td {$tdparam}>
+          {$content}
+          </td>
+          {/}{/}
+        </tr>
+      </tfoot>{/}
+    </table>{$Paginator}
+  </div>
+</div>

@@ -32,6 +32,12 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		$form->addSubmit($this->options['submit_button_name'])->addClass('btn btn-primary btn-block');
 		
 		if($form->isSubmitted()){
+			$ei = $this->add('xepan\base\Model_Contact_Email');
+			$ei->tryLoadBy('value',$form['email']);
+
+			if($ei->loaded())
+				return $form->js()->univ()->errorMessage('Already Subscribed');
+
 			$lead = $this->add('xepan\marketing\Model_Lead');
 			
 			try{

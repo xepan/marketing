@@ -367,39 +367,50 @@ class SocialPosters_Linkedin extends SocialPosters_Base_Social{
 
 	function comment($posting_model,$msg){
 
-		if(! $posting_model instanceof xepan/marketing\Model_SocialPosting and !$posting_model->loaded())
-			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting','Growl');
+		if(! $posting_model instanceof \xepan\marketing\Model_SocialPosters_Base_SocialPosting and !$posting_model->loaded())
+			throw $this->exception('Posting Model must be a loaded instance of Model_SocialPosting');
 
 		$user_model = $posting_model->ref('user_id');
 		$config_model = $user_model->ref('config_id');
 
-		$this->setup_client($config_model->id);
+		$this->setup_client($config_model,$user_model);
 
   		$client = $this->client;
   		$client->access_token = $user_model['access_token'];
 		$client->access_token_secret = $user_model['access_token_secret'];
 
+
 		$parameters = new \stdClass;
-
-		if($posting_model['post_type']=='shares'){
-			// echo "i m share";
-			$parameters->comment = $msg;
-			$success = $client->CallAPI(
-					'http://api.linkedin.com/v1/people/~/network/updates/key='.$posting_model['postid_returned'].'/update-comments?format=json',
-					'POST', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $likes_comments, $headers);
+		// $parameters->visibility = new \stdClass;
+		// $parameters->visibility->code = 'anyone';
+  		$parameters->comment = $msg;
+  		
+  		if( explode("_",$posting_model['post_type'])[0] === "Page" ){
+			$company_id = explode("-",$posting_model['postid_returned']);
+			$company_id = substr($company_id[1], 1);
+			// https://api.linkedin.com/v1/companies/2414183/updates/key=UPDATE-c2414183-5986959985467285504/update-comments-as-company/
+			$url = '/v1/companies/'.$company_id.'/updates/key='.$posting_model['postid_returned'].'/update-comments-as-company';
 		}else{
-			// 	Group Post
-
-			$post_id_array = explode("/",$posting_model['group_id']);
-	  		$post_id= $post_id_array[count($post_id_array)-1];
-
-			$parameters->text = $msg;
-			$success = $client->CallAPI(
-					'http://api.linkedin.com/v1/posts/'.$post_id.'/comments?format=json',
-					'POST', $parameters, array('FailOnAccessError'=>true, 'RequestContentType'=>'application/json'), $likes_comments, $headers);
+			throw new \Exception("comment only applied on page share");
 		}
-		$success = $client->Finalize($success);
 
+		$body_json = json_encode($parameters, true);
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.linkedin.com']);
+		$response = $client->request( 'POST',$url,
+						[
+	        				'headers'=> [
+	        							"Authorization" => "Bearer " . $user_model['access_token'],
+	                    				"Content-Type" => "application/json",
+	                            		"x-li-format"=>"json"
+	                            	],
+	        				'client_id' => $config_model['app_id'],
+	       	 				'body'      => $body_json
+	    				]);
+
+		// $stream = $response->getBody();
+		// // std class object
+		// $response_data = json_decode((string)$stream);
+		$this->updateActivities($posting_model);
 	}
 
 	function get_post_fields_using(){

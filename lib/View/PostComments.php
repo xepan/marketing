@@ -28,7 +28,7 @@ class View_PostComments extends \View{
 			try{
 				$social_posters = $this->add('xepan\marketing\SocialPosters_'.$social_posting_model['social_app']);
 				$social_posters->comment($social_posting_model,$form['comment']);
-				$form->js()->univ()->successMessage("commentd")->execute();
+				$form->js()->univ()->successMessage("commented")->execute();
 			}catch(Excepiton $e){
 				throw new \Exception($e);
 			}

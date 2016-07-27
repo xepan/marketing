@@ -132,6 +132,7 @@ class page_dashboard extends \xepan\base\Page{
 			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
 		});
 
+
 		$lead->addExpression('last_communication_date_from_company')->set(function($m,$q){
 			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->getElement('id'))->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc');
 			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
@@ -162,8 +163,30 @@ class page_dashboard extends \xepan\base\Page{
 		$lead->setOrder('score','desc');
 		$lead->setOrder('priority','desc');
 		// $lead->setLimit(10);
-		$this->add('xepan\hr\Grid',null,'hot_lead',['view\dashboard\hot-lead-grid'])->setModel($lead,['name','score','days_ago','priority','last_landing_response_date_from_lead','last_communication_date_from_lead','last_communication_date_from_company']);
 
+		$hot_lead_grid = $this->add('xepan\hr\Grid',null,'hot_lead',['view\dashboard\hot-lead-grid']);
+		
+		$hot_lead_grid->addHook('formatRow',function($g){
+			$xdate = $this->add('xepan\base\xDate');
+			$reponse_lead_date = $xdate->diff(
+								date("Y-m-d H:i:s",strtotime($g->app->now)),
+								date('Y-m-d H:i:s',strtotime($g->model['last_landing_response_date_from_lead']?:$g->model['created_at']))
+							);
+
+			$reponse_communication_lead_date = $xdate->diff(
+								date("Y-m-d H:i:s",strtotime($g->app->now)),
+								date('Y-m-d H:i:s',strtotime($g->model['last_communication_date_from_lead']?:$g->model['created_at']))
+							);	
+
+			$reponse_communication_company_date = $xdate->diff(
+								date("Y-m-d H:i:s",strtotime($g->app->now)),
+								date('Y-m-d H:i:s',strtotime($g->model['last_communication_date_from_company']?:$g->model['created_at']))
+							);				
+			$g->current_row_html['landing_response_date_from_lead'] = $reponse_lead_date;
+			$g->current_row_html['communication_date_from_lead'] = $reponse_communication_lead_date;
+			$g->current_row_html['communication_date_from_company'] = $reponse_communication_company_date;
+		});
+		$hot_lead_grid->setModel($lead,['name','score','days_ago','priority','landing_response_date_from_lead','communication_date_from_lead','communication_date_from_company']);
 		// SOCIAL ACTIVITY LISTER
 		// $social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');
 		// $social_lister->setModel('xepan\marketing\SocialPosters_Base_SocialConfig');
@@ -178,7 +201,7 @@ class page_dashboard extends \xepan\base\Page{
 		// $campaign_response = $this->add('xepan\hr\Grid',null,'campaign_response',['view/campaignresponse']);
 		// $campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
 		$lead_score_grid = $this->add('xepan\base\Grid',null,'ratio_filter',['view\leadscore']);	
-		$lead_score_grid->setModel($lead,['name','score'])->setOrder('id','desc');
+		$lead_score_grid->setModel($lead)->setOrder('id','desc');
 		$lead_score_grid->addPaginator(5);
 		$lead_score_grid->template->trySet('heading','Recent Scores');
 		

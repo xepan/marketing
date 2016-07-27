@@ -48,6 +48,11 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 				
 				$lead->save();
 
+				$point_system = $this->add('xepan\base\Model_PointSystem');	
+				$point_system['score'] = '50';
+				$point_system['created_at'] = $this->app->now;
+				$point_system['contact_id'] = $lead->id;
+
 				foreach ($selected_category as $cat) {					
 					$assoc = $this->add('xepan\marketing\Model_Lead_Category_Association');
 					

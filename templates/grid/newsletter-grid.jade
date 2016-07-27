@@ -25,8 +25,8 @@
                 iframe(src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}', style=' max-height: 300px; height: 300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);', frameborder='0')
               .project-box-footer.clearfix
                 a(href='#')
-                  span.sparkline.source_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$source_graph}  
-                  span.text-success   Score    
+                  span.label.text-center(style="height:50px; max-height:50px; font-size:25px;") {$total_sent} : {$total_visitor}
+                  span.text-success Ratio    
                 a(href='#')
                   span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
                   span.text-success   Timings   

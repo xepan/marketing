@@ -134,6 +134,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 				// throw new \Exception($lead->id, 1);
 				$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 				$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
+				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
 				// $email_lead=$this->add('xepan\marketing\Model_Lead')->load($lead->id);
 				$emails = $lead->getEmails();
 			    $subject = $lead['document'] ;		    		    

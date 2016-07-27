@@ -310,6 +310,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					$mail->addTo($email);
 			}
 			
+			$mail['related_document_id'] = $newsletter_model->id;
 			$mail->setSubject($subject_v->getHtml());
 			$mail->setBody($body_v->getHtml());
 			$mail->send($email_settings);

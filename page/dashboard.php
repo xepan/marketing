@@ -185,7 +185,7 @@ class page_dashboard extends \xepan\base\Page{
 		// $campaign_response = $this->add('xepan\hr\Grid',null,'campaign_response',['view/campaignresponse']);
 		// $campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
 		$lead_score_grid = $this->add('xepan\base\Grid',null,'ratio_filter',['view\leadscore']);	
-		$lead_score_grid->setModel($lead,['name','score','last_communication_date_from_company'])->setOrder('id','desc')->setLimit(5);
+		$lead_score_grid->setModel($lead,['name','score','medium'])->setOrder('id','desc')->setLimit(5);
 	}
 
 	function defaultTemplate(){

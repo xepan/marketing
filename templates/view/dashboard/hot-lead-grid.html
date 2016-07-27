@@ -14,8 +14,8 @@
         <th>Days Ago</th>
         <th>Priority</th>
         <th>Last Landing Response</th>
-        <th>Last Communication Date</th>
-        <th>Last Communication Date</th>{/}{/}
+        <th>Lead Responded</th>
+        <th>Company Responded</th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -24,9 +24,9 @@
           <td>{$score}</td>
           <td>{$days_ago}</td>
           <td>{$priority}</td>
-          <td>{$last_landing_response_date_from_lead}</td>
-          <td>{$last_communication_date_from_lead}</td>
-          <td>{$last_communication_date_from_company}</td>{/}
+          <td>{$landing_response_date_from_lead}</td>
+          <td>{$communication_date_from_lead}</td>
+          <td>{$communication_date_from_company}</td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

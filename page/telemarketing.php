@@ -81,7 +81,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
 									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
 		$view_conversation = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'bottom',['view\teleconversationlister'])->addClass('fliter-grid');
-			$view_conversation->setModel($model_communication,['title','description','to_raw'],['title','description','created_at','from','to_raw']);
+			$view_conversation->setModel($model_communication,['title','description'],['title','description','created_at','from','to_raw']);
 			$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
 			$view_conversation->grid->addPaginator(10);
 			$view_conversation->grid->addQuickSearch(['name']);

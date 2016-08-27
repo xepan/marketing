@@ -11,6 +11,9 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 		$this->getElement('status')->defaultValue('Draft');
 		$this->addCondition('type','Newsletter');
 
+		$this->getElement('content_name')->caption('Name');
+		$this->getElement('title')->caption('Subject');
+
 		$this->addExpression('total_visitor')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_LandingResponse')
 					->addCondition('content_id',$q->getField('id'))

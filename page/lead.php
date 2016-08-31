@@ -4,8 +4,8 @@ namespace xepan\marketing;
 	
 class page_lead extends \xepan\base\Page{
 	public $title = "Lead";
-	function init(){
-		parent::init();
+	
+	function page_index(){
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
 
@@ -49,5 +49,16 @@ class page_lead extends \xepan\base\Page{
 			$crud->grid->js('click')->_selector('.do-view-lead-visitor')->univ()->frameURL('Total Visits',[$this->api->url('xepan_marketing_leadvisitor'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 			$crud->grid->js('click')->_selector('.do-view-lead-score')->univ()->frameURL('Total Score',[$this->api->url('xepan_marketing_leadscore'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		}
+
+		$btn = $crud->grid->addButton('Grab')->addClass('btn btn-primary');
+		$btn->js('click',$this->js()->univ()->frameURL('Data Grabber',$this->app->url('./grab')));
+
+	}
+
+	function page_grab(){
+		echo "TYpe of code : Google serach result page, website, portal, yahoo search result page, bing search result page <br/>";
+		echo "Selector for urls <br/>";
+		echo "Code Block :: text area <br/>";
+
 	}
 }

@@ -56,13 +56,14 @@ class page_lead extends \xepan\base\Page{
 	}
 
 	function page_grab(){
+		set_time_limit(0);
 		// echo "TYpe of code : Google serach result page, website, portal, yahoo search result page, bing search result page <br/>";
 		// echo "Selector for urls <br/>";
 		// echo "Code Block :: text area <br/>";
 		$array	=
 				[
 					''=>'Please Select',
-					'Google Search Result Page'=>'Google Search Result Page',
+					'h3 a'=>'Google Search Result Page',
 					'Website Page'=>'Website Page',
 					'Yahoo Search Result Page'=>'Yahoo Search Result Page',
 					'Portal'=>'Portal',
@@ -80,86 +81,215 @@ class page_lead extends \xepan\base\Page{
 		// $tyop->js('change',$url_select->js()->reload(['type_of_pages'=>$tyop->js()->val()]));
 	
 		if($f->isSubmitted()){
-			$crawler = new  \Symfony\Component\DomCrawler\Crawler($f['html_code']);
-			$url_array=[];
-			$crawler->filter('h3 > a')->each(function($node,$i)use(&$url_array){
-				 $url_array[] = $node->attr('href');
-			});
-
-			$client = new \GuzzleHttp\Client();
-
-			foreach ($url_array as $url) {
-				$this->createLeads($this->getEmails($url),$url);
-
-				/*Search Links Contening Contact Fetch Page & Get links From Page & create Lead*/
-				$crawler = new  \Symfony\Component\DomCrawler\Crawler((string)$this->content);
-				$web_url=[];
-				$crawler->links()->each(function($node,$i)use(&$web_url){
-					$temp=$node->attr('href');
-					if(strpos($temp, 'contact')!==false OR strpos($temp, 'about')!==false ) 
-						$web_url[] = $temp->getUri();
-				});
+			$this->grab('http://searchpage.null/root',$f['html_code'],$f['url_selector']);
+			$unique_emails=[];
+			foreach ($this->grabbed_data as $host => $pages) {
 				
-				foreach ($web_url as $web_url) {
-					$this->createLeads($this->getEmails($web_url),$web_url);
+				if(!isset($unique_emails[$host])){
+					$unique_emails[$host]=[];
+				}
+
+				foreach ($pages as $page => $emails) {
+					foreach ($emails as $email) {
+						if(!in_array($email, $unique_emails[$host]))
+							$unique_emails[$host][] = $email;
+					}
 				}
 			}
 
-			// $f->js()->reload()->execute();
+			foreach ($unique_emails as $host => $emails) {
+				$this->createLeads($emails,$host);
+			}
+
 		}
 
 	}
 
-	function getEmails($url){
-		$client = new \GuzzleHttp\Client();
-		$email_return=[];
+	function grab($url, $content, $regex_selector /*, $max_page_depth, $max_domain_depth, $total_max_page_depth, $initial_domain_depth, $path*/){
+		
 		try{
-			$res = $client->request('GET',$url);
-			$this->content = $content = $res->getBody();
-			/*Get Emails From This Page & Create Lead*/
+		
+			$parsed_url = parse_url($url);
+
+			$start=microtime(true);
+			// get Emails and Mobile Number and ... 
 			$pattern = '/[a-z0-9_\-\+\.]+(@|(.)?\[(.)?at(.)?\](.)?)[a-z0-9\-]+(\.|(.)?\[(.)?dot(.)?\](.)?)([a-z]{2,3})(?:(\.|(.)?\[(.)?dot(.)?\](.)?)[a-z]{2})?/i';
 			$pattern = '/[a-z0-9_\-\+\.]{1,80}+@[a-z0-9\-]{1,80}+\.([a-z]{2,3})(?:\.[a-z]{2})?/i';
 			// preg_match_all returns an associative array
-			preg_match_all($pattern, (string)$content, $email_found);
-			// print_r($email_found);
-			foreach ($email_found[0] as $em) {
-				$email_return[] = $em;
-			}		
-		}catch(\GuzzleHttp\Exception\RequestException $e){
+			preg_match_all($pattern, $content, $email_found);
+			// echo '<br/>'.$path . " [<b> $url </b>] @ <b>$max_page_depth</b> level". "<br/>";
+			$end=microtime(true);
+			// echo print_r($email_found[0],true) . ' in '.($end-$start).' seconds from <b>'.$url.'</b><br/>';
+			// ob_flush();
+			// flush();
+
+			$this->grabbed_data[$parsed_url['host']][$parsed_url['path'] . $parsed_url['query']] = $email_found[0];
+
+			$pq = new phpQuery();
+			$doc = @$pq->newDocumentHTML($content);
 			
+			// if($max_domain_depth== $initial_domain_depth)
+				$get_a = $doc[$regex_selector];
+			// else
+				// $get_a = $doc['a:contains("contact")'];
+
+			// echo "Found Links: ";
+			
+			$unique_filtered_links = array();
+
+			foreach ($get_a as $a) {
+				// echo '<br/>--------  &nbsp; &nbsp; &nbsp; '.$pq->pq($a)->attr('href'). ' <br/>';
+				preg_match('/(\.pdf|\.exe|\.msi|\.zip|\.rar|\.gz|\.tar|\.flv|\.mov|\.mpg|\.mpeg)/i', $pq->pq($a)->attr('href'),$arr);
+				if(count($arr)) {
+					// echo "Found pdf etc so not taking to check in ". $pq->pq($a)->attr('href') .'<br/>';
+					continue;
+				}
+
+
+				$new_website = parse_url($pq->pq($a)->attr('href'));
+				if(!$new_website['scheme']) $new_website['scheme'] = $parsed_url['scheme'];
+				if(!$new_website['host']) $new_website['host'] = $parsed_url['host'];
+				$new_url = $new_website['scheme'].'://'.$new_website['host'] . '/'.$new_website['path'].$new_website['query'];
+
+				// if(in_array($new_website['path'].$new_website['query'], array_keys($this->grabbed_data[$parsed_url['host']]))){
+				// 	echo "Already Visited <br/>";
+				// 	continue;
+				// }
+
+				if(!in_array($new_url, $unique_filtered_links)){
+					$unique_filtered_links[] = $new_url;
+				}
+			}
+			// echo "Unique Links to check <br/>";
+			// print_r($unique_filtered_links);
+
+			$start = microtime(true);
+			$results = $this->multi_request($unique_filtered_links);
+			// ==================== 
+			// echo "Fetched ". count($unique_filtered_links).  " websites in ". (microtime(true) - $start) . ' seconds <br/>';
+
+			$contact_us_pages =array();
+			foreach ($unique_filtered_links as $id => $site_url) {
+				// somehow if no result was found just carry on
+				if(!$results[$id]) {
+					// echo "No Result for " . $site_url. '<br/>';
+					continue;
+				}
+
+				$parsed_url = parse_url($site_url);
+
+				preg_match_all($pattern, $results[$id], $email_found);
+				$this->grabbed_data[$parsed_url['host']][$parsed_url['path'] . $parsed_url['query']] = $email_found[0];
+
+				
+				$doc = @$pq->newDocumentHTML($results[$id]);
+				$get_a = $doc['a:contains("contact")'];
+
+				foreach ($get_a as $a) {
+					// echo '<br/>--------  &nbsp; &nbsp; &nbsp; '.$pq->pq($a)->attr('href'). ' <br/>';
+					preg_match('/(\.pdf|\.exe|\.msi|\.zip|\.rar|\.gz|\.tar|\.flv|\.mov|\.mpg|\.mpeg)/i', $pq->pq($a)->attr('href'),$arr);
+					if(count($arr)) {
+						// echo "Found pdf etc so not taking to check in ". $pq->pq($a)->attr('href') .'<br/>';
+						continue;
+					}
+
+
+					$new_website = parse_url($pq->pq($a)->attr('href'));
+					if(!$new_website['scheme']) $new_website['scheme'] = $parsed_url['scheme'];
+					if(!$new_website['host']) $new_website['host'] = $parsed_url['host'];
+					$new_url = $new_website['scheme'].'://'.$new_website['host'] . '/'.$new_website['path'].$new_website['query'];
+
+					// if(in_array($new_website['path'].$new_website['query'], array_keys(is_array($this->grabbed_data[$parsed_url['host']])?:array()))){
+					// 	echo "Already Visited <br/>";
+					// 	continue;
+					// }
+
+					if(!in_array($new_url, $contact_us_pages)){
+						$contact_us_pages[] = $new_url;
+					}
+				}
+			}
+			
+			// echo "Unique Contact Links to check <br/>";
+			// print_r($contact_us_pages);
+
+			$start = microtime(true);
+			$results = $this->multi_request($contact_us_pages);
+			
+			// ====================
+			// echo "Fetched ". count($contact_us_pages).  " contact-pages in ". (microtime(true) - $start) . ' seconds <br/>';
+
+			foreach ($results as $id => $contact_page_content) {
+				if(!$results[$id]){
+					// echo "Contact Page no result ". $contact_us_pages[$id] .'<br/>';
+					continue;
+				}
+
+				$parsed_url = parse_url($contact_us_pages[$id]);
+
+				preg_match_all($pattern, $contact_page_content, $email_found);
+				$this->grabbed_data[$parsed_url['host']][$parsed_url['path'] . $parsed_url['query']] = $email_found[0];
+			}
+
+		}catch(Exception $e){
+			return;
 		}
-		// print_r($email_return);
-		return $email_return;
 	}
 
-	function createLeads($emails,$url){
-		// var_dump($emails);
-		echo "<pre>";
-		echo $url;
-		print_r($emails);
-		echo "</pre>";
-		return;
-		// foreach ($emails as  $email) {
-		// 	$existing_email=$this->add('xepan\base\Model_Contact_Email');
-		// 	$existing_email->addCondition('value',$email);
-		// 	$existing_email->tryLoadAny();
-		// 	try{
-		// 		if(!$existing_email->loaded()){
-		// 			$lead=$this->add('xepan\marketing\Model_Lead');
-		// 			$lead['first_name'] = "Grab";
-		// 			$lead['last_name'] = "Lead";
-		// 			$lead['website'] = $url;
-		// 			$lead->save();
+	function multi_request($urls)
+	{
+		$curly = array();
+		$result = array();
+		$mh = curl_multi_init();
 
-		// 			$email_info=$this->add('xepan\base\Model_Contact_Email');
-		// 			$email_info['contact_id']=$lead->id;
-		// 			$email_info['head']="Official";
-		// 			$email_info['value'] = $email;
-		// 			$email_info->save();
-		// 		}
-		// 	}catch(\Exception $e){
-		// 		// echo $email;
-		// 	}			
-		// }
+		foreach ($urls as $id => $url) {
+			$curly[$id] = curl_init();
+			curl_setopt($curly[$id], CURLOPT_URL, $url);
+			curl_setopt($curly[$id], CURLOPT_HEADER, 0);
+			curl_setopt($curly[$id], CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curly[$id], CURLOPT_TIMEOUT, 30);
+			curl_setopt($curly[$id], CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($curly[$id], CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curly[$id], CURLOPT_SSL_VERIFYHOST, 0);
+			curl_multi_add_handle($mh, $curly[$id]);
+		}
+
+		$running = null;
+		do {
+			curl_multi_exec($mh, $running);
+		} while($running > 0);
+
+		foreach($curly as $id => $c) {
+			$result[$id] = curl_multi_getcontent($c);
+			curl_multi_remove_handle($mh, $c);
+		}
+		curl_multi_close($mh);
+		return $result;
+	}
+
+
+	function createLeads($emails,$url, $category){
+		foreach ($emails as  $email) {
+			$existing_email=$this->add('xepan\base\Model_Contact_Email');
+			$existing_email->addCondition('value',$email);
+			$existing_email->tryLoadAny();
+			try{
+				if(!$existing_email->loaded()){
+					$lead=$this->add('xepan\marketing\Model_Lead');
+					$lead['first_name'] = "Grab";
+					$lead['last_name'] = "Lead";
+					$lead['website'] = $url;
+					$lead->save();
+
+					$email_info=$this->add('xepan\base\Model_Contact_Email');
+					$email_info['contact_id']=$lead->id;
+					$email_info['head']="Official";
+					$email_info['value'] = $email;
+					$email_info->save();
+				}
+			}catch(\Exception $e){
+				// echo $email;
+			}			
+		}
 	}
 }

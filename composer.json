@@ -19,6 +19,7 @@
     },
     "require": {
         "xepan/base" : "dev-master",
+        "xepan/mail": "^2.3",
         "php": ">=5.3"
     },
     "autoload": {

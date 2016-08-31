@@ -195,6 +195,17 @@ class Controller_NewsLetterExec extends \AbstractController {
 					echo "Body"." = ".$lead['body'] ."<br/>";
 					echo"**********************************************************************************<br/><br/><br/>";
 				}
+
+				/***************************************************
+			         check if we can continue with same email setting
+			         or need next one with closing previous mailer 
+			         and create new one : TODO
+		        ***************************************************/
+
+			    if(!$email_settings->isUsable()){
+			    	$email_settings->loadNextMassEmail();
+			    }
+
 			}
 
 			// return $form->js()->univ()->successMessage('Newsletter Send')->execute();

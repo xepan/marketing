@@ -74,6 +74,9 @@ class page_lead extends \xepan\base\Page{
 		$tyop = $f->addField('DropDown','type_of_pages')->setValueList($array);
 		$url_select = $f->addField('line','url_selector')->set($pages_selector)->validate('required');
 		$f->addField('text','html_code');
+		$category_field = $f->addField('Dropdown','categories');
+		$category_field->setModel('xepan\marketing\Model_MarketingCategory');
+		$category_field->setAttr(['multiple'=>'multiple']);
 
 		$f->addSubmit('Grab');
 		// $tyop->js('change',$url_select->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$url_select->name]),'type_of_pages'=>$tyop->js()->val()]));
@@ -81,6 +84,8 @@ class page_lead extends \xepan\base\Page{
 		// $tyop->js('change',$url_select->js()->reload(['type_of_pages'=>$tyop->js()->val()]));
 	
 		if($f->isSubmitted()){
+			$category = $f['categories'];			
+
 			$this->grab('http://searchpage.null/root',$f['html_code'],$f['url_selector']);
 			$unique_emails=[];
 			foreach ($this->grabbed_data as $host => $pages) {
@@ -98,7 +103,7 @@ class page_lead extends \xepan\base\Page{
 			}
 
 			foreach ($unique_emails as $host => $emails) {
-				$this->createLeads($emails,$host);
+				$this->createLeads($emails,$host,$category);
 			}
 
 		}
@@ -269,6 +274,9 @@ class page_lead extends \xepan\base\Page{
 
 
 	function createLeads($emails,$url, $category){
+		$category_array = explode(',', $category);
+			
+				
 		foreach ($emails as  $email) {
 			$existing_email=$this->add('xepan\base\Model_Contact_Email');
 			$existing_email->addCondition('value',$email);
@@ -281,11 +289,28 @@ class page_lead extends \xepan\base\Page{
 					$lead['website'] = $url;
 					$lead->save();
 
+					foreach ($category_array as $cat) {
+						$associate_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
+						$associate_m['lead_id'] = $lead->id;
+		     			$associate_m['marketing_category_id']= $cat;
+			 			$associate_m->save();	
+					}
+
 					$email_info=$this->add('xepan\base\Model_Contact_Email');
 					$email_info['contact_id']=$lead->id;
 					$email_info['head']="Official";
 					$email_info['value'] = $email;
 					$email_info->save();
+				}else{
+					foreach ($category_array as $cat) {	
+						$associate_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
+						$associate_m->addCondition('lead_id',$existing_email['contact_id']);
+		     			$associate_m->addCondition('marketing_category_id',$cat);
+		     			$associate_m->tryLoadAny();
+		     			
+		     			if(!$associate_m->loaded())
+		 					$associate_m->save();	
+					}
 				}
 			}catch(\Exception $e){
 				// echo $email;

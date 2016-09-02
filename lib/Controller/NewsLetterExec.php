@@ -232,8 +232,8 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 			    $loop_count++;
 
-			    // echo "====== <br/>";
 			}
+		    echo "<br/>No Newsletters <br/>";
 
 			// return $form->js()->univ()->successMessage('Newsletter Send')->execute();
 		// }

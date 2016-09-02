@@ -130,8 +130,27 @@ class Controller_NewsLetterExec extends \AbstractController {
 			/*******************************************************************
 			        For each lead run this code
 		    *******************************************************************/
+			$loop_count=1;
+			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
 			foreach ($leads as $lead) {
 				// throw new \Exception($lead->id, 1);
+				// echo $lead['name']. '<br/>';
+				
+				// echo "working on ". $email_settings['name']. '<br/>';
+			    if(!$email_settings->isUsable()){
+			    	if($email_settings->loadNextMassEmail()){
+				    	$mailer = new \Nette\Mail\SmtpMailer(array(
+					        'host' => $email_settings['email_host'],
+					        'username' => $email_settings['email_username'],
+					        'password' => $email_settings['email_password'],
+					        'secure' => $email_settings['encryption'],
+					        'persistent'=>true
+						));
+			    	}else{
+			    		break; // No more email setting found
+			    	}
+			    }
+
 				$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 				$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
 				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
@@ -202,10 +221,16 @@ class Controller_NewsLetterExec extends \AbstractController {
 			         and create new one : TODO
 		        ***************************************************/
 
-			    if(!$email_settings->isUsable()){
-			    	$email_settings->loadNextMassEmail();
+			    if($loop_count >= $email_settings['smtp_auto_reconnect']){
+			    	$mailer->disconnect();
+			    	$mailer->connect();
+			    	// echo "Reconnecting smtp connection <br/>";
+			    	$loop_count=0;
 			    }
 
+			    $loop_count++;
+
+			    // echo "====== <br/>";
 			}
 
 			// return $form->js()->univ()->successMessage('Newsletter Send')->execute();

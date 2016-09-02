@@ -284,8 +284,10 @@ class page_lead extends \xepan\base\Page{
 			try{
 				if(!$existing_email->loaded()){
 					$lead=$this->add('xepan\marketing\Model_Lead');
-					$lead['first_name'] = "Grab";
-					$lead['last_name'] = "Lead";
+					$email_parts = explode("@", $email);
+					$lead['first_name'] = $email_parts[0];
+					unset($email_parts[0]);
+					$lead['last_name'] = "@" . implode("", $email_parts);
 					$lead['website'] = $url;
 					$lead['source'] = 'Data Grabber';
 					$lead->save();

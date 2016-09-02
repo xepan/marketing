@@ -148,6 +148,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 					        'persistent'=>true
 						));
 			    	}else{
+			    		echo "No more email_settings <br/>";
 			    		break; // No more email setting found
 			    	}
 			    }

@@ -14,7 +14,7 @@ class page_dashboard extends \xepan\base\Page{
 		
 		// HEADER FORM
 		$form = $this->add('Form',null,'form_layout');
-		$form->setLayout(['page\dashboard','form_layout']);
+		$form->setLayout(['page/mktngdashboard','form_layout']);
 		$field_from_date = $form->addField('DatePicker','from_date')->validate('required')->set($custom_date);
 		$field_to_date = $form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
 		// $form->addField('DateRangePicker','range')->validate('required');

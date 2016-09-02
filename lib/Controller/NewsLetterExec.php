@@ -119,6 +119,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 			
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')
 			->addCondition('mass_mail',true)
+			->addCondition('is_active',true)
 			->tryLoadAny();
 			$mailer = new \Nette\Mail\SmtpMailer(array(
 			        'host' => $email_settings['email_host'],

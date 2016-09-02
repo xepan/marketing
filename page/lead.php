@@ -287,6 +287,7 @@ class page_lead extends \xepan\base\Page{
 					$lead['first_name'] = "Grab";
 					$lead['last_name'] = "Lead";
 					$lead['website'] = $url;
+					$lead['source'] = 'Data Grabber';
 					$lead->save();
 
 					foreach ($category_array as $cat) {

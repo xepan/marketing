@@ -208,7 +208,7 @@ class page_dashboard extends \xepan\base\Page{
 	}
 
 	function defaultTemplate(){
-		return['page/dashboard'];
+		return['page/mktngdashboard'];
 	}
 
 }

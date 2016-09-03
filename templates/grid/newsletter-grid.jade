@@ -31,8 +31,8 @@
                   span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
                   span.text-success   Timings   
                 a(href='#')
-                  span.label.text-center(style="height:50px; max-height:50px; font-size:32px;") {$total_visitor}
-                  span.text-success Visits : {$success_ratio}%  
+                  span.label.text-center.newsletter-visit-detail(data-id="{$id}" style="height:50px; max-height:50px; font-size:32px;") {$total_visitor}
+                  span.text-success.newsletter-visit-detail(data-id="{$id}") Visits : {$success_ratio}%  
               .project-box-ultrafooter.clearfix
                 .col-md-1
                 .col-md-5.pull-left {$action}

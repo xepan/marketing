@@ -51,7 +51,7 @@ class page_newsletter extends \xepan\base\Page{
 		$vp1->set(function($p){
 			$l_r = $this->add('xepan\marketing\Model_LandingResponse');
 			$l_r->addCondition('content_id',$_GET['newsletter_id']);
-
+			$l_r->setOrder('date','desc');
 			$p->add('Grid')->setModel($l_r,['contact','date']);
 		});	
 

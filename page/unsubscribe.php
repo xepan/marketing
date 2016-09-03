@@ -8,7 +8,7 @@ class page_unsubscribe extends \Page{
 	function init(){
 		parent::init();
 		
-		$contact_id = $this->app->stickyGET('contact_id');
+		$contact_id = $this->app->stickyGET('xepan_landing_contact_id');
 		$model_contact = $this->add('xepan\base\Model_Contact');
 		$model_contact->tryLoadBy('id',$contact_id);
 

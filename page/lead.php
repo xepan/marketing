@@ -68,10 +68,10 @@ class page_lead extends \xepan\base\Page{
 				[
 					''=>'Please Select',
 					'h3 a'=>'Google Search Result Page',
-					'Website Page'=>'Website Page',
-					'Yahoo Search Result Page'=>'Yahoo Search Result Page',
-					'Portal'=>'Portal',
-					'Other'=>'Other'
+					// 'Website Page'=>'Website Page',
+					// 'Yahoo Search Result Page'=>'Yahoo Search Result Page',
+					// 'Portal'=>'Portal',
+					// 'Other'=>'Other'
 				];
 		$pages_selector = $this->app->stickyGET('type_of_pages');		
 		$f=$this->add('Form');

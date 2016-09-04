@@ -17,8 +17,8 @@
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
                 th(data-hide="phone")
                     span Category
-                th
-                    span Opportunities
+                //- th
+                //-     span Opportunities
                 th(id="{$score_sortid}")
                     span Total Score {$score_sort}
                 th
@@ -50,9 +50,9 @@
                             {$marketing_category}
                         {/}{/}
                         {/}
-                    td
-                      span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
-                        {$open_count},{$converted_count},{$rejected_count}
+                    //- td
+                    //-   span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
+                    //-     {$open_count},{$converted_count},{$rejected_count}
                     td
                         a.do-view-lead-score(href="#" data-id="{$id}")
                             span.alert.alert-warning{score}0{/}

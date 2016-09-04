@@ -11,7 +11,6 @@
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Name </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
         <th data-hide="phone"><span>Category</span></th>
-        <th><span>Opportunities</span></th>
         <th id="{$score_sortid}"><span>Total Score {$score_sort}</span></th>
         <th><span>Total Visits</span></th>
         <th> </th>{/}{/}
@@ -30,9 +29,6 @@
             <div class="row">{$marketing_category}</div>{/}{/}
             {/}
           </td>
-          <td><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">
-               
-              {$open_count},{$converted_count},{$rejected_count}</span></td>
           <td><a href="#" data-id="{$id}" class="do-view-lead-score"><span class="alert alert-warning">{score}0{/}</span></a></td>
           <td><a href="#" data-id="{$id}" class="do-view-lead-visitor"><span class="alert alert-success">{$total_visitor}</span></a></td>
           <td>{$action}</td>

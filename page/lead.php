@@ -14,7 +14,7 @@ class page_lead extends \xepan\base\Page{
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$lead->setOrder('total_visitor','desc');
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead)->setOrder('created_at','desc');	
+		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor'])->setOrder('created_at','desc');	
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_Avatar');
 		

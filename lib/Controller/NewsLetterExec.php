@@ -120,7 +120,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 									->addCondition('mass_mail',true)
 									->addCondition('is_active',true);
 
-			$total_send_limit = 0
+			$total_send_limit = 0;
 			foreach ($email_settings_temp as $es) {
 				$total_send_limit += $es['email_threshold'];
 			}

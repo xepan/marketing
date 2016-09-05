@@ -16,9 +16,13 @@ class page_lead extends \xepan\base\Page{
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
 		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor'])->setOrder('created_at','desc');	
 		$crud->grid->addPaginator(50);
+		$grid=$crud->grid;
+		$grid->addClass('grab-lead-grid');
+		$grid->js('reload')->reload();
+
 		$crud->add('xepan\base\Controller_Avatar');
 		
-		$frm=$crud->grid->addQuickSearch(['name','website','contacts_str']);
+		$frm=$grid->addQuickSearch(['name','website','contacts_str']);
 				
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
@@ -33,8 +37,8 @@ class page_lead extends \xepan\base\Page{
 		
 		$status->js('change',$frm->js()->submit());
 
-		$crud->grid->addColumn('category');
-		$crud->grid->addMethod('format_marketingcategory',function($grid,$field){				
+		$grid->addColumn('category');
+		$grid->addMethod('format_marketingcategory',function($grid,$field){				
 				$data = $grid->add('xepan\marketing\Model_Lead_Category_Association')->addCondition('lead_id',$grid->model->id);
 				$l = $grid->add('Lister',null,'category',['grid/lead-grid','category_lister']);
 				$l->setModel($data);
@@ -42,15 +46,15 @@ class page_lead extends \xepan\base\Page{
 				$grid->current_row_html[$field] = $l->getHtml();
 		});
 
-		$crud->grid->addFormatter('category','marketingcategory');
-		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
+		$grid->addFormatter('category','marketingcategory');
+		$grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		if(!$crud->isEditing()){
-			$crud->grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
-			$crud->grid->js('click')->_selector('.do-view-lead-visitor')->univ()->frameURL('Total Visits',[$this->api->url('xepan_marketing_leadvisitor'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
-			$crud->grid->js('click')->_selector('.do-view-lead-score')->univ()->frameURL('Total Score',[$this->api->url('xepan_marketing_leadscore'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$grid->js('click')->_selector('.do-view-lead-visitor')->univ()->frameURL('Total Visits',[$this->api->url('xepan_marketing_leadvisitor'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$grid->js('click')->_selector('.do-view-lead-score')->univ()->frameURL('Total Score',[$this->api->url('xepan_marketing_leadscore'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		}
 
-		$btn = $crud->grid->addButton('Grab')->addClass('btn btn-primary');
+		$btn = $grid->addButton('Grab')->addClass('btn btn-primary');
 		$btn->js('click',$this->js()->univ()->frameURL('Data Grabber',$this->app->url('./grab')));
 
 	}
@@ -64,10 +68,10 @@ class page_lead extends \xepan\base\Page{
 				[
 					''=>'Please Select',
 					'h3 a'=>'Google Search Result Page',
-					'Website Page'=>'Website Page',
-					'Yahoo Search Result Page'=>'Yahoo Search Result Page',
-					'Portal'=>'Portal',
-					'Other'=>'Other'
+					// 'Website Page'=>'Website Page',
+					// 'Yahoo Search Result Page'=>'Yahoo Search Result Page',
+					// 'Portal'=>'Portal',
+					// 'Other'=>'Other'
 				];
 		$pages_selector = $this->app->stickyGET('type_of_pages');		
 		$f=$this->add('Form');
@@ -106,6 +110,12 @@ class page_lead extends \xepan\base\Page{
 				$this->createLeads($emails,$host,$category);
 			}
 
+			$js=[
+					$f->js()->closest('.dialog')->dialog('close'),
+					$this->js()->_selector('.grab-lead-grid')->trigger('reload')
+				];
+
+			$f->js(null,$js)->univ()->successMessage('Leads Grabbed')->execute();
 		}
 
 	}

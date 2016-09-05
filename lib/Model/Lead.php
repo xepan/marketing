@@ -43,11 +43,11 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		// 				->count();
 		// });
 
-		// $this->addExpression('total_visitor')->set(function($m,$q){
-		// 	return $this->add('xepan\marketing\Model_LandingResponse')
-		// 			->addCondition('contact_id',$q->getField('id'))
-		// 			->count();
-		// });
+		$this->addExpression('total_visitor')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_LandingResponse')
+					->addCondition('contact_id',$q->getField('id'))
+					->count();
+		});
 
 		$this->addExpression('score')->set(function($m,$q){
 			$ps=$m->add('xepan\base\Model_PointSystem');

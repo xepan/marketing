@@ -116,7 +116,15 @@ class Controller_NewsLetterExec extends \AbstractController {
 		// $form->addSubmit('Send Newsletter')->addClass('btn btn-primary');
 
 		// if($form->isSubmitted()){
-			
+			$email_settings_temp = $this->add('xepan\communication\Model_Communication_EmailSetting')
+									->addCondition('mass_mail',true)
+									->addCondition('is_active',true);
+
+			$total_send_limit = 0
+			foreach ($email_settings_temp as $es) {
+				$total_send_limit += $es['email_threshold'];
+			}
+
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')
 			->addCondition('mass_mail',true)
 			->addCondition('is_active',true)
@@ -132,6 +140,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 			        For each lead run this code
 		    *******************************************************************/
 			$loop_count=1;
+			$leads->setLimit($total_send_limit);
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
 			foreach ($leads as $lead) {
 				// throw new \Exception($lead->id, 1);

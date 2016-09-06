@@ -58,11 +58,21 @@ class Model_Campaign extends \xepan\base\Model_Document{
 						->count();	
 		});
 
-		$this->addExpression('remaining')->set(function($m,$q){
+		$this->addExpression('newsletter_remaining')->set(function($m,$q){
+			return 	$this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters')
+					->addCondition('lead_campaing_id',$q->getField('id'))
+					->count();
+		});
+
+		$this->addExpression('post_remaining')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_Schedule')
 						->addCondition('campaign_id',$m->getElement('id'))
 						->addCondition('posted_on',null)
 						->count();
+		});
+
+		$this->addExpression('remaining')->set(function($m,$q){
+			return $q->expr('[0]+[1]',[$m->getElement('post_remaining'),$m->getElement('newsletter_remaining')]);
 		});
 
 		$this->addHook('beforeSave',$this);

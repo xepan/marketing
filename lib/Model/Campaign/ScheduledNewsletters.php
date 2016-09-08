@@ -9,6 +9,9 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 
 		$leads = $this;
 
+		$leads->getElement('total_visitor')->destroy();
+		$leads->getElement('score')->destroy();
+
 		/***************************************************************************
 			Joining tables to find lead->categories->campaigns->schedule->content
 		***************************************************************************/

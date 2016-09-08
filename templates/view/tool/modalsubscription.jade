@@ -1,0 +1,13 @@
+.modal.fade(id='{$_name}_subscription_model', tabindex='-1', role='dialog', aria-labelledby='{$_name}_model_label')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4.modal-title(id='{$_name}_model_label') Subscribe To Our Feeds
+        .modal-body 
+          | {$form}	
+          | {$Content}
+        .modal-footer
+          button.btn.btn-default(type='button', data-dismiss='modal') Close
+          | {$save_button}

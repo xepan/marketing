@@ -9,7 +9,8 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 				'on_success'=>'Same Page',
 				'success_url'=>'',
 				'lead_category'=>'',
-				'submit_button_name'=>'Submit'
+				'submit_button_name'=>'Submit',
+				'show_as_popup' => false
 			];	
 
 	function init(){
@@ -20,7 +21,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 			$selected_category = explode(",", $this->options["lead_category"]);
 		}		
 
-		$form = $this->add('Form');
+		$form = $this->add('Form',null,'form');
 		$form->setLayout('view/tool/subscription');
 
 		if($this->options['ask_name']){
@@ -36,14 +37,17 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 			$ei->tryLoadBy('value',$form['email']);
 
 			if($ei->loaded()){
-				
 				$l_id = $ei['contact_id'];
 				$l_model = $this->add('xepan\marketing\Model_Lead')->load($l_id);
 				$cat_arr = $l_model->getAssociatedCategories();
 
+				setcookie('xepan_lead_subscription',$form['email']);
 				$cat_diff = array_merge(array_diff($cat_arr, $selected_category),array_diff($selected_category, $cat_arr));
-				if(!count($cat_diff))
+				if(!count($cat_diff)){
+					if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
+						return $form->js(null,$form->js()->_selector('#'.$this->name."_subscription_model")->modal('hide'))->univ()->errorMessage('Already Subscribed')->execute();
 					return $form->js()->univ()->errorMessage('Already Subscribed')->execute();
+				}
 								
 				foreach ($cat_diff as $category) {					
 					$association = $this->add('xepan\marketing\Model_Lead_Category_Association');
@@ -51,8 +55,12 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 					$association['lead_id'] = $l_model->id;
 					$association['marketing_category_id'] = $category;  
 					$association->save();
-					return $form->js()->univ()->successMessage('Done')->execute();
 				}
+
+				if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
+					return $form->js(null,$form->js()->_selector('#'.$this->name."_subscription_model")->modal('hide'))->univ()->successMessage('Done')->execute();
+					
+				return $form->js()->univ()->successMessage('Done')->execute();
 			}				
 
 			$lead = $this->add('xepan\marketing\Model_Lead');
@@ -94,16 +102,20 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 			}catch(\Exception $e){
 				$this->api->db->rollback();
     			return $form->error('email','An unexpected error occured');
-    		}	
-
+    		}
+    		
+    		setcookie('xepan_lead_subscription',$form['email']);
     		if($this->options['send_mail']){
     			$email_id = $form['email'];
     			$this->sendThankYouMail($email_id);
     		}
 
-    		if($this->options['on_success'] == 'Same Page')    					
-				return $form->js()->univ()->successMessage('Done')->execute();
-    		else
+    		if($this->options['on_success'] == 'Same Page'){
+    			if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
+					return $form->js(null,$form->js()->_selector('#'.$this->name."_subscription_model")->modal('hide'))->univ()->successMessage('Done')->execute();
+				
+				return $form->js()->univ()->successMessage('Done')->execute();	
+    		}else
     			$this->app->redirect($this->app->url($this->options['success_url']));
 		}
 	}	
@@ -132,5 +144,21 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		$mail->setSubject($subject_v->getHtml());
 		$mail->setBody($body_v->getHtml());
 		$mail->send($email_settings);
-	}	
+	}
+
+	function defaultTemplate(){
+		if($this->options['show_as_popup'])
+			return['view\tool\modalsubscription'];
+		else
+			return['view\tool\primarysubscription'];
+	}
+
+	function render(){
+		if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
+			$this->js(true)->_selector('#'.$this->name."_subscription_model")->modal('show');
+		else		
+			$this->js(true)->_selector('#'.$this->name."_subscription_model")->modal('hide');
+
+		parent::render();
+	}
 }

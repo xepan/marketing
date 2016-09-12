@@ -66,10 +66,12 @@ class Controller_NewsLetterExec extends \AbstractController {
 			$leads->setLimit($total_send_limit);
 			$loop_count=1;
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
+			$done_contact_newsletter=[];
 			foreach ($leads as $lead) {
 				// throw new \Exception($lead->id, 1);
 				// echo $lead['name']. '<br/>';
-				
+				if(in_array($lead['id'.$lead['document_id'], $done_contact_newsletter)) continue;
+
 				// echo "working on ". $email_settings['name']. '<br/>';
 			    if(!$email_settings->isUsable()){
 			    	if($email_settings->loadNextMassEmail()){
@@ -165,6 +167,8 @@ class Controller_NewsLetterExec extends \AbstractController {
 			    	// echo "Reconnecting smtp connection <br/>";
 			    	$loop_count=0;
 			    }
+
+			    $done_contact_newsletter[$lead['id'].$lead['document_id']]=true;
 
 			    $loop_count++;
 

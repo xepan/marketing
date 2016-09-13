@@ -7,7 +7,7 @@ var xepan_subscriptionday = function(duration){
 	this.addEvent= function(evt){ // xepan_subscriptionevent object
 		// CALL AJAX
 		this.events[evt.event._nid] = evt;// event_html.appendTo($(this.element).closest('.days'));
-		this.events[evt.event._nid] = evt;// event_html.appendTo($(this.element).closest('.days'));
+		// this.events[evt._nid] = evt;// event_html.appendTo($(this.element).closest('.days'));
 		return evt;
 	};
 	this.hasEvent=function(evt){ // xepan_subscriptionevent object
@@ -20,7 +20,6 @@ var xepan_subscriptionday = function(duration){
 	};
 	
 	this.render= function(parent){
-		console.log('day rendered '+ this.duration);
 		day_obj = $('<div class="days clearfix panel panel-default atk-padding-small day-'+this.duration+'"></div>').appendTo($(parent)).data('duration',this.duration);
 		duration_title = $('<div class="atk-size-tera pull-left panel panel-default atk-padding-large">'+this.duration+'</div>').appendTo(day_obj);
 		$.each(this.events, function(index, e) {
@@ -87,7 +86,7 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 				var duration = ui.sender.data('duration');
 				self.days[ui.sender.data('duration')].removeEvent(new xepan_subscriptionevent(ui.item.data('event')));
 				// self.render(this.schedular);
-				self.inform('removeEvent',duration,ui.item.data('event')._nid);
+				self.inform('removeEvent',duration,ui.item.data('eventsource')._nid);
 				ui.item.remove();
 			}
 		});
@@ -100,7 +99,7 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 		// console.log(this.options.events);
 		self.addDay(0);
 		$.each(this.options.days, function(index, day) {
-			console.log(day);
+			// console.log(day);
 			if(self.days[index]==undefined){
 			 	self.addDay(index);
 			}
@@ -130,24 +129,24 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 				connectWith: ".days",
 				items: ".added_event",
 				receive: function( event, ui ){
-					if(day.hasEvent(new xepan_subscriptionevent(ui.item.data('event')))){
+					if(day.hasEvent(new xepan_subscriptionevent(ui.item.data('eventsource')))){
 						$(ui.sender).sortable('cancel');
 						// console.log('already have');
 						return;
 					}
-					self.days[index].addEvent(new xepan_subscriptionevent(ui.item.data('event')));
-					self.days[ui.sender.data('duration')].removeEvent(new xepan_subscriptionevent(ui.item.data('event')));
+					self.days[index].addEvent(new xepan_subscriptionevent(ui.item.data('eventsource')));
+					self.days[ui.sender.data('duration')].removeEvent(new xepan_subscriptionevent(ui.item.data('eventsource')));
 					// console.log('newsletter '+ui.item.data('event').title+ ' moved from '+ ui.sender.data('duration') + ' to ' + day.duration );
-					self.inform('moveEvent',day.duration,ui.item.data('event')._nid,ui.sender.data('duration'));
+					self.inform('moveEvent',day.duration,ui.item.data('eventsource')._nid,ui.sender.data('duration'));
 				}
 			}).droppable({
 				drop: function(event, ui){
 					if(!ui.helper.is('.added_event')){
-						if(!day.hasEvent(new xepan_subscriptionevent(ui.helper.data('event')))){
-							new_evt=day.addEvent(new xepan_subscriptionevent(ui.helper.data('event')));
+						if(!day.hasEvent(new xepan_subscriptionevent(ui.helper.data('eventsource')))){
+							new_evt=day.addEvent(new xepan_subscriptionevent(ui.helper.data('eventsource')));
 							new_evt.render($('.day-'+day.duration));
 							// $('.day-'+ day.duration).scrollTop();
-							self.inform('addEvent',day.duration,ui.helper.data('event')._nid);
+							self.inform('addEvent',day.duration,ui.helper.data('eventsource')._nid);
 						}
 					}
 				}

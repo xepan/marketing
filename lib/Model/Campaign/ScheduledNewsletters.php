@@ -28,10 +28,12 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		
 		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
-
 		$schedule_j->addField('schedule_date','date');
 		$schedule_j->addField('schedule_day','day');
 		$schedule_j->addField('schedule_id','id');
+		
+		$document_schecule_j = $schedule_j->join('document','document_id');
+		$document_schecule_j->addField('document_type','type');
 		
 		// May be this is done by 'last_sent_newsletter_from_schedule_row_days' expression
 		// $comm_j = $schedule_j->leftJoin('communication.related_id','document_id');

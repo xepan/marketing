@@ -14,7 +14,7 @@ namespace xepan\marketing;
 class Controller_NewsLetterExec extends \AbstractController {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = true;
+	public $debug = false;
 
 	function init(){
 		parent::init();
@@ -70,12 +70,12 @@ class Controller_NewsLetterExec extends \AbstractController {
 		    *******************************************************************/
 			$leads->setLimit($total_send_limit);
 			
-			$grid = $this->owner->add('Grid');
-			$grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable','is_already_sent','document_type']);
-			$grid->addFormatter('document','wrap');
-			$grid->addFormatter('name','wrap');
+			// $grid = $this->owner->add('Grid');
+			// $grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable','is_already_sent','document_type']);
+			// $grid->addFormatter('document','wrap');
+			// $grid->addFormatter('name','wrap');
 
-			return;
+			// return;
 
 			$loop_count=1;
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);

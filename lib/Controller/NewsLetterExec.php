@@ -14,10 +14,13 @@ namespace xepan\marketing;
 class Controller_NewsLetterExec extends \AbstractController {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = false;
+	public $debug = true;
 
 	function init(){
 		parent::init();
+
+		$this->app->today = '2016-09-12';
+		$this->app->now = $this->app->today.' 00:00:00';
 
 		$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters');
 
@@ -64,13 +67,21 @@ class Controller_NewsLetterExec extends \AbstractController {
 			        For each lead run this code
 		    *******************************************************************/
 			$leads->setLimit($total_send_limit);
+
+			$grid = $this->owner->add('Grid');
+			$grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable']);
+			$grid->addFormatter('document','wrap');
+			$grid->addFormatter('name','wrap');
+
+			return;
+
 			$loop_count=1;
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
 			$done_contact_newsletter=[];
 			foreach ($leads as $lead) {
 				// throw new \Exception($lead->id, 1);
 				// echo $lead['name']. '<br/>';
-				if(in_array($lead['id'.$lead['document_id'], $done_contact_newsletter)) continue;
+				if(in_array($lead['id'].$lead['document_id'], $done_contact_newsletter)) continue;
 
 				// echo "working on ". $email_settings['name']. '<br/>';
 			    if(!$email_settings->isUsable()){

@@ -7,6 +7,7 @@ class Model_Communication_Newsletter extends \xepan\communication\Model_Communic
 	function init(){
 		parent::init();
 		$this->getElement('status')->defaultValue('Draft');
-		$this->addCondition('communication_type','Newsletter');		
+		$this->addCondition('communication_type','Newsletter');	
+		$this->addCondition('direction','Out');	
 	}
 }

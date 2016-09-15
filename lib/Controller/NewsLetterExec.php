@@ -14,7 +14,7 @@ namespace xepan\marketing;
 class Controller_NewsLetterExec extends \AbstractController {
 	
 	public $title='Cron to send NewsLetters';
-	public $debug = true;
+	public $debug = false;
 
 	function init(){
 		parent::init();
@@ -27,11 +27,13 @@ class Controller_NewsLetterExec extends \AbstractController {
 		$leads->addCondition('sendable',true);
 		$leads->addCondition('campaign_status','Approved');
 		$leads->addCondition('content_status','Approved');
+		$leads->addCondition('is_already_sent',0);
+		$leads->addCondition('document_type','Newsletter');
 
 	// 	/***************************************************************************
 	// 		Must have a gap of N days between sending this Content/Newsletter again
 	// 	/***************************************************************************
-		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
+		// $leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
 
 		/***************************************************************************
 			Sending newsletter
@@ -67,13 +69,13 @@ class Controller_NewsLetterExec extends \AbstractController {
 			        For each lead run this code
 		    *******************************************************************/
 			$leads->setLimit($total_send_limit);
+			
+			// $grid = $this->owner->add('Grid');
+			// $grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable','is_already_sent','document_type']);
+			// $grid->addFormatter('document','wrap');
+			// $grid->addFormatter('name','wrap');
 
-			$grid = $this->owner->add('Grid');
-			$grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable']);
-			$grid->addFormatter('document','wrap');
-			$grid->addFormatter('name','wrap');
-
-			return;
+			// return;
 
 			$loop_count=1;
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
@@ -137,7 +139,8 @@ class Controller_NewsLetterExec extends \AbstractController {
 				$email_str = implode(',',$emails);
 
 				$model_communication_newsletter['to_id'] =$lead->id;
-				$model_communication_newsletter['related_id'] =$lead['document_id'];
+				$model_communication_newsletter['related_id'] = $lead['schedule_id'];
+				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
 
 				foreach ($emails as $email) {	
 					$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$lead->id.'>Unsubscribe</>');
@@ -179,7 +182,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 			    	$loop_count=0;
 			    }
 
-			    $done_contact_newsletter[$lead['id'].$lead['document_id']]=true;
+			    $done_contact_newsletter[]=$lead['id'].$lead['document_id'];
 
 			    $loop_count++;
 

@@ -28,9 +28,12 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		
 		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
-
 		$schedule_j->addField('schedule_date','date');
 		$schedule_j->addField('schedule_day','day');
+		$schedule_j->addField('schedule_id','id');
+		
+		$document_schecule_j = $schedule_j->join('document','document_id');
+		$document_schecule_j->addField('document_type','type');
 		
 		// May be this is done by 'last_sent_newsletter_from_schedule_row_days' expression
 		// $comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
@@ -64,27 +67,33 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 					);
 		})->type('boolean');
 
+		$this->addExpression('is_already_sent')->set(function($m,$q){
+			$comm_m = $this->add('xepan\communication\Model_Communication');
+			$comm_m->addCondition('related_id',$m->getElement('schedule_id'));
+			$comm_m->addCondition('to_id',$m->getElement('id'));
+			$comm_m->addCondition('related_document_id',$m->getElement('document_id'));
+			return $comm_m->count();		
+		})->type('boolean');
 
 	// 	/***************************************************************************
 	// 		To find the last newsletter sending time.
 	// 	***************************************************************************/	
-		$leads->addExpression('last_sent_newsletter_date')->set(function($m,$q){
-			return $this->add('xepan\marketing\Model_Communication_Newsletter')
-					->addCondition('related_id',$m->getElement('document_id'))
-					->addCondition('to_id',$m->getElement('id'))
-					->setOrder('created_at','desc')
-					->setLimit(1)
-					->fieldQuery('created_at');
-		});
+		// $leads->addExpression('last_sent_newsletter_date')->set(function($m,$q){
+		// 	return $this->add('xepan\marketing\Model_Communication_Newsletter')
+		// 			->addCondition('related_id',$m->getElement('document_id'))
+		// 			->addCondition('to_id',$m->getElement('id'))
+		// 			->setOrder('created_at','desc')
+		// 			->setLimit(1)
+		// 			->fieldQuery('created_at');
+		// });
 
-		$leads->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
-			return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
-				[
-				$m->getElement('last_sent_newsletter_date'),
-				$this->app->now
-				]);
-		})->caption('Last Newsletter Sent');
-
+		// $leads->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
+		// 	return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
+		// 		[
+		// 		$m->getElement('last_sent_newsletter_date'),
+		// 		$this->app->now
+		// 		]);
+		// })->caption('Last Newsletter Sent');
 
 	// 	/***************************************************************************
 	// 		Expression to extract 'message_3000' field from content model

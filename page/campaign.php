@@ -35,10 +35,6 @@ class page_campaign extends \xepan\base\Page{
 
 		if($this->app->stickyGET('status'))
 			$campaign->addCondition('status',explode(",",$this->app->stickyGET('status')));
-		
-		$campaign->addExpression('completed_percentage')->set(function($m, $q){
-			return $m->dsql()->expr("ROUND(([1]-[0])/[1]*100,0)",[$m->getElement('total_postings'),$m->getElement('remaining')]);
-		});
 
 		$landing_response = $this->add('xepan\marketing\Model_LandingResponse');
 		$response = $landing_response->getRows();

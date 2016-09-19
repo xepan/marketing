@@ -64,6 +64,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 						->count();	
 		});
 
+
 		$this->addExpression('total_combined_postings')->set(function($m,$q){
 			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_postings'),$m->getElement('total_newsletter_postings')]);
 		});
@@ -86,6 +87,14 @@ class Model_Campaign extends \xepan\base\Model_Document{
 
 		$this->addExpression('remaining')->set(function($m,$q){
 			return $q->expr('[0]+[1]',[$m->getElement('post_remaining'),$m->getElement('newsletter_remaining')]);
+		});
+
+		$this->addExpression('total_posted_and_remaining')->set(function($m,$q){
+			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_combined_postings'),$m->getElement('remaining')]);
+		});
+
+		$this->addExpression('completed_percentage')->set(function($m, $q){
+			return $m->dsql()->expr("ROUND(([1]-[0])/[1]*100,0)",[$m->getElement('total_posted_and_remaining'),$m->getElement('remaining')]);
 		});
 
 		$this->addHook('beforeSave',$this);

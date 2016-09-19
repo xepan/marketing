@@ -67,6 +67,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		$this->addExpression('newsletter_remaining')->set(function($m,$q){
 			return 	$this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters')
 					->addCondition('lead_campaing_id',$q->getField('id'))
+					->addCondition('is_already_sent',0);
 					->count();
 		});
 

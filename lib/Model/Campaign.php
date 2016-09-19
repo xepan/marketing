@@ -43,7 +43,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 					->count();
 		});
 
-		$this->addExpression('active_duration')->set(function($m,$q){
+		$this->addExpression('started_since')->set(function($m,$q){
 			return $m->dsql()->expr("DATEDIFF([1],[0])",[$m->getElement('starting_date'),$this->app->today]);
 		});
 
@@ -51,23 +51,27 @@ class Model_Campaign extends \xepan\base\Model_Document{
 			return $m->dsql()->expr("DATEDIFF([0],[1])",[$m->getElement('ending_date'),$this->app->today]);
 		});
 
-		$this->addExpression('total_postings')->set(function($m,$q){			
+		// social posts posted
+		$this->addExpression('social_postings_posted_count')->set(function($m,$q){			
 			return $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting')
 						->addCondition('campaign_id',$m->getElement('id'))
 						->addCondition('posted_on','<>',null)
 						->count();	
 		});
 
-		$this->addExpression('total_newsletter_postings')->set(function($m,$q){			
-			return $this->add('xepan\communication\Model_communication')
-						->addCondition('related_document_id',$m->getElement('id'))
-						->count();	
+		// newsletter posted
+		$this->addExpression('newsletter_sent_count')->set(function($m,$q){
+			$comm_m = $m->add('xepan\communication\Model_Communication');
+			$comm_m->join('schedule','related_id')
+					->addField('campaign_id');
+			return $comm_m->addCondition('campaign_id',$q->getField('id'))->count();
 		});
 
-
-		$this->addExpression('total_combined_postings')->set(function($m,$q){
-			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_postings'),$m->getElement('total_newsletter_postings')]);
+		// newsletter and social posts posted
+		$this->addExpression('total_combined_postings_done')->set(function($m,$q){
+			return $m->dsql()->expr("([0]+[1])",[$m->getElement('social_postings_posted_count'),$m->getElement('newsletter_sent_count')]);
 		});
+
 
 		$this->addExpression('newsletter_remaining')->set(function($m,$q){
 			return 	$this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters')
@@ -77,7 +81,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		});
 
 
-		$this->addExpression('post_remaining')->set(function($m,$q){
+		$this->addExpression('social_post_remaining')->set(function($m,$q){
 			return  $this->add('xepan\marketing\Model_Schedule')
 						->addCondition('campaign_id',$m->getElement('id'))
 						->addCondition('posted_on',null)
@@ -85,16 +89,18 @@ class Model_Campaign extends \xepan\base\Model_Document{
 						->count();
 		});
 
-		$this->addExpression('remaining')->set(function($m,$q){
-			return $q->expr('[0]+[1]',[$m->getElement('post_remaining'),$m->getElement('newsletter_remaining')]);
+		// newsletter and social post combined {remaining}
+		$this->addExpression('total_remaining')->set(function($m,$q){
+			return $q->expr('[0]+[1]',[$m->getElement('social_post_remaining'),$m->getElement('newsletter_remaining')]);
 		});
 
-		$this->addExpression('total_posted_and_remaining')->set(function($m,$q){
-			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_combined_postings'),$m->getElement('remaining')]);
+		// sent and remaining combined
+		$this->addExpression('total')->set(function($m,$q){
+			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
 		});
 
 		$this->addExpression('completed_percentage')->set(function($m, $q){
-			return $m->dsql()->expr("IFNULL(ROUND(([1]-[0])/[1]*100,0),0)",[$m->getElement('total_posted_and_remaining'),$m->getElement('remaining')]);
+			return $m->dsql()->expr("IFNULL(ROUND(([1]-[0])/[1]*100,0),0)",[$m->getElement('total_remaining'),$m->getElement('total')]);
 		});
 
 		$this->addHook('beforeSave',$this);

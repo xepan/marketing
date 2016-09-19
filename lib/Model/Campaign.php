@@ -73,7 +73,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 
 
 		$this->addExpression('post_remaining')->set(function($m,$q){
-			$schedule = $this->add('xepan\marketing\Model_Schedule')
+			return  $this->add('xepan\marketing\Model_Schedule')
 						->addCondition('campaign_id',$m->getElement('id'))
 						->addCondition('posted_on',null)
 						->addCondition('content_type','SocialPost')

@@ -94,14 +94,14 @@ class Model_Campaign extends \xepan\base\Model_Document{
 			return $q->expr('[0]+[1]',[$m->getElement('social_post_remaining'),$m->getElement('newsletter_remaining')]);
 		});
 
-		// sent and remaining combined
 		$this->addExpression('total')->set(function($m,$q){
 			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
 		});
 
 		$this->addExpression('completed_percentage')->set(function($m, $q){
-			return $m->dsql()->expr("IFNULL(ROUND([1]/[0]*100,0),0)",[$m->getElement('newsletter_sent_count'),$m->getElement('total')]);
+			return $m->dsql()->expr("IFNULL(ROUND(([0]/([0]+[1]))*100,0),0)",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
 		});
+
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);

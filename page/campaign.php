@@ -8,8 +8,6 @@ class page_campaign extends \xepan\base\Page{
 		parent::init();	
 
 		$campaign = $this->add('xepan\marketing\Model_Campaign');
-		$this->add('Grid')->setModel($campaign);
-		return;
 
 		$campaign->addExpression('source_graph_data')->set(function($m,$q){
 			$lr = $m->add('xepan\marketing\Model_LandingResponse');

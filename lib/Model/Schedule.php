@@ -14,6 +14,7 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('day')->type('Number');
 		$this->addField('posted_on')->type('datetime');
 		
+		$this->addExpression('content_type')->set($this->refSQL('document_id')->fieldQuery('content_type'));
 	}
 
 	function campaign(){

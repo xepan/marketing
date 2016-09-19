@@ -71,17 +71,12 @@ class Model_Campaign extends \xepan\base\Model_Document{
 					->count();
 		});
 
-		$this->addExpression('content_type')->set(function($m,$q){
-			return $this->add('xepan\marketing\Model_Schedule')
-						->addCondition('campaign_id',$m->getElement('id'))
-						->fieldQuery('type');
-						->setLimit(1)
-		});			
 
 		$this->addExpression('post_remaining')->set(function($m,$q){
 			$schedule = $this->add('xepan\marketing\Model_Schedule')
 						->addCondition('campaign_id',$m->getElement('id'))
 						->addCondition('posted_on',null)
+						->addCondition('content_type','SocialPost')
 						->count();
 		});
 

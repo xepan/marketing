@@ -21,11 +21,16 @@
                             h1(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
                       .row.text-muted 
                         .col-md-4
-                          span &nbsp; Visitors : {$total_visitor}
+                          span &nbsp; Visitors
+                          div(style="margin-left:8px;") {$total_visitor}
                         .col-md-4
-                          span Postings : {$total_postings}
+                          span Postings 
+                          div(style="margin-left:3px;") {$total_postings}
                         .col-md-4  
-                          span Remaining : {$remaining} 
+                          span Remaining
+                          div(style="margin-left:4px;") 
+                          span.fa.fa-globe {$newsletter_remaining} -   
+                          span.fa.fa-envelope-o {$post_remaining}
                       hr
                       .project-box-content
                         span.chart(data-bar-color='#2ecc71', data-percent='{$completed_percentage}')

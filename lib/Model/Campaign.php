@@ -58,6 +58,12 @@ class Model_Campaign extends \xepan\base\Model_Document{
 						->count();	
 		});
 
+		$this->addExpression('total_newsletter_postings')->set(function($m,$q){			
+			return $this->add('xepan\communication\Model_communication')
+						->addCondition('related_id',$m->getElement('id'))
+						->count();	
+		});
+
 		$this->addExpression('newsletter_remaining')->set(function($m,$q){
 			return 	$this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters')
 					->addCondition('lead_campaing_id',$q->getField('id'))

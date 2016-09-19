@@ -20,9 +20,15 @@
                   <h1 style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</h1></a></div>
             </div>
             <div class="row text-muted"> 
-              <div class="col-md-4"><span>&nbsp; Visitors : {$total_visitor}</span></div>
-              <div class="col-md-4"><span>Postings : {$total_postings}</span></div>
-              <div class="col-md-4"> <span>Remaining : {$remaining} </span></div>
+              <div class="col-md-4"><span>&nbsp; Visitors</span>
+                <div style="margin-left:8px;">{$total_visitor}</div>
+              </div>
+              <div class="col-md-4"><span>Postings </span>
+                <div style="margin-left:3px;">{$total_postings}</div>
+              </div>
+              <div class="col-md-4"> <span>Remaining</span>
+                <div style="margin-left:4px;"> </div><span class="fa fa-globe">{$newsletter_remaining} -   </span><span class="fa fa-envelope-o">{$post_remaining}</span>
+              </div>
             </div>
             <hr/>
             <div class="project-box-content"><span data-bar-color="#2ecc71" data-percent="{$completed_percentage}" class="chart"><span class="percent">{$completed_percentage}</span>%<br/><span class="lbl">completed</span>

@@ -60,8 +60,12 @@ class Model_Campaign extends \xepan\base\Model_Document{
 
 		$this->addExpression('total_newsletter_postings')->set(function($m,$q){			
 			return $this->add('xepan\communication\Model_communication')
-						->addCondition('related_id',$m->getElement('id'))
+						->addCondition('related_document_id',$m->getElement('id'))
 						->count();	
+		});
+
+		$this->addExpression('total_combined_postings')->set(function($m,$q){
+			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_postings'),$m->getElement('total_newsletter_postings')]);
 		});
 
 		$this->addExpression('newsletter_remaining')->set(function($m,$q){

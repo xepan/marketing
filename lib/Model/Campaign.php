@@ -94,7 +94,7 @@ class Model_Campaign extends \xepan\base\Model_Document{
 		});
 
 		$this->addExpression('completed_percentage')->set(function($m, $q){
-			return $m->dsql()->expr("ROUND(([1]-[0])/[1]*100,0)",[$m->getElement('total_posted_and_remaining'),$m->getElement('remaining')]);
+			return $m->dsql()->expr("IFNULL(ROUND(([1]-[0])/[1]*100,0),0)",[$m->getElement('total_posted_and_remaining'),$m->getElement('remaining')]);
 		});
 
 		$this->addHook('beforeSave',$this);

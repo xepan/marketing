@@ -4,7 +4,8 @@ namespace xepan\marketing;
 
 class page_subscriberschedule extends \xepan\base\Page{
 	public $title = 'Schedule';
-
+	public $breadcrumb=['Home'=>'index','Campaign'=>'xepan_marketing_campaign','Schedule'=>'#'];
+	
 	function init(){
 		parent::init();
 

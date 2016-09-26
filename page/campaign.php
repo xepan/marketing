@@ -58,11 +58,7 @@ class page_campaign extends \xepan\base\Page{
 		});
 
 		$crud->grid->addHook('formatRow',function($g){
-			if($g->model['campaign_type']==='subscription'){
-				$g->current_row['url'] = "?page=xepan_marketing_subscriberschedule&campaign_id=".$g->model->id;
-			}else{
-				$g->current_row['url'] = "?page=xepan_marketing_schedule&campaign_id=".$g->model->id;
-			}
+			$g->current_row['url'] = "?page=xepan_marketing_scheduledetail&campaign_id=".$g->model->id;
 
 			$source_data = explode(",",$g->model['source_graph_data']);
 			$source_values=[];

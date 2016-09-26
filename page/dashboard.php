@@ -82,29 +82,13 @@ class page_dashboard extends \xepan\base\Page{
 		$point_system->_dsql()->del('fields')->field($point_system->dsql()->expr('IFNULL(sum(score),0)score_count'))->field($point_system->dsql()->expr('[0]'.$group_by,[$point_system->getElement($group_by)]));
 		
 		foreach ($point_system->_dsql() as $ld) {
-			// echo $ld[$group_by]."<br/>";
 			if(!isset($lead_score_data[$ld[$group_by]])){
 				$lead_score_data[$ld[$group_by]] = [$group_by=>$ld[$group_by],'Lead Count'=> 0];
 			}
 			$lead_score_data[$ld[$group_by]]['Score Count'] = $ld['score_count'];
-			// if(isset($lead_score_data[$ld[$group_by]]))
-			// 	$lead_score_data[$ld[$group_by]] = 	
 		}
 		
-		// echo "<pre>";
-		// var_dump($lead_score_data);
-		// exit;
-		// $lead_score_data = [
-		// 	[$group_by=> "21", "Score"=> 20,'Lead'=>78],
-		// 	[$group_by=> "201", "Score"=> 33, "Lead"=> 629],
-		// 	[$group_by=> "203", "Score"=> 30, "Lead"=> 67],
-		// 	[$group_by=> "204", "Score"=> 40, "Lead"=> 676],
-		// 	[$group_by=> "205", "Score"=> 50, "Lead"=> 681],
-		// 	[$group_by=> "206", "Score"=> 60, "Lead"=> 620],
-		// 	[$group_by=> "207", "Score"=> 10, "Lead"=> 987],
-		// 	[$group_by=> "208", "Score"=> 90, "Lead"=> 89]
-		// ];
-
+		
 		$lead_vs_score = $this->add('xepan\base\View_Chart',null,'lead_vs_score');
 		$lead_vs_score->setChartType("Line");
 		$lead_vs_score->setLibrary("Morris");
@@ -187,19 +171,6 @@ class page_dashboard extends \xepan\base\Page{
 			$g->current_row_html['communication_date_from_company'] = $reponse_communication_company_date;
 		});
 		$hot_lead_grid->setModel($lead,['name','score','days_ago','priority','landing_response_date_from_lead','communication_date_from_lead','communication_date_from_company']);
-		// SOCIAL ACTIVITY LISTER
-		// $social_lister = $this->add('xepan\marketing\View_SocialLister',null,'social_lister');
-		// $social_lister->setModel('xepan\marketing\SocialPosters_Base_SocialConfig');
-
-		// // MAP
-		// $map = $this->add('xepan\marketing\View_Map',null,'map');
-
-		// // LEAD RESPONSE
-		// $lead_response = $this->add('xepan\marketing\View_LeadResponse',null,'lead_response',['view/leadresponse']);
-		
-		// // CAMPAIGN REPONSE
-		// $campaign_response = $this->add('xepan\hr\Grid',null,'campaign_response',['view/campaignresponse']);
-		// $campaign_response->setModel('xepan\marketing\Dashboard')->addCondition('ending_date','<',$this->app->today);
 		$lead_score_grid = $this->add('xepan\base\Grid',null,'ratio_filter',['view\leadscore']);	
 		$lead_score_grid->setModel($lead)->setOrder('id','desc');
 		$lead_score_grid->addPaginator(5);
@@ -210,5 +181,4 @@ class page_dashboard extends \xepan\base\Page{
 	function defaultTemplate(){
 		return['page/mktngdashboard'];
 	}
-
 }

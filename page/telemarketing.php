@@ -178,7 +178,7 @@ class page_telemarketing extends \xepan\base\Page{
 				ANALYTICAL GRAPHS 
 		*/
 
-		$view_graph = $this->add('xepan\marketing\View_TeleGraph',null,'graph');
+		// $view_graph = $this->add('xepan\marketing\View_TeleGraph',null,'graph');
 	}
 
 	function defaultTemplate(){

@@ -44,11 +44,11 @@
                           span.sparkline.source_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$source_graph}  
                           span.text-success Platform
                         a(href='#')
+                        //-   span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") 1,2,3  
+                        //-   span.text-success Location
+                        a(href='#')
                           span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
                           span.text-success   Timings   
-                        a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") 1,2,3  
-                          span.text-success Location
                       .project-box-ultrafooter.clearfix
                         .col-md-4
                           {$action}
@@ -107,4 +107,8 @@ style(type='text/css', media='screen').
   .project-box .project-box-footer a{
   padding: 0px 15px !important;
   margin: 10px 0; !important;
+  }
+
+  .project-box .project-box-footer a{
+  border-right: 0px!important;
   }

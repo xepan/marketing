@@ -33,7 +33,8 @@
             <hr/>
             <div class="project-box-content"><span data-bar-color="#2ecc71" data-percent="{$completed_percentage}" class="chart"><span class="percent">{$completed_percentage}</span>%<br/><span class="lbl">completed</span>
                 <canvas height="130" width="130"></canvas></span></div>
-            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline source_graph">{$source_graph}  </span><span class="text-success">Platform</span></a><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3  </span><span class="text-success">Location</span></a></div>
+            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline source_graph">{$source_graph}  </span><span class="text-success">Platform</span></a><a href="#"></a><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a>
+            </div>
             <div class="project-box-ultrafooter clearfix">
               <div class="col-md-4">{$action}</div>
               <div class="col-md-4"> </div>
@@ -94,5 +95,9 @@
   .project-box .project-box-footer a{
   padding: 0px 15px !important;
   margin: 10px 0; !important;
+  }
+  
+  .project-box .project-box-footer a{
+  border-right: 0px!important;
   }
 </style>

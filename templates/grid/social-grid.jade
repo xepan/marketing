@@ -39,11 +39,11 @@
                           span.sparkline.source_graph(sparkType="pie" data-id="{$id}" sparkHeight="50px") {$source_graph}
                           span.text-success Platform
                         a(href='#')
+                        //-   span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
+                        //-   span.text-success Location
+                        a.pull-right(href='#')
                           span.sparkline.timing_graph(sparkType="pie" data-id="{$id}" sparkHeight="50px") {$timing_graph}  
                           span.text-success   Timings   
-                        a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 1,2,3  
-                          span.text-success Location
                       .project-box-ultrafooter.clearfix
                         .col-md-4
                           {$action}
@@ -102,5 +102,9 @@ style(type='text/css', media='screen').
 
   hr{
     margin: 2px 0px 5px 0px !important;
+  }
+
+  .project-box .project-box-footer a{
+  border-right:0px !important;
   }
 

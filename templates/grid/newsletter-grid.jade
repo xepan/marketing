@@ -25,14 +25,14 @@
                 iframe(src='index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}', style=' max-height: 300px; height: 300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);', frameborder='0')
               .project-box-footer.clearfix
                 a(href='#')
-                  span.label.text-center(style="height:50px; max-height:50px; font-size:32px;") {$total_sent}
+                  span.label.text-center(style="height:50px; max-height:50px; font-size:25px;") {$total_sent}
                   span.text-success Sent    
                 a(href='#')
                   span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
                   span.text-success   Timings   
                 a(href='#')
                   span.label.text-center.newsletter-visit-detail(data-id="{$id}" style="height:50px; max-height:50px; font-size:32px;") {$total_visitor}
-                  span.text-success.newsletter-visit-detail(data-id="{$id}") Visits : {$success_ratio}%  
+                  span.text-success.newsletter-visit-detail(data-id="{$id}") Visits  
               .project-box-ultrafooter.clearfix
                 .col-md-1
                 .col-md-5.pull-left {$action}

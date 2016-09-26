@@ -20,8 +20,8 @@
                   <h1 style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</h1></a></div>
             </div>
             <div class="row text-muted"> 
-              <div class="col-md-4"><span>&nbsp; Visitors</span>
-                <div style="margin-left:8px;">{$total_visitor}</div>
+              <div class="col-md-4"><span data-id="{$id}" style="cursor:pointer; cursor: hand; max-width:600px;" class="campaign-visit-detail">&nbsp; Visitors</span>
+                <div data-id="{$id}" style="margin-left:8px; cursor:pointer; cursor: hand; max-width:600px;" class="campaign-visit-detail">{$total_visitor}</div>
               </div>
               <div class="col-md-4"><span>Postings </span>
                 <div style="margin-left:3px;">{$total_combined_postings_done}</div>

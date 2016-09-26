@@ -45,6 +45,17 @@ class page_campaign extends \xepan\base\Page{
 		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		$frm=$crud->grid->addQuickSearch(['title']);
 		
+		$vp1 = $this->add('VirtualPage');
+		$vp1->set(function($p){
+			$l_r = $this->add('xepan\marketing\Model_LandingResponse');
+			$l_r->addCondition('campaign_id',$_GET['campaign_id']);
+			$l_r->setOrder('date','desc');
+			$p->add('Grid')->setModel($l_r,['contact','date']);
+		});	
+
+		$this->on('click','.campaign-visit-detail',function($js,$data)use($vp1){
+				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
+		});
 
 		$crud->grid->addHook('formatRow',function($g){
 			if($g->model['campaign_type']==='subscription'){

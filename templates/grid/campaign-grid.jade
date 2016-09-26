@@ -21,8 +21,8 @@
                             h1(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
                       .row.text-muted 
                         .col-md-4
-                          span &nbsp; Visitors
-                          div(style="margin-left:8px;") {$total_visitor}
+                          span.campaign-visit-detail(data-id = "{$id}" style= "cursor:pointer; cursor: hand; max-width:600px;") &nbsp; Visitors
+                          div.campaign-visit-detail(data-id = "{$id}" style="margin-left:8px; cursor:pointer; cursor: hand; max-width:600px;") {$total_visitor}
                         .col-md-4
                           span Postings 
                           div(style="margin-left:3px;") {$total_combined_postings_done}

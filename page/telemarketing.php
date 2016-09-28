@@ -75,7 +75,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$form->addField('Line','title');
 		$form->addField('Text','description');
 		$form->addField('Line','from_number');
-		$to_field = $form->addField('xepan\base\NoValidateDropDown','to_number')->setValueList($contact_array);
+		$to_field = $form->addField('xepan\base\NoValidateDropDown','to_number')->setValueList($contact_array)->setEmptyText('Select or add a number');
 		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
 		$to_field->select_menu_options=['tags'=>true];
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');

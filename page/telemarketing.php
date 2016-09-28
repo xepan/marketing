@@ -64,13 +64,20 @@ class page_telemarketing extends \xepan\base\Page{
 		$form->setLayout('view\teleconversationform');
 		
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
+		
+		// getting contact string to display it as dropdown
+		$contact_array = [];
+		if($_GET['lead_id']){
+			$contact = $this->add('xepan\base\Model_Contact')->load($lead_id);
+			$contact_array = explode('<br/>', $contact['contacts_str']);			
+		}
 
 		$form->addField('Line','title');
 		$form->addField('Text','description');
 		$form->addField('Line','from_number');
-		$form->addField('Line','to_number');
+		$to_field = $form->addField('xepan\base\NoValidateDropDown','to_number')->setValueList($contact_array);
 		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
-
+		$to_field->select_menu_options=['tags'=>true];
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
 		
@@ -93,21 +100,11 @@ class page_telemarketing extends \xepan\base\Page{
 		/*
 				JS FOR RELOAD WITH SPECIFIC ID 
 		*/
-				
-		// $view_lead->js('click',
-		// 	[	
-		// 	// $view_conversation->js()->addClass('hidden'),
-		// 		$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
-		// 		$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
-	
-		$view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
-			$js_array = [
-					$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
-					$view_teleform->js()->reload(['lead_id'=>$data['id']],null,$view_teleform_url),
-
-					];
-			return $js_array;
-		});
+					
+		$view_lead->js('click',
+			[$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id')]),
+			$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id')])
+			])->_selector('.tele-lead');
 		
 		if($lead_id){
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){

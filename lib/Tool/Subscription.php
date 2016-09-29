@@ -124,9 +124,32 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
 		$mail = $this->add('xepan\communication\Model_Communication_Email');
 		
-		$sub_model=$this->app->epan->config;
-		$email_subject=$sub_model->getConfig('SUBSCRIPTION_MAIL_SUBJECT');
-		$email_body=$sub_model->getConfig('SUBSCRIPTION_MAIL_BODY');												
+		// $sub_model=$this->app->epan->config;
+		// $email_subject=$sub_model->getConfig('SUBSCRIPTION_MAIL_SUBJECT');
+		// $email_body=$sub_model->getConfig('SUBSCRIPTION_MAIL_BODY');												
+
+		$frontend_config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'user_registration_type'=>'DropDown',
+						'reset_subject'=>'xepan\base\RichText',
+						'reset_body'=>'xepan\base\RichText',
+						'update_subject'=>'Line',
+						'update_body'=>'xepan\base\RichText',
+						'registration_subject'=>'Line',
+						'registration_body'=>'xepan\base\RichText',
+						'verification_subject'=>'Line',
+						'verification_body'=>'xepan\base\RichText',
+						'subscription_subject'=>'Line',
+						'subscription_body'=>'xepan\base\RichText',
+						],
+				'config_key'=>'FRONTEND_LOGIN_RELATED_EMAIL',
+				'application'=>'communication'
+		]);
+		$frontend_config_m->tryLoadAny();
+
+		$email_subject = $frontend_config_m['subscription_subject'];
+		$email_body = $frontend_config_m['subscription_body'];
 
 		$subject_temp=$this->add('GiTemplate');
 		$subject_temp->loadTemplateFromString($email_subject);

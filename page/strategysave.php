@@ -36,7 +36,6 @@ class page_strategysave extends \xepan\base\Page{
 				'config_key'=>'ORGANIZATIONS_STRATEGY_PLANNING',
 				'application'=>'marketing'
 		]);
-		$config_m->add('xepan\hr\Controller_ACL');
 		$config_m->tryLoadAny();
 		$config_m[$_POST['field']] = $_POST['nodes'];
 		$config_m->save();

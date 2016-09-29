@@ -62,15 +62,28 @@ class page_strategyplanning extends \xepan\base\Page{
 									]);
 
 		// ORGANIZATION'S LOCATION MANAGEMENT
+		$config_m1 = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'country'=>'line',
+						'state'=>'line',
+						'city'=>'line',
+						],
+				'config_key'=>'abcd',
+				'application'=>'marketing',
+				'acl'=> 'ORGANIZATIONS_STRATEGY_PLANNING'
+		]);
+		$config_m1->add('xepan\hr\Controller_ACL');
+		$config_m1->tryLoadAny();
 		$location_crud = $this->add('xepan\base\CRUD',['frame_options'=>['width'=>'600px'],'entity_name'=>'Location'],'location');
-		$location_crud->setModel($config_m,['country','state','city']);
+		$location_crud->setModel($config_m1,['country','state','city']);
 
 		// ORGANIZATION'S BUSINESS DESCRIPTION MANAGEMENT
 		$form = $this->add('Form',null,'business');
 		$form->setModel($config_m,['business_description','business_stream','business_usp']);
 		$form->addSubmit('Save');
 		if($form->isSubmitted()){
-			$form->model->save();
+			$form->save();
 			$form->js()->univ()->successMessage("Saved Successfully")->execute();
 		}
 

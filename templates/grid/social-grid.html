@@ -33,7 +33,8 @@
                 </div>
               </div>
             </div>
-            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" data-id="{$id}" sparkHeight="50px" class="sparkline source_graph">{$source_graph}</span><span class="text-success">Platform</span></a><a href="#"><span sparkType="pie" data-id="{$id}" sparkHeight="50px" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a><a href="#"><span sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]" class="sparkline">1,2,3  </span><span class="text-success">Location</span></a></div>
+            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" data-id="{$id}" sparkHeight="50px" class="sparkline source_graph">{$source_graph}</span><span class="text-success">Platform</span></a><a href="#"></a><a href="#" class="pull-right"><span sparkType="pie" data-id="{$id}" sparkHeight="50px" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a>
+            </div>
             <div class="project-box-ultrafooter clearfix">
               <div class="col-md-4">{$action}</div>
               <div class="col-md-4"> </div>
@@ -94,5 +95,9 @@
   
   hr{
     margin: 2px 0px 5px 0px !important;
+  }
+  
+  .project-box .project-box-footer a{
+  border-right:0px !important;
   }
 </style>

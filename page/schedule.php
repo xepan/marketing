@@ -4,7 +4,7 @@ namespace xepan\marketing;
 class page_schedule extends \xepan\base\Page{
 	
 	public $title="Schedule";
-	
+	public $breadcrumb=['Home'=>'index','Campaign'=>'xepan_marketing_campaign','Schedule'=>'#'];
 	function init(){
 		parent::init();	
 		$campaign_id=$this->app->stickyGET('campaign_id');

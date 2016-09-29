@@ -112,7 +112,6 @@ class page_telemarketing extends \xepan\base\Page{
 			$js_array = [
 				$js->univ()->successMessage('Positive Marking Done'),
 				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
-
 				];
 			return $js_array;
 			});
@@ -170,12 +169,6 @@ class page_telemarketing extends \xepan\base\Page{
 				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
 
 			});
-
-		/*
-				ANALYTICAL GRAPHS 
-		*/
-
-		// $view_graph = $this->add('xepan\marketing\View_TeleGraph',null,'graph');
 	}
 
 	function defaultTemplate(){

@@ -124,38 +124,37 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$form->addField('billing_pincode');
 		$form->addField('DatePicker','due_date');
 		$form->addSubmit('Save');
-
 		if($form->isSubmitted()){
-			$this->quote($form['narration'],$form['probability_percentage']);
+			$quotation_model  = $this->quote($form->getAllFields());
 			$this->app->employee
 				->addActivity("Quoted Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('negotiate,win,lose','Quoted');
-
-			// TODO - check if commerce application is installed
-			$quotation  = $this->add('xepan\commerce\Model_Quotation');
-			$quotation['contact_id'] = $this['lead_id'];
-			$quotation['related_qsp_master_id'] = $form['related_qsp_master_id'];
-			$quotation['billing_address'] = $form['billing_address'];
-			$quotation['billing_country_id'] = $form['billing_country_id'];
-			$quotation['billing_state_id'] = $form['billing_state_id'];
-			$quotation['billing_city'] = $form['billing_city'];
-			$quotation['billing_pincode'] = $form['billing_pincode'];
-			$quotation['currency_id'] = $this->app->epan->default_currency->id;
-			$quotation['exchange_rate'] = 1;
-			$quotation['due_date'] = $form['due_date'];
-			$quotation->save();
-
-			$form->app->redirect($this->app->url('xepan_commerce_quotationdetail',['action'=>'edit','document_id'=>$quotation->id]))->execute();
+			return $this->app->page_action_result = $form->js()->univ()->frameURL('Quotation',$this->app->url('xepan_commerce_quotationdetail',['action'=>'edit','document_id'=>$quotation_model->id]));		
 		}	
 	}
 
-	function quote($narration,$probability_percentage=0){
+	function quote($form_data){
+
+		$quotation  = $this->add('xepan\commerce\Model_Quotation');
+		$quotation['contact_id'] = $this['lead_id'];
+		$quotation['related_qsp_master_id'] = $this->id;
+		$quotation['billing_address'] = $form_data['billing_address'];
+		$quotation['billing_country_id'] = $form_data['billing_country_id'];
+		$quotation['billing_state_id'] = $form_data['billing_state_id'];
+		$quotation['billing_city'] = $form_data['billing_city'];
+		$quotation['billing_pincode'] = $form_data['billing_pincode'];
+		$quotation['currency_id'] = $this->app->epan->default_currency->id;
+		$quotation['exchange_rate'] = 1;
+		$quotation['due_date'] = $form_data['due_date'];
+		$quotation->save();
+
 		$this['previous_status']= $this['status'];
 		$this['status']='Quoted';
-		$this['narration']=$narration;
-		$this['probability_percentage']=$probability_percentage;
+		$this['narration']= $form_data['narration'];
+		$this['probability_percentage']= $form_data['probability_percentage'];
 		$this->save();
-		return true;
+
+		return $quotation;
 	}
 
 	function page_negotiate($p){
@@ -165,7 +164,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		if($quotation->loaded()){
 			$view = $p->add('View');	
-			$view->setHTML('Lead Already Quoted with<br> <b>Discount Amount :</b> '.'<b>'.$quotation['discount_amount'].'</b><br>'.' <b>Net Amount : </b> '.'<b>'.$quotation['net_amount'].'</b><br>'.'<b><span style = "cursor:pointer; cursor: hand; max-width:600px;" class ="view-quotation-detail small" data-quotation-id ='.$quotation['document_no'].'>click to view detail</a></b><hr>');
+			$view->setHTML('Lead Already Quoted with<br> <b>Discount Amount :</b> '.'<b>'.$quotation['discount_amount'].'</b><br>'.' <b>Net Amount : </b> '.'<b>'.$quotation['net_amount'].'</b><br>'.'<b><span style = "cursor:pointer; cursor: hand; max-width:600px;" class ="view-quotation-detail small" data-quotation-id ='.$quotation['id'].'>click to view detail</a></b><hr>');
 			$view->js('click')->_selector('.view-quotation-detail')->univ()->frameURL('Quotation Details',[$this->api->url('xepan_commerce_quotationdetail'),'document_id'=>$view->js()->_selectorThis()->closest('[data-quotation-id]')->data('id')]);
 		}
 

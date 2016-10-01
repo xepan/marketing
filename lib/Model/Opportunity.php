@@ -117,14 +117,35 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$form = $p->add('Form');
 		$form->addField('text','narration')->set($this['narration']);
 		$form->addField('probability_percentage')->set($this['probability_percentage']);
+		$form->addField('billing_address');
+		$form->addField('billing_country_id');
+		$form->addField('billing_state_id');
+		$form->addField('billing_city');
+		$form->addField('billing_pincode');
+		$form->addField('DatePicker','due_date');
 		$form->addSubmit('Save');
-		
+
 		if($form->isSubmitted()){
 			$this->quote($form['narration'],$form['probability_percentage']);
 			$this->app->employee
 				->addActivity("Quoted Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('negotiate,win,lose','Quoted');
-			return $p->js()->univ()->closeDialog();
+
+			// TODO - check if commerce application is installed
+			$quotation  = $this->add('xepan\commerce\Model_Quotation');
+			$quotation['contact_id'] = $this['lead_id'];
+			$quotation['related_qsp_master_id'] = $form['related_qsp_master_id'];
+			$quotation['billing_address'] = $form['billing_address'];
+			$quotation['billing_country_id'] = $form['billing_country_id'];
+			$quotation['billing_state_id'] = $form['billing_state_id'];
+			$quotation['billing_city'] = $form['billing_city'];
+			$quotation['billing_pincode'] = $form['billing_pincode'];
+			$quotation['currency_id'] = $this->app->epan->default_currency->id;
+			$quotation['exchange_rate'] = 1;
+			$quotation['due_date'] = $form['due_date'];
+			$quotation->save();
+
+			$form->app->redirect($this->app->url('xepan_commerce_quotationdetail',['action'=>'edit','document_id'=>$quotation->id]))->execute();
 		}	
 	}
 

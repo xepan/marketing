@@ -53,6 +53,9 @@ class page_leaddetails extends \xepan\base\Page {
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
 			$o->setModel($lead->ref('Opportunities'),['title','description','status','assign_to','fund','discount_percentage','closing_date']);
 			
+			if($o->isEditing()){
+				$o->form->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
+			}
 
 			$activity_view = $this->add('xepan\base\Grid',['no_records_message'=>'No activity found'],'activity',['view/activity/activity-grid']);
 			$activity_view->add('xepan\base\Paginator',null,'Paginator');

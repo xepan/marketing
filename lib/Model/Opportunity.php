@@ -47,10 +47,10 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 	
-		// $this->is([
-		// 		'closing_date|required',
-		// 		'title|required'
-		// ]);
+		$this->is([
+				'closing_date|required',
+				'title|required'
+		]);
 	}
 
 	function updateSearchString($m){
@@ -64,26 +64,29 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this['search_string'] = $search_string;
 	}
 
-	function page_qualify($p){		
+	function page_qualify($p){
 		$form = $p->add('Form');
-		$form->addField('text','narration')->set($this['narration']);
-		$form->addField('probability_percentage')->set($this['probability_percentage']);
+		$form->addField('text','narration');//->set($this['narration']);
+		$form->addField('probability_percentage');//->set($this['probability_percentage']);
 		$form->addSubmit('Save');
 		
 		if($form->isSubmitted()){
-			$new = $p->add('xepan\marketing\Model_Opportunity')->load($this->id);
-
-			$new['previous_status'] = $this['status'];
-			$new['status'] = 'Qualified';
-			$new['narration']  = $form['narration'];
-			$new['probability_percentage']  = $form['probability_percentage'];
-			$new->save();
-			// $this->app->employee
-			// 	->addActivity("Qualified Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
-			// 	->notifyWhoCan('analyse_needs,lose','Qualified');
-			$form->js()->univ()->successMessage('Opportunity Qualified')->execute();
+			$this->qualify($form['narration'],$form['probability_percentage']);
+			$this->app->employee
+				->addActivity("Qualified Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
+				->notifyWhoCan('analyse_needs,lose','Qualified');
+			return $p->js()->univ()->closeDialog();
 		}
 	}	
+
+	function qualify($narration,$probability_percentage=0){
+		$this['previous_status']= $this['status'];
+		$this['status']='Qualified';
+		$this['narration']=$narration;
+		$this['probability_percentage']=$probability_percentage;
+		$this->save();
+		return true;
+	}
 
 	function page_analyse_needs($p){
 		$form = $p->add('Form');

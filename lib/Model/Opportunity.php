@@ -11,7 +11,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'Quoted',
 		'Negotiated',
 		'Winned',
-		'Losed'
+		'Lost'
 	];
 	public $actions=[
 		'Open'=>['view','edit','delete','qualify','lose'],
@@ -19,8 +19,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose'],
 		'Quoted'=>['view','edit','delete','negotiate','win','lose'],
 		'Negotiated'=>['view','edit','delete','win','quote','lose'],
-		'Winned'=>['view','edit','delete'],
-		'Losed'=>['view','edit','delete']
+		'Won'=>['view','edit','delete'],
+		'Lost'=>['view','edit','delete']
 	];
 
 	function init(){
@@ -66,8 +66,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	function page_qualify($p){
 		$form = $p->add('Form');
-		$form->addField('text','narration');//->set($this['narration']);
-		$form->addField('probability_percentage');//->set($this['probability_percentage']);
+		$form->addField('text','narration')->set($this['narration']);
+		$form->addField('probability_percentage')->set($this['probability_percentage']);
 		$form->addSubmit('Save');
 		
 		if($form->isSubmitted()){
@@ -90,80 +90,116 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 	function page_analyse_needs($p){
 		$form = $p->add('Form');
-		$form->setModel('xepan\marketing\Opportunity',['narration','probability_percentage'])->load($this->id);
+		$form->addField('text','narration')->set($this['narration']);
+		$form->addField('probability_percentage')->set($this['probability_percentage']);
 		$form->addSubmit('Save');
-
+		
 		if($form->isSubmitted()){
-			$form->save();
-			$this['previous_status'] = $this['status'];
-			$this['status'] = 'NeedsAnalysis';
+			$this->analyse_needs($form['narration'],$form['probability_percentage']);
 			$this->app->employee
 				->addActivity("analysing needs of Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('quote,negotiate,lose','NeedsAnalysis');
-			$this->saveAndUnload();
-		}	
+			return $p->js()->univ()->closeDialog();
+		}
+	}
+
+
+	function analyse_needs($narration,$probability_percentage=0){		
+		$this['previous_status']= $this['status'];
+		$this['status']='NeedsAnalysis';
+		$this['narration']=$narration;
+		$this['probability_percentage']=$probability_percentage;
+		$this->save();
+		return true;
 	}
 
 	function page_quote($p){
 		$form = $p->add('Form');
-		$form->setModel('xepan\marketing\Opportunity',['narration','probability_percentage'])->load($this->id);
+		$form->addField('text','narration')->set($this['narration']);
+		$form->addField('probability_percentage')->set($this['probability_percentage']);
 		$form->addSubmit('Save');
-
+		
 		if($form->isSubmitted()){
-			$form->save();
-			$this['previous_status'] = $this['status'];
-			$this['status'] = 'Quoted';
+			$this->quote($form['narration'],$form['probability_percentage']);
 			$this->app->employee
 				->addActivity("Quoted Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('negotiate,win,lose','Quoted');
-			$this->saveAndUnload();
+			return $p->js()->univ()->closeDialog();
 		}	
+	}
+
+	function quote($narration,$probability_percentage=0){
+		$this['previous_status']= $this['status'];
+		$this['status']='Quoted';
+		$this['narration']=$narration;
+		$this['probability_percentage']=$probability_percentage;
+		$this->save();
+		return true;
 	}
 
 	function page_negotiate($p){
 		$form = $p->add('Form');
-		$form->setModel('xepan\marketing\Opportunity',['narration','probability_percentage'])->load($this->id);
+		$form->addField('text','narration')->set($this['narration']);
+		$form->addField('probability_percentage')->set($this['probability_percentage']);
 		$form->addSubmit('Save');
-
+		
 		if($form->isSubmitted()){
-			$form->save();
-			$this['previous_status'] = $this['status'];
-			$this['status'] = 'Negotiated';
+			$this->negotiate($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("analysing needs of Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
-				->notifyWhoCan('win,quote,lose','Quoted');
-			$this->saveAndUnload();
-		}		
+				->addActivity("Negotiated Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
+				->notifyWhoCan('win,quote,lose','Negotiated');
+			return $p->js()->univ()->closeDialog();
+		}	
+	}
+
+	function negotiate($narration,$probability_percentage=0){
+		$this['previous_status']= $this['status'];
+		$this['status']='Negotiated';
+		$this['narration']=$narration;
+		$this['probability_percentage']=$probability_percentage;
+		$this->save();
+		return true;
 	}
 
 	function page_win($p){
 		$form = $p->add('Form');
-		$form->setModel('xepan\marketing\Opportunity',['narration','probability_percentage'])->load($this->id);
+		$form->addField('text','narration')->set($this['narration']);
 		$form->addSubmit('Save');
-
+		
 		if($form->isSubmitted()){
-			$form->save();
-			$this['previous_status'] = $this['status'];
-			$this['status'] = 'Winned';
+			$this->win($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("analysing needs of Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");			
-				$this->saveAndUnload();
+				->addActivity("won Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");			
+			return $p->js()->univ()->closeDialog();
 		}	
+	}
+
+	function win($narration){
+		$this['previous_status']= $this['status'];
+		$this['status']='Won';
+		$this['narration']=$narration;
+		$this->save();
+		return true;
 	}
 
 	function page_lose($p){
 		$form = $p->add('Form');
-		$form->setModel('xepan\marketing\Opportunity',['narration','probability_percentage'])->load($this->id);
+		$form->addField('text','narration')->set($this['narration']);
 		$form->addSubmit('Save');
-
+		
 		if($form->isSubmitted()){
-			$form->save();
-			$this['previous_status'] = $this['status'];
-			$this['status'] = 'Losed';
+			$this->lose($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("analysing needs of Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
-			$this->saveAndUnload();
-			
-		}	
+				->addActivity("Lost Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
+			return $p->js()->univ()->closeDialog();	
+		}
+	}
+
+	function lose($narration){
+		$this['previous_status']= $this['status'];
+		$this['status']='Lost';
+		$this['narration']=$narration;
+		$this->save();
+		return true;
 	}
 } 

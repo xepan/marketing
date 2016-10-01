@@ -8,11 +8,12 @@ class page_telemarketing extends \xepan\base\Page{
 		parent::init();
 		
 		$lead_id = $this->app->stickyGET('lead_id');
-
+		$contact_id = $this->app->stickyGET('contact_id');
+		
 		if($lead_id)
 			$lead_model = $this->add('xepan\marketing\Model_Lead')->load($lead_id);
 		/*
-				GRID FOR SHOWING ALL LEAD 
+			GRID FOR SHOWING ALL LEAD 
 		*/
 
 		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
@@ -63,13 +64,14 @@ class page_telemarketing extends \xepan\base\Page{
 		$form = $view_teleform->add('Form');
 		$form->setLayout('view\teleconversationform');
 		
+
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 		
 		// getting contact string to display it as dropdown
 		$contact_array = [];
 		if($_GET['lead_id']){
 			$contact = $this->add('xepan\base\Model_Contact')->load($lead_id);
-			$contact_array = explode('<br/>', $contact['contacts_str']);			
+			$contact_array = explode('<br/>', $contact['contacts_str']);						
 		}
 
 		$form->addField('Line','title');
@@ -80,29 +82,22 @@ class page_telemarketing extends \xepan\base\Page{
 		$to_field->select_menu_options=['tags'=>true];
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
-		
 		/*
-				GRID FOR SHOWING PREVIOUS CONVERSATION 
+			GRID FOR SHOWING PREVIOUS CONVERSATION 
 		*/							
+
+		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',null,'bottom');
 
 		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
 									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
-		$view_conversation = $this->add('xepan\hr\CRUD',null,'bottom',['view\teleconversationlister'])->addClass('fliter-grid');
-			$view_conversation->setModel($model_communication,['title','description'],['title','description','created_at','from','to_raw']);
-			$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
-			$view_conversation->grid->addPaginator(10);
-			$view_conversation->grid->addQuickSearch(['name']);
-			
-			$view_conversation->grid->addHook('formatRow',function($g){	
-				$data = json_decode($g->model['to_raw'],true);
-				$g->current_row_html['last_call_no'] = $data[0]['number'];
-			});		
+		$view_conversation->setModel($model_communication);
+		
 		/*
-				JS FOR RELOAD WITH SPECIFIC ID 
+			JS FOR RELOAD WITH SPECIFIC ID 
 		*/
 					
 		$view_lead->js('click',
-			[$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id')]),
+			[$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id'),'contact_id'=>$this->js()->_selectorThis()->data('id')]),
 			$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id')])
 			])->_selector('.tele-lead');
 		

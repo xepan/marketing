@@ -159,6 +159,16 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 	}
 
 	function page_negotiate($p){
+		$quotation = $this->add('xepan\commerce\Model_Quotation');
+		$quotation->addCondition('related_qsp_master_id',$this->id);
+		$quotation->tryLoadAny();
+
+		if($quotation->loaded()){
+			$view = $p->add('View');	
+			$view->setHTML('Lead Already Quoted with<br> <b>Discount Amount :</b> '.'<b>'.$quotation['discount_amount'].'</b><br>'.' <b>Net Amount : </b> '.'<b>'.$quotation['net_amount'].'</b><br>'.'<b><span style = "cursor:pointer; cursor: hand; max-width:600px;" class ="view-quotation-detail small" data-quotation-id ='.$quotation['document_no'].'>click to view detail</a></b><hr>');
+			$view->js('click')->_selector('.view-quotation-detail')->univ()->frameURL('Quotation Details',[$this->api->url('xepan_commerce_quotationdetail'),'document_id'=>$view->js()->_selectorThis()->closest('[data-quotation-id]')->data('id')]);
+		}
+
 		$form = $p->add('Form');
 		$form->addField('text','narration')->set($this['narration']);
 		$form->addField('probability_percentage')->set($this['probability_percentage']);

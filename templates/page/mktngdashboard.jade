@@ -1,20 +1,72 @@
-.panel.panel-default
-  | {$Content}
-  .panel-body
-    .col-md-12
-      | {form_layout}
-      // <div class="col-md-6">Date Range{$range}</div>
-      .col-md-3.atk-form-row From Date{$from_date}
-      .col-md-3.atk-form-row To Date{$to_date}
-      .col-md-3.atk-form-row Group {$group}
-      .col-md-3
-      |     {/}
-.row.xepan-push-large
+div(id="{$_name}")
   .panel.panel-default
+    | {$Content}
     .panel-body
-      .col-md-6 {$lead_vs_score}
-      .col-md-6
-        | {$ratio_filter}
-.row.xepan-push-large
-  .panel.panel-default
-    .panel-body {$hot_lead}
+      .col-md-12
+        | {form_layout}
+        // <div class="col-md-6">Date Range{$range}</div>
+        .col-md-3.atk-form-row From Date{$from_date}
+        .col-md-3.atk-form-row To Date{$to_date}
+        .col-md-3.atk-form-row Group {$group}
+        .col-md-3
+        |     {/}
+  .row.xepan-push-large
+    .panel.panel-default
+      .panel-body
+        .col-md-6 {$lead_vs_score}
+        .col-md-6
+          | {$ratio_filter}
+  .row.xepan-push-large
+    .panel.panel-default
+      .panel-body {$hot_lead}
+  .row.xepan-push-large
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Revenue Channels
+          {$roi_of_channel}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Sales Current Pipeline
+          {$sale_current_pipeline}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Lead Engaging by channel
+          {$engagin_by_channel}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Customer Satisfaction
+          {$customer_satisfaction}
+    .col-md-8
+      .panel.panel-default
+        .panel-body
+          h3 Sales Activity by Sales Emp.
+          {$sales_activity_by_sales_emp}
+    .col-md-12
+      .panel.panel-default
+        .panel-body
+          h3 Month over Month Growth
+          {$month_over_month_growth}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Key opportunity month/six-month/year
+          {$key_opportunity}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Closed Rate by Sales Emp
+          {$closed_rate_by_sale_emp}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 Apportunity amount vs Discount amount
+          {$apportunity_amount_vs_discount_amount}
+    .col-md-4
+      .panel.panel-default
+        .panel-body
+          h3 High Revenue By Employee
+          {$high_revenue_by_employee}

@@ -7,38 +7,116 @@ class page_dashboard extends \xepan\base\Page{
 	
 	function init(){
 		parent::init();
-
-		$this->add('xepan\base\View_Chart')
-	         ->setData([
-	         		'columns' => [
-				        ['data1', 30, 200, 100, 400, 150, 250],
-				        ['data2', 50, 20, 10, 40, 15, 25]
-				      ]
-	         	]);
-
-		// $from_date = date("Y-m-d", strtotime('-1 months', strtotime($this->app->today))); 		
-		// $custom_date = strtotime(date("Y-m-d", strtotime('-1 month', strtotime($this->app->today)))); 		
-		// $week_start = date('Y-m-d', strtotime('this week last monday', $custom_date));
-		// $week_end = date('Y-m-d', strtotime('this week next sunday', $custom_date));
+	    
+		$from_date = date("Y-m-d", strtotime('-1 months', strtotime($this->app->today))); 		
+		$custom_date = strtotime(date("Y-m-d", strtotime('-1 month', strtotime($this->app->today)))); 		
+		$week_start = date('Y-m-d', strtotime('this week last monday', $custom_date));
+		$week_end = date('Y-m-d', strtotime('this week next sunday', $custom_date));
 		
 		// // HEADER FORM
-		// $form = $this->add('Form',null,'form_layout');
-		// $form->setLayout(['page/mktngdashboard','form_layout']);
-		// $field_from_date = $form->addField('DatePicker','from_date')->validate('required')->set($custom_date);
-		// $field_to_date = $form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
-		// // $form->addField('DateRangePicker','range')->validate('required');
-		// $field_group = $form->addField('dropdown','group')->setValueList(['Hours'=>'Hours','Date'=>'Date','Week'=>'Week','Month'=>'Month','Year'=>'Year'])->set('Date');
-		// $form->addSubmit("Filter")->addClass('btn btn-primary');
-		// if($form->isSubmitted()){
-		// 	if(!$form['from_date'])
-		// 		$form->error('from_date','must not be empty');
+		$form = $this->add('Form',null,'form_layout');
+		$form->setLayout(['page/mktngdashboard','form_layout']);
+		$field_from_date = $form->addField('DatePicker','from_date')->validate('required')->set($custom_date);
+		$field_to_date = $form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
+		// $form->addField('DateRangePicker','range')->validate('required');
+		$field_group = $form->addField('dropdown','group')->setValueList(['Hours'=>'Hours','Date'=>'Date','Week'=>'Week','Month'=>'Month','Year'=>'Year'])->set('Date');
+		$form->addSubmit("Filter")->addClass('btn btn-primary');
+		if($form->isSubmitted()){
+			if(!$form['from_date'])
+				$form->error('from_date','must not be empty');
 			
-		// 	if(!$form['to_date'])
-		// 		$form->error('to_date','must not be empty');
+			if(!$form['to_date'])
+				$form->error('to_date','must not be empty');
 			
-		// 	$form->app->redirect($this->app->url(null,['from_date'=>$form['from_date'],'to_date'=>$form['to_date'],'group'=>$form['group']]));
-		// }
+			$form->app->redirect($this->app->url(null,['from_date'=>$form['from_date'],'to_date'=>$form['to_date'],'group'=>$form['group']]));
+		}
 
+		// $this->add('xepan\base\View_Chart')
+	 //         ->setData([
+	 //         		'columns' => [
+		// 		        ['data1', 30, 200, 100, 400, 150, 250],
+		// 		        ['data2', 50, 20, 10, 40, 15, 25]
+		// 		      ]
+	 //         	]);
+
+		// ROI of channel
+	    $this->add('xepan\base\View_Chart',null,'roi_of_channel')
+	     		->setData(['columns'=> [
+						            ['Social Marketing', 30],
+						            ['Email', 50],
+						            ['SMS', 80],
+						            ['Personal', 40],
+						            ['By Referrence', 60]
+					        	],
+					        'type'=>'pie'
+					    	]);
+		
+		// sale_current_pipeline
+		$this->add('xepan\base\View_Chart',null,'sale_current_pipeline')
+	     		->setData(['columns'=> [
+						            ['Open', 90],
+						            ['Qualified', 70],
+						            ['Needs Analysis', 60],
+						            ['Quoted', 50],
+						            ['Negotiated', 5]
+					        	],
+					        'type'=>'pie'
+					    	]);
+	    
+	    // customer-satisfaction
+	     $this->add('xepan\base\View_Chart',null,'customer_satisfaction')
+	     		->setData(['columns'=> [
+						            ['data', 60]
+					        	],
+					        'type'=>'gauge'
+					    	]);
+	    // engagin_by_channel
+     	$this->add('xepan\base\View_Chart',null,'engagin_by_channel')
+     		->setData(['columns'=> [
+						        ['Social Marketing', 100],
+					            ['Email', 70],
+					            ['SMS', 40],
+				        	],
+				        'type'=>'donut'
+				    	])
+     		->mergeOptions(['donut'=> ['title'=> "Lead engegged by channel"]]);
+		
+		// Sales activity by sale emp
+     	$this->add('xepan\base\View_Chart',null,'sales_activity_by_sales_emp')
+     		->setData(['columns'=> [
+						        ['data1', 30, 200, 200, 400, 150, 250],
+					            ['data2', 130, 100, 100, 200, 150, 50],
+					            ['data3', 230, 200, 200, 300, 250, 250]
+				        	],
+				        'type'=>'bar',
+				        "groups"=> [['data1', 'data2']]
+				])
+     		->mergeOptions([
+     							'grid'=>['y'=>['lines'=>[['value'=>0]]]],
+     							'axis'=>['rotated'=>true]
+     						]);
+
+     	//month over month growth
+     	$this->add('xepan\base\View_Chart',null,'month_over_month_growth')
+     		->setData([
+     				"columns"=> [
+			            ['data1', 30, 20, 50, 40, 60, 50],
+			            ['data2', 200, 130, 90, 240, 130, 220],
+			            ['data3', 300, 200, 160, 400, 250, 250],
+			            ['data4', 200, 130, 90, 240, 130, 220],
+			            ['data5', 130, 120, 150, 140, 160, 150],
+			            ['data6', 90, 70, 20, 50, 60, 120],
+			        ],
+			        "type"=> 'bar',
+			        "types"=> [
+			            "data3"=> 'spline',
+			            "data4"=> 'line',
+			            "data6"=> 'area',
+			        ],
+			        "groups"=> [
+			            ['data1','data2']
+			        ]
+     			]);
 		// //GRAPH 1
 		// // LEAD VS SCORE INCREMENT GRAPH
 		
@@ -187,7 +265,7 @@ class page_dashboard extends \xepan\base\Page{
 		
 	}
 
-	// function defaultTemplate(){
-	// 	return['page/mktngdashboard'];
-	// }
+	function defaultTemplate(){
+		return['page/mktngdashboard'];
+	}
 }

@@ -35,7 +35,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$opp_j->addField('description')->type('text');
 		$opp_j->addField('fund')->type('money');
 		$opp_j->addField('discount_percentage')->type('int');
-		$opp_j->addField('closing_date');
+		$opp_j->addField('closing_date')->type('date');
 		$opp_j->addField('narration')->type('text');
 		$opp_j->addField('previous_status');
 		$opp_j->addField('probability_percentage');
@@ -118,8 +118,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$form->addField('text','narration')->set($this['narration']);
 		$form->addField('probability_percentage')->set($this['probability_percentage']);
 		$form->addField('billing_address');
-		$form->addField('billing_country_id');
-		$form->addField('billing_state_id');
+		$form->addField('DropDown','billing_country')->setModel('xepan\base\Country');
+		$form->addField('DropDown','billing_state')->setModel('xepan\base\State');
 		$form->addField('billing_city');
 		$form->addField('billing_pincode');
 		$form->addField('DatePicker','due_date');
@@ -139,8 +139,8 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$quotation['contact_id'] = $this['lead_id'];
 		$quotation['related_qsp_master_id'] = $this->id;
 		$quotation['billing_address'] = $form_data['billing_address'];
-		$quotation['billing_country_id'] = $form_data['billing_country_id'];
-		$quotation['billing_state_id'] = $form_data['billing_state_id'];
+		$quotation['billing_country_id'] = $form_data['billing_country'];
+		$quotation['billing_state_id'] = $form_data['billing_state'];
 		$quotation['billing_city'] = $form_data['billing_city'];
 		$quotation['billing_pincode'] = $form_data['billing_pincode'];
 		$quotation['currency_id'] = $this->app->epan->default_currency->id;

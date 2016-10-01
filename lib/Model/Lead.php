@@ -6,7 +6,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	public $status = ['Active','InActive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate','communication','send'],
+					'Active'=>['view','edit','delete','deactivate','communication','send','create_opportunity'],
 					'InActive'=>['view','edit','delete','activate','communication']
 					];
 
@@ -195,6 +195,13 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
 	}
 	
+	function page_create_opportunity($page){
+		$crud = $page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid']);		
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('lead_id',$this->id);
+		$crud->setModel($opportunity,['title','description','status','assign_to','fund','discount_percentage','closing_date']);
+	}
+
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee

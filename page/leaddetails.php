@@ -46,13 +46,16 @@ class page_leaddetails extends \xepan\base\Page {
 		$lead_view->setModel($lead);
 
 			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
-			$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark','weekly_communication'],['source','remark']);//,'marketing_category_id','communication','opportunities'
+			$detail->setModel($lead,['assign_to_id','source','marketing_category','communication','opportunities','remark','weekly_communication'],['assign_to_id','source','remark']);//,'marketing_category_id','communication','opportunities'
 		if($lead->loaded()){
 			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
-			$o->setModel($lead->ref('Opportunities'));
+			$o->setModel($lead->ref('Opportunities'),['title','description','status','assign_to','fund','discount_percentage','closing_date']);
 			
+			if($o->isEditing()){
+				$o->form->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
+			}
 
 			$activity_view = $this->add('xepan\base\Grid',['no_records_message'=>'No activity found'],'activity',['view/activity/activity-grid']);
 			$activity_view->add('xepan\base\Paginator',null,'Paginator');

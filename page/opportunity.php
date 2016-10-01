@@ -24,7 +24,7 @@ class page_opportunity extends \xepan\base\Page{
 		$opportunity->add('xepan\marketing\Controller_SideBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
-		$crud->setModel($opportunity);
+		$crud->setModel($opportunity,['title','description','status','assign_to','fund','discount_percentage','closing_date']);
 		$crud->grid->addPaginator(10);		
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
 		

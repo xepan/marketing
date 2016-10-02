@@ -39,39 +39,74 @@ class page_dashboard extends \xepan\base\Page{
 		// 		      ]
 	 //         	]);
 
+
+		$model = $this->add('xepan\marketing\Model_Opportunity');
+		$model->addExpression('fund_sum')->set('sum(fund)');
+		$model->addExpression('source_filled')->set($model->dsql()->expr('IFNULL([0],"unknown")',[$model->getElement('source')]));
+		// $model->addCondition('status','Winned');
+		$model->_dsql()->group('source_filled');
+
 		// ROI of channel
 	    $this->add('xepan\base\View_Chart',null,'roi_of_channel')
-	     		->setData(['columns'=> [
-						            ['Social Marketing', 30],
-						            ['Email', 50],
-						            ['SMS', 80],
-						            ['Personal', 40],
-						            ['By Referrence', 60]
-					        	],
-					        'type'=>'pie'
-					    	]);
+	    		->setType('pie')
+	    		->setModel($model,'source_filled',['fund_sum'])
+	    		;
+
+		
+		$model = $this->add('xepan\marketing\Model_Opportunity');
+		$model->addExpression('fund_sum')->set('sum(fund)');
+		$model->_dsql()->group('status');
 		
 		// sale_current_pipeline
 		$this->add('xepan\base\View_Chart',null,'sale_current_pipeline')
-	     		->setData(['columns'=> [
-						            ['Open', 90],
-						            ['Qualified', 70],
-						            ['Needs Analysis', 60],
-						            ['Quoted', 50],
-						            ['Negotiated', 5]
-					        	],
-					        'type'=>'pie'
-					    	]);
+	     		->setType('pie')
+	    		->setModel($model,'status',['fund_sum'])
+	    		;
 	    
-	    // customer-satisfaction
-	     $this->add('xepan\base\View_Chart',null,'customer_satisfaction')
-	     		->setData(['columns'=> [
-						            ['data', 60]
-					        	],
-					        'type'=>'gauge'
-					    	]);
+
+	    $model = $this->add('xepan\marketing\Model_Opportunity');
+		$model->addExpression('fund_sum')->set('sum(fund)');
+		$model->addExpression('source_filled')->set($model->dsql()->expr('IFNULL([0],"unknown")',[$model->getElement('source')]));
+		// $model->addCondition('status','Winned');
+		$model->_dsql()->group('source_filled');
+
+
 	    // engagin_by_channel
-     	$this->add('xepan\base\View_Chart',null,'engagin_by_channel')
+	     $this->add('xepan\base\View_Chart',null,'engagin_by_channel')
+	     		->setType('pie')
+	    		->setModel($model,'source_filled',['fund_sum'])
+	    		;
+	    
+	   	// Sales activity by sale emp
+	   //  		public $status=[
+				// 	'Open',
+				// 	'Qualified',
+				// 	'NeedsAnalysis',
+				// 	'Quoted',
+				// 	'Negotiated',
+				// 	'Winned',
+				// 	'Lost'
+				// ];
+	    $model = $this->add('xepan\hr\Model_Employee');
+	    $model->hasMany('xepan\marketing\Opportunity','assign_to_id',null,'Oppertunities');
+		$model->addExpression('Open')->set($model->refSQL('Oppertunities')->addCondition('status','Open')->sum('fund'));
+		$model->addExpression('Qualified')->set($model->refSQL('Oppertunities')->addCondition('status','Qualified')->sum('fund'));
+		$model->addExpression('Total')->set(function($m,$q){
+				return $q->expr('IFNULL([0],0) + IFNULL([1],0)',[$m->getElement('Open'),$m->getElement('Qualified')]);
+			});
+		$model->addCondition('Total','>',0);
+		$model->addCondition('status','Active');
+
+     	$this->add('xepan\base\View_Chart',null,'sales_activity_by_sales_emp')
+     		->setType('bar')
+     		->setModel($model,'name',['Open','Qualified'])
+     		->setGroup(['Open','Qualified'])
+     		;
+
+	    return;
+
+	    // customer-satisfaction
+     	$this->add('xepan\base\View_Chart',null,'customer_satisfaction')
      		->setData(['columns'=> [
 						        ['Social Marketing', 100],
 					            ['Email', 70],
@@ -80,21 +115,6 @@ class page_dashboard extends \xepan\base\Page{
 				        'type'=>'donut'
 				    	])
      		->mergeOptions(['donut'=> ['title'=> "Lead engegged by channel"]]);
-		
-		// Sales activity by sale emp
-     	$this->add('xepan\base\View_Chart',null,'sales_activity_by_sales_emp')
-     		->setData(['columns'=> [
-						        ['data1', 30, 200, 200, 400, 150, 250],
-					            ['data2', 130, 100, 100, 200, 150, 50],
-					            ['data3', 230, 200, 200, 300, 250, 250]
-				        	],
-				        'type'=>'bar',
-				        "groups"=> [['data1', 'data2']]
-				])
-     		->mergeOptions([
-     							'grid'=>['y'=>['lines'=>[['value'=>0]]]],
-     							'axis'=>['rotated'=>true]
-     						]);
 
      	//month over month growth
      	$this->add('xepan\base\View_Chart',null,'month_over_month_growth')

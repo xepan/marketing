@@ -44,8 +44,7 @@ class Initiator extends \Controller_Addon {
 		$m->addItem(['Tele Marketing','icon'=>'fa fa-phone'],'xepan_marketing_telemarketing');
 		$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));
 		$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']));
-		$m->addItem(['Social Config','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
-		$m->addItem(['Social Exec','icon'=>'fa fa-cog'],'xepan_marketing_socialexec');
+		$m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 		$m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 
 		

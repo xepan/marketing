@@ -11,6 +11,8 @@
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Name </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
         <th data-hide="phone"><span>Category</span></th>
+        <th><span style="border-bottom:1px solid gray;">Created By</span><span>Assign To</span></th>
+        <th><span>Last Communication</span></th>
         <th id="{$score_sortid}"><span>Total Score {$score_sort}</span></th>
         <th><span>Total Visits</span></th>
         <th> </th>{/}{/}
@@ -18,7 +20,7 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="#" data-id="{$id}" class="user-link do-view-lead">{name}Name{/}</a><span class="user-subhead">{source}Source{/}
+          <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="#" data-id="{$id}" class="user-link do-view-lead">{$effective_name}</a><span class="user-subhead">{source}Source{/}
               <h6>[{city}{/}] - [{$type}]</h6></span>
           </td>
           <td>
@@ -29,6 +31,11 @@
             <div class="row">{$marketing_category}</div>{/}{/}
             {/}
           </td>
+          <td>
+            <div title="Lead Created By" style="border-bottom:1px solid gray;">{$created_by}</div>
+            <div title="Lead Assign To">{$assign_to}</div>
+          </td>
+          <td>{$last_communication}</td>
           <td><a href="#" data-id="{$id}" class="do-view-lead-score"><span class="alert alert-warning">{score}0{/}</span></a></td>
           <td><a href="#" data-id="{$id}" class="do-view-lead-visitor"><span class="alert alert-success">{$total_visitor}</span></a></td>
           <td>{$action}</td>

@@ -39,17 +39,18 @@ class page_dashboard extends \xepan\base\Page{
 		// 		      ]
 	 //         	]);
 
-
 		$model = $this->add('xepan\marketing\Model_Opportunity');
 		$model->addExpression('fund_sum')->set('sum(fund)');
 		$model->addExpression('source_filled')->set($model->dsql()->expr('IFNULL([0],"unknown")',[$model->getElement('source')]));
-		// $model->addCondition('status','Winned');
+		$model->addCondition('status','Won');
 		$model->_dsql()->group('source_filled');
 
 		// ROI of channel
-	    $this->add('xepan\base\View_Chart',null,'roi_of_channel')
+	    $this->add('xepan\base\View_Chart',null,'Charts')
 	    		->setType('pie')
 	    		->setModel($model,'source_filled',['fund_sum'])
+	    		->addClass('col-md-4')
+	    		->setTitle('Won Business Sources')
 	    		;
 
 		
@@ -58,49 +59,71 @@ class page_dashboard extends \xepan\base\Page{
 		$model->_dsql()->group('status');
 		
 		// sale_current_pipeline
-		$this->add('xepan\base\View_Chart',null,'sale_current_pipeline')
+		$this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
 	    		->setModel($model,'status',['fund_sum'])
+	    		->addClass('col-md-4')
+	    		->setTitle('Opportunities Pipeline')
 	    		;
 	    
 
 	    $model = $this->add('xepan\marketing\Model_Opportunity');
 		$model->addExpression('fund_sum')->set('sum(fund)');
 		$model->addExpression('source_filled')->set($model->dsql()->expr('IFNULL([0],"unknown")',[$model->getElement('source')]));
-		// $model->addCondition('status','Winned');
 		$model->_dsql()->group('source_filled');
 
 
 	    // engagin_by_channel
-	     $this->add('xepan\base\View_Chart',null,'engagin_by_channel')
+	     $this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
 	    		->setModel($model,'source_filled',['fund_sum'])
+	    		->setTitle('Opportunities From Sources')
+	    		->addClass('col-md-4');
 	    		;
 	    
 	   	// Sales activity by sale emp
-	   //  		public $status=[
-				// 	'Open',
-				// 	'Qualified',
-				// 	'NeedsAnalysis',
-				// 	'Quoted',
-				// 	'Negotiated',
-				// 	'Winned',
-				// 	'Lost'
-				// ];
+
+	 //    public $status=[
+		// 	'Open',
+		// 	'Qualified',
+		// 	'NeedsAnalysis',
+		// 	'Quoted',
+		// 	'Negotiated',
+		// 	'Won',
+		// 	'Lost'
+		// ];
 	    $model = $this->add('xepan\hr\Model_Employee');
 	    $model->hasMany('xepan\marketing\Opportunity','assign_to_id',null,'Oppertunities');
 		$model->addExpression('Open')->set($model->refSQL('Oppertunities')->addCondition('status','Open')->sum('fund'));
 		$model->addExpression('Qualified')->set($model->refSQL('Oppertunities')->addCondition('status','Qualified')->sum('fund'));
+		$model->addExpression('NeedsAnalysis')->set($model->refSQL('Oppertunities')->addCondition('status','NeedsAnalysis')->sum('fund'));
+		$model->addExpression('Quoted')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->sum('fund'));
+		$model->addExpression('Negotiated')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
+		$model->addExpression('Won')->set($model->refSQL('Oppertunities')->addCondition('status','Won')->sum('fund'));
+		$model->addExpression('Lost')->set($model->refSQL('Oppertunities')->addCondition('status','Lost')->sum('fund'));
 		$model->addExpression('Total')->set(function($m,$q){
-				return $q->expr('IFNULL([0],0) + IFNULL([1],0)',[$m->getElement('Open'),$m->getElement('Qualified')]);
+				return $q->expr('IFNULL([0],0) + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0) ',
+					[
+						$m->getElement('Open'),
+						$m->getElement('Qualified'),
+						$m->getElement('NeedsAnalysis'),
+						$m->getElement('Quoted'),
+						$m->getElement('Negotiated'),
+						$m->getElement('Won'),
+						$m->getElement('Lost')
+					]);
 			});
+		
 		$model->addCondition('Total','>',0);
 		$model->addCondition('status','Active');
 
-     	$this->add('xepan\base\View_Chart',null,'sales_activity_by_sales_emp')
+     	$this->add('xepan\base\View_Chart',null,'Charts')
      		->setType('bar')
      		->setModel($model,'name',['Open','Qualified'])
      		->setGroup(['Open','Qualified'])
+     		->setTitle('Sales Staff Status')
+     		->addClass('col-md-8')
+     		->rotateAxis()
      		;
 
 	    return;

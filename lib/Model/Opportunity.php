@@ -42,12 +42,6 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->addExpression('duration')->set('"TODO"');
 		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
-		$this->addExpression('lead')->set(function($m,$q){
-			return $this->add('xepan\base\Model_Contact')
-						->addCondition('id',$this->getElement('lead_id'))
-						->setLimit(1)
-						->fieldQuery('name');
-		});
 
 		$this->getElement('status')->defaultValue('Open');
 		$this->addCondition('type','Opportunity');

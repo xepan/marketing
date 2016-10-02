@@ -31,13 +31,28 @@ class page_dashboard extends \xepan\base\Page{
 			$form->app->redirect($this->app->url(null,['from_date'=>$form['from_date'],'to_date'=>$form['to_date'],'group'=>$form['group']]));
 		}
 
-		// $this->add('xepan\base\View_Chart')
-	 //         ->setData([
-	 //         		'columns' => [
-		// 		        ['data1', 30, 200, 100, 400, 150, 250],
-		// 		        ['data2', 50, 20, 10, 40, 15, 25]
-		// 		      ]
-	 //         	]);
+		// ============ CHARTS =============
+
+		$model = $this->add('xepan\marketing\Model_Lead');
+		$model->addExpression('lead_count')->set('count(*)');
+		$model->addExpression('score_sum')->set(function($m,$q){
+			return $q->expr('IFNULL([0],0)',[$this->add('xepan\base\Model_PointSystem')->addCondition('contact_id',$q->getField('id'))->sum('score')]);
+		});
+
+		$model->addExpression('Date','DATE(created_at)');
+		$model->addExpression('Month','DATE_FORMAT(created_at,"%Y %M")');
+		$model->addExpression('Year','YEAR(created_at)');
+		$model->addExpression('Week','WEEK(created_at)');
+
+		$model->_dsql()->group('Date');
+		$model->addCondition('created_at','<>',null);
+
+		$this->add('xepan\base\View_Chart',null,'Charts')
+	    		->setType('line')
+	    		->setModel($model,'Date',['lead_count','score_sum'])
+	    		->addClass('col-md-12')
+	    		->setTitle('Lead Count Vs Score')
+	    		;
 
 		$model = $this->add('xepan\marketing\Model_Opportunity');
 		$model->addExpression('fund_sum')->set('sum(fund)');
@@ -113,7 +128,7 @@ class page_dashboard extends \xepan\base\Page{
 						$m->getElement('Lost')
 					]);
 			});
-		
+
 		$model->addCondition('Total','>',0);
 		$model->addCondition('status','Active');
 

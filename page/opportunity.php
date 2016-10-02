@@ -8,6 +8,7 @@ class page_opportunity extends \xepan\base\Page{
 		parent::init(); 
  
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->setOrder('created_at','desc');
 		$opportunity->addExpression('weakly_communication')->set(function($m,$q){
 			$comm = $m->add('xepan/communication/Model_Communication');
 			$comm->_dsql()->del('fields');

@@ -88,27 +88,23 @@ class page_leaddetails extends \xepan\base\Page {
 
 				$base = $detail->form->layout;
 
-				$cat_ass_field = $base->addField('hidden','ass_cat')->set(json_encode($lead->getAssociatedCategories()));
-
-				$base->addField('hidden','contact_id')->set($_GET['contact_id']);
-
-				$category_assoc_grid = $base->add('xepan\base\Grid',['show_header'=>false],'marketing_category');
-				$category_assoc_grid->setModel($model_assoc_category,['name'],['name']);
-				$category_assoc_grid->addSelectable($cat_ass_field);
+				$cat_ass_field = $base->addField('DropDown','ass_cat')->set($lead->getAssociatedCategories());
+				$cat_ass_field->setAttr(['multiple'=>'multiple']);
+				$cat_ass_field->setModel('xepan\marketing\Model_MarketingCategory');
 
 				$detail->form->onSubmit(function($frm){
+					$lead_model = $this->add('xepan\marketing\Model_lead')->load($_GET['contact_id']);	
+					$lead_model->removeAssociateCategory();
 
-				$lead_model = $this->add('xepan\marketing\Model_lead')->load($_GET['contact_id']);	
-				$lead_model->removeAssociateCategory();
+					$selected_categories = [];
+					$selected_categories = explode(',', $frm['ass_cat']);
+					
+					foreach ($selected_categories as $cat) {
+						$lead_model->associateCategory($cat);
+					}
 
-				$selected_categories = json_decode($frm['ass_cat'],true);
-
-				foreach ($selected_categories as $cat) {
-					$lead_model->associateCategory($cat);
-				}
-
-				$frm->save();
-				$frm->js(null,$this->js()->univ()->successMessage('Lead associated with categories'))->reload()->execute();	
+					$frm->save();
+					$frm->js(null,$this->js()->univ()->successMessage('Saved'))->reload()->execute();	
 				});
 			
 			}

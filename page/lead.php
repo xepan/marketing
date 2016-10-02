@@ -25,7 +25,7 @@ class page_lead extends \xepan\base\Page{
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$lead->setOrder('total_visitor','desc');
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$grid=$crud->grid;
 		$grid->addClass('grab-lead-grid');
@@ -38,18 +38,18 @@ class page_lead extends \xepan\base\Page{
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
 
-		// $source_type = $frm->addField('Dropdown','source_type')->setEmptyText('Please Select Source');
-		// $source_model = $this->add('xepan\base\Model_ConfigJsonModel',
-		//         [
-		//             'fields'=>[
-		//                         'reset_subject'=>'Line',
-		//                         ],
-	 //                'config_key'=>'ADMIN_LOGIN_RELATED_EMAIL',
-	 //                'application'=>'communication'
-		//         ]);
-		// $source_model->tryLoadAny();
-		// $source_type->setModel($source_model);
-		// $source_type->js('change',$frm->js()->submit());
+		$source_type = $frm->addField('Dropdown','source_type')->setEmptyText('Please Select Source');
+		$source_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		        [
+		            'fields'=>[
+						'lead_source'=>'text',
+						],
+					'config_key'=>'MARKETING_LEAD_SOURCE',
+					'application'=>'marketing'
+		        ]);
+		$source_model->tryLoadAny();
+		$source_array = explode(",",$source_model['lead_source']);
+		$source_type->setValueList(array_combine($source_array,$source_array));
 
 		$frm->addHook('applyFilter',function($f,$m){
 			if($f['marketing_category_id']){
@@ -63,6 +63,7 @@ class page_lead extends \xepan\base\Page{
 		});
 		
 		$status->js('change',$frm->js()->submit());
+		$source_type->js('change',$frm->js()->submit());
 
 
 		$grid->addColumn('category');

@@ -10,7 +10,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'NeedsAnalysis',
 		'Quoted',
 		'Negotiated',
-		'Winned',
+		'Won',
 		'Lost'
 	];
 	public $actions=[
@@ -42,6 +42,13 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->addExpression('duration')->set('"TODO"');
 		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
+		$this->addExpression('lead')->set(function($m,$q){
+			return $this->add('xepan\base\Model_Contact')
+						->addCondition('id',$this->getElement('lead_id'))
+						->setLimit(1)
+						->fieldQuery('name');
+		});
+
 		$this->getElement('status')->defaultValue('Open');
 		$this->addCondition('type','Opportunity');
 
@@ -164,7 +171,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		if($quotation->loaded()){
 			$view = $p->add('View');	
-			$view->setHTML('Lead Already Quoted with<br> <b>Discount Amount :</b> '.'<b>'.$quotation['discount_amount'].'</b><br>'.' <b>Net Amount : </b> '.'<b>'.$quotation['net_amount'].'</b><br>'.'<b><span style = "cursor:pointer; cursor: hand; max-width:600px;" class ="view-quotation-detail small" data-quotation-id ='.$quotation['id'].'>click to view detail</a></b><hr>');
+			$view->setHTML('Lead Already Quoted with<br> <b>Discount Amount :</b> '.'<b>'.$quotation['discount_amount'].'</b><br>'.' <b>Net Amount : </b> '.'<b>'.$quotation['net_amount'].'</b><br>'.'<b><span style = "cursor:pointer; cursor: hand; max-width:600px;" class ="view-quotation-detail small" data-quotation-id ='.$quotation['id'].' data-id = '.$quotation['id'].'>click to view detail</a></b><hr>');
 			$view->js('click')->_selector('.view-quotation-detail')->univ()->frameURL('Quotation Details',[$this->api->url('xepan_commerce_quotationdetail'),'document_id'=>$view->js()->_selectorThis()->closest('[data-quotation-id]')->data('id')]);
 		}
 

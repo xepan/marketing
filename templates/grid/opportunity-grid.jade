@@ -19,8 +19,6 @@
                     span Communication    
                 th(data-hide="phone")
                     span Description    
-                th()
-                    span Duration 
                 th  
                                
                 th 
@@ -38,16 +36,12 @@
                       {/}
                       {title}{/}
                       .row 
-                            //- a(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$lead_id}{/}') 
                             a.user-link.do-view-opportunity(href='#',data-id="{$id}" data-lead-id="{$lead_id}")  
-                                span.user-subhead{lead}Lead{/}
+                                span.user-subhead {$lead}
                     td
                       .sparkline(sparkType = "bar") {$weakly_communication}    
                     td
-                        span.small {$description}    
-                    td
-                        | {duration}Duration{/}
-
+                        span.small {$description}
                     td  
                         | {$action}
 

@@ -7,11 +7,10 @@ class page_telemarketing extends \xepan\base\Page{
 	function init(){
 		parent::init();
 		
-		$lead_id = $this->app->stickyGET('lead_id');
 		$contact_id = $this->app->stickyGET('contact_id');
 		
-		if($lead_id)
-			$lead_model = $this->add('xepan\marketing\Model_Lead')->load($lead_id);
+		if($contact_id)
+			$lead_model = $this->add('xepan\marketing\Model_Lead')->load($contact_id);
 		/*
 			GRID FOR SHOWING ALL LEAD 
 		*/
@@ -75,10 +74,10 @@ class page_telemarketing extends \xepan\base\Page{
 			GRID FOR SHOWING PREVIOUS CONVERSATION 
 		*/							
 
-		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',null,'bottom');
+		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id],'bottom');
 
 		$model_communication = $this->add('xepan\communication\Model_Communication')
-									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
+									->addCondition('to_id',$contact_id)->setOrder('id','desc')->setLimit(1);
 		$view_conversation->setModel($model_communication);
 		
 		/*
@@ -86,11 +85,11 @@ class page_telemarketing extends \xepan\base\Page{
 		*/
 					
 		$view_lead->js('click',
-			[$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id'),'contact_id'=>$this->js()->_selectorThis()->data('id')]),
-			$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->data('id')])
+			[$view_conversation->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')]),
+			$view_teleform->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
 			])->_selector('.tele-lead');
 		
-		if($lead_id){
+		if($contact_id){
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);
 			$js_array = [
@@ -118,13 +117,13 @@ class page_telemarketing extends \xepan\base\Page{
  		$button->add('VirtualPage')
 			->bindEvent('Opportunities','click')
 			->set(function($page){
-				$lead_id = $this->app->stickyGET('lead_id');
-				if(!$lead_id){
+				$contact_id = $this->app->stickyGET('contact_id');
+				if(!$contact_id){
 					$page->add('View_Error')->set('Please Select A Lead First');
 					return;	
 				}
 				$opportunity_model = $page->add('xepan\marketing\Model_Opportunity')
-									  ->addCondition('lead_id',$lead_id);	
+									  ->addCondition('lead_id',$contact_id);	
 				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
 
 			});

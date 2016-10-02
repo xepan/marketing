@@ -207,6 +207,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$crud = $page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid']);		
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
 		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->setOrder('created_at','desc');
 		$opportunity->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
 		$crud->setModel($opportunity,['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
 	}

@@ -14,11 +14,11 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'Lost'
 	];
 	public $actions=[
-		'Open'=>['view','edit','delete','qualify','lose'],
-		'Qualified'=>['view','edit','delete','analyse_needs','lose'],
-		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose'],
-		'Quoted'=>['view','edit','delete','negotiate','win','lose'],
-		'Negotiated'=>['view','edit','delete','win','quote','lose'],
+		'Open'=>['view','edit','delete','qualify','lose','reassess'],
+		'Qualified'=>['view','edit','delete','analyse_needs','lose','reassess'],
+		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','reassess'],
+		'Quoted'=>['view','edit','delete','negotiate','win','lose','reassess'],
+		'Negotiated'=>['view','edit','delete','win','quote','lose','reassess'],
 		'Won'=>['view','edit','delete'],
 		'Lost'=>['view','edit','delete']
 	];
@@ -42,6 +42,12 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 
 		$this->addExpression('duration')->set('"TODO"');
 		$this->addExpression('source')->set($this->refSql('lead_id')->fieldQuery('source'));
+		$this->addExpression('effective_name')->set(function($m,$q){
+			$lead = $this->add('xepan\marketing\Model_Lead');
+			$lead->addCondition('id',$m->getElement('lead_id'));
+			$lead->setLimit(1);
+			return $lead->fieldQuery('effective_name');
+		});
 
 		$this->getElement('status')->defaultValue('Open');
 		$this->addCondition('type','Opportunity');
@@ -230,6 +236,31 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$this['previous_status']= $this['status'];
 		$this['status']='Lost';
 		$this['narration']=$narration;
+		$this->save();
+		return true;
+	}
+
+	function page_reassess($p){
+		$form = $p->add('Form');
+		$form->addField('text','narration')->set($this['narration']);
+		$form->addField('fund')->set($this['fund']);
+		$form->addField('discount_percentage')->set($this['discount_percentage']);
+		$form->addField('DatePicker','closing_date')->set($this['closing_date']);
+		$form->addSubmit('Save');
+		
+		if($form->isSubmitted()){
+			$this->reassess($form['fund'],$form['discount_percentage'],$form['narration'],$form['closing_date']);
+			$this->app->employee
+				->addActivity("Reassessed Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
+			return $p->js()->univ()->closeDialog();	
+		}
+	}
+
+	function reassess($fund,$discount_percentage,$narration,$closing_date){
+		$this['fund']= $fund;
+		$this['discount_percentage']=$discount_percentage;
+		$this['narration']=$narration;
+		$this['closing_date']=$closing_date;
 		$this->save();
 		return true;
 	}

@@ -15,8 +15,8 @@
                 th(id="{$title_sortid}")
                     span Title
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$title_sort}
-                th(data-hide="phone")
-                    span Communication    
+                th
+                    span Assigned To    
                 th(data-hide="phone")
                     span Description    
                 th  
@@ -37,9 +37,11 @@
                       {title}{/}
                       .row 
                             a.user-link.do-view-opportunity(href='#',data-id="{$id}" data-lead-id="{$lead_id}")  
-                                span.user-subhead {$lead}
-                    td
-                      .sparkline(sparkType = "bar") {$weakly_communication}    
+                                span.user-subhead {$effective_name}
+                    td 
+                        span {$assign_to} 
+                    td 
+                        span {$fund} 
                     td
                         span.small {$description}
                     td  

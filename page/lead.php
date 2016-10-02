@@ -8,13 +8,24 @@ class page_lead extends \xepan\base\Page{
 	function page_index(){
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->addExpression('last_communication')->set(function($m,$q){
+			$last_commu = $m->add('xepan\communication\Model_Communication');
+			$last_commu->addCondition(
+							$last_commu->dsql()->orExpr()
+								->where('from_id',$q->getField('id'))
+								->where('to_id',$q->getField('id'))
+							)
+						->setOrder('id','desc')
+						->setLimit(1);
+			return $q->expr('DATE_FORMAT([0],"%M-%d-%Y")',[$last_commu->fieldQuery('created_at')]);
+		});
 
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$lead->setOrder('total_visitor','desc');
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor'])->setOrder('created_at','desc');	
+		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$grid=$crud->grid;
 		$grid->addClass('grab-lead-grid');
@@ -23,9 +34,22 @@ class page_lead extends \xepan\base\Page{
 		$crud->add('xepan\base\Controller_Avatar');
 		
 		$frm=$grid->addQuickSearch(['name']);
-				
+	
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
+
+		$source_type = $frm->addField('Dropdown','source_type')->setEmptyText('Please Select Source');
+		$source_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		        [
+		            'fields'=>[
+						'lead_source'=>'text',
+						],
+					'config_key'=>'MARKETING_LEAD_SOURCE',
+					'application'=>'marketing'
+		        ]);
+		$source_model->tryLoadAny();
+		$source_array = explode(",",$source_model['lead_source']);
+		$source_type->setValueList(array_combine($source_array,$source_array));
 
 		$frm->addHook('applyFilter',function($f,$m){
 			if($f['marketing_category_id']){
@@ -33,9 +57,14 @@ class page_lead extends \xepan\base\Page{
 				$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
 				$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
 			}
+			if($f['source_type']){
+				$m->addCondition('source',$f['source_type']);
+			}
 		});
 		
 		$status->js('change',$frm->js()->submit());
+		$source_type->js('change',$frm->js()->submit());
+
 
 		$grid->addColumn('category');
 		$grid->addMethod('format_marketingcategory',function($grid,$field){				

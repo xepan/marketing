@@ -98,8 +98,10 @@ class page_leaddetails extends \xepan\base\Page {
 
 					$selected_categories = [];
 					$selected_categories = explode(',', $frm['ass_cat']);
-					
+												
 					foreach ($selected_categories as $cat) {
+						if(!$cat)
+							break;														
 						$lead_model->associateCategory($cat);
 					}
 

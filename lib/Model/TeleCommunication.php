@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Model_TeleCommunication extends \xepan\communication\Model_Communication{
+class Model_TeleCommunication extends \xepan\communication\Model_Communication_TeleMarketing{
 	public $acl=true;
 	public $actions = ['*'=>['view','edit','delete']];
 	function init(){

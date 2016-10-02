@@ -74,7 +74,7 @@ class page_telemarketing extends \xepan\base\Page{
 			GRID FOR SHOWING PREVIOUS CONVERSATION 
 		*/							
 
-		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id],'bottom');
+		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'bottom');
 
 		$model_communication = $this->add('xepan\communication\Model_Communication')
 									->addCondition('to_id',$contact_id)->setOrder('id','desc')->setLimit(1);
@@ -124,7 +124,7 @@ class page_telemarketing extends \xepan\base\Page{
 				}
 				$opportunity_model = $page->add('xepan\marketing\Model_Opportunity')
 									  ->addCondition('lead_id',$contact_id);	
-				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
+				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model,['title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
 
 			});
 	}

@@ -17,7 +17,7 @@ class page_lead extends \xepan\base\Page{
 							)
 						->setOrder('id','desc')
 						->setLimit(1);
-			return $q->expr('DATE_FORMAT([0],"%M-%d-%Y")',[$last_commu->fieldQuery('created_at')]);
+			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
 		});
 
 		if($status = $this->app->stickyGET('status'))

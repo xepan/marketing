@@ -29,7 +29,7 @@ class page_leaddetails extends \xepan\base\Page {
 		$lead->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 		if($action=="add"){
 
-			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
+			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document','page_reload'=>($action=='add')],'contact_view_full_width');
 			$lead_view->document_view->effective_template->del('im_and_events_andrelation');
 			$lead_view->document_view->effective_template->del('email_and_phone');
 			$lead_view->document_view->effective_template->del('avatar_wrapper');

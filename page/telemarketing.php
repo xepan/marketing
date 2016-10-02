@@ -68,18 +68,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 		
 		// getting contact string to display it as dropdown
-		$contact_array = [];
-		if($_GET['lead_id']){
-			$contact = $this->add('xepan\base\Model_Contact')->load($lead_id);
-			$contact_array = explode('<br/>', $contact['contacts_str']);						
-		}
 
-		$form->addField('Line','title');
-		$form->addField('Text','description');
-		$form->addField('Line','from_number');
-		$to_field = $form->addField('xepan\base\NoValidateDropDown','to_number')->setValueList($contact_array)->setEmptyText('Select or add a number');
-		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
-		$to_field->select_menu_options=['tags'=>true];
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
 		/*
@@ -88,7 +77,7 @@ class page_telemarketing extends \xepan\base\Page{
 
 		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',null,'bottom');
 
-		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
+		$model_communication = $this->add('xepan\communication\Model_Communication')
 									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
 		$view_conversation->setModel($model_communication);
 		
@@ -120,31 +109,6 @@ class page_telemarketing extends \xepan\base\Page{
 				];
 			return $js_array;
 			});
-		}
-		
-		
-		/*
-				FORM SUBMISSION 
-		*/
-
-		if($form->isSubmitted()){
-
-			if(!$lead_id){
-				return $form->js()->univ()->errorMessage('Please Select A Lead First')->execute();
-			}
-
-			$model_telecommunication->unload();
-
-			$model_telecommunication['title'] = $form['title']; 
-			$model_telecommunication['description'] = $form['description']; 
-			$model_telecommunication['from_id']=$this->app->employee->id;
-			$model_telecommunication['to_id'] = $lead_id;
-			$model_telecommunication['from_raw'] = json_encode(['name'=>'','number'=>$form['from_number']]); 
-			$model_telecommunication['to_raw'] = json_encode([['name'=>'','number'=>$form['to_number']]]); 
-			$model_telecommunication->save();
-
-			return $view_conversation->js(true,$form->js()->univ()->reload()->successMessage("Added"))->univ()->reload()->execute();
-			  
 		}
 
 		/*

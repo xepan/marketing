@@ -76,10 +76,16 @@ class page_telemarketing extends \xepan\base\Page{
 
 		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'bottom');
 
-		$model_communication = $this->add('xepan\communication\Model_Communication')
-									->addCondition('to_id',$contact_id)->setOrder('id','desc')->setLimit(1);
+		$model_communication = $this->add('xepan\communication\Model_Communication');
+		$model_communication->addCondition(
+										$model_communication->dsql()->andExpr()
+									  	->where('to_id',$contact_id)
+									  	->where('to_id','<>',null));
+		$model_communication->setOrder('id','desc');
+
 		$view_conversation->setModel($model_communication);
-		
+		$view_conversation->add('Paginator',['ipp'=>1]);
+
 		/*
 			JS FOR RELOAD WITH SPECIFIC ID 
 		*/

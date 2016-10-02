@@ -13,7 +13,22 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function init(){
 		parent::init();
 		
+		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'lead_source'=>'text',
+						],
+				'config_key'=>'MARKETING_LEAD_SOURCE',
+				'application'=>'marketing'
+		]);
+		$config_m->tryLoadAny();
+
+		$this->getElement('source')->enum(explode(',', $config_m['lead_source']));
+
 		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
+
+		$config_m->add('xepan\hr\Controller_ACL');
+		$config_m->tryLoadAny();
 
 		$this->addExpression('open_count')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_Opportunity',['table_alias'=>'open_count'])
@@ -192,6 +207,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$crud = $page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid']);		
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
 		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->setOrder('created_at','desc');
 		$opportunity->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
 		$crud->setModel($opportunity,['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
 	}

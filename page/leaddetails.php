@@ -51,8 +51,7 @@ class page_leaddetails extends \xepan\base\Page {
 			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
-			$o->setModel($lead->ref('Opportunities'),['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
-
+			$o->setModel($lead->ref('Opportunities'),['title','description','status','assign_to_id','fund','discount_percentage','closing_date'])->setOrder('created_at','desc');
 			if(($action != 'view')){				
 				$detail->form->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
 			}

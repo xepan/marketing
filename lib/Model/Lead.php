@@ -80,6 +80,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		
 		$this->getElement('status')->defaultValue('Active');
+		$this->addHook('beforeDelete',[$this,'checkContactIsLead']);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
@@ -247,6 +248,11 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	}
 
 	//activate Lead
+
+	function checkContactIsLead(){
+		if($this['type'] !='Lead')
+			throw new \Exception("Sorry! you cannot delete ".$this['type'].", navigate to ".$this['type']." menu to delete");
+	}
 
 	function checkExistingOpportunities($m){				
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');

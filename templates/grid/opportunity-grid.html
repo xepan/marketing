@@ -10,9 +10,11 @@
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$title_sortid}"><span>Title</span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$title_sort}</span></th>
-        <th><span>Assigned To    </span></th>
+        <th><span>Assigned To </span></th>
+        <th><span>Fund</span></th>
+        <th><span>Last Communication           </span></th>
         <th data-hide="phone"><span>Description    </span></th>
-        <th> </th>
+        <th>         </th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
@@ -24,6 +26,7 @@
           </td>
           <td> <span>{$assign_to} </span></td>
           <td> <span>{$fund} </span></td>
+          <td><span>{$last_communication}    </span></td>
           <td><span class="small">{$description}</span></td>
           <td>
              

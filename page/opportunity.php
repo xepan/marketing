@@ -17,8 +17,14 @@ class page_opportunity extends \xepan\base\Page{
 			$comm->_dsql()->group('to_id');
 
 			return $q->expr("(select GROUP_CONCAT(tmp.communication_count) from [sql] as tmp where tmp.to_id = [0])",[$m->getElement('lead_id'),'sql'=>$comm->_dsql()]);
-		});	
+		});
 
+		$opportunity->addExpression('last_communication')->set(function($m,$q){
+			$lead = $this->add('xepan\marketing\Model_Lead');
+			$lead->addCondition('id',$m->getElement('lead_id'));
+			$lead->setLimit(1);
+			return $lead->fieldQuery('last_communication');
+		});	
 
 		if($status = $this->app->stickyGET('status'))
 			$opportunity->addCondition('status',$status);
@@ -30,7 +36,7 @@ class page_opportunity extends \xepan\base\Page{
 			$crud->form->setLayout('form\opportunity');
 		}	
 
-		$crud->setModel($opportunity,['effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
+		$crud->setModel($opportunity,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
 		$crud->grid->addPaginator(10);		
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
 		

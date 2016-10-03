@@ -16,11 +16,14 @@
                     span Title
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$title_sort}
                 th
-                    span Assigned To    
+                    span Assigned To 
+                th
+                    span Fund
+                th
+                    span Last Communication           
                 th(data-hide="phone")
                     span Description    
-                th  
-                               
+                th          
                 th 
                 {/}{/}
             {/}
@@ -42,6 +45,8 @@
                         span {$assign_to} 
                     td 
                         span {$fund} 
+                    td
+                        span {$last_communication}    
                     td
                         span.small {$description}
                     td  

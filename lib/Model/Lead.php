@@ -236,17 +236,25 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	//activate Lead
 
-	function checkExistingOpportunities($m){
-		$this->ref('Opportunities')->each(function($o){
-			$o->delete();
-		});
+	function checkExistingOpportunities($m){				
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->tryLoadAny();
 
+		if($opportunity->loaded())
+			throw new \Exception('Cannot Delete,first delete lead`s opportunities');	
+
+		// $this->ref('Opportunities')->each(function($o){
+		// 	$o->delete();
+		// });
 	}
 
-	function checkExistingCategoryAssociation($m){
-		$cat_ass_count = $this->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
-		if($cat_ass_count)
-			throw $this->exception('Cannot Delete,first delete Category Association`s ');	
+	function checkExistingCategoryAssociation($m){		
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->load($this->id);
+
+		if($lead->loaded())
+			$lead->removeAssociateCategory();	
 	}
 
 	function getAssociatedCategories(){

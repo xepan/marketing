@@ -139,8 +139,8 @@ class page_dashboard extends \xepan\base\Page{
 
      	$this->add('xepan\base\View_Chart',null,'Charts')
      		->setType('bar')
-     		->setModel($model,'name',['Open','Qualified'])
-     		->setGroup(['Open','Qualified'])
+     		->setModel($model,'name',['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
+     		->setGroup(['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
      		->setTitle('Sales Staff Status')
      		->addClass('col-md-8')
      		->rotateAxis()

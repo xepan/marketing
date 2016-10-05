@@ -34,7 +34,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$opp_j->addField('title')->sortable(true);
 		$opp_j->addField('description')->type('text');
 		$opp_j->addField('fund')->type('money');
-		$opp_j->addField('discount_percentage')->type('int');
+		$opp_j->addField('discount_percentage')->type('int')->defaultValue(0);
 		$opp_j->addField('closing_date')->type('date');
 		$opp_j->addField('narration')->type('text');
 		$opp_j->addField('previous_status');

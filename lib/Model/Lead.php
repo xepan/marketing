@@ -63,11 +63,24 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			return $q->expr('IFNULL([0],0)',[$ps->sum('score')]);
 		})->sortable(true);
 
+		$this->addExpression('last_communication')->set(function($m,$q){
+			$last_commu = $m->add('xepan\communication\Model_Communication');
+			$last_commu->addCondition(
+							$last_commu->dsql()->orExpr()
+								->where('from_id',$q->getField('id'))
+								->where('to_id',$q->getField('id'))
+							)
+						->setOrder('id','desc')
+						->setLimit(1);
+			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
+		});
+
 		
 		$this->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$this->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		
 		$this->getElement('status')->defaultValue('Active');
+		$this->addHook('beforeDelete',[$this,'checkContactIsLead']);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
@@ -236,17 +249,30 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	//activate Lead
 
-	function checkExistingOpportunities($m){
-		$this->ref('Opportunities')->each(function($o){
-			$o->delete();
-		});
-
+	function checkContactIsLead(){
+		if($this['type'] !='Lead')
+			throw new \Exception("Sorry! you cannot delete ".$this['type'].", navigate to ".$this['type']." menu to delete");
 	}
 
-	function checkExistingCategoryAssociation($m){
-		$cat_ass_count = $this->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
-		if($cat_ass_count)
-			throw $this->exception('Cannot Delete,first delete Category Association`s ');	
+	function checkExistingOpportunities($m){				
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->tryLoadAny();
+
+		if($opportunity->loaded())
+			throw new \Exception('Cannot Delete,first delete lead`s opportunities');	
+
+		// $this->ref('Opportunities')->each(function($o){
+		// 	$o->delete();
+		// });
+	}
+
+	function checkExistingCategoryAssociation($m){		
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->load($this->id);
+
+		if($lead->loaded())
+			$lead->removeAssociateCategory();	
 	}
 
 	function getAssociatedCategories(){

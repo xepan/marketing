@@ -84,7 +84,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$model_communication->setOrder('id','desc');
 
 		$view_conversation->setModel($model_communication);
-		$view_conversation->add('Paginator',['ipp'=>1]);
+		$view_conversation->add('Paginator',['ipp'=>10]);
 
 		/*
 			JS FOR RELOAD WITH SPECIFIC ID 

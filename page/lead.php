@@ -8,17 +8,6 @@ class page_lead extends \xepan\base\Page{
 	function page_index(){
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
-		$lead->addExpression('last_communication')->set(function($m,$q){
-			$last_commu = $m->add('xepan\communication\Model_Communication');
-			$last_commu->addCondition(
-							$last_commu->dsql()->orExpr()
-								->where('from_id',$q->getField('id'))
-								->where('to_id',$q->getField('id'))
-							)
-						->setOrder('id','desc')
-						->setLimit(1);
-			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
-		});
 
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);

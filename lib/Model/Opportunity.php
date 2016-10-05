@@ -14,11 +14,11 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'Lost'
 	];
 	public $actions=[
-		'Open'=>['view','edit','delete','qualify','lose','reassess'],
-		'Qualified'=>['view','edit','delete','analyse_needs','lose','reassess'],
-		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','reassess'],
-		'Quoted'=>['view','edit','delete','negotiate','win','lose','reassess'],
-		'Negotiated'=>['view','edit','delete','win','quote','lose','reassess'],
+		'Open'=>['view','edit','delete','qualify','lose','reassess','communication'],
+		'Qualified'=>['view','edit','delete','analyse_needs','lose','reassess','communication'],
+		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','reassess','communication'],
+		'Quoted'=>['view','edit','delete','negotiate','win','lose','reassess','communication'],
+		'Negotiated'=>['view','edit','delete','win','quote','lose','reassess','communication'],
 		'Won'=>['view','edit','delete'],
 		'Lost'=>['view','edit','delete']
 	];
@@ -69,6 +69,12 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$search_string .=" ". $this['source'];
 
 		$this['search_string'] = $search_string;
+	}
+
+	function page_communication($p){
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->loadBy('id',$this['lead_id']);
+		$lead->page_communication($p);
 	}
 
 	function page_qualify($p){

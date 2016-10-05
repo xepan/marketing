@@ -95,18 +95,18 @@ class Initiator extends \Controller_Addon {
 
 	function resetDB(){
 		// Clear DB
-		if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
-        if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
-        $this->app->epan=$this->app->old_epan;
-        $truncate_models = ['Opportunity','Lead_Category_Association','Lead','Campaign_Category_Association','Schedule','Campaign_SocialUser_Association','campaign','Content','MarketingCategory'];
-        foreach ($truncate_models as $t) {
-            $m=$this->add('xepan\marketing\Model_'.$t);
-            foreach ($m as $mt) {
-                $mt->delete();
-            }
-        }
+		// if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
+	    // if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
+	    // $this->app->epan=$this->app->old_epan;
+        // $truncate_models = ['Opportunity','Lead_Category_Association','Lead','Campaign_Category_Association','Schedule','Campaign_SocialUser_Association','campaign','Content','MarketingCategory'];
+        // foreach ($truncate_models as $t) {
+        //     $m=$this->add('xepan\marketing\Model_'.$t);
+        //     foreach ($m as $mt) {
+        //         $mt->delete();
+        //     }
+        // }
         
-        $this->app->epan=$this->app->new_epan;
+        // $this->app->epan=$this->app->new_epan;
 
         $mar_cat=$this->add('xepan\marketing\Model_MarketingCategory');
         $mar_cat['name']="default";

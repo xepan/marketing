@@ -47,14 +47,14 @@ class page_dashboard extends \xepan\base\Page{
 		$model->_dsql()->group('Date');
 		$model->addCondition('created_at','<>',null);
 
-		$data=  ["columns"=> [
-            ['Lead', 30, 40, 50, 100, 150, 250],
-            ['Score', 10, 30, 70, 90, 150, 200]
-        ]];
+		// $data=  ["columns"=> [
+  //           ['Lead', 30, 40, 50, 100, 150, 250],
+  //           ['Score', 10, 30, 70, 90, 150, 200]
+  //       ]];
 		$this->add('xepan\base\View_Chart',null,'Charts')
 	    		->setType('line')
-	    		// ->setModel($model,'Date',['lead_count','score_sum'])
-	    		->setData($data)
+	    		->setModel($model,'Date',['lead_count','score_sum'])
+	    		// ->setData($data)
 	    		->addClass('col-md-12')
 	    		->setTitle('Lead Count Vs Score')
 	    		;
@@ -121,20 +121,8 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addExpression('Negotiated')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
 		$model->addExpression('Won')->set($model->refSQL('Oppertunities')->addCondition('status','Won')->sum('fund'));
 		$model->addExpression('Lost')->set($model->refSQL('Oppertunities')->addCondition('status','Lost')->sum('fund'));
-		$model->addExpression('Total')->set(function($m,$q){
-				return $q->expr('IFNULL([0],0) + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0) ',
-					[
-						$m->getElement('Open'),
-						$m->getElement('Qualified'),
-						$m->getElement('NeedsAnalysis'),
-						$m->getElement('Quoted'),
-						$m->getElement('Negotiated'),
-						$m->getElement('Won'),
-						$m->getElement('Lost')
-					]);
-			});
 
-		$model->addCondition('Total','>',0);
+		$model->addCondition([['Open','>',0],['Qualified','>',0],['NeedsAnalysis','>',0],['Quoted','>',0],['Negotiated','>',0]]);
 		$model->addCondition('status','Active');
 
      	$this->add('xepan\base\View_Chart',null,'Charts')

@@ -27,9 +27,6 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
 
-		$config_m->add('xepan\hr\Controller_ACL');
-		$config_m->tryLoadAny();
-
 		$this->addExpression('open_count')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_Opportunity',['table_alias'=>'open_count'])
 						->addCondition('lead_id',$q->getField('id'))
@@ -251,7 +248,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	function checkContactIsLead(){
 		if($this['type'] !='Lead')
-			throw new \Exception("Sorry! you cannot delete ".$this['type'].", navigate to ".$this['type']." menu to delete");
+			throw new \Exception("Sorry! you cannot delete ".$this['type'].", NAME ".$this['name']."ID ".$this['id']);
 	}
 
 	function checkExistingOpportunities($m){				

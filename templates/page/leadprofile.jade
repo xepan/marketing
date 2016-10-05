@@ -2,7 +2,89 @@
   | {$Content}
   .row
     .col-lg-12.col-md-12.col-sm-12
-      {$contact_view_full_width}
+      {contact_view_full_width}
+      {$Content}
+      div.main-box
+        header.main-box-header.clearfix.text-center
+          h2 Add New Lead
+        div.main-box-body.clearfix
+          div.row
+            div.form-group.col-xs-8
+              div.row
+                div.col-xs-6
+                  div.form-group.atk-form-row.atk-form-field
+                    {$first_name}
+                  div.form-group.atk-form-row.atk-form-field
+                    {$organization}
+                  div.form-group.atk-form-row.atk-form-field
+                    {$website}
+                div.col-xs-6
+                  div.form-group.atk-form-row.atk-form-field
+                    {$last_name}
+                  div.form-group.atk-form-row.atk-form-field
+                    {$post}
+              div.row
+                div.form-group.col-xs-6.atk-form-row.atk-form-field
+                  {$address}
+                div.col-xs-6
+                  div.form-group.atk-form-row.atk-form-field
+                    | Country 
+                    {$country_id}
+                  div.form-group.atk-form-row.atk-form-field
+                    | State
+                    {$state_id}    
+                  div.form-group.atk-form-row.atk-form-field
+                    {$city}
+                  div.form-group.atk-form-row.atk-form-field
+                    {$pin_code}
+              div.row
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  | Lead Note\ Remark\ Interest\ Narration
+                  {$remark}
+              div.row
+                div.form-group.col-xs-6.atk-form-field.atk-form-row
+                  | Lead Source
+                  {$source}
+                div.form-group.col-xs-6.atk-form-row.atk-form-field
+                  | Lead Assign to Employee
+                  {$assign_to_id}
+            div.form-group.col-xs-4
+              h3 Email Ids
+              div 
+                h2 Official Email
+              div.row
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$email_1}
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$email_2}
+              div
+                h2 Personal Email
+              div.row
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$email_3}
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$email_4}
+              h3 Contact Numbers
+              div 
+                h2 Official Contact Number
+              div.row
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$contact_no_1}
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$contact_no_2}
+              div
+                h2 Personal Contact Number
+              div.row
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$contact_no_3}
+                div.form-group.col-xs-12.atk-form-row.atk-form-field
+                  {$contact_no_4}
+          div.row
+            div.form-group.col-xs-12.atk-form-row.atk-form-field
+              | Lead Belongs to Category
+              {$category}
+        {$form_buttons}
+      {/}
     .col-lg-3.co-md-3.col-sm-3
       {$contact_view}
     //-include ../../../base/templates/view/profile.jade

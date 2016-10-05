@@ -1,7 +1,101 @@
 
 <div id="user-profile">{$Content}
   <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">{$contact_view_full_width}</div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      {contact_view_full_width}
+      {$Content}
+      <div class="main-box">
+        <header class="main-box-header clearfix text-center">
+          <h2>Add New Lead</h2>
+        </header>
+        <div class="main-box-body clearfix">
+          <div class="row">
+            <div class="form-group col-xs-8">
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group atk-form-row atk-form-field">{$first_name}</div>
+                  <div class="form-group atk-form-row atk-form-field">{$organization}</div>
+                  <div class="form-group atk-form-row atk-form-field">{$website}</div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group atk-form-row atk-form-field">{$last_name}</div>
+                  <div class="form-group atk-form-row atk-form-field">{$post}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-6 atk-form-row atk-form-field">{$address}</div>
+                <div class="col-xs-6">
+                  <div class="form-group atk-form-row atk-form-field">
+                    Country 
+                    {$country_id}
+                  </div>
+                  <div class="form-group atk-form-row atk-form-field">
+                    State
+                    {$state_id}    
+                  </div>
+                  <div class="form-group atk-form-row atk-form-field">{$city}</div>
+                  <div class="form-group atk-form-row atk-form-field">{$pin_code}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">
+                  Lead Note\ Remark\ Interest\ Narration
+                  {$remark}
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-6 atk-form-field atk-form-row">
+                  Lead Source
+                  {$source}
+                </div>
+                <div class="form-group col-xs-6 atk-form-row atk-form-field">
+                  Lead Assign to Employee
+                  {$assign_to_id}
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-xs-4">
+              <h3>Email Ids</h3>
+              <div> 
+                <h2>Official Email</h2>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_1}</div>
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_2}</div>
+              </div>
+              <div>
+                <h2>Personal Email</h2>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_3}</div>
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_4}</div>
+              </div>
+              <h3>Contact Numbers</h3>
+              <div> 
+                <h2>Official Contact Number</h2>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_1}</div>
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_2}</div>
+              </div>
+              <div>
+                <h2>Personal Contact Number</h2>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_3}</div>
+                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_4}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-xs-12 atk-form-row atk-form-field">
+              Lead Belongs to Category
+              {$category}
+            </div>
+          </div>
+        </div>{$form_buttons}
+      </div>{/}
+    </div>
     <div class="col-lg-3 co-md-3 col-sm-3">{$contact_view}</div>{other_details}
     <div class="col-lg-9 col-md-8 col-sm-8">
       <div class="main-box clearfix">

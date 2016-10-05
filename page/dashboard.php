@@ -47,14 +47,14 @@ class page_dashboard extends \xepan\base\Page{
 		$model->_dsql()->group('Date');
 		$model->addCondition('created_at','<>',null);
 
-		$data=  ["columns"=> [
-            ['Lead', 30, 40, 50, 100, 150, 250],
-            ['Score', 10, 30, 70, 90, 150, 200]
-        ]];
+		// $data=  ["columns"=> [
+  //           ['Lead', 30, 40, 50, 100, 150, 250],
+  //           ['Score', 10, 30, 70, 90, 150, 200]
+  //       ]];
 		$this->add('xepan\base\View_Chart',null,'Charts')
 	    		->setType('line')
-	    		// ->setModel($model,'Date',['lead_count','score_sum'])
-	    		->setData($data)
+	    		->setModel($model,'Date',['lead_count','score_sum'])
+	    		// ->setData($data)
 	    		->addClass('col-md-12')
 	    		->setTitle('Lead Count Vs Score')
 	    		;

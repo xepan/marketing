@@ -116,20 +116,8 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addExpression('Negotiated')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
 		$model->addExpression('Won')->set($model->refSQL('Oppertunities')->addCondition('status','Won')->sum('fund'));
 		$model->addExpression('Lost')->set($model->refSQL('Oppertunities')->addCondition('status','Lost')->sum('fund'));
-		$model->addExpression('Total')->set(function($m,$q){
-				return $q->expr('IFNULL([0],0) + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0)  + IFNULL([1],0) ',
-					[
-						$m->getElement('Open'),
-						$m->getElement('Qualified'),
-						$m->getElement('NeedsAnalysis'),
-						$m->getElement('Quoted'),
-						$m->getElement('Negotiated'),
-						$m->getElement('Won'),
-						$m->getElement('Lost')
-					]);
-			});
 
-		$model->addCondition('Total','>',0);
+		$model->addCondition([['Open','>',0],['Qualified','>',0],['NeedsAnalysis','>',0],['Quoted','>',0],['Negotiated','>',0]]);
 		$model->addCondition('status','Active');
 
      	$this->add('xepan\base\View_Chart',null,'Charts')

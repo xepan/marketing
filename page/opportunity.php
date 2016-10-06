@@ -25,9 +25,17 @@ class page_opportunity extends \xepan\base\Page{
 			$lead->setLimit(1);
 			return $lead->fieldQuery('last_communication');
 		});	
-
-		if($status = $this->app->stickyGET('status'))
+		
+		$watchable = $this->app->stickyGET('watchable');
+		$status = $this->app->stickyGET('status');
+		if($watchable){
+			$opportunity->addCondition('status','<>',['Won','Lost']);
+		}
+		else{
+			// throw new \Exception($status, 1);
 			$opportunity->addCondition('status',$status);
+		}
+
 		$opportunity->add('xepan\marketing\Controller_SideBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);

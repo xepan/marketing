@@ -134,6 +134,50 @@ class page_dashboard extends \xepan\base\Page{
      		->rotateAxis()
      		;
 
+
+     	// Communications by staff 
+     	$model = $this->add('xepan\hr\Model_Employee');
+	    // $model->hasMany('xepan\communication\Communication','from_id',null,'FromCommunications');
+	    // $model->hasMany('xepan\communication\Communication','to_id',null,'ToCommunications');
+		
+		$model->addExpression('Email')->set(function($m,$q){
+			return $this->add('xepan\communication\Model_Communication')
+						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
+						->addCondition('communication_type','Email')
+						->count();
+		});
+
+		$model->addExpression('Call')->set(function($m,$q){
+			return $this->add('xepan\communication\Model_Communication')
+						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
+						->addCondition('communication_type','Call')
+						->count();
+		});
+
+		$model->addExpression('Meeting')->set(function($m,$q){
+			return $this->add('xepan\communication\Model_Communication')
+						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
+						->addCondition('communication_type','Personal')
+						->count();
+		});
+
+		// $model->addExpression('SMS')->set($model->refSQL('Oppertunities')->addCondition('status','Qualified')->sum('fund'));
+		// $model->addExpression('TeleMarketing')->set($model->refSQL('Oppertunities')->addCondition('status','NeedsAnalysis')->sum('fund'));
+		// $model->addExpression('Phone')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->sum('fund'));
+		// $model->addExpression('Meetings')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
+
+		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0]]);
+		$model->addCondition('status','Active');
+
+     	$this->add('xepan\base\View_Chart',null,'Charts')
+     		->setType('bar')
+     		->setModel($model,'name',['Email','Call','Meeting'])
+     		->setGroup(['Email','Call','Meeting'])
+     		->setTitle('Sales Staff Communication')
+     		->addClass('col-md-8')
+     		->rotateAxis()
+     		;
+
 	    return;
 
 	    // customer-satisfaction

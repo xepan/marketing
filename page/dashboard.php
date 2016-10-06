@@ -144,6 +144,7 @@ class page_dashboard extends \xepan\base\Page{
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
 						->addCondition('communication_type','Email')
+						->addCondition('status','<>','Outbox')
 						->count();
 		});
 

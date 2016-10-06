@@ -32,7 +32,7 @@ class page_opportunity extends \xepan\base\Page{
 			$opportunity->addCondition('status','<>',['Won','Lost']);
 		}
 		else{
-			throw new \Exception($status, 1);
+			// throw new \Exception($status, 1);
 			$opportunity->addCondition('status',$status);
 		}
 

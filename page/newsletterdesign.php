@@ -36,7 +36,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter')->tryLoadBy('id',$this->api->stickyGET('document_id'));
 		
-		$newsletter->addCondition('created_by_id',$this->app->employee->id);
+		// $newsletter->addCondition('created_by_id',$this->app->employee->id);
 		if($action !='view'){
 			$tmps = scandir(getcwd().'/../vendor/xepan/marketing/templates/newsletter-layout-chunks');
 			unset($tmps[0]);

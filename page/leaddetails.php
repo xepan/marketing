@@ -42,7 +42,8 @@ class page_leaddetails extends \xepan\base\Page {
 			$form->addField('line','contact_no_2');
 			$form->addField('line','contact_no_3');
 			$form->addField('line','contact_no_4');
-			
+			$form->addField('Checkbox','want_to_add_next_lead')->set(true);
+
 			$categories_field = $form->addField('DropDown','category');
 			$categories_field->setModel($this->add('xepan\marketing\Model_MarketingCategory'));
 			$categories_field->addClass('multiselect-full-width');
@@ -145,6 +146,9 @@ class page_leaddetails extends \xepan\base\Page {
 		            throw $e;
 		        }	
 
+		        if($form['want_to_add_next_lead']){
+		        	$form->js(null,$form->js()->reload())->univ()->successMessage('Lead Created Successfully')->execute();
+		        }
 				$form->js(null,$form->js()->univ()->successMessage('Lead Created Successfully'))->univ()->redirect($this->app->url(null,['action'=>"edit",'contact_id'=>$new_lead_model->id]))->execute();
 			}
 			// Temporary off view qsp add form 

@@ -20,6 +20,10 @@
     "require": {
         "xepan/base" : "dev-master",
         "xepan/mail": "^2.3",
+        "facebook/php-sdk-v4" : "~5.0",
+        "linkedinapi/linkedin": "^1.1",
+        "guzzlehttp/guzzle": "^6.2",
+        "abraham/twitteroauth": "^0.6.4",
         "php": ">=5.3"
     },
     "autoload": {

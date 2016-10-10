@@ -38,16 +38,14 @@ class Initiator extends \Controller_Addon {
 		$m->addItem(['Strategy Planning','icon'=>'fa fa-gavel'],'xepan_marketing_strategyplanning');
 		$m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
 		$m->addItem(['Lead','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_lead',['status'=>'Active']));
-		$m->addItem(['Opportunity','icon'=>'fa fa-user'],$this->api->url('xepan_marketing_opportunity',['status'=>'Open']));
+		$m->addItem(['Opportunity','icon'=>'fa fa-user'],$this->api->url('xepan_marketing_opportunity',['watchable'=>true]));
 		$m->addItem(['Newsletter','icon'=>'fa fa-envelope-o'],$this->app->url('xepan_marketing_newsletter',['status'=>'Draft,Submitted,Approved']));
 		$m->addItem(['Social Content','icon'=>'fa fa-globe'],$this->app->url('xepan_marketing_socialcontent',['status'=>'Draft,Submitted,Approved']));
 		$m->addItem(['Tele Marketing','icon'=>'fa fa-phone'],'xepan_marketing_telemarketing');
 		$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));
 		$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']));
-		$m->addItem(['Reports','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_reports');
-		$m->addItem(['Social Config','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_socialconfiguration');
-		$m->addItem(['Social Exec','icon'=>'fa fa-bar-chart-o'],'xepan_marketing_socialexec');
-
+		$m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
+		$m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 		
         $this->app->status_icon["xepan\marketing\Model_Lead"] = ['All'=>'fa fa-globe','Active'=>"fa fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
         $this->app->status_icon["xepan\marketing\Model_Opportunity"] = ['All'=>'fa fa-globe','Open'=>"fa fa-lightbulb-o xepan-effect-yellow",'Converted'=>'fa fa-check text-success','Rejected'=>'fa fa-times text-danger'];
@@ -58,7 +56,6 @@ class Initiator extends \Controller_Addon {
 		$search_lead = $this->add('xepan\marketing\Model_Lead');
 		$this->app->addHook('quick_searched',[$search_lead,'quickSearch']);
 		return $this;
-		
 	}
 
 	function setup_frontend(){
@@ -73,14 +70,14 @@ class Initiator extends \Controller_Addon {
 			var_dump($now);
 
 			$job2 = new \Cron\Job\ShellJob();
-			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('* * * * *'));
 			if(!$job2->getSchedule() || $job2->getSchedule()->valid($now)){	
 				echo " Executing Newsletter exec <br/>";
 				$this->add('xepan\marketing\Controller_NewsLetterExec');
 			}
 
 			$job3 = new \Cron\Job\ShellJob();
-			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('*/5 * * * *'));
+			$job3->setSchedule(new \Cron\Schedule\CrontabSchedule('* * * * *'));
 			if(!$job3->getSchedule() || $job3->getSchedule()->valid($now)){	
 				echo " Executing Social exec <br/>";
 				$this->add('xepan\marketing\Controller_SocialExec');
@@ -98,18 +95,18 @@ class Initiator extends \Controller_Addon {
 
 	function resetDB(){
 		// Clear DB
-		if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
-        if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
-        $this->app->epan=$this->app->old_epan;
-        $truncate_models = ['Opportunity','Lead_Category_Association','Lead','Campaign_Category_Association','Schedule','Campaign_SocialUser_Association','campaign','Content','MarketingCategory'];
-        foreach ($truncate_models as $t) {
-            $m=$this->add('xepan\marketing\Model_'.$t);
-            foreach ($m as $mt) {
-                $mt->delete();
-            }
-        }
+		// if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
+	    // if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
+	    // $this->app->epan=$this->app->old_epan;
+        // $truncate_models = ['Opportunity','Lead_Category_Association','Lead','Campaign_Category_Association','Schedule','Campaign_SocialUser_Association','campaign','Content','MarketingCategory'];
+        // foreach ($truncate_models as $t) {
+        //     $m=$this->add('xepan\marketing\Model_'.$t);
+        //     foreach ($m as $mt) {
+        //         $mt->delete();
+        //     }
+        // }
         
-        $this->app->epan=$this->app->new_epan;
+        // $this->app->epan=$this->app->new_epan;
 
         $mar_cat=$this->add('xepan\marketing\Model_MarketingCategory');
         $mar_cat['name']="default";

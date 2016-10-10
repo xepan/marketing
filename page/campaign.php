@@ -8,7 +8,7 @@ class page_campaign extends \xepan\base\Page{
 		parent::init();	
 
 		$campaign = $this->add('xepan\marketing\Model_Campaign');
-		
+
 		$campaign->addExpression('source_graph_data')->set(function($m,$q){
 			$lr = $m->add('xepan\marketing\Model_LandingResponse');
 			$lr->_dsql()->del('fields');
@@ -35,10 +35,6 @@ class page_campaign extends \xepan\base\Page{
 
 		if($this->app->stickyGET('status'))
 			$campaign->addCondition('status',explode(",",$this->app->stickyGET('status')));
-		
-		$campaign->addExpression('completed_percentage')->set(function($m, $q){
-			return $m->dsql()->expr("ROUND(([1]-[0])/[1]*100,0)",[$m->getElement('total_postings'),$m->getElement('remaining')]);
-		});
 
 		$landing_response = $this->add('xepan\marketing\Model_LandingResponse');
 		$response = $landing_response->getRows();
@@ -49,13 +45,20 @@ class page_campaign extends \xepan\base\Page{
 		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		$frm=$crud->grid->addQuickSearch(['title']);
 		
+		$vp1 = $this->add('VirtualPage');
+		$vp1->set(function($p){
+			$l_r = $this->add('xepan\marketing\Model_LandingResponse');
+			$l_r->addCondition('campaign_id',$_GET['campaign_id']);
+			$l_r->setOrder('date','desc');
+			$p->add('Grid')->setModel($l_r,['contact','date']);
+		});	
+
+		$this->on('click','.campaign-visit-detail',function($js,$data)use($vp1){
+				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
+		});
 
 		$crud->grid->addHook('formatRow',function($g){
-			if($g->model['campaign_type']==='subscription'){
-				$g->current_row['url'] = "?page=xepan_marketing_subscriberschedule&campaign_id=".$g->model->id;
-			}else{
-				$g->current_row['url'] = "?page=xepan_marketing_schedule&campaign_id=".$g->model->id;
-			}
+			$g->current_row['url'] = "?page=xepan_marketing_scheduledetail&campaign_id=".$g->model->id;
 
 			$source_data = explode(",",$g->model['source_graph_data']);
 			$source_values=[];

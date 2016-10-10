@@ -18,7 +18,10 @@
                 th(data-hide="phone")
                     span Category
                 th
-                    span Opportunities
+                    span(style="border-bottom:1px solid gray;") Created By &nbsp;
+                    span Assign To
+                th
+                    span Last Communication
                 th(id="{$score_sortid}")
                     span Total Score {$score_sort}
                 th
@@ -36,8 +39,9 @@
                       {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
                       {/}
+                      //- {$code}
                       a.user-link.do-view-lead(href='#',data-id="{$id}")
-                        {name}Name{/}
+                        {$effective_name}
                       //- a.user-link(href='{url}index.php?page=xepan_marketing_leaddetails&contact_id={$id}{/}')
                       span.user-subhead {source}Source{/}
                         h6 [{city}{/}] - [{$type}]
@@ -51,8 +55,13 @@
                         {/}{/}
                         {/}
                     td
-                      span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
-                        {$open_count},{$converted_count},{$rejected_count}
+                        div(title="Lead Created By" style="border-bottom:1px solid gray;") {$created_by}
+                        div(title="Lead Assign To") {$assign_to}
+                    td
+                        {$last_communication}
+                    //- td
+                    //-   span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
+                    //-     {$open_count},{$converted_count},{$rejected_count}
                     td
                         a.do-view-lead-score(href="#" data-id="{$id}")
                             span.alert.alert-warning{score}0{/}

@@ -27,33 +27,159 @@ class page_leaddetails extends \xepan\base\Page {
 		});
 
 		$lead->tryLoadBy('id',$this->api->stickyGET('contact_id'));
-		
 		if($action=="add"){
+			$base_validator = $this->add('xepan\base\Controller_Validator');
 
-			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
-			$lead_view->document_view->effective_template->del('im_and_events_andrelation');
-			$lead_view->document_view->effective_template->del('email_and_phone');
-			$lead_view->document_view->effective_template->del('avatar_wrapper');
-			$lead_view->document_view->effective_template->del('contact_since_wrapper');
-			$lead_view->document_view->effective_template->del('send_email_sms_wrapper');
-			$lead_view->document_view->effective_template->del('online_status_wrapper');
-			$lead_view->document_view->effective_template->del('contact_type_wrapper');
+			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
+			$form->setLayout(['page/leadprofile','contact_view_full_width']);			
+			$form->setModel($lead,['first_name','last_name','address','city','country_id','state_id','pin_code','organization','post','website','source','remark','assign_to_id']);
+			$form->addField('line','email_1')->validate('email');
+			$form->addField('line','email_2');
+			$form->addField('line','email_3');
+			$form->addField('line','email_4');
+			
+			$form->addField('line','contact_no_1');
+			$form->addField('line','contact_no_2');
+			$form->addField('line','contact_no_3');
+			$form->addField('line','contact_no_4');
+			$form->addField('Checkbox','want_to_add_next_lead')->set(true);
+
+			$categories_field = $form->addField('DropDown','category');
+			$categories_field->setModel($this->add('xepan\marketing\Model_MarketingCategory'));
+			$categories_field->addClass('multiselect-full-width');
+			$categories_field->setAttr(['multiple'=>'multiple']);
+			$categories_field->setEmptyText("Please Select");
+
+			$form->addSubmit('Add');
+
+			if($form->isSubmitted()){
+
+				if(!$form['source'])
+					$form->displayError('source','mandatory');
+				
+				try{
+					$this->api->db->beginTransaction();
+					$form->save();
+					$new_lead_model = $form->getModel();
+					
+					if($form['email_1']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_lead_model->id;
+						$email['head'] = "Official";
+						$email['value'] = $form['email_1'];
+						$email->save();
+					}
+
+					if($form['email_2']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_lead_model->id;
+						$email['head'] = "Official";
+						$email['value'] = $form['email_2'];
+						$email->save();
+					}
+
+					if($form['email_3']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_lead_model->id;
+						$email['head'] = "Personal";
+						$email['value'] = $form['email_3'];
+						$email->save();
+					}
+					if($form['email_4']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_lead_model->id;
+						$email['head'] = "Personal";
+						$email['value'] = $form['email_4'];
+						$email->save();
+					}
+
+					// Contact Form
+					if($form['contact_no_1']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_lead_model->id;
+						$phone['head'] = "Official";
+						$phone['value'] = $form['contact_no_1'];
+						$phone->save();
+					}
+
+					if($form['contact_no_2']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_lead_model->id;
+						$phone['head'] = "Official";
+						$phone['value'] = $form['contact_no_2'];
+						$phone->save();
+					}
+
+					if($form['contact_no_3']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_lead_model->id;
+						$phone['head'] = "Personal";
+						$phone['value'] = $form['contact_no_3'];
+						$phone->save();
+					}
+					if($form['contact_no_4']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_lead_model->id;
+						$phone['head'] = "Personal";
+						$phone['value'] = $form['contact_no_4'];
+						$phone->save();
+					}
+
+					// Category Association
+					if($form['category']){
+						$categories = explode(",",$form['category']);
+						foreach ($categories as $key => $cat_id) {
+							if(!is_numeric($cat_id))
+								continue;
+
+							$cat_asso_model = $this->add('xepan\marketing\Model_Lead_Category_Association');
+							$cat_asso_model['lead_id'] = $new_lead_model->id;
+							$cat_asso_model['marketing_category_id'] = $cat_id;
+							$cat_asso_model->save();
+						}
+					}					
+					$this->api->db->commit();
+				}catch(\Exception_StopInit $e){
+
+		        }catch(\Exception $e){
+		            $this->api->db->rollback();
+		            throw $e;
+		        }	
+
+		        if($form['want_to_add_next_lead']){
+		        	$form->js(null,$form->js()->reload())->univ()->successMessage('Lead Created Successfully')->execute();
+		        }
+				$form->js(null,$form->js()->univ()->successMessage('Lead Created Successfully'))->univ()->redirect($this->app->url(null,['action'=>"edit",'contact_id'=>$new_lead_model->id]))->execute();
+			}
+			// Temporary off view qsp add form 
+			// $lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document','page_reload'=>($action=='add')],'contact_view_full_width');
+			// $lead_view->document_view->effective_template->del('im_and_events_andrelation');
+			// $lead_view->document_view->effective_template->del('email_and_phone');
+			// $lead_view->document_view->effective_template->del('avatar_wrapper');
+			// $lead_view->document_view->effective_template->del('contact_since_wrapper');
+			// $lead_view->document_view->effective_template->del('send_email_sms_wrapper');
+			// $lead_view->document_view->effective_template->del('online_status_wrapper');
+			// $lead_view->document_view->effective_template->del('contact_type_wrapper');
+			// $lead_view->setStyle(['width'=>'50%','margin'=>'auto']);
 			$this->template->del('other_details');
-			$lead_view->setStyle(['width'=>'50%','margin'=>'auto']);
 		}else{
+			$this->template->del('contact_view_full_width');
 			$lead_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\marketing\Model_Lead','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+			$lead_view->setModel($lead);
 		}
 
-		$lead_view->setModel($lead);
 
-			$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
-			$detail->setModel($lead,['source','marketing_category','communication','opportunities','remark','weekly_communication'],['source','remark']);//,'marketing_category_id','communication','opportunities'
+		$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/details']);
+		$detail->setModel($lead,['assign_to','assign_to_id','source','marketing_category','communication','opportunities','remark','weekly_communication'],['assign_to_id','source','remark']);//,'marketing_category_id','communication','opportunities'
+
 		if($lead->loaded()){
 			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
-			$o->setModel($lead->ref('Opportunities'));
-			
+			$o->setModel($lead->ref('Opportunities'),['title','description','status','assign_to_id','fund','discount_percentage','closing_date'])->setOrder('created_at','desc');
+			if(($action != 'view')){				
+				$detail->form->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
+			}
 
 			$activity_view = $this->add('xepan\base\Grid',['no_records_message'=>'No activity found'],'activity',['view/activity/activity-grid']);
 			$activity_view->add('xepan\base\Paginator',null,'Paginator');
@@ -86,34 +212,32 @@ class page_leaddetails extends \xepan\base\Page {
 
 				$base = $detail->form->layout;
 
-				$cat_ass_field = $base->addField('hidden','ass_cat')->set(json_encode($lead->getAssociatedCategories()));
-
-				$base->addField('hidden','contact_id')->set($_GET['contact_id']);
-
-				$category_assoc_grid = $base->add('xepan\base\Grid',['show_header'=>false],'marketing_category');
-				$category_assoc_grid->setModel($model_assoc_category,['name'],['name']);
-				$category_assoc_grid->addSelectable($cat_ass_field);
+				$cat_ass_field = $base->addField('DropDown','ass_cat')->set($lead->getAssociatedCategories());
+				$cat_ass_field->setAttr(['multiple'=>'multiple']);
+				$cat_ass_field->setModel('xepan\marketing\Model_MarketingCategory');
 
 				$detail->form->onSubmit(function($frm){
+					$lead_model = $this->add('xepan\marketing\Model_lead')->load($_GET['contact_id']);	
+					$lead_model->removeAssociateCategory();
 
-				$lead_model = $this->add('xepan\marketing\Model_lead')->load($_GET['contact_id']);	
-				$lead_model->removeAssociateCategory();
+					$selected_categories = [];
+					$selected_categories = explode(',', $frm['ass_cat']);
+												
+					foreach ($selected_categories as $cat) {
+						if(!$cat)
+							break;														
+						$lead_model->associateCategory($cat);
+					}
 
-				$selected_categories = json_decode($frm['ass_cat'],true);
-
-				foreach ($selected_categories as $cat) {
-					$lead_model->associateCategory($cat);
-				}
-
-				$frm->save();
-				$frm->js(null,$this->js()->univ()->successMessage('Lead associated with categories'))->reload()->execute();	
+					$frm->save();
+					$frm->js(null,$this->js()->univ()->successMessage('Saved'))->reload()->execute();	
 				});
 			
 			}
 
 		}
 		
-		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
+		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true, 'chartRangeMin' =>0]);
 	}
 
 	function defaultTemplate(){

@@ -7,7 +7,7 @@ jQuery.widget("ui.xepan_mindchart",{
 		addbutton_false_at_level:null,
 		deletebutton_false_at_level:null,
 		Labels:[{"add":'Add Category'},{"add":'Add Subcategory'},{"add":'Add Example'}],
-		config_key:undefined
+		field:undefined
 	},
 
 	_create: function(){
@@ -18,7 +18,7 @@ jQuery.widget("ui.xepan_mindchart",{
             maxLevel:this.options.maxLevel,
             addbutton_false_at_level:this.options.addbutton_false_at_level,
             Labels:this.options.Labels,
-            config_key:this.options.config_key
+            field:this.options.field
 		});
 	},
 });

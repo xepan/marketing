@@ -19,106 +19,44 @@ class Controller_NewsLetterExec extends \AbstractController {
 	function init(){
 		parent::init();
 
-		/***************************************************************************
-			Joining tables to find lead->categories->campaigns->schedule->content
-		***************************************************************************/
-		$leads = $this->add('xepan\marketing\Model_Lead');
-		
-		$lead_cat_assos_j = $leads->join('lead_category_association.lead_id');
-		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
-				
-		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
-		$camp_j->addField('campaign_title','title');
-		$camp_j->addField('campaign_type');
-		$camp_j->addField('lead_campaing_id','document_id');
-		
-		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
-		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
+		// $this->app->today = '2016-09-12';
+		// $this->app->now = $this->app->today.' 00:00:00';
 
-		$schedule_j->addField('schedule_date','date');
-		$schedule_j->addField('schedule_day','day');
-		
-		// May be this is done by 'last_sent_newsletter_from_schedule_row_days' expression
-		// $comm_j = $schedule_j->leftJoin('communication.related_id','document_id');
-		// $comm_j->addField('communication_date','created_at');
-		// $comm_j->addField('sent_to','to_id');
-
-
-	// 	/***************************************************************************
-	// 		Expression for finding total days since lead joined
-	// 	***************************************************************************/
-		$leads->addExpression('days_from_join')->set(function($m,$q){
-			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
-		});
-
-		/***************************************************************************
-			Expression to find if the lead is 'Hot'/'sendable limit'
-		***************************************************************************/
-		$leads->addExpression('sendable')->set(function($m,$q){
-			return $q->expr(
-					"IF([campaign_type]='campaign',
-						if([schedule_date]<='[now]',1,0),
-						if([days_from_join]>=[schedule_day],1,0)
-						)",
-					[
-						'campaign_type'=> $m->getElement('campaign_type'),
-						'schedule_date'=> $m->getElement('schedule_date'),
-						'now' => $this->app->now,
-						'days_from_join'=> $m->getElement('days_from_join'),
-						'schedule_day'=> $m->getElement('schedule_day')
-					]
-					);
-		})->type('boolean');
-
-
-	// 	/***************************************************************************
-	// 		To find the last newsletter sending time.
-	// 	***************************************************************************/	
-		$leads->addExpression('last_sent_newsletter_date')->set(function($m,$q){
-			return $this->add('xepan\marketing\Model_Communication_Newsletter')
-					->addCondition('related_id',$m->getElement('document_id'))
-					->addCondition('to_id',$m->getElement('id'))
-					->setOrder('created_at','desc')
-					->setLimit(1)
-					->fieldQuery('created_at');
-		});
-
-		$leads->addExpression('last_sent_newsletter_from_schedule_row_days')->set(function($m,$q){
-			return $q->expr("(DATEDIFF('[1]',IFNULL([0],'1970-01-01')))",
-				[
-				$m->getElement('last_sent_newsletter_date'),
-				$this->app->now
-				]);
-		})->caption('Last Newsletter Sent');
-
-
-	// 	/***************************************************************************
-	// 		Expression to extract 'message_3000' field from content model
-	// 	***************************************************************************/
-		$leads->addExpression('body')->set(function($m,$q){
-			return $m->refSQL('document_id')->fieldQuery('message_blog');
-		});
+		$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters');
 
 		$leads->addCondition('sendable',true);
+		$leads->addCondition('campaign_status','Approved');
+		$leads->addCondition('content_status','Approved');
+		$leads->addCondition('is_already_sent',0);
+		$leads->addCondition('document_type','Newsletter');
 
 	// 	/***************************************************************************
 	// 		Must have a gap of N days between sending this Content/Newsletter again
 	// 	/***************************************************************************
-		$leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
+		// $leads->addCondition('last_sent_newsletter_from_schedule_row_days','>=',10);
 
 		/***************************************************************************
 			Sending newsletter
 		***************************************************************************/
 		
-		$model = $this->add('xepan\marketing\Model_MassMailing');/*Mass Email Active*/
+		// $model = $this->add('xepan\marketing\Model_MassMailing');/*Mass Email Active*/
 		
 		// $form = $this->add('Form');
 		// $form->addSubmit('Send Newsletter')->addClass('btn btn-primary');
 
 		// if($form->isSubmitted()){
-			
+			$email_settings_temp = $this->add('xepan\communication\Model_Communication_EmailSetting')
+									->addCondition('mass_mail',true)
+									->addCondition('is_active',true);
+
+			$total_send_limit = 0;
+			foreach ($email_settings_temp as $es) {
+				$total_send_limit += $es['email_threshold'];
+			}
+
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')
 			->addCondition('mass_mail',true)
+			->addCondition('is_active',true)
 			->tryLoadAny();
 			$mailer = new \Nette\Mail\SmtpMailer(array(
 			        'host' => $email_settings['email_host'],
@@ -130,8 +68,39 @@ class Controller_NewsLetterExec extends \AbstractController {
 			/*******************************************************************
 			        For each lead run this code
 		    *******************************************************************/
+			$leads->setLimit($total_send_limit);
+			
+			// $grid = $this->owner->add('Grid');
+			// $grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable','is_already_sent','document_type']);
+			// $grid->addFormatter('document','wrap');
+			// $grid->addFormatter('name','wrap');
+
+			// return;
+
+			$loop_count=1;
+			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
+			$done_contact_newsletter=[];
 			foreach ($leads as $lead) {
 				// throw new \Exception($lead->id, 1);
+				// echo $lead['name']. '<br/>';
+				if(in_array($lead['id'].$lead['document_id'], $done_contact_newsletter)) continue;
+
+				// echo "working on ". $email_settings['name']. '<br/>';
+			    if(!$email_settings->isUsable()){
+			    	if($email_settings->loadNextMassEmail()){
+				    	$mailer = new \Nette\Mail\SmtpMailer(array(
+					        'host' => $email_settings['email_host'],
+					        'username' => $email_settings['email_username'],
+					        'password' => $email_settings['email_password'],
+					        'secure' => $email_settings['encryption'],
+					        'persistent'=>true
+						));
+			    	}else{
+			    		echo "No more email_settings <br/>";
+			    		break; // No more email setting found
+			    	}
+			    }
+
 				$model_communication_newsletter = $this->add('xepan\marketing\Model_Communication_Newsletter');
 				$model_communication_newsletter->setfrom($email_settings['from_email'],$email_settings['from_name']);
 				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
@@ -167,10 +136,14 @@ class Controller_NewsLetterExec extends \AbstractController {
 				$body_v=$this->add('View',null,null,$temp);
 				$body_v->template->set($lead->get());
 
+				$email_str = implode(',',$emails);
+
 				$model_communication_newsletter['to_id'] =$lead->id;
-				$model_communication_newsletter['related_id'] =$lead['document_id'];
+				$model_communication_newsletter['related_id'] = $lead['schedule_id'];
+				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
 
 				foreach ($emails as $email) {	
+					$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$lead->id.'>Unsubscribe</>');
 					$model_communication_newsletter->addTo($email);
 					// var_dump($email);
 				}
@@ -195,7 +168,26 @@ class Controller_NewsLetterExec extends \AbstractController {
 					echo "Body"." = ".$lead['body'] ."<br/>";
 					echo"**********************************************************************************<br/><br/><br/>";
 				}
+
+				/***************************************************
+			         check if we can continue with same email setting
+			         or need next one with closing previous mailer 
+			         and create new one : TODO
+		        ***************************************************/
+
+			    if($loop_count >= $email_settings['smtp_auto_reconnect']){
+			    	$mailer->disconnect();
+			    	$mailer->connect();
+			    	// echo "Reconnecting smtp connection <br/>";
+			    	$loop_count=0;
+			    }
+
+			    $done_contact_newsletter[]=$lead['id'].$lead['document_id'];
+
+			    $loop_count++;
+
 			}
+		    echo "<br/>No Newsletters <br/>";
 
 			// return $form->js()->univ()->successMessage('Newsletter Send')->execute();
 		// }

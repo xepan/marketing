@@ -46,6 +46,19 @@ class page_newsletter extends \xepan\base\Page{
 				return $js->univ()->dialogURL("NEWSLETTER PREVIEW",$this->api->url($vp->getURL(),['newsletter_id'=>$data['id']]));
 		});
 
+
+		$vp1 = $this->add('VirtualPage');
+		$vp1->set(function($p){
+			$l_r = $this->add('xepan\marketing\Model_LandingResponse');
+			$l_r->addCondition('content_id',$_GET['newsletter_id']);
+			$l_r->setOrder('date','desc');
+			$p->add('Grid')->setModel($l_r,['contact','date']);
+		});	
+
+		$this->on('click','.newsletter-visit-detail',function($js,$data)use($vp1){
+				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['newsletter_id'=>$data['id']]));
+		});
+
 		$crud->grid->addHook('formatRow',function($g){
 			$com = $this->add('xepan\communication\Model_Communication');
 			$com->addCondition('related_document_id',$g->model->id);

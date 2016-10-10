@@ -27,6 +27,13 @@
 		.xepan-tool-option-value 
 			input#submit_button_name(data-attr='submit_button_name')			
 
+	.xepan-tool-option
+		.xepan-tool-option-title Show as Popup
+		.xepan-tool-option-value 
+			select#show_as_popup(data-attr='show_as_popup')
+				option true																				
+				option false								
+	
 	div.panel.panel-heading.panel-primary.collapsed(data-toggle="collapse" data-target="#lead_category" aria-expanded="false")
 					span Category
 				#lead_category.xepan-cms-tools-bar-panel.row-fluid.collapse
@@ -34,7 +41,8 @@
 						tr
 							.xepan-tool-option
 								td.xepan-tool-option-value(colspan="2")
-									select.chosen-select.item-list-option-category-multiselect(id="{$_name}_multiselect" style="width:350px;" multiple="" data-attr='lead_category' multiselect)					
+									select.chosen-select.item-list-option-category-multiselect(id="{$_name}_multiselect" style="width:350px;" multiple="" data-attr='lead_category' multiselect)
+
 	<link rel="stylesheet" type="text/css" href="vendor/xepan/commerce/templates/css/chosen.css"/>
 	script(src="vendor/xepan/commerce/templates/js/chosen.jquery.js")
 	script.

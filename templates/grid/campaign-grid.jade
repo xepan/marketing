@@ -21,11 +21,16 @@
                             h1(style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;") {$title}
                       .row.text-muted 
                         .col-md-4
-                          span &nbsp; Visitors : {$total_visitor}
+                          span.campaign-visit-detail(data-id = "{$id}" style= "cursor:pointer; cursor: hand; max-width:600px;") &nbsp; Visitors
+                          div.campaign-visit-detail(data-id = "{$id}" style="margin-left:8px; cursor:pointer; cursor: hand; max-width:600px;") {$total_visitor}
                         .col-md-4
-                          span Postings : {$total_postings}
+                          span Postings 
+                          div(style="margin-left:3px;") {$total_combined_postings_done}
                         .col-md-4  
-                          span Remaining : {$remaining} 
+                          span Remaining
+                          div(style="margin-left:4px;") 
+                          span.fa.fa-globe  {$social_post_remaining} &nbsp;     
+                          span.fa.fa-envelope-o  {$newsletter_remaining}
                       hr
                       .project-box-content
                         span.chart(data-bar-color='#2ecc71', data-percent='{$completed_percentage}')
@@ -39,11 +44,11 @@
                           span.sparkline.source_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$source_graph}  
                           span.text-success Platform
                         a(href='#')
+                        //-   span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") 1,2,3  
+                        //-   span.text-success Location
+                        a(href='#')
                           span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
                           span.text-success   Timings   
-                        a(href='#')
-                          span.sparkline(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") 1,2,3  
-                          span.text-success Location
                       .project-box-ultrafooter.clearfix
                         .col-md-4
                           {$action}
@@ -102,4 +107,8 @@ style(type='text/css', media='screen').
   .project-box .project-box-footer a{
   padding: 0px 15px !important;
   margin: 10px 0; !important;
+  }
+
+  .project-box .project-box-footer a{
+  border-right: 0px!important;
   }

@@ -6,21 +6,26 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	public $status = ['Active','InActive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate','communication','send'],
+					'Active'=>['view','edit','delete','deactivate','communication','send','create_opportunity'],
 					'InActive'=>['view','edit','delete','activate','communication']
 					];
 
 	function init(){
 		parent::init();
 		
+		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'lead_source'=>'text',
+						],
+				'config_key'=>'MARKETING_LEAD_SOURCE',
+				'application'=>'marketing'
+		]);
+		$config_m->tryLoadAny();
+
+		$this->getElement('source')->enum(explode(',', $config_m['lead_source']));
+
 		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
-		
-		// $lead_j = $this->join('lead.contact_id');
-		// $lead_j->addField('source');
-		// $lead_j->addField('remark')->type('text');
-		// $lead_count=$lead_j->addExpression('count_leads')->set(function($m){
-		// 	return $m->refSQL('xepan\marketing\Model_Opportunity')->count();
-		// });
 
 		$this->addExpression('open_count')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_Opportunity',['table_alias'=>'open_count'])
@@ -55,11 +60,24 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			return $q->expr('IFNULL([0],0)',[$ps->sum('score')]);
 		})->sortable(true);
 
+		$this->addExpression('last_communication')->set(function($m,$q){
+			$last_commu = $m->add('xepan\communication\Model_Communication');
+			$last_commu->addCondition(
+							$last_commu->dsql()->orExpr()
+								->where('from_id',$q->getField('id'))
+								->where('to_id',$q->getField('id'))
+							)
+						->setOrder('id','desc')
+						->setLimit(1);
+			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
+		});
+
 		
 		$this->hasMany('xepan\marketing\Opportunity','lead_id',null,'Opportunities');
 		$this->hasMany('xepan\marketing\Lead_Category_Association','lead_id');
 		
 		$this->getElement('status')->defaultValue('Active');
+		$this->addHook('beforeDelete',[$this,'checkContactIsLead']);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
@@ -195,6 +213,15 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
 	}
 	
+	function page_create_opportunity($page){
+		$crud = $page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid']);		
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->setOrder('created_at','desc');
+		$opportunity->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
+		$crud->setModel($opportunity,['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
+	}
+
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
@@ -219,17 +246,30 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	//activate Lead
 
-	function checkExistingOpportunities($m){
-		$this->ref('Opportunities')->each(function($o){
-			$o->delete();
-		});
-
+	function checkContactIsLead(){
+		if($this['type'] !='Lead')
+			throw new \Exception("Sorry! you cannot delete ".$this['type'].", NAME ".$this['name']."ID ".$this['id']);
 	}
 
-	function checkExistingCategoryAssociation($m){
-		$cat_ass_count = $this->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
-		if($cat_ass_count)
-			throw $this->exception('Cannot Delete,first delete Category Association`s ');	
+	function checkExistingOpportunities($m){				
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->tryLoadAny();
+
+		if($opportunity->loaded())
+			throw new \Exception('Cannot Delete,first delete lead`s opportunities');	
+
+		// $this->ref('Opportunities')->each(function($o){
+		// 	$o->delete();
+		// });
+	}
+
+	function checkExistingCategoryAssociation($m){		
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->load($this->id);
+
+		if($lead->loaded())
+			$lead->removeAssociateCategory();	
 	}
 
 	function getAssociatedCategories(){
@@ -319,4 +359,141 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		}
 	}
 
+	function addLeadFromCSV($data){
+		// multi record loop
+		foreach ($data as $key => $record) {
+			$email_array = ['personal'=>[],'official'=>[]];
+			$contact_array = ['personal'=>[],'official'=>[]];
+			$category = [];
+
+			$lead = $this->add('xepan\marketing\Model_Lead');
+			foreach ($record as $field => $value) {
+				$field = strtolower(trim($field));
+				$value = trim($value);
+
+				// category selection
+				if($field == "category"){
+					$category = explode(",",$value);
+					continue;
+				}
+
+				// official contact
+				if(strstr($field, 'official_contact')){
+					$contact_array['official'][] = $value;
+					continue;
+				}
+				// official email
+				if(strstr($field, 'official_email')){
+					$email_array['official'][] = $value;
+					continue;
+				}
+
+				// Personal contact
+				if(strstr($field, 'personal_contact')){
+					$contact_array['personal'][] = $value;
+					continue;
+				}
+				// official email
+				if(strstr($field, 'personal_email')){
+					$email_array['personal'][] = $value;
+					continue;
+				}
+
+				if($field == "country"){
+					$country = $this->add('xepan\base\Model_Country')->addCondition('name','like',$value)->tryLoadAny();
+					if(!$country->loaded())
+						continue;
+					$value = $country->id;
+				}
+
+				if($field == "state"){
+					$state = $this->add('xepan\base\Model_State')->addCondition('name','like',$value)->tryLoadAny();
+					if(!$state->loaded())
+						continue;
+					$value = $state->id;
+				}
+
+				$lead[$field] = $value;
+			}
+
+			$lead->save();
+
+			// insert category
+			foreach ($category as $key => $name) {
+				$name = trim($name);
+
+				$lead_category = $this->add('xepan\marketing\Model_MarketingCategory');
+				$lead_category->addCondition('name','like',$name);
+				$lead_category->tryLoadAny();
+				if(!$lead_category->loaded()){
+					$lead_category['name'] = $name;
+					$lead_category->save();
+				}
+				
+				$lead_category_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
+				$lead_category_asso->addCondition('lead_id',$lead->id);
+				$lead_category_asso->addCondition('marketing_category_id',$lead_category->id);
+				$lead_category_asso->tryLoadAny();
+				$lead_category_asso->save();
+			}
+
+			// echo "<pre>";
+			// print_r($category);
+			// print_r($email_array);
+			// print_r($contact_array);
+
+			// insert email official ids
+			foreach ($email_array['official'] as $key => $email) {
+				$email_model = $this->add('xepan\base\Model_Contact_Email');
+				$email_model['contact_id'] = $lead->id;
+				$email_model['head'] = "Official";
+				$email_model['value'] = $email;
+				try{
+					$email_model->save();
+				}catch(\Exception $e){
+
+				}
+			}
+
+			foreach ($email_array['personal'] as $key => $email) {
+				$email_model = $this->add('xepan\base\Model_Contact_Email');
+				$email_model['contact_id'] = $lead->id;
+				$email_model['head'] = "Personal";
+				$email_model['value'] = $email;
+				
+				try{
+					$email_model->save();
+				}catch(\Exception $e){
+					
+				}
+			}
+
+			// insert offical contact numbers
+			foreach($contact_array['official'] as $key => $contact){
+				$phone = $this->add('xepan\base\Model_Contact_Phone');
+				$phone['contact_id'] = $lead->id;
+				$phone['head'] = "Official";
+				$phone['value'] = $contact;
+				try{
+					$phone->save();
+				}catch(\Exception $e){
+
+				}
+			}
+
+			// insert offical contact numbers
+			foreach($contact_array['personal'] as $key => $contact){
+				$phone = $this->add('xepan\base\Model_Contact_Phone');
+				$phone['contact_id'] = $lead->id;
+				$phone['head'] = "Personal";
+				$phone['value'] = $contact;
+				try{
+					$phone->save();
+				}catch(\Exception $e){
+					
+				}
+			}
+		}
+
+	}
 } 

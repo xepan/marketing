@@ -72,7 +72,7 @@
             save_button = $('<div class="btn btn-primary xepan-strategy-panning-save-button">Save</div>').appendTo(container);
             $(save_button).click(function(event){
                 console.log(options);
-                // console.log(JSON.stringify(nodes));
+                console.log(JSON);
 
                 $.ajax({
                     url: 'index.php?page=xepan_marketing_strategysave',
@@ -80,7 +80,7 @@
                     datatype: "json",
                     data: { 
                             nodes:JSON.stringify(nodes),
-                            config_key:options.config_key
+                            field:options.field
                         },
                 })
                 .done(function(ret) {

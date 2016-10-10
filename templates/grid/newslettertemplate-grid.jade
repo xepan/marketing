@@ -21,23 +21,13 @@
                           a(href='#')
                             | {$content_name}
                       .project-box-content
-                        iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0")
-                      .project-box-footer.clearfix
-                        a(href='#')
-                          span.value {$total_leads}
-                          span.label Total
-                        a(href='#')
-                          span.value {$send_to}
-                          span.label Sent To
-                        a(href='#')
-                          span.value {$remaining}
-                          span.label Remaining   
+                        iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0")  
                       .project-box-ultrafooter.clearfix
                         .col-md-1
                         .col-md-5.pull-left
                           a.user-link(href='index.php?page=xepan_marketing_newsletterdesign&action=add&content_id={$id}')      
                             button.btn.btn-primary.atk-button(style='')
-                                |  Select
+                                |  Use Template
                         .col-md-2
                         .col-md-4.pull-right     
                             {$edit}

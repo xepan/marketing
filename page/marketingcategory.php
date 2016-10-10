@@ -8,17 +8,22 @@ class page_marketingcategory extends \xepan\base\Page{
 		parent::init();
 
 		$m = $this->add('xepan\marketing\Model_MarketingCategory');
+		// $association_j = $m->join('lead_category_association.marketing_category_id','id');
+		// $association_j->addField('marketing_lead_id','lead_id');
+		// $association_j->join('communication.to_id','marketing_lead_id');
+		// // $m->_dsql()->group('name');
+		// $this->add('Grid')->setModel($m);
+		// return;
 
-		$m->addExpression('weakly_communication')->set(function($m,$q){
-			$comm = $m->add('xepan/marketing/Model_Schedule');
-			$comm->addCondition('date','>',date('Y-m-d',strtotime('-8 week')));
-			$comm->_dsql()->del('fields');
-			$comm->_dsql()->field('count(*) shcedules_count');
-			$comm->_dsql()->field('campaign_id');
-			$comm->_dsql()->group('campaign_id');
+		// $m->addExpression('weekly_communication')->set(function($m,$q){
+		// 	$comm = $m->add('xepan/communication/Model_Communication');
+		// 	$comm->_dsql()->del('fields');
+		// 	$comm->_dsql()->field('count(*) communication_count');
+		// 	$comm->_dsql()->field('to_id');
+		// 	$comm->_dsql()->group('to_id');
 
-			return $q->expr("(select GROUP_CONCAT(tmp.shcedules_count) from [sql] as tmp where tmp.campaign_id = [0])",[$q->getField('id'),'sql'=>$comm->_dsql()]);
-		});
+		// 	return $q->expr("(select GROUP_CONCAT(tmp.communication_count) from [sql] as tmp where tmp.to_id = [0])",[$m->getElement('marketing_lead_id'),'sql'=>$comm->_dsql()]);
+		// });
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
 
@@ -38,5 +43,4 @@ class page_marketingcategory extends \xepan\base\Page{
 		$this->app->jui->addStaticInclude('jquery.easypiechart.min');
 		parent::render();
 	}	
-
 }

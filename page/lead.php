@@ -11,8 +11,10 @@ class page_lead extends \xepan\base\Page{
 
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
+
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$lead->setOrder('total_visitor','desc');
+
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
 		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
@@ -75,6 +77,86 @@ class page_lead extends \xepan\base\Page{
 		$btn = $grid->addButton('Grab')->addClass('btn btn-primary');
 		$btn->js('click',$this->js()->univ()->frameURL('Data Grabber',$this->app->url('./grab')));
 
+		/**			
+		CSV Importer
+		*/
+		$import_btn=$grid->addButton('Import CSV')->addClass('btn btn-primary');
+		$import_btn->setIcon('ui-icon-arrowthick-1-n');
+
+		$import_btn->js('click')
+			->univ()
+			->frameURL(
+					'Import CSV',
+					$this->app->url('./import')
+					);
+
+	}
+
+	function page_import(){
+		
+		$form = $this->add('Form');
+		$form->addSubmit('Download Sample File');
+		
+		if($_GET['download_sample_csv_file']){
+			$output = ['first_name','last_name','address','city','state','country','pin_code','organization','post','website','source','remark','personal_email_1','personal_email_2','official_email_1','official_email_2','personal_contact_1','personal_contact_2','official_contact_1','official_contact_2'];
+
+			$output = implode(",", $output);
+	    	header("Content-type: text/csv");
+	        header("Content-disposition: attachment; filename=\"sample_qty_set_file.csv\"");
+	        header("Content-Length: " . strlen($output));
+	        header("Content-Transfer-Encoding: binary");
+	        print $output;
+	        exit;
+		}
+
+		if($form->isSubmitted()){
+			$form->js()->univ()->newWindow($form->app->url('xepan_marketing_lead_import',['download_sample_csv_file'=>true]))->execute();
+		}
+
+		$this->add('View')->setElement('iframe')->setAttr('src',$this->api->url('./execute',array('cut_page'=>1)))->setAttr('width','100%');
+	}
+	
+	function downloadsamplefile(){
+
+	}
+
+	function page_import_execute(){
+
+		$form= $this->add('Form');
+		$form->template->loadTemplateFromString("<form method='POST' action='".$this->api->url(null,array('cut_page'=>1))."' enctype='multipart/form-data'>
+			<input type='file' name='csv_lead_file'/>
+			<input type='submit' value='Upload'/>
+			</form>"
+			);
+
+		if($_FILES['csv_lead_file']){
+			if ( $_FILES["csv_lead_file"]["error"] > 0 ) {
+				$this->add( 'View_Error' )->set( "Error: " . $_FILES["csv_lead_file"]["error"] );
+			}else{
+				$mimes = ['text/comma-separated-values', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.ms-excel', 'application/vnd.msexcel', 'text/anytext'];
+				if(!in_array($_FILES['csv_lead_file']['type'],$mimes)){
+					$this->add('View_Error')->set('Only CSV Files allowed');
+					return;
+				}
+
+				$importer = new \xepan\base\CSVImporter($_FILES['csv_lead_file']['tmp_name'],true,',');
+				$data = $importer->get();
+
+				try{
+					$this->api->db->beginTransaction();
+					$lead = $this->add('xepan\marketing\Model_Lead');
+					$lead->addLeadFromCSV($data);
+					$this->api->db->commit();
+				}catch(\Exception_StopInit $e){
+
+				}catch(\Exception $e){
+					if($this->app->db->intransaction()) $this->api->db->rollback();
+					throw $e;
+				}
+				
+				$this->add('View_Info')->set(count($data).' Recored Imported');
+			}
+		}
 	}
 
 	function page_grab(){

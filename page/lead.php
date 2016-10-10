@@ -11,17 +11,36 @@ class page_lead extends \xepan\base\Page{
 
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
+
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$lead->setOrder('total_visitor','desc');
+
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead)->setOrder('created_at','desc');	
+		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
+		$grid=$crud->grid;
+		$grid->addClass('grab-lead-grid');
+		$grid->js('reload')->reload();
+
 		$crud->add('xepan\base\Controller_Avatar');
 		
-		$frm=$crud->grid->addQuickSearch(['name','website','contacts_str']);
-				
+		$frm=$grid->addQuickSearch(['name']);
+	
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
+
+		$source_type = $frm->addField('Dropdown','source_type')->setEmptyText('Please Select Source');
+		$source_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		        [
+		            'fields'=>[
+						'lead_source'=>'text',
+						],
+					'config_key'=>'MARKETING_LEAD_SOURCE',
+					'application'=>'marketing'
+		        ]);
+		$source_model->tryLoadAny();
+		$source_array = explode(",",$source_model['lead_source']);
+		$source_type->setValueList(array_combine($source_array,$source_array));
 
 		$frm->addHook('applyFilter',function($f,$m){
 			if($f['marketing_category_id']){
@@ -29,12 +48,17 @@ class page_lead extends \xepan\base\Page{
 				$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
 				$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
 			}
+			if($f['source_type']){
+				$m->addCondition('source',$f['source_type']);
+			}
 		});
 		
 		$status->js('change',$frm->js()->submit());
+		$source_type->js('change',$frm->js()->submit());
 
-		$crud->grid->addColumn('category');
-		$crud->grid->addMethod('format_marketingcategory',function($grid,$field){				
+
+		$grid->addColumn('category');
+		$grid->addMethod('format_marketingcategory',function($grid,$field){				
 				$data = $grid->add('xepan\marketing\Model_Lead_Category_Association')->addCondition('lead_id',$grid->model->id);
 				$l = $grid->add('Lister',null,'category',['grid/lead-grid','category_lister']);
 				$l->setModel($data);
@@ -42,17 +66,97 @@ class page_lead extends \xepan\base\Page{
 				$grid->current_row_html[$field] = $l->getHtml();
 		});
 
-		$crud->grid->addFormatter('category','marketingcategory');
-		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
+		$grid->addFormatter('category','marketingcategory');
+		$grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		if(!$crud->isEditing()){
-			$crud->grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
-			$crud->grid->js('click')->_selector('.do-view-lead-visitor')->univ()->frameURL('Total Visits',[$this->api->url('xepan_marketing_leadvisitor'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
-			$crud->grid->js('click')->_selector('.do-view-lead-score')->univ()->frameURL('Total Score',[$this->api->url('xepan_marketing_leadscore'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$grid->js('click')->_selector('.do-view-lead-visitor')->univ()->frameURL('Total Visits',[$this->api->url('xepan_marketing_leadvisitor'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$grid->js('click')->_selector('.do-view-lead-score')->univ()->frameURL('Total Score',[$this->api->url('xepan_marketing_leadscore'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		}
 
-		$btn = $crud->grid->addButton('Grab')->addClass('btn btn-primary');
+		$btn = $grid->addButton('Grab')->addClass('btn btn-primary');
 		$btn->js('click',$this->js()->univ()->frameURL('Data Grabber',$this->app->url('./grab')));
 
+		/**			
+		CSV Importer
+		*/
+		$import_btn=$grid->addButton('Import CSV')->addClass('btn btn-primary');
+		$import_btn->setIcon('ui-icon-arrowthick-1-n');
+
+		$import_btn->js('click')
+			->univ()
+			->frameURL(
+					'Import CSV',
+					$this->app->url('./import')
+					);
+
+	}
+
+	function page_import(){
+		
+		$form = $this->add('Form');
+		$form->addSubmit('Download Sample File');
+		
+		if($_GET['download_sample_csv_file']){
+			$output = ['first_name','last_name','address','city','state','country','pin_code','organization','post','website','source','remark','personal_email_1','personal_email_2','official_email_1','official_email_2','personal_contact_1','personal_contact_2','official_contact_1','official_contact_2'];
+
+			$output = implode(",", $output);
+	    	header("Content-type: text/csv");
+	        header("Content-disposition: attachment; filename=\"sample_qty_set_file.csv\"");
+	        header("Content-Length: " . strlen($output));
+	        header("Content-Transfer-Encoding: binary");
+	        print $output;
+	        exit;
+		}
+
+		if($form->isSubmitted()){
+			$form->js()->univ()->newWindow($form->app->url('xepan_marketing_lead_import',['download_sample_csv_file'=>true]))->execute();
+		}
+
+		$this->add('View')->setElement('iframe')->setAttr('src',$this->api->url('./execute',array('cut_page'=>1)))->setAttr('width','100%');
+	}
+	
+	function downloadsamplefile(){
+
+	}
+
+	function page_import_execute(){
+
+		$form= $this->add('Form');
+		$form->template->loadTemplateFromString("<form method='POST' action='".$this->api->url(null,array('cut_page'=>1))."' enctype='multipart/form-data'>
+			<input type='file' name='csv_lead_file'/>
+			<input type='submit' value='Upload'/>
+			</form>"
+			);
+
+		if($_FILES['csv_lead_file']){
+			if ( $_FILES["csv_lead_file"]["error"] > 0 ) {
+				$this->add( 'View_Error' )->set( "Error: " . $_FILES["csv_lead_file"]["error"] );
+			}else{
+				$mimes = ['text/comma-separated-values', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.ms-excel', 'application/vnd.msexcel', 'text/anytext'];
+				if(!in_array($_FILES['csv_lead_file']['type'],$mimes)){
+					$this->add('View_Error')->set('Only CSV Files allowed');
+					return;
+				}
+
+				$importer = new \xepan\base\CSVImporter($_FILES['csv_lead_file']['tmp_name'],true,',');
+				$data = $importer->get();
+
+				try{
+					$this->api->db->beginTransaction();
+					$lead = $this->add('xepan\marketing\Model_Lead');
+					$lead->addLeadFromCSV($data);
+					$this->api->db->commit();
+				}catch(\Exception_StopInit $e){
+
+				}catch(\Exception $e){
+					if($this->app->db->intransaction()) $this->api->db->rollback();
+					throw $e;
+				}
+				
+				$this->add('View_Info')->set(count($data).' Recored Imported');
+			}
+		}
 	}
 
 	function page_grab(){
@@ -64,10 +168,10 @@ class page_lead extends \xepan\base\Page{
 				[
 					''=>'Please Select',
 					'h3 a'=>'Google Search Result Page',
-					'Website Page'=>'Website Page',
-					'Yahoo Search Result Page'=>'Yahoo Search Result Page',
-					'Portal'=>'Portal',
-					'Other'=>'Other'
+					// 'Website Page'=>'Website Page',
+					// 'Yahoo Search Result Page'=>'Yahoo Search Result Page',
+					// 'Portal'=>'Portal',
+					// 'Other'=>'Other'
 				];
 		$pages_selector = $this->app->stickyGET('type_of_pages');		
 		$f=$this->add('Form');
@@ -106,6 +210,12 @@ class page_lead extends \xepan\base\Page{
 				$this->createLeads($emails,$host,$category);
 			}
 
+			$js=[
+					$f->js()->closest('.dialog')->dialog('close'),
+					$this->js()->_selector('.grab-lead-grid')->trigger('reload')
+				];
+
+			$f->js(null,$js)->univ()->successMessage('Leads Grabbed')->execute();
 		}
 
 	}
@@ -284,8 +394,10 @@ class page_lead extends \xepan\base\Page{
 			try{
 				if(!$existing_email->loaded()){
 					$lead=$this->add('xepan\marketing\Model_Lead');
-					$lead['first_name'] = "Grab";
-					$lead['last_name'] = "Lead";
+					$email_parts = explode("@", $email);
+					$lead['first_name'] = $email_parts[0];
+					unset($email_parts[0]);
+					$lead['last_name'] = "@" . implode("", $email_parts);
 					$lead['website'] = $url;
 					$lead['source'] = 'Data Grabber';
 					$lead->save();

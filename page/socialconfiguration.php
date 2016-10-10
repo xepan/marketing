@@ -1,8 +1,8 @@
 <?php
 namespace xepan\marketing;
 
-class page_socialconfiguration extends \xepan\base\Page{
-	public $title="Social";
+class page_socialconfiguration extends page_configurationsidebar{
+	public $title="Social Configuration";
 	function init(){
 		parent::init();
 		

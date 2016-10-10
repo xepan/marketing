@@ -40,13 +40,22 @@
       <input id="submit_button_name" data-attr="submit_button_name"/>
     </div>
   </div>
+  <div class="xepan-tool-option">
+    <div class="xepan-tool-option-title">Show as Popup</div>
+    <div class="xepan-tool-option-value"> 
+      <select id="show_as_popup" data-attr="show_as_popup">
+        <option>true																				</option>
+        <option>false								</option>
+      </select>
+    </div>
+  </div>
   <div data-toggle="collapse" data-target="#lead_category" aria-expanded="false" class="panel panel-heading panel-primary collapsed"><span>Category</span></div>
   <div id="lead_category" class="xepan-cms-tools-bar-panel row-fluid collapse">
     <table class="table table-condensed table-hover">
       <tr>
         <div class="xepan-tool-option">
           <td colspan="2" class="xepan-tool-option-value">
-            <select id="{$_name}_multiselect" style="width:350px;" multiple="" data-attr="lead_category" multiselect="multiselect" class="chosen-select item-list-option-category-multiselect">					</select>
+            <select id="{$_name}_multiselect" style="width:350px;" multiple="" data-attr="lead_category" multiselect="multiselect" class="chosen-select item-list-option-category-multiselect"></select>
           </td>
         </div>
       </tr>

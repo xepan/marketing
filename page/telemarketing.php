@@ -7,12 +7,12 @@ class page_telemarketing extends \xepan\base\Page{
 	function init(){
 		parent::init();
 		
-		$lead_id = $this->app->stickyGET('lead_id');
-
-		if($lead_id)
-			$lead_model = $this->add('xepan\marketing\Model_Lead')->load($lead_id);
+		$contact_id = $this->app->stickyGET('contact_id');
+		
+		if($contact_id)
+			$lead_model = $this->add('xepan\marketing\Model_Lead')->load($contact_id);
 		/*
-				GRID FOR SHOWING ALL LEAD 
+			GRID FOR SHOWING ALL LEAD 
 		*/
 
 		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
@@ -63,59 +63,44 @@ class page_telemarketing extends \xepan\base\Page{
 		$form = $view_teleform->add('Form');
 		$form->setLayout('view\teleconversationform');
 		
-		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
 
-		$form->addField('Line','title');
-		$form->addField('Text','description');
-		$form->addField('Line','from_number');
-		$form->addField('Line','to_number');
-		$form->addSubmit('Add Conversation')->addClass('btn btn-sm btn-primary');
+		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
+		
+		// getting contact string to display it as dropdown
 
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
-		
 		/*
-				GRID FOR SHOWING PREVIOUS CONVERSATION 
+			GRID FOR SHOWING PREVIOUS CONVERSATION 
 		*/							
 
-		$model_communication = $this->add('xepan\marketing\Model_TeleCommunication')
-									->addCondition('to_id',$lead_id)->setOrder('id','desc')->setLimit(1);
-		$view_conversation = $this->add('xepan\hr\CRUD',null,'bottom',['view\teleconversationlister'])->addClass('fliter-grid');
-			$view_conversation->setModel($model_communication,['title','description'],['title','description','created_at','from','to_raw']);
-			$view_conversation_url = $this->api->url(null,['cut_object'=>$view_conversation->name]);
-			$view_conversation->grid->addPaginator(10);
-			$view_conversation->grid->addQuickSearch(['name']);
-			
-			$view_conversation->grid->addHook('formatRow',function($g){	
-				$data = json_decode($g->model['to_raw'],true);
-				$g->current_row_html['last_call_no'] = $data[0]['number'];
-			});		
-		/*
-				JS FOR RELOAD WITH SPECIFIC ID 
-		*/
-				
-		// $view_lead->js('click',
-		// 	[	
-		// 	// $view_conversation->js()->addClass('hidden'),
-		// 		$view_conversation->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]),
-		// 		$view_teleform->js()->reload(['lead_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')],null,$view_teleform_url)])->_selector('#lead');		
-	
-		$view_lead->on('click','#lead',function($js,$data)use($view_conversation_url,$view_conversation,$view_teleform_url,$view_teleform){
-			$js_array = [
-					$view_conversation->js()->reload(['lead_id'=>$data['id']],null,$view_conversation_url),
-					$view_teleform->js()->reload(['lead_id'=>$data['id']],null,$view_teleform_url),
+		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'bottom');
 
-					];
-			return $js_array;
-		});
+		$model_communication = $this->add('xepan\communication\Model_Communication');
+		$model_communication->addCondition(
+										$model_communication->dsql()->andExpr()
+									  	->where('to_id',$contact_id)
+									  	->where('to_id','<>',null));
+		$model_communication->setOrder('id','desc');
+
+		$view_conversation->setModel($model_communication);
+		$view_conversation->add('Paginator',['ipp'=>10]);
+
+		/*
+			JS FOR RELOAD WITH SPECIFIC ID 
+		*/
+					
+		$view_lead->js('click',
+			[$view_conversation->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')]),
+			$view_teleform->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
+			])->_selector('.tele-lead');
 		
-		if($lead_id){
+		if($contact_id){
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);
 			$js_array = [
 				$js->univ()->successMessage('Positive Marking Done'),
 				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
-
 				];
 			return $js_array;
 			});
@@ -130,31 +115,6 @@ class page_telemarketing extends \xepan\base\Page{
 			return $js_array;
 			});
 		}
-		
-		
-		/*
-				FORM SUBMISSION 
-		*/
-
-		if($form->isSubmitted()){
-
-			if(!$lead_id){
-				return $form->js()->univ()->errorMessage('Please Select A Lead First')->execute();
-			}
-
-			$model_telecommunication->unload();
-
-			$model_telecommunication['title'] = $form['title']; 
-			$model_telecommunication['description'] = $form['description']; 
-			$model_telecommunication['from_id']=$this->app->employee->id;
-			$model_telecommunication['to_id'] = $lead_id;
-			$model_telecommunication['from_raw'] = json_encode(['name'=>'','number'=>$form['from_number']]); 
-			$model_telecommunication['to_raw'] = json_encode([['name'=>'','number'=>$form['to_number']]]); 
-			$model_telecommunication->save();
-
-			return $view_conversation->js(true,$form->js()->univ()->reload()->successMessage("Added"))->univ()->reload()->execute();
-			  
-		}
 
 		/*
 				VIRTUAL PAGE TO SEE AND ADD OPPORTUNITIES 
@@ -163,22 +123,16 @@ class page_telemarketing extends \xepan\base\Page{
  		$button->add('VirtualPage')
 			->bindEvent('Opportunities','click')
 			->set(function($page){
-				$lead_id = $this->app->stickyGET('lead_id');
-				if(!$lead_id){
+				$contact_id = $this->app->stickyGET('contact_id');
+				if(!$contact_id){
 					$page->add('View_Error')->set('Please Select A Lead First');
 					return;	
 				}
 				$opportunity_model = $page->add('xepan\marketing\Model_Opportunity')
-									  ->addCondition('lead_id',$lead_id);	
-				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model);
+									  ->addCondition('lead_id',$contact_id);	
+				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model,['title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
 
 			});
-
-		/*
-				ANALYTICAL GRAPHS 
-		*/
-
-		$view_graph = $this->add('xepan\marketing\View_TeleGraph',null,'graph');
 	}
 
 	function defaultTemplate(){

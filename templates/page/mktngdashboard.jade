@@ -1,0 +1,17 @@
+div(id="{$_name}")
+  .panel.panel-default
+    | {$Content}
+    .panel-body
+      .col-md-12
+        | {form_layout}
+        // <div class="col-md-6">Date Range{$range}</div>
+        .col-md-3.atk-form-row From Date{$from_date}
+        .col-md-3.atk-form-row To Date{$to_date}
+        .col-md-3.atk-form-row Group {$group}
+        .col-md-3
+        |     {/}
+  .row.xepan-push-large
+    .panel.panel-default
+      .panel-body {$hot_lead}
+  .row.xepan-push-large
+  {$Charts}

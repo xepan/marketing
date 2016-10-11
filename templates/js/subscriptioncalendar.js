@@ -86,7 +86,7 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 				var duration = ui.sender.data('duration');
 				self.days[ui.sender.data('duration')].removeEvent(new xepan_subscriptionevent(ui.item.data('event')));
 				// self.render(this.schedular);
-				self.inform('removeEvent',duration,ui.item.data('eventsource')._nid);
+				self.inform('removeEvent',duration,ui.item.data('event')._nid);
 				ui.item.remove();
 			}
 		});
@@ -142,6 +142,9 @@ jQuery.widget("ui.xepan_subscriptioncalander",{
 			}).droppable({
 				drop: function(event, ui){
 					if(!ui.helper.is('.added_event')){
+
+						console.log(ui.helper.data('eventsource'));
+						
 						if(!day.hasEvent(new xepan_subscriptionevent(ui.helper.data('eventsource')))){
 							new_evt=day.addEvent(new xepan_subscriptionevent(ui.helper.data('eventsource')));
 							new_evt.render($('.day-'+day.duration));

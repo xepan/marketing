@@ -25,14 +25,14 @@
                   {message_160}{/} 
               .project-box-footer.clearfix
                 a(href='#')
-                  span.value 210
-                  span.label send to
+                  span.value {$Outbox}
+                  span.label Outbox
                 a(href='#')
-                  span.value 45
+                  span.value {$remaining}
                   span.label remaining
                 a(href='#')
-                  span.value 4
-                  span.label failed
+                  span.value {$draft}
+                  span.label Draft
               .project-box-ultrafooter.clearfix
                 .col-md-1
                 .col-md-5.pull-left

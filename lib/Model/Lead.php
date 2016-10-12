@@ -249,7 +249,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	function checkContactIsLead(){
 		if($this['type'] !='Lead')
-			throw new \Exception("Sorry! you cannot delete ".$this['type'].", NAME ".$this['name']."ID ".$this['id']);
+			throw new \Exception("Sorry! you cannot delete ".$this['type']." from here");
 	}
 
 	function checkExistingOpportunities($m){				

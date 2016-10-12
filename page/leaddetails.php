@@ -179,11 +179,13 @@ class page_leaddetails extends \xepan\base\Page {
 			
 			$opportunities_tab = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'opportunity',['view/opp']);
 			$o = $opportunities_tab->addMany('opportunity',null,'opportunity',['grid/addopportunity-grid']);
-			$o->grid->addQuickSearch(['title']);
+			if($action != 'view')
+				$o->grid->addQuickSearch(['title']);
 			$o->setModel($lead->ref('Opportunities'),['title','description','status','assign_to_id','fund','discount_percentage','closing_date'])->setOrder('created_at','desc');
 
 			$activity_view = $this->add('xepan\base\Grid',['no_records_message'=>'No activity found'],'activity',['view/activity/activity-grid']);
-			$activity_view->addQuickSearch(['activity']);
+			if($action != 'view')
+				$activity_view->addQuickSearch(['activity']);
 			$activity_view->add('xepan\base\Paginator',null,'Paginator');
 
 			$activity=$this->add('xepan\base\Model_Activity')->setOrder('created_at','desc');

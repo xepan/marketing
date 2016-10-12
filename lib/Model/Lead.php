@@ -248,7 +248,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	//activate Lead
 
 	function checkContactIsLead(){
-		if($this['type'] !='Lead')
+		if(($this['type'] !='Contact') AND ($this['type'] !='Lead'))
 			throw new \Exception("Sorry! you cannot delete ".$this['type']." from here");
 	}
 
@@ -258,11 +258,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$opportunity->tryLoadAny();
 
 		if($opportunity->loaded())
-			throw new \Exception('Cannot Delete,first delete lead`s opportunities');	
-
-		// $this->ref('Opportunities')->each(function($o){
-		// 	$o->delete();
-		// });
+			throw new \Exception('Cannot Delete,first delete lead`s opportunities');
 	}
 
 	function checkExistingCategoryAssociation($m){		

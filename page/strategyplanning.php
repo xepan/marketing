@@ -75,8 +75,14 @@ class page_strategyplanning extends \xepan\base\Page{
 		]);
 		$config_m1->add('xepan\hr\Controller_ACL');
 		$config_m1->tryLoadAny();
-		$location_crud = $this->add('xepan\base\CRUD',['frame_options'=>['width'=>'600px'],'entity_name'=>'Location'],'location');
-		$location_crud->setModel($config_m1,['country','state','city']);
+		$location_form = $this->add('Form',null,'location');
+		$location_form->setModel($config_m1,['country','state','city']);
+		$location_form->addSubmit('Save')->addClass('btn btn-primary');
+		
+		if($location_form->isSubmitted()){
+			$location_form->save();
+			$location_form->js()->univ()->successMessage('Saved')->execute();
+		}
 
 		// ORGANIZATION'S BUSINESS DESCRIPTION MANAGEMENT
 		$form = $this->add('Form',null,'business');
@@ -114,8 +120,14 @@ class page_strategyplanning extends \xepan\base\Page{
 									]);
 
 		// ORGANIZATION'S COMPETITORS MANAGEMENT
-		$competetors_crud = $this->add('xepan\base\CRUD',['frame_options'=>['width'=>'600px'],'entity_name'=>'Competetor'],'competetor');
-		$competetors_crud->setModel($config_m,['competitor_name','competitor_url','competitor_description']);
+		$competitors_form = $this->add('Form',null,'competetor');
+		$competitors_form->setModel($config_m,['competitor_name','competitor_url','competitor_description']);
+		$competitors_form->addSubmit('Save')->addClass('btn btn-primary');
+	
+		if($competitors_form->isSubmitted()){
+			$competitors_form->save();
+			$competitors_form->js()->univ()->successMessage('Saved')->execute();
+		}
 	}
 
 	function defaultTemplate(){

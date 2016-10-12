@@ -216,6 +216,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function page_create_opportunity($page){
 		$crud = $page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid']);		
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$crud->grid->addQuickSearch(['title']);
 		$opportunity->addCondition('lead_id',$this->id);
 		$opportunity->setOrder('created_at','desc');
 		$opportunity->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
@@ -247,8 +248,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	//activate Lead
 
 	function checkContactIsLead(){
-		if($this['type'] !='Lead')
-			throw new \Exception("Sorry! you cannot delete ".$this['type'].", NAME ".$this['name']."ID ".$this['id']);
+		if(($this['type'] !='Contact') AND ($this['type'] !='Lead'))
+			throw new \Exception("Sorry! you cannot delete ".$this['type']." from here");
 	}
 
 	function checkExistingOpportunities($m){				
@@ -257,11 +258,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$opportunity->tryLoadAny();
 
 		if($opportunity->loaded())
-			throw new \Exception('Cannot Delete,first delete lead`s opportunities');	
-
-		// $this->ref('Opportunities')->each(function($o){
-		// 	$o->delete();
-		// });
+			throw new \Exception('Cannot Delete,first delete lead`s opportunities');
 	}
 
 	function checkExistingCategoryAssociation($m){		

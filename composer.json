@@ -18,7 +18,7 @@
         "reference": "origin/master"
     },
     "require": {
-        "xepan/base" : ">=0.2",
+        "xepan/base" : "^0.2",
         "xepan/mail": "^2.3",
         "facebook/php-sdk-v4" : "~5.0",
         "linkedinapi/linkedin": "^1.1",

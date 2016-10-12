@@ -216,6 +216,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function page_create_opportunity($page){
 		$crud = $page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid']);		
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$crud->grid->addQuickSearch(['title']);
 		$opportunity->addCondition('lead_id',$this->id);
 		$opportunity->setOrder('created_at','desc');
 		$opportunity->getElement('assign_to_id')->getModel()->addCondition('type','Employee');

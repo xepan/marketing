@@ -7,6 +7,7 @@ class page_lead extends \xepan\base\Page{
 	public $content=null;
 	function page_index(){
 
+
 		$lead = $this->add('xepan\marketing\Model_Lead');
 
 		if($status = $this->app->stickyGET('status'))
@@ -122,6 +123,8 @@ class page_lead extends \xepan\base\Page{
 
 	function page_import_execute(){
 
+		ini_set('max_execution_time', 0);
+
 		$form= $this->add('Form');
 		$form->template->loadTemplateFromString("<form method='POST' action='".$this->api->url(null,array('cut_page'=>1))."' enctype='multipart/form-data'>
 			<input type='file' name='csv_lead_file'/>
@@ -147,6 +150,7 @@ class page_lead extends \xepan\base\Page{
 					$lead = $this->add('xepan\marketing\Model_Lead');
 					$lead->addLeadFromCSV($data);
 					$this->api->db->commit();
+					$this->add('View_Info')->set(count($data).' Recored Imported');
 				}catch(\Exception_StopInit $e){
 
 				}catch(\Exception $e){
@@ -154,7 +158,6 @@ class page_lead extends \xepan\base\Page{
 					throw $e;
 				}
 				
-				$this->add('View_Info')->set(count($data).' Recored Imported');
 			}
 		}
 	}

@@ -369,29 +369,29 @@ class Model_Lead extends \xepan\base\Model_Contact{
 				$value = trim($value);
 
 				// category selection
-				if($field == "category"){
+				if($field == "category" && $value){
 					$category = explode(",",$value);
 					continue;
 				}
 
 				// official contact
-				if(strstr($field, 'official_contact')){
+				if(strstr($field, 'official_contact') && $value){
 					$contact_array['official'][] = $value;
 					continue;
 				}
 				// official email
-				if(strstr($field, 'official_email')){
+				if(strstr($field, 'official_email') && $value){
 					$email_array['official'][] = $value;
 					continue;
 				}
 
 				// Personal contact
-				if(strstr($field, 'personal_contact')){
+				if(strstr($field, 'personal_contact') && $value){
 					$contact_array['personal'][] = $value;
 					continue;
 				}
 				// official email
-				if(strstr($field, 'personal_email')){
+				if(strstr($field, 'personal_email') && $value){
 					$email_array['personal'][] = $value;
 					continue;
 				}
@@ -439,7 +439,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			// print_r($email_array);
 			// print_r($contact_array);
 
-			// insert email official ids
+			// insert email official ids			
 			foreach ($email_array['official'] as $key => $email) {
 				$email_model = $this->add('xepan\base\Model_Contact_Email');
 				$email_model['contact_id'] = $lead->id;
@@ -451,7 +451,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 				}
 			}
-
+			
 			foreach ($email_array['personal'] as $key => $email) {
 				$email_model = $this->add('xepan\base\Model_Contact_Email');
 				$email_model['contact_id'] = $lead->id;
@@ -490,6 +490,9 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					
 				}
 			}
+
+			$lead->unload();
+
 		}
 
 	}

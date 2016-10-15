@@ -6,83 +6,97 @@
       {$Content}
       div.main-box
         header.main-box-header.clearfix.text-center
-          h2 Add New Lead
+          h1 Add New Lead
         div.main-box-body.clearfix
           div.row
             div.form-group.col-xs-8
-              div.row
-                div.col-xs-6
-                  div.form-group.atk-form-row.atk-form-field
-                    {$first_name}
-                  div.form-group.atk-form-row.atk-form-field
-                    {$organization}
-                  div.form-group.atk-form-row.atk-form-field
-                    {$website}
-                div.col-xs-6
-                  div.form-group.atk-form-row.atk-form-field
-                    {$last_name}
-                  div.form-group.atk-form-row.atk-form-field
-                    {$post}
-              div.row
-                div.form-group.col-xs-6.atk-form-row.atk-form-field
-                  {$address}
-                div.col-xs-6
-                  div.form-group.atk-form-row.atk-form-field
-                    | Country 
-                    {$country_id}
-                  div.form-group.atk-form-row.atk-form-field
-                    | State
-                    {$state_id}    
-                  div.form-group.atk-form-row.atk-form-field
-                    {$city}
-                  div.form-group.atk-form-row.atk-form-field
-                    {$pin_code}
-              div.row
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  | Lead Note\ Remark\ Interest\ Narration
-                  {$remark}
-              div.row
-                div.form-group.col-xs-6.atk-form-field.atk-form-row
-                  | Lead Source
-                  {$source}
-                div.form-group.col-xs-6.atk-form-row.atk-form-field
-                  | Lead Assign to Employee
-                  {$assign_to_id}
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary General Information
+                .panel-body
+                  div.row
+                    div.col-xs-6
+                      div.form-group.atk-form-row.atk-form-field
+                        {$first_name}
+                      div.form-group.atk-form-row.atk-form-field
+                        {$organization}
+                      div.form-group.atk-form-row.atk-form-field
+                        {$website}
+                    div.col-xs-6
+                      div.form-group.atk-form-row.atk-form-field
+                        {$last_name}
+                      div.form-group.atk-form-row.atk-form-field
+                        {$post}
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary Address
+                .panel-body
+                  div.row
+                    div.form-group.col-xs-6.atk-form-row.atk-form-field
+                      {$address}
+                    div.col-xs-6
+                      div.form-group.atk-form-row.atk-form-field
+                        | Country 
+                        {$country_id}
+                      div.form-group.atk-form-row.atk-form-field
+                        | State
+                        {$state_id}    
+                      div.form-group.atk-form-row.atk-form-field
+                        {$city}
+                      div.form-group.atk-form-row.atk-form-field
+                        {$pin_code}
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary Miscellaneous Information
+                .panel-body
+                  div.row
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      | Lead Note\ Remark\ Interest\ Narration
+                      {$remark}
+                  div.row
+                    div.form-group.col-xs-6.atk-form-field.atk-form-row
+                      | Lead Source
+                      {$source}
+                    div.form-group.col-xs-6.atk-form-row.atk-form-field
+                      | Lead Assign to Employee
+                      {$assign_to_id}
+            
             div.form-group.col-xs-4
-              h3 Email Ids
-              div 
-                h2 Official Email
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary Official Email
+                .panel-body         
+                  div.row
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$email_1}
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$email_2}
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary Personal Email
+                .panel-body
+                  div.row
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$email_3}
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$email_4}
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary Official Contact
+                .panel-body
+                  div.row
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$contact_no_1}
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$contact_no_2}
+              .panel.panel-default(style='margin-bottom:0px;')
+                .panel.panel-heading.panle-primary Personal Contact
+                .panel-body
+                  div.row
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$contact_no_3}
+                    div.form-group.col-xs-12.atk-form-row.atk-form-field
+                      {$contact_no_4}
+          .panel.panel-default(style='margin-bottom:0px;')
+            .panel.panel-heading.panle-primary Lead Category
+            .panel-body
               div.row
                 div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$email_1}
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$email_2}
-              div
-                h2 Personal Email
-              div.row
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$email_3}
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$email_4}
-              h3 Contact Numbers
-              div 
-                h2 Official Contact Number
-              div.row
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$contact_no_1}
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$contact_no_2}
-              div
-                h2 Personal Contact Number
-              div.row
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$contact_no_3}
-                div.form-group.col-xs-12.atk-form-row.atk-form-field
-                  {$contact_no_4}
-          div.row
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              | Lead Belongs to Category
-              {$category}
+                  {$category}
           div.row
             div.form-group.col-xs-12.atk-form-row.atk-form-field
               {$want_to_add_next_lead}

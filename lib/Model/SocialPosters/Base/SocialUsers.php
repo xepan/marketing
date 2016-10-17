@@ -13,7 +13,7 @@ class Model_SocialPosters_Base_SocialUsers extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 		
-		$this->hasOne('xepan\base\Epan','epan_id');
+		// $this->hasOne('xepan\base\Epan','epan_id');
 
 		$this->hasOne('xepan\marketing\SocialPosters_Base_SocialConfig','config_id');
 		

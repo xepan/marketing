@@ -8,7 +8,7 @@ class Model_SocialPosters_Base_SocialActivity extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\base\Epan','epan_id');
+		// $this->hasOne('xepan\base\Epan','epan_id');
 		$this->hasOne('xepan/marketing/SocialPosters_Base_SocialPosting','posting_id');
 
 		$this->addField('activityid_returned');

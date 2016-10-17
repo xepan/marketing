@@ -9,8 +9,8 @@ class Model_SocialPosters_Base_SocialConfig extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\base\Epan','epan_id');
-		$this->addCondition('epan_id',$this->app->epan->id);
+		// $this->hasOne('xepan\base\Epan','epan_id');
+		// $this->addCondition('epan_id',$this->app->epan->id);
 		
 		$this->addField('social_app')->mandatory(true)->system(true); // Must Be Set In Extended class
 

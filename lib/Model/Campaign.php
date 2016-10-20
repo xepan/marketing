@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;  
 
-class Model_Campaign extends \xepan\base\Model_Document{
+class Model_Campaign extends \xepan\hr\Model_Document{
 
 	public $status=['Draft',
 					'Submitted',

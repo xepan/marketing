@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Model_MarketingCategory extends \xepan\base\Model_Document{
+class Model_MarketingCategory extends \xepan\hr\Model_Document{
 
 	public $status=[];
 	public $actions=[

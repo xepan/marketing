@@ -27,6 +27,20 @@ class page_leaddetails extends \xepan\base\Page {
 		});
 
 		$lead->tryLoadBy('id',$this->api->stickyGET('contact_id'));
+
+		// ===== Edit as and when required for variour type of contacts 
+		// and put taeir respective namespace here 
+		// is a hack for now, later we will throw hook to register namespace with type
+
+		if($lead->loaded()){
+			if($lead['type']=='Employee') $lead->namespace='xepan\hr';
+			if($lead['type']=='Affiliate') $lead->namespace='xepan\hr';
+			if($lead['type']=='Customer') $lead->namespace='xepan\commerce';
+			if($lead['type']=='Supplier') $lead->namespace='xepan\commerce';
+			if($lead['type']=='Warehouse') $lead->namespace='xepan\commerce';
+			if($lead['type']=='OutsourceParty') $lead->namespace='xepan\production';
+		}
+
 		if($action=="add"){
 			$base_validator = $this->add('xepan\base\Controller_Validator');
 

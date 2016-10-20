@@ -44,6 +44,15 @@ class page_leaddetails extends \xepan\base\Page {
 			$form->addField('line','contact_no_4');
 			$form->addField('Checkbox','want_to_add_next_lead')->set(true);
 
+			$country_field =  $form->getElement('country_id');
+			$state_field = $form->getElement('state_id');
+
+			if($cntry_id = $this->app->stickyGET('country_id')){			
+				$state_field->getModel()->addCondition('country_id',$cntry_id);
+			}
+
+			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
+
 			$categories_field = $form->addField('DropDown','category');
 			$categories_field->setModel($this->add('xepan\marketing\Model_MarketingCategory'));
 			$categories_field->addClass('multiselect-full-width');

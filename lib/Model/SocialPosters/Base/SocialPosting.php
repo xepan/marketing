@@ -26,7 +26,7 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 
 		})->caption('At')->sortable(true);
 
-		$this->hasOne('xepan\base\Epan','epan_id');
+		// $this->hasOne('xepan\base\Epan','epan_id');
 		$this->hasOne('xepan/marketing/Model_SocialPosters_Base_SocialUsers','user_id');
 		$this->hasOne('xepan/marketing/SocialPost','post_id');
 		

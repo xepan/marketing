@@ -60,13 +60,17 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_teleform = $this->add('View',null,'top');
 		$view_teleform_url = $this->api->url(null,['cut_object'=>$view_teleform->name]);
 		
+		// opportunity, filter form
 		$form = $view_teleform->add('Form');
 		$form->setLayout('view\teleconversationform');
+		$type_field = $form->addField('xepan\base\DropDown','communication_type');
+		$type_field->setAttr(['multiple'=>'multiple']);
+		$type_field->setValueList(['TeleMarketing'=>'TeleMarketing','Email'=>'Email','Support'=>'Support','Call'=>'Call','Newsletter'=>'Newsletter','SMS'=>'SMS','Personal'=>'Personal']);
+		$form->addField('search');
+		$form->addSubmit('Filter')->addClass('btn btn-primary btn-block');
 		
 
 		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
-		
-		// getting contact string to display it as dropdown
 
 		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
 
@@ -83,9 +87,24 @@ class page_telemarketing extends \xepan\base\Page{
 									  	->where('to_id','<>',null));
 		$model_communication->setOrder('id','desc');
 
-		$view_conversation->setModel($model_communication);
+		// FILTERS
+		if($_GET['comm_type']){			
+			$model_communication->addCondition('communication_type',explode(",", $_GET['comm_type']));
+		}
+
+		if($search = $this->app->stickyGET('search')){			
+			$model_communication->addExpression('Relevance')->set('MATCH(title,description,communication_type) AGAINST ("'.$search.'")');
+			$model_communication->addCondition('Relevance','>',0);
+ 			$model_communication->setOrder('Relevance','Desc');
+		}
+
+		$view_conversation->setModel($model_communication)->setOrder('created_at','desc');
 		$view_conversation->add('Paginator',['ipp'=>10]);
 
+		
+		$temp = ['TeleMarketing'];
+		$type_field->set($_GET['comm_type']?explode(",", $_GET['comm_type']):$temp)->js(true)->trigger('changed');
+		
 		/*
 			JS FOR RELOAD WITH SPECIFIC ID 
 		*/
@@ -95,9 +114,16 @@ class page_telemarketing extends \xepan\base\Page{
 			$view_teleform->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
 			])->_selector('.tele-lead');
 		
-		if($contact_id){
+		if($contact_id){						
+			
+			// submitting filter form
+			if($form->isSubmitted() AND $contact_id){												
+				$view_conversation->js()->reload(['comm_type'=>$form['communication_type'],'search'=>$form['search']])->execute();
+			}
+			
 			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
 				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);
+			
 			$js_array = [
 				$js->univ()->successMessage('Positive Marking Done'),
 				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
@@ -110,7 +136,6 @@ class page_telemarketing extends \xepan\base\Page{
 				$js_array = [
 				$js->univ()->successMessage('Negative Marking Done'),
 				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
-
 				];
 			return $js_array;
 			});

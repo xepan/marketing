@@ -151,7 +151,7 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addExpression('Call')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
-						->addCondition('communication_type','Call')
+						->addCondition('communication_type',['Call','TeleMarketing'])
 						->count();
 		});
 

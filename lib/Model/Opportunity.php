@@ -29,7 +29,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		$opp_j=$this->join('opportunity.document_id');
 		
 		$opp_j->hasOne('xepan\marketing\Lead','lead_id')->display(['form'=>'xepan\base\Basic']);
-		$opp_j->hasOne('xepan\hr\Employee','assign_to_id');
+		$opp_j->hasOne('xepan\hr\Employee','assign_to_id')->defaultValue($this->app->employee->id);
 
 		$opp_j->addField('title')->sortable(true);
 		$opp_j->addField('description')->type('text');

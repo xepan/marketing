@@ -8,27 +8,26 @@ class page_dashboard extends \xepan\base\Page{
 	function init(){
 		parent::init();
 	    
-		$from_date = date("Y-m-d", strtotime('-1 months', strtotime($this->app->today))); 		
-		$custom_date = strtotime(date("Y-m-d", strtotime('-1 month', strtotime($this->app->today)))); 		
-		$week_start = date('Y-m-d', strtotime('this week last monday', $custom_date));
-		$week_end = date('Y-m-d', strtotime('this week next sunday', $custom_date));
+		$this->start_date = $start_date = $_GET['start_date']?:date("Y-m-d", strtotime('-29 days', strtotime($this->app->today))); 		
+		$this->end_date = $end_date = $_GET['end_date']?:$this->app->today;
+		
 		
 		// // HEADER FORM
 		$form = $this->add('Form',null,'form_layout');
-		$form->setLayout(['page/mktngdashboard','form_layout']);
-		$field_from_date = $form->addField('DatePicker','from_date')->validate('required')->set($custom_date);
-		$field_to_date = $form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
-		// $form->addField('DateRangePicker','range')->validate('required');
-		$field_group = $form->addField('dropdown','group')->setValueList(['Hours'=>'Hours','Date'=>'Date','Week'=>'Week','Month'=>'Month','Year'=>'Year'])->set('Date');
+		// $form->setLayout(['page/mktngdashboard','form_layout']);
+		$fld = $form->addField('DateRangePicker','period')
+                ->setStartDate($start_date)
+                ->setEndDate($end_date)
+                // ->showTimer(15)
+                // ->getBackDatesSet() // or set to false to remove
+                // ->getFutureDatesSet() // or skip to not include
+                ;
+
+        $this->end_date = $this->app->nextDate($this->end_date);
 		$form->addSubmit("Filter")->addClass('btn btn-primary');
+		
 		if($form->isSubmitted()){
-			if(!$form['from_date'])
-				$form->error('from_date','must not be empty');
-			
-			if(!$form['to_date'])
-				$form->error('to_date','must not be empty');
-			
-			$form->app->redirect($this->app->url(null,['from_date'=>$form['from_date'],'to_date'=>$form['to_date'],'group'=>$form['group']]));
+			$form->app->redirect($this->app->url(null,['start_date'=>$fld->getStartDate()?:0,'end_date'=>$fld->getEndDate()?:0]));
 		}
 
 		// ============ CHARTS =============
@@ -45,7 +44,8 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addExpression('Week','WEEK(created_at)');
 
 		$model->_dsql()->group('Date');
-		$model->addCondition('created_at','<>',null);
+		$model->addCondition('created_at','>',$this->start_date);
+		$model->addCondition('created_at','<',$this->end_date);
 
 		// $data=  ["columns"=> [
   //           ['Lead', 30, 40, 50, 100, 150, 250],
@@ -59,11 +59,14 @@ class page_dashboard extends \xepan\base\Page{
 	    		->setTitle('Lead Count Vs Score')
 	    		;
 
+
 		$model = $this->add('xepan\marketing\Model_Opportunity');
 		$model->addExpression('fund_sum')->set('sum(fund)');
 		$model->addExpression('source_filled')->set($model->dsql()->expr('IFNULL([0],"unknown")',[$model->getElement('source')]));
 		$model->addCondition('status','Won');
 		$model->_dsql()->group('source_filled');
+		$model->addCondition('created_at','>',$this->start_date);
+		$model->addCondition('created_at','<',$this->end_date);
 
 		// ROI of channel
 	    $this->add('xepan\base\View_Chart',null,'Charts')
@@ -77,6 +80,8 @@ class page_dashboard extends \xepan\base\Page{
 		$model = $this->add('xepan\marketing\Model_Opportunity');
 		$model->addExpression('fund_sum')->set('sum(fund)');
 		$model->_dsql()->group('status');
+		$model->addCondition('created_at','>',$this->start_date);
+		$model->addCondition('created_at','<',$this->end_date);
 		
 		// sale_current_pipeline
 		$this->add('xepan\base\View_Chart',null,'Charts')
@@ -91,6 +96,8 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addExpression('fund_sum')->set('sum(fund)');
 		$model->addExpression('source_filled')->set($model->dsql()->expr('IFNULL([0],"unknown")',[$model->getElement('source')]));
 		$model->_dsql()->group('source_filled');
+		$model->addCondition('created_at','>',$this->start_date);
+		$model->addCondition('created_at','<',$this->end_date);
 
 
 	    // engagin_by_channel
@@ -114,14 +121,14 @@ class page_dashboard extends \xepan\base\Page{
 		// ];
 	    $model = $this->add('xepan\hr\Model_Employee');
 	    $model->hasMany('xepan\marketing\Opportunity','assign_to_id',null,'Oppertunities');
-		$model->addExpression('Open')->set($model->refSQL('Oppertunities')->addCondition('status','Open')->sum('fund'));
-		$model->addExpression('Qualified')->set($model->refSQL('Oppertunities')->addCondition('status','Qualified')->sum('fund'));
-		$model->addExpression('NeedsAnalysis')->set($model->refSQL('Oppertunities')->addCondition('status','NeedsAnalysis')->sum('fund'));
-		$model->addExpression('Quoted')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->sum('fund'));
-		$model->addExpression('Negotiated')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
-		$model->addExpression('Won')->set($model->refSQL('Oppertunities')->addCondition('status','Won')->sum('fund'));
-		$model->addExpression('Lost')->set($model->refSQL('Oppertunities')->addCondition('status','Lost')->sum('fund'));
-
+		$model->addExpression('Open')->set($model->refSQL('Oppertunities')->addCondition('status','Open')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		$model->addExpression('Qualified')->set($model->refSQL('Oppertunities')->addCondition('status','Qualified')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		$model->addExpression('NeedsAnalysis')->set($model->refSQL('Oppertunities')->addCondition('status','NeedsAnalysis')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		$model->addExpression('Quoted')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		$model->addExpression('Negotiated')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		$model->addExpression('Won')->set($model->refSQL('Oppertunities')->addCondition('status','Won')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		$model->addExpression('Lost')->set($model->refSQL('Oppertunities')->addCondition('status','Lost')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
+		
 		$model->addCondition([['Open','>',0],['Qualified','>',0],['NeedsAnalysis','>',0],['Quoted','>',0],['Negotiated','>',0]]);
 		$model->addCondition('status','Active');
 
@@ -145,13 +152,17 @@ class page_dashboard extends \xepan\base\Page{
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
 						->addCondition('communication_type','Email')
 						->addCondition('status','<>','Outbox')
+						->addCondition('created_at','>',$this->start_date)
+						->addCondition('created_at','<',$this->end_date)
 						->count();
 		});
 
 		$model->addExpression('Call')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
-						->addCondition('communication_type','Call')
+						->addCondition('communication_type',['Call','TeleMarketing'])
+						->addCondition('created_at','>',$this->start_date)
+						->addCondition('created_at','<',$this->end_date)
 						->count();
 		});
 
@@ -159,6 +170,8 @@ class page_dashboard extends \xepan\base\Page{
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
 						->addCondition('communication_type','Personal')
+						->addCondition('created_at','>',$this->start_date)
+						->addCondition('created_at','<',$this->end_date)
 						->count();
 		});
 

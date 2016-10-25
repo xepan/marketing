@@ -15,7 +15,7 @@ class page_dashboard extends \xepan\base\Page{
 		// // HEADER FORM
 		$form = $this->add('Form',null,'form_layout');
 		// $form->setLayout(['page/mktngdashboard','form_layout']);
-		$fld = $form->addField('DateRangePicker','field_name')
+		$fld = $form->addField('DateRangePicker','period')
                 ->setStartDate($start_date)
                 ->setEndDate($end_date)
                 // ->showTimer(15)

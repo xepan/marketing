@@ -124,20 +124,25 @@ class page_daybydayanalytics extends \xepan\base\Page{
 
 	    $model = $this->add('xepan\marketing\Model_Opportunity');
 		$model->addExpression('total','sum(fund)');
+		$model->addExpression('employee','IFNULL(assign_to_id,"unAssigedn")');
 
 		if($this->employee_id)
-			$model->addCondition('assign_to_id',$this->employee_id);
+			$model->addCondition('employee',$this->employee_id);
 
-		$model->_dsql()->group(['assign_to_id','status']);
+		$model->_dsql()->group(['created_at','assign_to_id','status']);
 
-		// $data
+		$model->_dsql()->having('total','>',0);
 
+		// $data=[];
+		// foreach ($model->getRows() as $m) {
+		// 	$data[] = 
+		// }
 
      	$this->add('xepan\base\View_Chart',null,'Charts')
      		->setType('bar')
-     		->setModel($model,'name',['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
-     		->setGroup(['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
-     		->setTitle('Sales Staff Status')
+     		->setModel($model,'created_at',['employee','total','status'])
+     		// ->setGroup(['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
+     		->setTitle('Date vise Opportunities')
      		->addClass('col-md-8')
      		->rotateAxis()
      		;

@@ -30,6 +30,10 @@ class page_daybydayanalytics extends \xepan\base\Page{
 			$form->app->redirect($this->app->url(null,['start_date'=>$fld->getStartDate()?:0,'end_date'=>$fld->getEndDate()?:0,'employee_id'=>$form['employee']]));
 		}
 
+		if(!$this->employee_id){
+			$this->add('View_Error',null,'Charts')->set('Must elect an Employee')->addClass('btn btn-danger');
+			return;
+		}
 		// ============ CHARTS =============
 
 		$model = $this->add('xepan\marketing\Model_Lead');
@@ -117,39 +121,43 @@ class page_daybydayanalytics extends \xepan\base\Page{
 	    		->setTitle('Opportunities From Sources')
 	    		->addClass('col-md-4');
 	    		;
-	    
-	   	// Sales activity by sale emp
 
-	    $model = $this->add('xepan\hr\Model_Employee');
+	    // Employee Communication Channel
+ 		// $grid = $this->add('Grid',null,'Charts');
+ 		$communication_graph = $this->add('xepan\communication\Model_Communication');
+		$communication_graph->addExpression('date','date(created_at)');
+		$communication_graph->addExpression('score','count(*)');
+		$communication_graph->addCondition([['from_id',$this->employee_id],['to_id',$this->employee_id]])
+							->addCondition('created_at','>',$this->start_date)
+							->addCondition('status','<>','Outbox')
+							->addCondition('created_at','<',$this->end_date)
+							->setOrder('date','asc')
+							->_dsql()->group(['communication_type',$communication_graph->_dsql()->expr('[0]',[$communication_graph->getElement('date')])])
+							;
+		// $grid->setModel($communication_graph,['communication_type','status','date','employee_id','employee','score']);
 
-	    $model = $this->add('xepan\marketing\Model_Opportunity');
-		$model->addExpression('total','sum(fund)');
-		$model->addExpression('employee','IFNULL(assign_to_id,"unAssigedn")');
+		$data_array = [];
+		foreach ($communication_graph as $model) {
+			if(!isset($data_array[$model['date']])) $data_array[$model['date']]=[];
+			$data_array[$model['date']] = array_merge($data_array[$model['date']],['date'=>$model['date'], $model['communication_type']=>$model['score']]);
+		}
 
-		if($this->employee_id)
-			$model->addCondition('employee',$this->employee_id);
-
-		$model->_dsql()->group(['created_at','assign_to_id','status']);
-
-		$model->_dsql()->having('total','>',0);
-
-		// $data=[];
-		// foreach ($model->getRows() as $m) {
-		// 	$data[] = 
-		// }
-
-     	$this->add('xepan\base\View_Chart',null,'Charts')
-     		->setType('bar')
-     		->setModel($model,'created_at',['employee','total','status'])
-     		// ->setGroup(['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
-     		->setTitle('Date vise Opportunities')
-     		->addClass('col-md-8')
-     		->rotateAxis()
-     		;
-
+		$data_array = array_values($data_array);
+		// echo "<pre>";
+		// var_dump($data_array);
+		// exit;
+		$communication_graph = $this->add('xepan\base\View_Chart',null,'Charts')
+ 		->setType('bar')
+ 		->setData(['json'=>$data_array])
+ 		->setGroup(['Email','Call','Personal','Comment','TeleMarketing'])
+ 		->setXAxis('date')
+ 		->setYAxises(['Email','Call','Personal','Comment','TeleMarketing'])
+ 		->addClass('col-md-12')
+ 		->setTitle('Communication')
+ 		;
      		return;
 
-     	// Communications by staff 
+     	// Communications by staff
      	$model = $this->add('xepan\hr\Model_Employee');
 	    // $model->hasMany('xepan\communication\Communication','from_id',null,'FromCommunications');
 	    // $model->hasMany('xepan\communication\Communication','to_id',null,'ToCommunications');
@@ -199,7 +207,6 @@ class page_daybydayanalytics extends \xepan\base\Page{
      		->rotateAxis()
      		;
 
-	    return;
 
 	    // customer-satisfaction
      	$this->add('xepan\base\View_Chart',null,'customer_satisfaction')

@@ -2,34 +2,38 @@
 
 namespace xepan\marketing;
 
-class page_dashboard extends \xepan\base\Page{
-	public $title = "Marketing Dashboard";
+class page_daybydayanalytics extends \xepan\base\Page{
+	public $title = "Marketing Day by Day Analytics Dashboard";
 	
 	function init(){
 		parent::init();
 	    
 		$this->start_date = $start_date = $_GET['start_date']?:date("Y-m-d", strtotime('-29 days', strtotime($this->app->today))); 		
 		$this->end_date = $end_date = $_GET['end_date']?:$this->app->today;
+		$this->employee_id = $_GET['employee_id'];
 		
 		
-		// // HEADER FORM
 		$form = $this->add('Form',null,'form_layout');
-		// $form->setLayout(['page/mktngdashboard','form_layout']);
 		$fld = $form->addField('DateRangePicker','period')
                 ->setStartDate($start_date)
                 ->setEndDate($end_date)
-                // ->showTimer(15)
-                // ->getBackDatesSet() // or set to false to remove
-                // ->getFutureDatesSet() // or skip to not include
                 ;
+        $emp_fld = $form->addField('DropDown','employee');
+        $emp_fld->setModel('xepan\Hr\Model_Employee')->addCondition('status','Active');
+        $emp_fld->setEmptyText('All');
+        $emp_fld->set($this->employee_id);
 
         $this->end_date = $this->app->nextDate($this->end_date);
 		$form->addSubmit("Filter")->addClass('btn btn-primary');
 		
 		if($form->isSubmitted()){
-			$form->app->redirect($this->app->url(null,['start_date'=>$fld->getStartDate()?:0,'end_date'=>$fld->getEndDate()?:0]));
+			$form->app->redirect($this->app->url(null,['start_date'=>$fld->getStartDate()?:0,'end_date'=>$fld->getEndDate()?:0,'employee_id'=>$form['employee']]));
 		}
 
+		if(!$this->employee_id){
+			$this->add('View_Error',null,'Charts')->set('Must elect an Employee')->addClass('btn btn-danger');
+			return;
+		}
 		// ============ CHARTS =============
 
 		$model = $this->add('xepan\marketing\Model_Lead');
@@ -46,6 +50,9 @@ class page_dashboard extends \xepan\base\Page{
 		$model->_dsql()->group('Date');
 		$model->addCondition('created_at','>',$this->start_date);
 		$model->addCondition('created_at','<',$this->end_date);
+		
+		if($this->employee_id)
+			$model->addCondition('created_by_id',$this->employee_id);
 
 		// $data=  ["columns"=> [
   //           ['Lead', 30, 40, 50, 100, 150, 250],
@@ -68,6 +75,9 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addCondition('created_at','>',$this->start_date);
 		$model->addCondition('created_at','<',$this->end_date);
 
+		if($this->employee_id)
+			$model->addCondition('created_by_id',$this->employee_id);
+
 		// ROI of channel
 	    $this->add('xepan\base\View_Chart',null,'Charts')
 	    		->setType('pie')
@@ -82,11 +92,12 @@ class page_dashboard extends \xepan\base\Page{
 		$model->_dsql()->group('status');
 		$model->addCondition('created_at','>',$this->start_date);
 		$model->addCondition('created_at','<',$this->end_date);
+		if($this->employee_id)
+			$model->addCondition('created_by_id',$this->employee_id);
 		
 		// sale_current_pipeline
 		$this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
-	     		->setLabelToValue(true)
 	    		->setModel($model,'status',['fund_sum'])
 	    		->addClass('col-md-4')
 	    		->setTitle('Opportunities Pipeline')
@@ -99,52 +110,54 @@ class page_dashboard extends \xepan\base\Page{
 		$model->_dsql()->group('source_filled');
 		$model->addCondition('created_at','>',$this->start_date);
 		$model->addCondition('created_at','<',$this->end_date);
+		if($this->employee_id)
+			$model->addCondition('created_by_id',$this->employee_id);
 
 
 	    // engagin_by_channel
 	     $this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
-	     		->setLabelToValue(true)
 	    		->setModel($model,'source_filled',['fund_sum'])
 	    		->setTitle('Opportunities From Sources')
 	    		->addClass('col-md-4');
 	    		;
-	    
-	   	// Sales activity by sale emp
 
-	 //    public $status=[
-		// 	'Open',
-		// 	'Qualified',
-		// 	'NeedsAnalysis',
-		// 	'Quoted',
-		// 	'Negotiated',
-		// 	'Won',
-		// 	'Lost'
-		// ];
-	    $model = $this->add('xepan\hr\Model_Employee');
-	    $model->hasMany('xepan\marketing\Opportunity','assign_to_id',null,'Oppertunities');
-		$model->addExpression('Open')->set($model->refSQL('Oppertunities')->addCondition('status','Open')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		$model->addExpression('Qualified')->set($model->refSQL('Oppertunities')->addCondition('status','Qualified')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		$model->addExpression('NeedsAnalysis')->set($model->refSQL('Oppertunities')->addCondition('status','NeedsAnalysis')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		$model->addExpression('Quoted')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		$model->addExpression('Negotiated')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		$model->addExpression('Won')->set($model->refSQL('Oppertunities')->addCondition('status','Won')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		$model->addExpression('Lost')->set($model->refSQL('Oppertunities')->addCondition('status','Lost')->addCondition('created_at','>',$this->start_date)->addCondition('created_at','<',$this->end_date)->sum('fund'));
-		
-		$model->addCondition([['Open','>',0],['Qualified','>',0],['NeedsAnalysis','>',0],['Quoted','>',0],['Negotiated','>',0]]);
-		$model->addCondition('status','Active');
+	    // Employee Communication Channel
+ 		// $grid = $this->add('Grid',null,'Charts');
+ 		$communication_graph = $this->add('xepan\communication\Model_Communication');
+		$communication_graph->addExpression('date','date(created_at)');
+		$communication_graph->addExpression('score','count(*)');
+		$communication_graph->addCondition([['from_id',$this->employee_id],['to_id',$this->employee_id]])
+							->addCondition('created_at','>',$this->start_date)
+							->addCondition('status','<>','Outbox')
+							->addCondition('created_at','<',$this->end_date)
+							->setOrder('date','asc')
+							->_dsql()->group(['communication_type',$communication_graph->_dsql()->expr('[0]',[$communication_graph->getElement('date')])])
+							;
+		// $grid->setModel($communication_graph,['communication_type','status','date','employee_id','employee','score']);
 
-     	$this->add('xepan\base\View_Chart',null,'Charts')
-     		->setType('bar')
-     		->setModel($model,'name',['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
-     		->setGroup(['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
-     		->setTitle('Sales Staff Status')
-     		->addClass('col-md-8')
-     		->rotateAxis()
-     		;
+		$data_array = [];
+		foreach ($communication_graph as $model) {
+			if(!isset($data_array[$model['date']])) $data_array[$model['date']]=[];
+			$data_array[$model['date']] = array_merge($data_array[$model['date']],['date'=>$model['date'], $model['communication_type']=>$model['score']]);
+		}
 
+		$data_array = array_values($data_array);
+		// echo "<pre>";
+		// var_dump($data_array);
+		// exit;
+		$communication_graph = $this->add('xepan\base\View_Chart',null,'Charts')
+ 		->setType('bar')
+ 		->setData(['json'=>$data_array])
+ 		->setGroup(['Email','Call','Personal','Comment','TeleMarketing'])
+ 		->setXAxis('date')
+ 		->setYAxises(['Email','Call','Personal','Comment','TeleMarketing'])
+ 		->addClass('col-md-12')
+ 		->setTitle('Communication')
+ 		;
+     		return;
 
-     	// Communications by staff 
+     	// Communications by staff
      	$model = $this->add('xepan\hr\Model_Employee');
 	    // $model->hasMany('xepan\communication\Communication','from_id',null,'FromCommunications');
 	    // $model->hasMany('xepan\communication\Communication','to_id',null,'ToCommunications');
@@ -162,16 +175,7 @@ class page_dashboard extends \xepan\base\Page{
 		$model->addExpression('Call')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
-						->addCondition('communication_type','Call')
-						->addCondition('created_at','>',$this->start_date)
-						->addCondition('created_at','<',$this->end_date)
-						->count();
-		});
-
-		$model->addExpression('TeleMarketing')->set(function($m,$q){
-			return $this->add('xepan\communication\Model_Communication')
-						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
-						->addCondition('communication_type','TeleMarketing')
+						->addCondition('communication_type',['Call','TeleMarketing'])
 						->addCondition('created_at','>',$this->start_date)
 						->addCondition('created_at','<',$this->end_date)
 						->count();
@@ -191,19 +195,18 @@ class page_dashboard extends \xepan\base\Page{
 		// $model->addExpression('Phone')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->sum('fund'));
 		// $model->addExpression('Meetings')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
 
-		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0],['TeleMarketing','>',0]]);
+		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0]]);
 		$model->addCondition('status','Active');
 
      	$this->add('xepan\base\View_Chart',null,'Charts')
      		->setType('bar')
-     		->setModel($model,'name',['Email','Call','Meeting','TeleMarketing'])
-     		->setGroup(['Email','Call','Meeting','TeleMarketing'])
+     		->setModel($model,'name',['Email','Call','Meeting'])
+     		->setGroup(['Email','Call','Meeting'])
      		->setTitle('Sales Staff Communication')
      		->addClass('col-md-8')
      		->rotateAxis()
      		;
 
-	    return;
 
 	    // customer-satisfaction
      	$this->add('xepan\base\View_Chart',null,'customer_satisfaction')

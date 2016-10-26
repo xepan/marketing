@@ -86,6 +86,7 @@ class page_dashboard extends \xepan\base\Page{
 		// sale_current_pipeline
 		$this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
+	     		->setLabelToValue(true)
 	    		->setModel($model,'status',['fund_sum'])
 	    		->addClass('col-md-4')
 	    		->setTitle('Opportunities Pipeline')
@@ -103,6 +104,7 @@ class page_dashboard extends \xepan\base\Page{
 	    // engagin_by_channel
 	     $this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
+	     		->setLabelToValue(true)
 	    		->setModel($model,'source_filled',['fund_sum'])
 	    		->setTitle('Opportunities From Sources')
 	    		->addClass('col-md-4');

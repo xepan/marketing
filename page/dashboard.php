@@ -201,7 +201,7 @@ class page_dashboard extends \xepan\base\Page{
 		// $model->addExpression('Phone')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->sum('fund'));
 		// $model->addExpression('Meetings')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
 
-		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0],['TeleMarketing','>',0],['Newsletter'>0]]);
+		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0],['TeleMarketing','>',0],['Newsletter','>',0]]);
 		$model->addCondition('status','Active');
 
      	$this->add('xepan\base\View_Chart',null,'Charts')

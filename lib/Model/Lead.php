@@ -318,6 +318,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
 			$mail = $this->add('xepan\communication\Model_Communication_Email');
 
+			$mail['from_id'] = $this->app->employee->id;
+
 			$subject = $newsletter_model['title'] ;		    		    
 			$email_subject=$this->add('GiTemplate');
 			

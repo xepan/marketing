@@ -196,8 +196,8 @@ class page_dashboard extends \xepan\base\Page{
 
      	$this->add('xepan\base\View_Chart',null,'Charts')
      		->setType('bar')
-     		->setModel($model,'name',['Email','Call','Meeting','TeleMarketing'])
-     		->setGroup(['Email','Call','Meeting','TeleMarketing'])
+     		->setModel($model,'name',['Email','Newsletter','Call','Meeting','TeleMarketing'])
+     		->setGroup(['Email','Newsletter','Call','Meeting','TeleMarketing'])
      		->setTitle('Sales Staff Communication')
      		->addClass('col-md-8')
      		->rotateAxis()

@@ -81,6 +81,7 @@ class page_daybydayanalytics extends \xepan\base\Page{
 		// ROI of channel
 	    $this->add('xepan\base\View_Chart',null,'Charts')
 	    		->setType('pie')
+	    		->setLabelToValue(true)
 	    		->setModel($model,'source_filled',['fund_sum'])
 	    		->addClass('col-md-4')
 	    		->setTitle('Won Business Sources')
@@ -98,6 +99,7 @@ class page_daybydayanalytics extends \xepan\base\Page{
 		// sale_current_pipeline
 		$this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
+	     		->setLabelToValue(true)
 	    		->setModel($model,'status',['fund_sum'])
 	    		->addClass('col-md-4')
 	    		->setTitle('Opportunities Pipeline')

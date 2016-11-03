@@ -159,6 +159,16 @@ class page_dashboard extends \xepan\base\Page{
 						->count();
 		});
 
+		$model->addExpression('Newsletter')->set(function($m,$q){
+			return $this->add('xepan\communication\Model_Communication')
+						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
+						->addCondition('communication_type','Newsletter')
+						->addCondition('status','<>','Outbox')
+						->addCondition('created_at','>',$this->start_date)
+						->addCondition('created_at','<',$this->end_date)
+						->count();
+		});
+
 		$model->addExpression('Call')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
@@ -191,7 +201,7 @@ class page_dashboard extends \xepan\base\Page{
 		// $model->addExpression('Phone')->set($model->refSQL('Oppertunities')->addCondition('status','Quoted')->sum('fund'));
 		// $model->addExpression('Meetings')->set($model->refSQL('Oppertunities')->addCondition('status','Negotiated')->sum('fund'));
 
-		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0],['TeleMarketing','>',0]]);
+		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0],['TeleMarketing','>',0],['Newsletter'>0]]);
 		$model->addCondition('status','Active');
 
      	$this->add('xepan\base\View_Chart',null,'Charts')

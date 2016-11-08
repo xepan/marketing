@@ -81,6 +81,7 @@ class page_daybydayanalytics extends \xepan\base\Page{
 		// ROI of channel
 	    $this->add('xepan\base\View_Chart',null,'Charts')
 	    		->setType('pie')
+	    		->setLabelToValue(true)
 	    		->setModel($model,'source_filled',['fund_sum'])
 	    		->addClass('col-md-4')
 	    		->setTitle('Won Business Sources')
@@ -98,6 +99,7 @@ class page_daybydayanalytics extends \xepan\base\Page{
 		// sale_current_pipeline
 		$this->add('xepan\base\View_Chart',null,'Charts')
 	     		->setType('pie')
+	     		->setLabelToValue(true)
 	    		->setModel($model,'status',['fund_sum'])
 	    		->addClass('col-md-4')
 	    		->setTitle('Opportunities Pipeline')
@@ -149,9 +151,9 @@ class page_daybydayanalytics extends \xepan\base\Page{
 		$communication_graph = $this->add('xepan\base\View_Chart',null,'Charts')
  		->setType('bar')
  		->setData(['json'=>$data_array])
- 		->setGroup(['Email','Call','Personal','Comment','TeleMarketing'])
+ 		->setGroup(['Email','Newsletter','Call','Personal','Comment','TeleMarketing'])
  		->setXAxis('date')
- 		->setYAxises(['Email','Call','Personal','Comment','TeleMarketing'])
+ 		->setYAxises(['Email','Newsletter','Call','Personal','Comment','TeleMarketing'])
  		->addClass('col-md-12')
  		->setTitle('Communication')
  		;

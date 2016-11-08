@@ -56,7 +56,47 @@ class Initiator extends \Controller_Addon {
         $this->app->status_icon["xepan\marketing\Model_Campaign"] = ['All'=>'fa fa-globe','Draft'=>"fa fa-sticky-note-o ",'Submitted'=>'fa fa-check-square-o text-primary','Redesign'=>'fa fa-refresh ','Approved'=>'fa fa-thumbs-up text-success','Onhold'=>'fa fa-pause text-warning'];
 		$search_lead = $this->add('xepan\marketing\Model_Lead');
 		$this->app->addHook('quick_searched',[$search_lead,'quickSearch']);
+		$this->app->addHook('contact_save',[$this,'contactSave']);
 		return $this;
+	}
+	
+	function contactSave($app,$m){
+		if($m->id == $this->app->employee->id)
+			return;
+		
+		// finding id of marketing category
+		$marketing_category = $this->add('xepan\marketing\Model_MarketingCategory');
+		$marketing_category->tryLoadBy('name',$m['status'].' '.$m['type']);
+
+		if(!$marketing_category->loaded())
+			return;
+
+		$active_category = $this->add('xepan\marketing\Model_MarketingCategory');
+		$active_category->tryLoadBy('name','Active '.$m['type']);
+		$active_cat_id = $active_category->id;  
+		
+		$inactive_category = $this->add('xepan\marketing\Model_MarketingCategory');
+		$inactive_category->tryLoadBy('name','InActive '.$m['type']);
+		$inactive_cat_id = $inactive_category->id;
+
+
+		// finding current association 
+		$cat_assoc = $this->add('xepan\marketing\Model_Lead_category_Association');
+		$cat_assoc->addCondition('lead_id',$m->id);
+		$cat_assoc->addCondition('marketing_category_id',[$active_cat_id,$inactive_cat_id]);
+
+		// deleting current association 
+		if($cat_assoc->count()->getOne() > 0){									
+			foreach ($cat_assoc as $association_row){
+				$association_row->delete();
+			}
+		}
+
+		// new association 		
+		$category_association_m = $this->add('xepan\marketing\Model_Lead_category_Association');
+		$category_association_m['lead_id'] = $m->id;
+		$category_association_m['marketing_category_id'] = $marketing_category->id;
+		$category_association_m->save();		
 	}
 
 	function setup_frontend(){
@@ -95,23 +135,26 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function resetDB(){
-		// Clear DB
-		// if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
-	    // if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
-	    // $this->app->epan=$this->app->old_epan;
-        // $truncate_models = ['Opportunity','Lead_Category_Association','Lead','Campaign_Category_Association','Schedule','Campaign_SocialUser_Association','campaign','Content','MarketingCategory'];
-        // foreach ($truncate_models as $t) {
-        //     $m=$this->add('xepan\marketing\Model_'.$t);
-        //     foreach ($m as $mt) {
-        //         $mt->delete();
-        //     }
-        // }
-        
-        // $this->app->epan=$this->app->new_epan;
+		$category_name = ['Default',
+					 'Active Affiliate',
+					 'InActive Affiliate',
+					 'Active Employee',
+					 'InActive Employee',
+					 'Active Customer',
+					 'InActive Customer',
+					 'Active Supplier',
+					 'InActive Supplier',
+					 'Active OutSourceParty',
+					 'InActive OutSourceParty'
+					];
 
-        $mar_cat=$this->add('xepan\marketing\Model_MarketingCategory');
-        $mar_cat['name']="default";
-        $mar_cat->save();
+       	
+       	foreach ($category_name as $cat) {
+        	$mar_cat=$this->add('xepan\marketing\Model_MarketingCategory');
+        	$mar_cat['name'] = $cat;
+        	$mar_cat['system'] = true;
+        	$mar_cat->save(); 
+       	}
 
         $news=$this->add('xepan\marketing\Model_Newsletter');
         $news['marketing_category_id']=$mar_cat->id;

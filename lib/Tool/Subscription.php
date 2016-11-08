@@ -54,6 +54,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 					
 					$association['lead_id'] = $l_model->id;
 					$association['marketing_category_id'] = $category;  
+					$association['created_at'] = $this->app->now;  
 					$association->save();
 				}
 
@@ -86,6 +87,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 					
 					$assoc['lead_id'] = $lead->id;
 					$assoc['marketing_category_id'] = $cat;  
+					$assoc['created_at'] = $this->app->now;  
 					$assoc->save();
 				}
 

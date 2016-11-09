@@ -17,6 +17,8 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		***************************************************************************/
 		
 		$lead_cat_assos_j = $leads->join('lead_category_association.lead_id');
+		$lead_cat_assos_j->addField('association_time','created_at');
+		
 		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
 				
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');

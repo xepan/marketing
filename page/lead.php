@@ -409,6 +409,7 @@ class page_lead extends \xepan\base\Page{
 						$associate_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
 						$associate_m['lead_id'] = $lead->id;
 		     			$associate_m['marketing_category_id']= $cat;
+		     			$associate_m['created_at']= $this->app->now;
 			 			$associate_m->save();	
 					}
 
@@ -422,6 +423,7 @@ class page_lead extends \xepan\base\Page{
 						$associate_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
 						$associate_m->addCondition('lead_id',$existing_email['contact_id']);
 		     			$associate_m->addCondition('marketing_category_id',$cat);
+		     			$associate_m->addCondition('created_at',$this->app->now);
 		     			$associate_m->tryLoadAny();
 		     			
 		     			if(!$associate_m->loaded())

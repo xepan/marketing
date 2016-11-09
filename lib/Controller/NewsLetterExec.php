@@ -29,7 +29,6 @@ class Controller_NewsLetterExec extends \AbstractController {
 		$leads->addCondition('content_status','Approved');
 		$leads->addCondition('is_already_sent',0);
 		$leads->addCondition('document_type','Newsletter');
-		$leads->addCondition($leads->dsql()->expr("[0]>[1]",[$leads->getElement('association_time'),$leads->getElement('schedule_date')]));
 
 	// 	/***************************************************************************
 	// 		Must have a gap of N days between sending this Content/Newsletter again

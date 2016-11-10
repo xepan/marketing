@@ -13,9 +13,31 @@ class Model_Content extends \xepan\hr\Model_Document{
 	public $actions=[
 		'Draft'=>['view','edit','delete','submit','test'],
 		'Submitted'=>['view','reject','approve','edit','delete','test'],
-		'Approved'=>['view','reject','schedule','edit','delete','test'],
+		'Approved'=>['view','reject','schedule','edit','delete','test','get_url'],
 		'Rejected'=>['view','edit','delete','submit','test']
 	];
+
+	function page_get_url($p){
+		
+		$form = $p->add('Form');
+		$form->addField('page');
+		$form->addField('source')->addClass('xepan-push-large');
+		$form->addSubmit('Get traceable URL')->addClass('btn btn-primary xepan-push-large');
+		$view = $p->add('View');
+		
+		$page='index';
+		$source='Social';
+
+		if($_GET['url']) $page=$_GET['url'];
+		if($_GET['source']) $source=$_GET['source'];
+
+		$view->set($this->app->pm->base_url."?page=$page&source=$source&xepan_landing_content_id=$this->id");
+
+		if($form->isSubmitted()){
+			$url = $form['input_your_websites_url'].'/?&xepan_landing_content_id='.$this->id;
+			$view->js()->reload(['url'=>$form['page'],'source'=>$form['source']])->execute();
+		}
+	}
 
 	function init(){
 		parent::init();

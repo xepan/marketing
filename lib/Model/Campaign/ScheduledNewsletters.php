@@ -17,6 +17,8 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		***************************************************************************/
 		
 		$lead_cat_assos_j = $leads->join('lead_category_association.lead_id');
+		$lead_cat_assos_j->addField('association_time','created_at');
+		
 		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
 				
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
@@ -51,10 +53,12 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		/***************************************************************************
 			Expression to find if the lead is 'Hot'/'sendable limit'
 		***************************************************************************/
+		
 		$leads->addExpression('sendable')->set(function($m,$q){
 			return $q->expr(
 					"IF([campaign_type]='campaign',
-						if([schedule_date]<='[now]',1,0),
+						if([schedule_date]<='[now]',
+						if([schedule_date]>[lead_association_time],1,0),0),
 						if([days_from_join]>=[schedule_day],1,0)
 						)",
 					[
@@ -62,7 +66,8 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 						'schedule_date'=> $m->getElement('schedule_date'),
 						'now' => $this->app->now,
 						'days_from_join'=> $m->getElement('days_from_join'),
-						'schedule_day'=> $m->getElement('schedule_day')
+						'schedule_day'=> $m->getElement('schedule_day'),
+						'lead_association_time'=> $m->getElement('association_time')
 					]
 					);
 		})->type('boolean');

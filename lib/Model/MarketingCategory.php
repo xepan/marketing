@@ -18,7 +18,8 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		
 		$cat_j = $this->join('marketingcategory.document_id');
 		$cat_j->addField('name')->sortable(true);
-		
+		$cat_j->addField('system')->type('boolean');
+
 		$cat_j->hasMany('xepan\marketing\Lead_Category_Association','marketing_category_id');
 		$cat_j->hasMany('xepan\marketing\Campaign_Category_Association','marketing_category_id');
 
@@ -49,17 +50,17 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 
 	function checkExistingLeadCategoryAssociation($m){
 		$lead__cat_count = $m->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
-
+		
 		if($lead__cat_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association ');	
+			throw $this->exception('Cannot Delete,first delete Lead`s Category Association');	
 	}
 		
 
 	function checkExistingCampaignCategoryAssociation($m){
 		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
-		
+	
 		if($campaign_catasso_count)
-			throw $this->exception('Cannot Delete,first delete Lead`s Category Association');	
+			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association ');	
 	}
 
 	function getAssociatedLeads(){

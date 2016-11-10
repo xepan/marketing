@@ -158,6 +158,7 @@ class page_leaddetails extends \xepan\base\Page {
 							$cat_asso_model = $this->add('xepan\marketing\Model_Lead_Category_Association');
 							$cat_asso_model['lead_id'] = $new_lead_model->id;
 							$cat_asso_model['marketing_category_id'] = $cat_id;
+							$cat_asso_model['created_at'] = $this->app->now;
 							$cat_asso_model->save();
 						}
 					}					

@@ -264,8 +264,36 @@ class page_leaddetails extends \xepan\base\Page {
 			}
 
 		}
+
+		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'activate_lead_api'=>'checkbox',
+						'open_lead_external_info_in_iframe'=>'checkbox',
+						'external_url'=>'Line',
+						],
+				'config_key'=>'MARKETING_EXTERNAL_CONFIGURATION',
+				'application'=>'marketing'
+		]);
+		$config_m->tryLoadAny();
+		
+		$temp = $this->add('GiTemplate');
+		$temp->loadTemplateFromString($config_m['external_url']);
+
+		$external_view = $this->add('GiTemplate');
+		$external_view->loadTemplateFromString($config_m['external_url']);
+		$external_view->trySet($lead->get());
+
+
+		if($config_m['activate_lead_api'] AND $config_m['open_lead_external_info_in_iframe'])
+			$this->add('View',null,'extra_info')->setElement('iframe')->setAttr(['src'=>$external_view->render(),'width'=>'100%','height'=>'600px']);
+		else{		
+			$this->template->trySet('extra_info',' ');
+			$this->add('View',null,'extra_info_message',null)->set('Please activate lead API from configuration');	
+		}
 		
 		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true, 'chartRangeMin' =>0]);
+
 	}
 
 	function defaultTemplate(){

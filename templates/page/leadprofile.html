@@ -130,6 +130,7 @@
             <li class="active"><a data-toggle="tab" href="#tab-details">Details</a></li>
             <li><a data-toggle="tab" href="#tab-opportunity">Opportunity</a></li>
             <li><a data-toggle="tab" href="#tab-activity">Activity  </a></li>
+            <li class="tab-extrenal-info"><a data-toggle="tab" href="#tab-external-info">External Information  </a></li>
           </ul>
           <div class="tab-content">
             <div id="tab-details" class="tab-pane active">{details}
@@ -137,9 +138,15 @@
             </div>
             <div id="tab-opportunity" class="tab-pane">{$opportunity}</div>
             <div id="tab-activity" class="tab-pane">{$activity}</div>
+            <div id="tab-external-info" class="tab-pane">
+              <div class="view-related-lead-extrenal-info">
+                {$extra_info}
+                {$extra_info_message}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>{/}        
+    </div>{/}         
   </div>
 </div>

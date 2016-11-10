@@ -28,6 +28,8 @@ class page_externalconfiguration extends \xepan\base\Page{
         $lead_form->setModel($config_m,['activate_lead_api','open_lead_external_info_in_iframe','external_url']);
         $lead_form->addSubmit('Save')->addClass('btn btn-info');
 
+        $lead_form->getElement('external_url');
+
         if($lead_form->isSubmitted()){
         	$lead_form->save();
         	$lead_form->js()->univ()->successMessage('Saved')->execute();

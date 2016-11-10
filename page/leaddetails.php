@@ -264,35 +264,38 @@ class page_leaddetails extends \xepan\base\Page {
 			}
 
 		}
-		$account_no = "SLBRD2";	
+
+		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'activate_lead_api'=>'checkbox',
+						'open_lead_external_info_in_iframe'=>'checkbox',
+						'external_url'=>'Line',
+						],
+				'config_key'=>'MARKETING_EXTERNAL_CONFIGURATION',
+				'application'=>'marketing'
+		]);
+		$config_m->tryLoadAny();
+		
+		$temp = $this->add('GiTemplate');
+		$temp->loadTemplateFromString($config_m['external_url']);
+
+		$external_view = $this->add('GiTemplate');
+		$external_view->loadTemplateFromString($config_m['external_url']);
+		$external_v = $this->add('View',null,'extra_info',$external_view);
+		$external_v->template->trySet($config_m);
+		
+		$get_parameters = $external_v->getHtml().$lead['first_name'];
+
+		if($config_m['activate_lead_api'] AND $config_m['open_lead_external_info_in_iframe'])
+			$this->add('View',null,'extra_info')->setElement('iframe')->setAttr(['src'=>$get_parameters,'width'=>'100%','height'=>'600px']);
+		else{		
+			$this->template->trySet('extra_info',' ');
+			$this->add('View',null,'extra_info_message',null)->set('Please activate lead API from configuration');	
+		}
+		
 		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true, 'chartRangeMin' =>0]);
-		$this->add('View',null,'extra_info')->setElement('iframe')->setAttr(['src'=>'http://localhost/xbank2/?page=api_account&account='.$account_no,'width'=>'100%','height'=>'600px']);
 
-		// $this->js('click','
-		// 	 $.ajax({
-  //               type: "GET",
-  //               url: "http://localhost/xbank2/?page=api_account",
-  //               contentType: "application/json",
-  //               data: JSON.stringify({
-  //                   name: "Tricia",
-  //                   age: 37
-  //               }),
-  //               dataType: "text",
-  //               success: function( response ){
-  //                   alert("hello")
-  //               },
-  //               error: function( error ){
-  //                   // Log any error.
-  //                   console.log( "ERROR:", error );
-  //               },
-  //               complete: function(){
-  //                   // When this completes, execute teh
-  //                   // DELETE request.
-  //                   console.log( "complete");
-  //               }
-  //           });
-
-  //   ')->_selector('.tab-extrenal-info');
 	}
 
 	function defaultTemplate(){

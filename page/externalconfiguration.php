@@ -18,7 +18,7 @@ class page_externalconfiguration extends \xepan\base\Page{
 				'application'=>'marketing'
 		]);
 
-		$config_m->add('xepan\hr\Controller_ACL');
+		// $config_m->add('xepan\hr\Controller_ACL');
 		$config_m->tryLoadAny();
 
 		$tabs = $this->add('Tabs');

@@ -8,6 +8,9 @@ class page_opportunity extends \xepan\base\Page{
 		parent::init(); 
  
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opp_lead_j = $opportunity->opp_j->join('contact.id','lead_id');
+		$x = $opp_lead_j->addField('organization');
+
 		$opportunity->setOrder('created_at','desc');
 		$opportunity->addExpression('weakly_communication')->set(function($m,$q){
 			$comm = $m->add('xepan/communication/Model_Communication');
@@ -25,7 +28,7 @@ class page_opportunity extends \xepan\base\Page{
 			$lead->setLimit(1);
 			return $lead->fieldQuery('last_communication');
 		});	
-		
+
 		$watchable = $this->app->stickyGET('watchable');
 		$status = $this->app->stickyGET('status');
 		if($watchable){
@@ -44,11 +47,11 @@ class page_opportunity extends \xepan\base\Page{
 			$crud->form->setLayout('form\opportunity');
 		}	
 
-		$crud->setModel($opportunity,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
+		$crud->setModel($opportunity,['organization','last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
 		$crud->grid->addPaginator(10);		
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
 		
-		$f = $crud->grid->addQuickSearch(['lead']);
+		$f = $crud->grid->addQuickSearch(['lead','title','description',$x]);
 		$dropdown = $f->addField('dropdown','status')->setValueList(['Open'=>'Open','Converted'=>'Converted','Rejected'=>'Rejected'])->setEmptyText('Status');
 		$dropdown->js('change',$f->js()->submit());
 

@@ -282,13 +282,11 @@ class page_leaddetails extends \xepan\base\Page {
 
 		$external_view = $this->add('GiTemplate');
 		$external_view->loadTemplateFromString($config_m['external_url']);
-		$external_v = $this->add('View',null,'extra_info',$external_view);
-		$external_v->template->trySet($config_m);
-		
-		$get_parameters = $external_v->getHtml().$lead['first_name'];
+		$external_view->trySet($lead->get());
+
 
 		if($config_m['activate_lead_api'] AND $config_m['open_lead_external_info_in_iframe'])
-			$this->add('View',null,'extra_info')->setElement('iframe')->setAttr(['src'=>$get_parameters,'width'=>'100%','height'=>'600px']);
+			$this->add('View',null,'extra_info')->setElement('iframe')->setAttr(['src'=>$external_view->render(),'width'=>'100%','height'=>'600px']);
 		else{		
 			$this->template->trySet('extra_info',' ');
 			$this->add('View',null,'extra_info_message',null)->set('Please activate lead API from configuration');	

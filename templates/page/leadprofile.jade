@@ -116,6 +116,8 @@
               a(data-toggle='tab', href='#tab-opportunity') Opportunity
             li
               a(data-toggle='tab', href='#tab-activity') Activity  
+            li.tab-extrenal-info
+              a(data-toggle='tab', href='#tab-external-info') External Information  
           .tab-content
             
              #tab-details.tab-pane.active
@@ -132,4 +134,7 @@
    
              #tab-activity.tab-pane
                 {$activity}
-    {/}        
+             #tab-external-info.tab-pane
+                .view-related-lead-extrenal-info
+                  {$extra_info}
+    {/}         

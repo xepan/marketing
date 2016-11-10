@@ -263,8 +263,35 @@ class page_leaddetails extends \xepan\base\Page {
 			}
 
 		}
-		
+		$account_no = "SLBRD2";	
 		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true, 'chartRangeMin' =>0]);
+		$this->add('View',null,'extra_info')->setElement('iframe')->setAttr(['src'=>'http://localhost/xbank2/?page=api_account&account='.$account_no,'width'=>'100%','height'=>'600px']);
+
+		// $this->js('click','
+		// 	 $.ajax({
+  //               type: "GET",
+  //               url: "http://localhost/xbank2/?page=api_account",
+  //               contentType: "application/json",
+  //               data: JSON.stringify({
+  //                   name: "Tricia",
+  //                   age: 37
+  //               }),
+  //               dataType: "text",
+  //               success: function( response ){
+  //                   alert("hello")
+  //               },
+  //               error: function( error ){
+  //                   // Log any error.
+  //                   console.log( "ERROR:", error );
+  //               },
+  //               complete: function(){
+  //                   // When this completes, execute teh
+  //                   // DELETE request.
+  //                   console.log( "complete");
+  //               }
+  //           });
+
+  //   ')->_selector('.tab-extrenal-info');
 	}
 
 	function defaultTemplate(){

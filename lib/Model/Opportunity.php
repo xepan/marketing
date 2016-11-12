@@ -86,7 +86,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$this->qualify($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("Qualified Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
+				->addActivity("Opportunity '".$this['title']."' Qualified", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('analyse_needs,lose','Qualified');
 			return $p->js()->univ()->closeDialog();
 		}
@@ -110,7 +110,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$this->analyse_needs($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("analysing needs of Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
+				->addActivity("Opportunity : ".$this['title']." 's  Needs Analyzed", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('quote,negotiate,lose','NeedsAnalysis');
 			return $p->js()->univ()->closeDialog();
 		}
@@ -140,7 +140,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$quotation_model  = $this->quote($form->getAllFields());
 			$this->app->employee
-				->addActivity("Quoted Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
+				->addActivity("Quoted to Opportunity '".$this['title']."'", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('negotiate,win,lose','Quoted');
 			return $this->app->page_action_result = $form->js()->univ()->frameURL('Quotation',$this->app->url('xepan_commerce_quotationdetail',['action'=>'edit','document_id'=>$quotation_model->id]));		
 		}	
@@ -189,7 +189,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$this->negotiate($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("Negotiated Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
+				->addActivity("Negotiated with Opportunity '".$this['title']."'", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."")
 				->notifyWhoCan('win,quote,lose','Negotiated');
 			return $p->js()->univ()->closeDialog();
 		}	
@@ -212,7 +212,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$this->win($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("won Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");			
+				->addActivity("Won Opportunity : '".$this['title']."'", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");			
 			return $p->js()->univ()->closeDialog();
 		}	
 	}
@@ -233,7 +233,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$this->lose($form['narration'],$form['probability_percentage']);
 			$this->app->employee
-				->addActivity("Lost Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
+				->addActivity("Lost Opportunity : '".$this['title']."'", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
 			return $p->js()->univ()->closeDialog();	
 		}
 	}
@@ -257,7 +257,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		if($form->isSubmitted()){
 			$this->reassess($form['fund'],$form['discount_percentage'],$form['narration'],$form['closing_date']);
 			$this->app->employee
-				->addActivity("Reassessed Opportunity", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
+				->addActivity("Reassessed Opportunity : '".$this['title']."'", $this->id, $this['lead_id'],null,null,"xepan_marketing_leaddetails&contact_id=".$this['lead_id']."");
 			return $p->js()->univ()->closeDialog();	
 		}
 	}

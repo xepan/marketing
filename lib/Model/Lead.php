@@ -220,13 +220,28 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$opportunity->addCondition('lead_id',$this->id);
 		$opportunity->setOrder('created_at','desc');
 		$opportunity->getElement('assign_to_id')->getModel()->addCondition('type','Employee');
+		
+		$opportunity->addHook('afterInsert',function($m){
+			$this->opportunityMessage();
+		});
+
 		$crud->setModel($opportunity,['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
+	}
+
+	function opportunityMessage(){
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('lead_id',$this->id);
+		$opportunity->setOrder('id','desc');
+		$opportunity->tryLoadAny();
+		$this->app->employee
+            ->addActivity("Opportunity : '".$opportunity['title']."' Created, Related To Lead : '".$this['name']."'", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_marketing_leaddetails&contact_id=".$this->id."")
+            ->notifyWhoCan('create_opportunity','Active',$this);
 	}
 
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
-            ->addActivity("Lead '".$this['name']."' now active", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_marketing_leaddetails&contact_id=".$this->id."")
+            ->addActivity("Lead : '".$this['name']."' Activated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_marketing_leaddetails&contact_id=".$this->id."")
             ->notifyWhoCan('deactivate','Active',$this);
 		$this->save();
 	}
@@ -236,7 +251,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->app->employee
-            ->addActivity("Lead '".$this['name']."' has deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_marketing_leaddetails&contact_id=".$this->id."")
+            ->addActivity("Lead : '".$this['name']."' has deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_marketing_leaddetails&contact_id=".$this->id."")
             ->notifyWhoCan('activate','InActive',$this);
 		$this->save();
 	}
@@ -353,8 +368,10 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			$mail->setSubject($subject_v->getHtml());
 			$mail->setBody($body_v->getHtml());
 			$mail->send($email_settings);
-
-			return $f->js(true,$f->js()->univ()->successMessage('Mail Send Successfully'))->reload();				
+			$this->app->employee
+				->addActivity("Newsletter : '".$newsletter_model['content_name']."' successfully sent to '".$this['name']."'", $newsletter_model->id/* Related Document ID*/, /*Related Contact ID*/$this->id,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$newsletter_model->id."")
+				->notifyWhoCan(' ',' ',$this);
+			return $f->js(true,$f->js(null,$f->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Mail Send Successfully'))->reload();				
 		}
 	}
 

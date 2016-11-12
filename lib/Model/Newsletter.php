@@ -167,7 +167,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	function submit(){
 		$this['status']='Submitted';
         $this->app->employee
-            ->addActivity("Newsletter '".$this['title']."' has been submitted ", $this->id)
+            ->addActivity("Newsletter : '".$this['title']."' Submitted For Approval",$this->id/* Related Document ID*/, /*Related Contact ID*/null,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$this->id."")
             ->notifyWhoCan('reject,approve,test','Submitted');
         $this->saveAndUnload();    
 	}
@@ -175,7 +175,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	function reject(){
 		$this['status']='Rejected';
         $this->app->employee
-            ->addActivity("Newsletter '".$this['title']."' rejected ", $this->id)
+            ->addActivity("Newsletter : '".$this['title']."' Rejected ",$this->id/* Related Document ID*/, /*Related Contact ID*/null,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$this->id."")
             ->notifyWhoCan('submit,test','Rejected');
         $this->saveAndUnload();     
 	}
@@ -183,7 +183,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 	function approve(){
 		$this['status']='Approved';
         $this->app->employee
-            ->addActivity("Newsletter '".$this['title']."' approved ", $this->id)
+            ->addActivity("Newsletter : '".$this['title']."' Approved ",$this->id/* Related Document ID*/, /*Related Contact ID*/null,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$this->id."")
             ->notifyWhoCan('reject,schedule,test','Approved');
 		$this->saveAndUnload(); 
 	}

@@ -4,7 +4,7 @@ namespace xepan\marketing;
 class SocialPosters_Linkedin_LinkedinConfig extends \xepan\marketing\Model_SocialPosters_Base_SocialConfig {
 	public $status = ['Active','Inactive'];
 	public $actions = [
-			'Active'=>['view','edit','delete','login_url','users','fetch_company_page','inactive'],
+			'Active'=>['view','edit','delete','login_url','users','fetch_company_page','deactivate'],
 			'Inactive'=>['view','edit','delete','active']
 		];
 
@@ -144,5 +144,23 @@ class SocialPosters_Linkedin_LinkedinConfig extends \xepan\marketing\Model_Socia
 			$form->js(null,$form->js()->reload())->univ()->successMessage("Company Page factched successfully")->execute();
 		}
 
+	}
+
+	//Config Deactivated
+	function deactivate(){
+		$this['status']='InActive';
+		$this->app->employee
+            ->addActivity("Linkedin Configuration : '". $this['name'] ."' has been deactivated", null /*Related Document ID*/, null /*Related Contact ID*/,null,null,"xepan_marketing_socialconfiguration")
+            ->notifyWhoCan('activate','InActive',$this);
+		return $this->save();
+	}
+
+	//Activate Facebook Config
+	function activate(){
+		$this['status']='Active';
+		$this->app->employee
+            ->addActivity("Linkedin Configuration : '". $this['name'] ."' now active", null /*Related Document ID*/, null /*Related Contact ID*/,null,null,"xepan_marketing_socialconfiguration")
+            ->notifyWhoCan('deactivate','Active',$this);
+		$this->save();
 	}
 }

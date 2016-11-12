@@ -5,7 +5,7 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 	
 	public $status = ['Active','Inactive'];
 	public $actions = [
-			'Active'=>['view','edit','delete','login_url','users','fetch_social_page','inactive'],
+			'Active'=>['view','edit','delete','login_url','users','fetch_social_page','deactivate'],
 			'Inactive'=>['view','edit','delete','active']
 		];
 
@@ -158,5 +158,23 @@ class SocialPosters_Facebook_FacebookConfig extends \xepan\marketing\Model_Socia
 		}
 
 		return $data;
+	}
+
+	//Config Deactivated
+	function deactivate(){
+		$this['status']='InActive';
+		$this->app->employee
+            ->addActivity("Facebook Configuration : '". $this['name'] ."' has been deactivated", null /*Related Document ID*/, null /*Related Contact ID*/,null,null,"xepan_marketing_socialconfiguration")
+            ->notifyWhoCan('activate','InActive',$this);
+		return $this->save();
+	}
+
+	//Activate Facebook Config
+	function activate(){
+		$this['status']='Active';
+		$this->app->employee
+            ->addActivity("Facebook Configuration : '". $this['name'] ."' now active", null /*Related Document ID*/, null /*Related Contact ID*/,null,null,"xepan_marketing_socialconfiguration")
+            ->notifyWhoCan('deactivate','Active',$this);
+		$this->save();
 	}
 }

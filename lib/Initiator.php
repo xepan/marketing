@@ -57,8 +57,14 @@ class Initiator extends \Controller_Addon {
 		$search_lead = $this->add('xepan\marketing\Model_Lead');
 		$this->app->addHook('quick_searched',[$search_lead,'quickSearch']);
 		$this->app->addHook('contact_save',[$this,'contactSave']);
+		$this->app->addHook('widget_collection',[$this,'exportWidgets']);
 		return $this;
 	}
+
+	function exportWidgets($app,&$array){
+        $array['widget_list'][] = 'xepan\marketing\Widget_DayByDayCommunication';
+
+    }
 	
 	function contactSave($app,$m){
 		if($m->id == $this->app->employee->id)

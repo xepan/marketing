@@ -58,11 +58,15 @@ class Initiator extends \Controller_Addon {
 		$this->app->addHook('quick_searched',[$search_lead,'quickSearch']);
 		$this->app->addHook('contact_save',[$this,'contactSave']);
 		$this->app->addHook('widget_collection',[$this,'exportWidgets']);
+		$this->app->addHook('entity_collection',[$this,'exportEntities']);
 		return $this;
 	}
 
 	function exportWidgets($app,&$array){
-        $array['widget_list'][] = 'xepan\marketing\Widget_DayByDayCommunication';
+        $array[] = 'xepan\marketing\Widget_DayByDayCommunication';
+    }
+
+    function exportEntities($app,&$array){
 
     }
 	

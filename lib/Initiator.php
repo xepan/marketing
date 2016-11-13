@@ -64,6 +64,12 @@ class Initiator extends \Controller_Addon {
 
 	function exportWidgets($app,&$array){
         $array[] = 'xepan\marketing\Widget_DayByDayCommunication';
+        $array[] = 'xepan\marketing\Widget_LeadAndScore';
+        $array[] = 'xepan\marketing\Widget_ROI';
+        $array[] = 'xepan\marketing\Widget_OpportunityPipeline';
+        $array[] = 'xepan\marketing\Widget_EngagementByChannel';
+        $array[] = 'xepan\marketing\Widget_SaleStaffStatus';
+        $array[] = 'xepan\marketing\Widget_SaleStaffCommunication';
     }
 
     function exportEntities($app,&$array){

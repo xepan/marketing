@@ -41,7 +41,7 @@ class Widget_DayByDayCommunication extends \xepan\base\Widget {
 		// echo "<pre>";
 		// var_dump($data_array);
 		// exit;
-		$communication_graph = $this->add('xepan\base\View_Chart')
+		$this->chart = $this->add('xepan\base\View_Chart')
 	 		->setType('bar')
 	 		->setData(['json'=>$data_array])
 	 		->setGroup(['Email','Newsletter','Call','Personal','Comment','TeleMarketing'])

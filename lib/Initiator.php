@@ -34,7 +34,7 @@ class Initiator extends \Controller_Addon {
 		->setBaseURL('../vendor/xepan/marketing/');
 
 		$m = $this->app->top_menu->addMenu('Marketing');
-		$m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],'xepan_marketing_dashboard');
+		// $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],'xepan_marketing_dashboard');
 		$m->addItem(['Strategy Planning','icon'=>'fa fa-gavel'],'xepan_marketing_strategyplanning');
 		$m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
 		$m->addItem(['Lead','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_lead',['status'=>'Active']));
@@ -63,13 +63,13 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function exportWidgets($app,&$array){
-        $array[] = 'xepan\marketing\Widget_DayByDayCommunication';
-        $array[] = 'xepan\marketing\Widget_LeadAndScore';
-        $array[] = 'xepan\marketing\Widget_ROI';
-        $array[] = 'xepan\marketing\Widget_OpportunityPipeline';
-        $array[] = 'xepan\marketing\Widget_EngagementByChannel';
-        $array[] = 'xepan\marketing\Widget_SaleStaffStatus';
-        $array[] = 'xepan\marketing\Widget_SaleStaffCommunication';
+        $array[] = ['xepan\marketing\Widget_DayByDayCommunication','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_LeadAndScore','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_ROI','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_OpportunityPipeline','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_EngagementByChannel','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_SaleStaffStatus','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_SaleStaffCommunication','level'=>'Global'];
     }
 
     function exportEntities($app,&$array){

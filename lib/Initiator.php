@@ -70,6 +70,7 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\marketing\Widget_EngagementByChannel','level'=>'Global'];
         $array[] = ['xepan\marketing\Widget_SaleStaffStatus','level'=>'Global'];
         $array[] = ['xepan\marketing\Widget_SaleStaffCommunication','level'=>'Global'];
+        $array[] = ['xepan\marketing\Widget_MassCommunication','level'=>'Global'];
     }
 
     function exportEntities($app,&$array){

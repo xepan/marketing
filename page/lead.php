@@ -17,7 +17,7 @@ class page_lead extends \xepan\base\Page{
 		$lead->setOrder('total_visitor','desc');
 
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code','organization'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['emails_str','contacts_str','name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code','organization'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$grid=$crud->grid;
 		$grid->addClass('grab-lead-grid');
@@ -25,7 +25,7 @@ class page_lead extends \xepan\base\Page{
 
 		$crud->add('xepan\base\Controller_Avatar');
 		
-		$frm=$grid->addQuickSearch(['name','organization']);
+		$frm=$grid->addQuickSearch(['name','organization','emails_str','contacts_str']);
 	
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');

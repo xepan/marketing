@@ -17,10 +17,12 @@ class page_unsubscribe extends \Page{
 			$get_emails = explode(',', $this->app->stickyGET('email_str'));
 
 			if(!empty(array_intersect($contact_emails, $get_emails)))				
-				$model_contact['status'] = 'InActive';
+				$model_contact->deactivateContactEmails($model_contact->id);
 				$model_contact->save();
 				$this->js(true)->univ()->successMessage('You have been unsubscribed');
 		}
+		
+		$subscription_tool = $this->add('xepan\marketing\Tool_Subscription',null,'subscription');
 	}
 
 	function defaultTemplate(){

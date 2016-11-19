@@ -360,6 +360,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 			$source_mail = explode("<br/>",$this['emails_str']);
 			foreach ($source_mail as $index => $email) {				
+				$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$this->id.'>Unsubscribe</>');
 				if($f['email_'.$index])
 					$mail->addTo($email);
 			}

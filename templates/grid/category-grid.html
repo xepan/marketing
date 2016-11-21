@@ -10,8 +10,7 @@
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Category</span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
-        <th id="{$leads_count_sortid}" data-hide="phone"><span>Leads Count </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$leads_count_sort}</span></th>
-        <th data-hide="phone"><span>Communication       </span></th>
+        <th id="{$leads_count_sortid}" data-hide="phone"><span>Leads Count </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$leads_count_sort}     </span></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
@@ -20,10 +19,7 @@
           <td><span class="text-muted">{$name}</span></td>
           <td>
              
-            {$leads_count}
-          </td>
-          <td>
-            <div sparkType="bar" class="sparkline">{$weakly_communication}    </div>
+            {$leads_count}   
           </td>
           <td style="width: 15%;">
             {$edit}

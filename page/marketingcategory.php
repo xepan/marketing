@@ -11,7 +11,7 @@ class page_marketingcategory extends \xepan\base\Page{
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
 
-		$crud->setModel($m,['name']);
+		$crud->setModel($m,['name','leads_count']);
 	    $crud->grid->addQuickSearch(['name']);
 	    $crud->grid->addPaginator(50);
 

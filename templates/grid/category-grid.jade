@@ -17,10 +17,7 @@
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
                 th(id="{$leads_count_sortid}" data-hide="phone")
                     span Leads Count 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$leads_count_sort}
-
-                th(data-hide="phone")
-                    span Communication       
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$leads_count_sort}     
                 th 
                 {/}{/}
             {/}
@@ -33,9 +30,7 @@
                     td
                       span.text-muted {$name}
                     td 
-                      | {$leads_count}
-                    td
-                      .sparkline(sparkType = "bar") {$weakly_communication}    
+                      | {$leads_count}   
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

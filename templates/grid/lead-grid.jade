@@ -12,9 +12,8 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
-                th(id="{$name_sortid}")
+                th
                     span Name 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
                 th(data-hide="phone")
                     span Category
                 th
@@ -22,8 +21,8 @@
                     span Assign To
                 th
                     span Last Communication
-                th(id="{$score_sortid}")
-                    span Total Score {$score_sort}
+                th
+                    span Total Score
                 th
                     span Total Visits
                 th 

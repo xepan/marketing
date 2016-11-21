@@ -58,7 +58,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			$ps=$m->add('xepan\base\Model_PointSystem');
 			$ps->addCondition('contact_id',$q->getField('id'));
 			return $q->expr('IFNULL([0],0)',[$ps->sum('score')]);
-		})->sortable(true);
+		});
 
 		$this->addExpression('last_communication')->set(function($m,$q){
 			$last_commu = $m->add('xepan\communication\Model_Communication');

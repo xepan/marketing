@@ -59,7 +59,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 					"IF([campaign_type]='campaign',
 						if([schedule_date]<='[now]',
 						if([schedule_date]>[lead_association_time],1,0),0),
-						if([days_from_join]>=[schedule_day],1,0)
+						if([days_from_join]=[schedule_day],1,0)
 						)",
 					[
 						'campaign_type'=> $m->getElement('campaign_type'),

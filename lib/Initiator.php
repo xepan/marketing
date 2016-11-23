@@ -63,16 +63,16 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function exportWidgets($app,&$array){
-        $array[] = ['xepan\marketing\Widget_DayByDayCommunication','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_LeadAndScore','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_ROI','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_OpportunityPipeline','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_EngagementByChannel','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_SaleStaffStatus','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_SaleStaffCommunication','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_GlobalMassCommunication','level'=>'Global'];
-        $array[] = ['xepan\marketing\Widget_MyMassCommunication','level'=>'Individual'];
-        $array[] = ['xepan\marketing\Widget_DepartmentMassCommunication','level'=>'Department'];
+        $array[] = ['xepan\marketing\Widget_DayByDayCommunication','level'=>'Global','title'=>'Employees Day To Day Communication'];
+        $array[] = ['xepan\marketing\Widget_LeadAndScore','level'=>'Global','title'=>'Lead Vs Score Chart'];
+        $array[] = ['xepan\marketing\Widget_ROI','level'=>'Global','title'=>'Return On Inverstment'];
+        $array[] = ['xepan\marketing\Widget_OpportunityPipeline','level'=>'Global','title'=>'Opportunity Pipeline'];
+        $array[] = ['xepan\marketing\Widget_EngagementByChannel','level'=>'Global','title'=>'Engagement By Channel'];
+        $array[] = ['xepan\marketing\Widget_SaleStaffStatus','level'=>'Global','title'=>'Sales Staff Status'];
+        $array[] = ['xepan\marketing\Widget_SaleStaffCommunication','level'=>'Global','title'=>'Sales Staff Communication'];
+        $array[] = ['xepan\marketing\Widget_GlobalMassCommunication','level'=>'Global','title'=>'Company Mass Communication Status'];
+        $array[] = ['xepan\marketing\Widget_MyMassCommunication','level'=>'Individual','title'=>'My Mass Communication Status'];
+        $array[] = ['xepan\marketing\Widget_DepartmentMassCommunication','level'=>'Department','title'=>'Departmental Mass Communication Status'];
     }
 
     function exportEntities($app,&$array){

@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Widget_MassCommunication extends \xepan\base\Widget {
+class Widget_MyMassCommunication extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();
@@ -17,10 +17,11 @@ class Widget_MassCommunication extends \xepan\base\Widget {
 		$this->end_date = $this->app->nextDate($this->report->end_date);
 		
 		$model = $this->add('xepan\hr\Model_Employee');
-			
+		$model->addCondition('id',$this->app->employee->id);
+
 		$model->addExpression('Newsletter')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
-						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
+						->addCondition('from_id',$q->getField('id'))
 						->addCondition('communication_type','Newsletter')
 						->addCondition('status','<>','Outbox')
 						->addCondition('created_at','>',$this->start_date)
@@ -30,7 +31,7 @@ class Widget_MassCommunication extends \xepan\base\Widget {
 
 		$model->addExpression('TeleMarketing')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
-						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
+						->addCondition('from_id',$q->getField('id'))
 						->addCondition('communication_type','TeleMarketing')
 						->addCondition('created_at','>',$this->start_date)
 						->addCondition('created_at','<',$this->end_date)
@@ -44,7 +45,7 @@ class Widget_MassCommunication extends \xepan\base\Widget {
      	$this->chart->setType('bar')
      				->setModel($model,'name',['Newsletter','TeleMarketing'])
      				->setGroup(['Newsletter','TeleMarketing'])
- 					->setTitle('Mass Communication')
+ 					->setTitle('My Mass Communication')
      				->rotateAxis();
 
 		return parent::recursiveRender();

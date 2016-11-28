@@ -8,6 +8,7 @@ class Widget_DepartmentMassCommunication extends \xepan\base\Widget {
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
+		$this->report->enableFilterEntity('department');
 
 		$this->chart = $this->add('xepan\base\View_Chart');
 	}
@@ -18,7 +19,11 @@ class Widget_DepartmentMassCommunication extends \xepan\base\Widget {
 		
 		$model = $this->add('xepan\hr\Model_Employee');
 		$model->addCondition('status','Active');
-		$model->addCondition('department_id',$this->app->employee['department_id']);
+
+		if(isset($this->report->department))
+			$model->addCondition('department_id',$this->report->department);
+		else	
+			$model->addCondition('department_id',$this->app->employee['department_id']);
 			
 		$model->addExpression('Newsletter')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')

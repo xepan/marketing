@@ -2,7 +2,7 @@
 
 namespace xepan\marketing;
 
-class Widget_MassCommunication extends \xepan\base\Widget {
+class Widget_GlobalMassCommunication extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();

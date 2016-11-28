@@ -71,8 +71,12 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\marketing\Widget_SaleStaffStatus','level'=>'Global','title'=>'Sales Staff Status'];
         $array[] = ['xepan\marketing\Widget_SaleStaffCommunication','level'=>'Global','title'=>'Sales Staff Communication'];
         $array[] = ['xepan\marketing\Widget_GlobalMassCommunication','level'=>'Global','title'=>'Company Mass Communication Status'];
-        $array[] = ['xepan\marketing\Widget_MyMassCommunication','level'=>'Individual','title'=>'My Mass Communication Status'];
         $array[] = ['xepan\marketing\Widget_DepartmentMassCommunication','level'=>'Department','title'=>'Departmental Mass Communication Status'];
+        
+        $array[] = ['xepan\marketing\Widget_MyCommunication','level'=>'Individual','title'=>'My Communication Graph'];
+        $array[] = ['xepan\marketing\Widget_MySaleStatus','level'=>'Individual','title'=>'My Sales Status'];
+        $array[] = ['xepan\marketing\Widget_MyDayByDayCommunication','level'=>'Individual','title'=>'My Day To Day Communication'];
+        $array[] = ['xepan\marketing\Widget_MyMassCommunication','level'=>'Individual','title'=>'My Mass Communication Status'];
     }
 
     function exportEntities($app,&$array){

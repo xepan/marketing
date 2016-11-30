@@ -14,6 +14,7 @@ class page_marketingcategory extends \xepan\base\Page{
 		$crud->setModel($m,['name','leads_count']);
 	    $crud->grid->addQuickSearch(['name']);
 	    $crud->grid->addPaginator(50);
+	    $crud->add('xepan\base\Controller_MultiDelete');
 
 	    $crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		

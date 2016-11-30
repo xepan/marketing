@@ -32,7 +32,8 @@ class Widget_SaleStaffStatus extends \xepan\base\Widget {
 		     		->setModel($model,'name',['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
 		     		->setGroup(['Open','Qualified','NeedsAnalysis','Quoted','Negotiated'])
 		     		->setTitle('Sales Staff Status')
-		     		->rotateAxis();
+		     		->rotateAxis()
+		     		->openOnClick('xepan_marketing_widget_salesstaffstatus');
 
 		return parent::recursiveRender();
 	}

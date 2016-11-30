@@ -28,16 +28,6 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
 						->count();
 		});
 		
-		// $model->addExpression('Newsletter')->set(function($m,$q){
-		// 	return $this->add('xepan\communication\Model_Communication')
-		// 				->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
-		// 				->addCondition('communication_type','Newsletter')
-		// 				->addCondition('status','<>','Outbox')
-		// 				->addCondition('created_at','>',$this->start_date)
-		// 				->addCondition('created_at','<',$this->end_date)
-		// 				->count();
-		// });
-
 		$model->addExpression('Call')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
@@ -47,17 +37,6 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
 						->count();
 		});
 
-		// $model->addExpression('TeleMarketing')->set(function($m,$q){
-		// 	return $this->add('xepan\communication\Model_Communication')
-		// 				->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
-		// 				->addCondition('communication_type','TeleMarketing')
-		// 				->addCondition('created_at','>',$this->start_date)
-		// 				->addCondition('created_at','<',$this->end_date)
-		// 				->count();
-		// });
-
-		// ,['TeleMarketing','>',0],['Newsletter','>',0]
-		
 		$model->addExpression('Meeting')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])
@@ -74,7 +53,8 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
      				->setModel($model,'name',['Email','Call','Meeting'])
      				->setGroup(['Email','Call','Meeting'])
  					->setTitle('Sales Staff Communication')
-     				->rotateAxis();
+     				->rotateAxis()
+     				->openOnClick('xepan_marketing_widget_salesstaffcommunication');
 
 		return parent::recursiveRender();
 	}

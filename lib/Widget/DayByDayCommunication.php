@@ -9,7 +9,6 @@ class Widget_DayByDayCommunication extends \xepan\base\Widget {
 
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('employee');
-
 	}
 
 	function recursiveRender(){
@@ -32,11 +31,8 @@ class Widget_DayByDayCommunication extends \xepan\base\Widget {
 		
 		$communication_graph->addCondition('status','<>','Outbox');
 		$communication_graph->setOrder('date','asc')
-							->_dsql()->group(['communication_type',$communication_graph->_dsql()->expr('[0]',[$communication_graph->getElement('date')])])
-							;
+							->_dsql()->group(['communication_type',$communication_graph->_dsql()->expr('[0]',[$communication_graph->getElement('date')])]);
 		
-		// $grid->setModel($communication_graph,['communication_type','status','date','employee_id','employee','score']);
-
 		$data_array = [];
 		foreach ($communication_graph as $model) {
 			if(!isset($data_array[$model['date']])) $data_array[$model['date']]=[];
@@ -44,9 +40,7 @@ class Widget_DayByDayCommunication extends \xepan\base\Widget {
 		}
 
 		$data_array = array_values($data_array);
-		// echo "<pre>";
-		// var_dump($data_array);
-		// exit;
+
 		$this->chart = $this->add('xepan\base\View_Chart')
 	 		->setType('bar')
 	 		->setData(['json'=>$data_array])
@@ -55,7 +49,7 @@ class Widget_DayByDayCommunication extends \xepan\base\Widget {
 	 		->setYAxises(['Email','Newsletter','Call','Personal','Comment','TeleMarketing'])
 	 		->addClass('col-md-12')
 	 		->setTitle('Communication')
-	 		;
+	 		->openOnClick('xepan_marketing_widget_daybydaycommunication');
 
 		return parent::recursiveRender();
 	}

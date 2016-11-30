@@ -13,6 +13,7 @@
             thead.xepan-hover-hand
                 {cols}{col}
                 th
+                th
                     span Name 
                 th(data-hide="phone")
                     span Category
@@ -34,6 +35,8 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td
+                        {$selected}
                     td
                       {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')

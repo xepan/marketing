@@ -10,6 +10,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					'InActive'=>['view','edit','delete','activate','communication']
 					];
 
+	public $assigable_by_field = 'assign_to_id';
+
 	function init(){
 		parent::init();
 		

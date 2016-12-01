@@ -52,7 +52,8 @@ class Widget_DepartmentMassCommunication extends \xepan\base\Widget {
      				->setModel($model,'name',['Newsletter','TeleMarketing'])
      				->setGroup(['Newsletter','TeleMarketing'])
  					->setTitle('Department Mass Communication')
-     				->rotateAxis();
+     				->rotateAxis()
+     				->openOnClick('xepan_marketing_widget_masscommunication');
 
 		return parent::recursiveRender();
 	}

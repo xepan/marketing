@@ -82,7 +82,8 @@ class Widget_DepartmentCommunication extends \xepan\base\Widget {
      				->setModel($model,'name',['Email','Call','Meeting'])
      				->setGroup(['Email','Call','Meeting'])
  					->setTitle('Department Communication')
-     				->rotateAxis();
+     				->rotateAxis()
+     				->openOnClick('xepan_marketing_widget_daybydaycommunication');
 
 		return parent::recursiveRender();
 	}

@@ -381,8 +381,10 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function addLeadFromCSV($data){
 		// multi record loop
 			foreach ($data as $key => $record) {
+
 				try{
 					$this->api->db->beginTransaction();
+
 					$email_array = ['personal'=>[],'official'=>[]];
 					$contact_array = ['personal'=>[],'official'=>[]];
 					$category = [];
@@ -437,25 +439,36 @@ class Model_Lead extends \xepan\base\Model_Contact{
 						$lead[$field] = $value;
 					}
 
-					$lead->save();
+					// try{
+						$lead->save();
+					// }catch(\Exception $e){
+					// 	continue;
+					// }
 
 					// insert category
 					foreach ($category as $key => $name) {
 						$name = trim($name);
 
 						$lead_category = $this->add('xepan\marketing\Model_MarketingCategory');
-						$lead_category->addCondition('name','like',$name);
+						$lead_category->addCondition('name',$name);
 						$lead_category->tryLoadAny();
-						if(!$lead_category->loaded()){
-							$lead_category['name'] = $name;
+						// try{
 							$lead_category->save();
-						}
+						// }catch(\Exception $e){
+						// 	continue;
+						// }
 						
 						$lead_category_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
 						$lead_category_asso->addCondition('lead_id',$lead->id);
 						$lead_category_asso->addCondition('marketing_category_id',$lead_category->id);
 						$lead_category_asso->tryLoadAny();
-						$lead_category_asso->save();
+						
+						// try{
+							$lead_category_asso->save();
+						// }catch(\Exception $e){
+
+						// }
+						// echo "cat = ".$lead_category['id']."<br/>";
 					}
 
 					// echo "<pre>";
@@ -466,44 +479,65 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					// insert email official ids			
 					foreach ($email_array['official'] as $key => $email) {
 						$email_model = $this->add('xepan\base\Model_Contact_Email');
-						$email_model['contact_id'] = $lead->id;
-						$email_model['head'] = "Official";				
-						$email_model['value'] = $email;
-						$email_model->save();
+						$email_model->addCondition('value',$email);
+						$email_model->tryLoadAny();
+						
+						if(!$email_model->loaded()){
+							$email_model['contact_id'] = $lead->id;
+							$email_model['head'] = "Official";				
+							$email_model['value'] = $email;
+							$email_model->save();
+						}
 					}
 					
 					foreach ($email_array['personal'] as $key => $email) {
 						$email_model = $this->add('xepan\base\Model_Contact_Email');
 						$email_model['value'] = $email;
-						$email_model['head'] = "Personal";				
-						$email_model['contact_id'] = $lead->id;
-						$email_model->save();
+						$email_model->addCondition('value',$email);
+						$email_model->tryLoadAny();
+						
+						if(!$email_model->loaded()){
+							$email_model['contact_id'] = $lead->id;
+							$email_model['head'] = "Personal";				
+							$email_model['value'] = $email;
+							$email_model->save();
+						}
 					}
 
 					// insert offical contact numbers
 					foreach($contact_array['official'] as $key => $contact){
 						$phone = $this->add('xepan\base\Model_Contact_Phone');
-						$phone['value'] = $contact;
-						$phone['contact_id'] = $lead->id;
-						$phone['head'] = "Official";
-						$phone->save();
+						$phone->addCondition('value',$contact);
+						$phone->tryLoadAny();
+
+						if(!$phone->loaded()){
+							$phone['contact_id'] = $lead->id;
+							$phone['head'] = "Official";
+							$phone->save();
+						}
 					}
 
 					// insert offical contact numbers
 					foreach($contact_array['personal'] as $key => $contact){
 						$phone = $this->add('xepan\base\Model_Contact_Phone');
-						$phone['value'] = $contact;
-						$phone['contact_id'] = $lead->id;
-						$phone['head'] = "Personal";
-						$phone->save();
+						$phone->addCondition('value',$contact);
+						$phone->tryLoadAny();
+
+						if(!$phone->loaded()){
+							$phone['contact_id'] = $lead->id;
+							$phone['head'] = "Personal";
+							$phone->save();
+						}
 					}
 
 					$lead->unload();
 
 					$this->api->db->commit();
 				}catch(\Exception $e){
-					// throw $e;
-					$this->api->db->rollback();
+					echo $e->getMessage()."<br/>";
+					continue;
+				// 	// throw $e;
+					// $this->api->db->rollback();
 				}
 			}
 	}

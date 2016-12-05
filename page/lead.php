@@ -151,7 +151,7 @@ class page_lead extends \xepan\base\Page{
 					$lead = $this->add('xepan\marketing\Model_Lead');
 					$lead->addLeadFromCSV($data);
 					$this->api->db->commit();
-					$this->add('View_Info')->set(count($data).' Recored Imported');
+					$this->add('View_Info')->set('Total Records : '.count($data));
 				}catch(\Exception_StopInit $e){
 
 				}catch(\Exception $e){

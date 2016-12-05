@@ -464,21 +464,34 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			// insert email official ids			
 			foreach ($email_array['official'] as $key => $email) {
 				$email_model = $this->add('xepan\base\Model_Contact_Email');
+				$email_model->addCondition('value',$email);
+				$email_model->tryLoadAny();
+
+				if($email_model->loaded()){
+					continue;
+				}
+
+				$email_model['head'] = "Official";				
 				$email_model['contact_id'] = $lead->id;
-				$email_model['head'] = "Official";
-				$email_model['value'] = $email;
+				
 				try{
 					$email_model->save();
 				}catch(\Exception $e){
-
+					
 				}
 			}
 			
 			foreach ($email_array['personal'] as $key => $email) {
 				$email_model = $this->add('xepan\base\Model_Contact_Email');
+				$email_model->addCondition('value',$email);
+				$email_model->tryLoadAny();
+
+				if($email_model->loaded()){
+					continue;
+				}
+
+				$email_model['head'] = "Personal";				
 				$email_model['contact_id'] = $lead->id;
-				$email_model['head'] = "Personal";
-				$email_model['value'] = $email;
 				
 				try{
 					$email_model->save();
@@ -490,9 +503,16 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			// insert offical contact numbers
 			foreach($contact_array['official'] as $key => $contact){
 				$phone = $this->add('xepan\base\Model_Contact_Phone');
+				$phone->addCondition('value',$contact);
+				$phone->tryLoadAny();
+
+				if($phone->loaded()){
+					continue;
+				}
+
 				$phone['contact_id'] = $lead->id;
 				$phone['head'] = "Official";
-				$phone['value'] = $contact;
+				
 				try{
 					$phone->save();
 				}catch(\Exception $e){
@@ -503,19 +523,25 @@ class Model_Lead extends \xepan\base\Model_Contact{
 			// insert offical contact numbers
 			foreach($contact_array['personal'] as $key => $contact){
 				$phone = $this->add('xepan\base\Model_Contact_Phone');
+				$phone->addCondition('value',$contact);
+				$phone->tryLoadAny();
+
+				if($phone->loaded()){
+					continue;
+				}
+
 				$phone['contact_id'] = $lead->id;
 				$phone['head'] = "Personal";
-				$phone['value'] = $contact;
+				
 				try{
 					$phone->save();
 				}catch(\Exception $e){
-					
+
 				}
 			}
 
 			$lead->unload();
 
 		}
-
 	}
 } 

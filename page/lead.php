@@ -26,7 +26,7 @@ class page_lead extends \xepan\base\Page{
 
 		$crud->add('xepan\base\Controller_Avatar');
 		
-		$frm=$grid->addQuickSearch(['name','organization','emails_str','contacts_str']);
+		$frm=$grid->addQuickSearch(['name','organization','emails_str','contacts_str','score']);
 	
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');

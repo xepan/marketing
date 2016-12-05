@@ -35,7 +35,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$view_lead->addPaginator(10);
 
-		$frm = $view_lead->addQuickSearch(['name','contacts_str','emails_str']);
+		$frm = $view_lead->addQuickSearch(['name','contacts_str','emails_str','score']);
 
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');

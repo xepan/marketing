@@ -146,19 +146,9 @@ class page_lead extends \xepan\base\Page{
 				$importer = new \xepan\base\CSVImporter($_FILES['csv_lead_file']['tmp_name'],true,',');
 				$data = $importer->get();
 
-				try{
-					$this->api->db->beginTransaction();
-					$lead = $this->add('xepan\marketing\Model_Lead');
-					$lead->addLeadFromCSV($data);
-					$this->api->db->commit();
-					$this->add('View_Info')->set('Total Records : '.count($data));
-				}catch(\Exception_StopInit $e){
-
-				}catch(\Exception $e){
-					if($this->app->db->intransaction()) $this->api->db->rollback();
-					throw $e;
-				}
-				
+				$lead = $this->add('xepan\marketing\Model_Lead');
+				$lead->addLeadFromCSV($data);
+				$this->add('View_Info')->set('Total Records : '.count($data));
 			}
 		}
 	}

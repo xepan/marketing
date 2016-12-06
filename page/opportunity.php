@@ -47,7 +47,7 @@ class page_opportunity extends \xepan\base\Page{
 			$crud->form->setLayout('form\opportunity');
 		}	
 
-		$crud->setModel($opportunity,['organization','last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
+		$crud->setModel($opportunity,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
 		$crud->grid->addPaginator(10);		
 		$crud->add('xepan\base\Controller_MultiDelete');		
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);

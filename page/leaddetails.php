@@ -90,6 +90,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Official";
 						$email['value'] = $form['email_1'];
+						$this->checkEmail($email->id,$form['email_1'],$new_lead_model->id,$form);
 						$email->save();
 					}
 
@@ -98,6 +99,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Official";
 						$email['value'] = $form['email_2'];
+						$this->checkEmail($email->id,$form['email_2'],$new_lead_model->id,$form);
 						$email->save();
 					}
 
@@ -106,6 +108,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = $form['email_3'];
+						$this->checkEmail($email->id,$form['email_3'],$new_lead_model->id,$form);
 						$email->save();
 					}
 					if($form['email_4']){
@@ -113,6 +116,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = $form['email_4'];
+						$this->checkEmail($email->id,$form['email_4'],$new_lead_model->id,$form);
 						$email->save();
 					}
 
@@ -122,6 +126,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_1'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_1'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 
@@ -130,6 +135,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_2'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_2'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 
@@ -138,6 +144,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_3'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_3'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 					if($form['contact_no_4']){
@@ -145,6 +152,7 @@ class page_leaddetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_4'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_4'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 
@@ -304,4 +312,77 @@ class page_leaddetails extends \xepan\base\Page {
 		// $this->app->jui->addStaticInclude('jquery.easypiechart.min');
 		parent::render();
 	}	
+
+	function checkPhoneNo($phone_id,$phone_value,$contact_id,$form){
+
+		 $contact = $this->add('xepan\base\Model_Contact');
+        
+        if($contact_id)
+	        $contact->load($contact_id);
+
+		$contactconfig_m = $this->add('xepan\base\Model_ConfigJsonModel',
+			[
+				'fields'=>[
+							'contact_no_duplcation_allowed'=>'DropDown'
+							],
+					'config_key'=>'Contact No Duplication Allowed Settings',
+					'application'=>'base'
+			]);
+		$contactconfig_m->tryLoadAny();	
+
+		if($contactconfig_m['contact_no_duplcation_allowed'] != 'duplication_allowed'){
+	        $contactphone_m = $this->add('xepan\base\Model_Contact_Phone');
+	        $contactphone_m->addCondition('id','<>',$phone_id);
+	        $contactphone_m->addCondition('value',$phone_value);
+			
+			if($contactconfig_m['contact_no_duplcation_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
+				$contactphone_m->addCondition('contact_type',$contact['contact_type']);
+		        $contactphone_m->tryLoadAny();
+		 	}
+
+	        $contactphone_m->tryLoadAny();
+	        
+	        if($contactphone_m->loaded())
+	        	for ($i=1; $i <=4 ; $i++){ 
+	        		if($phone_value == $form['contact_no_'.$i])
+			        	$form->displayError('contact_no_'.$i,'Contact No. Already Used');
+	        	}
+		}	
+    }
+
+    function checkEmail($email_id,$email_value,$contact_id,$form){
+
+    	$contact = $this->add('xepan\base\Model_Contact');
+        
+        if($contact_id)
+	        $contact->load($contact_id);
+
+		$emailconfig_m = $this->add('xepan\base\Model_ConfigJsonModel',
+			[
+				'fields'=>[
+							'email_duplication_allowed'=>'DropDown'
+							],
+					'config_key'=>'Email Duplication Allowed Settings',
+					'application'=>'base'
+			]);
+		$emailconfig_m->tryLoadAny();
+
+		if($emailconfig_m['email_duplication_allowed'] != 'duplication_allowed'){
+	        $email_m = $this->add('xepan\base\Model_Contact_Email');
+	        $email_m->addCondition('id','<>',$email_id);
+	        $email_m->addCondition('value',$email_value);
+			
+			if($emailconfig_m['email_duplication_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
+				$email_m->addCondition('contact_type',$contact['contact_type']);
+			}
+	        
+	        $email_m->tryLoadAny();
+	        
+	        if($email_m->loaded())
+	        	for ($i=1; $i <=4 ; $i++){ 
+	        		if($email_value == $form['email_'.$i])
+			        	$form->displayError('email_'.$i,'Email Already Used');
+	        	}
+		}	
+    }
 }

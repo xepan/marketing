@@ -6,56 +6,43 @@ class page_test extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$new_category_array = ['ERP','PRINTING','PRODUCTION'];
-		$category_id_array = [];
+		$category_name = ['Default',
+					 'Active Affiliate',
+					 'InActive Affiliate',
+					 'Active Employee',
+					 'InActive Employee',
+					 'Active Customer',
+					 'InActive Customer',
+					 'Active Supplier',
+					 'InActive Supplier',
+					 'Active OutSourceParty',
+					 'InActive OutSourceParty'
+					];
 
-		foreach ($new_category_array as $new_cat) {
-			$category = $this->add('xepan\marketing\Model_MarketingCategory');
-			$category['name'] = $new_cat;
-			$category['system'] = true;
-			$category->save();	
-			$category_id_array [] = $category->id; 
-		}
+       	
+       	foreach ($category_name as $cat_name){
+        	$mar_cat=$this->add('xepan\marketing\Model_MarketingCategory');
+        	$mar_cat['name'] = $cat_name;
+        	$mar_cat['system'] = true;
+        	$mar_cat->save();			
+       	}
 
-		$old_categories = $this->add('xepan\marketing\Model_MarketingCategory');
+       	$contact_type = ['Affiliate','Employee','Customer','Supplier','OutsourceParty'];
+		
+		foreach ($contact_type as $ct){
+			$model = $this->add('xepan\base\Model_Contact');
+			$model->addCondition('type',$ct);
+		
+			foreach ($model as $m){			
+				$mar_cat1 = $this->add('xepan\marketing\Model_MarketingCategory');
+				$cat_name = $m['status']." ".$ct;						
+	        	$mar_cat1->loadBy('name',$cat_name);
 
-		foreach ($old_categories as $old_cat){
-			if(substr($old_cat['name'],0,8) == 'Printing'){
-				$cat = $this->add('xepan\marketing\Model_MarketingCategory');
-				$cat['name'] = substr($old_cat['name'],20,25);
-				$cat->save();
-
-				$association = $this->add('xepan\marketing\Model_Lead_Category_Association');
-				$association->addCondition('marketing_category_id',$old_cat->id);
-				
-				$lead_id = [];
-				foreach ($association as $assoc){
-					$lead_id[] =  ['id' =>$assoc['lead_id'], 'cat_name'=>$cat['name']];
-					$assoc ->delete(); 
-				}
-
-				$camp_assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
-				$camp_assoc->addCondition('marketing_category_id',$old_cat->id);
-				
-				foreach ($camp_assoc as $ca){
-					$ca->delete();
-				}
-
-				$old_cat->delete();
-				if(!empty($lead_id)){
-					foreach ($lead_id as $lead){
-						$marketingcategory = $this->add('xepan\marketing\Model_MarketingCategory');
-						$marketingcategory->addCondition([['id',$category_id_array],['name',$lead['cat_name']]]);
-
-						foreach ($marketingcategory as $c){
-							$new_cat_assoc = $this->add('xepan\marketing\Model_Lead_Category_Association');
-							$new_cat_assoc['lead_id'] = $lead['id'];
-							$new_cat_assoc['marketing_category_id'] = $c->id;
-							$new_cat_assoc->save();	
-						}
-					}
-				}
-			}				
-		}
+	        	$new_cat_assoc1 = $this->add('xepan\marketing\Model_Lead_Category_Association');
+				$new_cat_assoc1['lead_id'] = $m['id'];
+				$new_cat_assoc1['marketing_category_id'] = $mar_cat1->id;
+				$new_cat_assoc1->save();	
+			}
+		}		
 	}
 }

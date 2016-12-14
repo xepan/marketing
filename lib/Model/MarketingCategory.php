@@ -51,16 +51,28 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 	function checkExistingLeadCategoryAssociation($m){
 		$lead__cat_count = $m->ref('xepan\marketing\Lead_Category_Association')->count()->getOne();
 		
-		if($lead__cat_count)
-			throw $this->exception('Cannot Delete,first delete Lead`s Category Association');	
+		if($lead__cat_count){
+			$model = $this->add('xepan\marketing\Model_Lead_Category_Association');
+			$model->addCondition('marketing_category_id',$this->id);
+
+			foreach ($model as $m){
+				$m->delete();		
+			}	
+		}
 	}
 		
 
 	function checkExistingCampaignCategoryAssociation($m){
 		$campaign_catasso_count = $m->ref('xepan\marketing\Campaign_Category_Association')->count()->getOne();
 	
-		if($campaign_catasso_count)
-			throw $this->exception('Cannot Delete,first delete Campaign`s Category Association ');	
+		if($campaign_catasso_count){
+			$model = $this->add('xepan\marketing\Model_Campaign_Category_Association');
+			$model->addCondition('marketing_category_id',$this->id);
+
+			foreach ($model as $m){
+				$m->delete();		
+			}
+		}
 	}
 
 	function getAssociatedLeads(){

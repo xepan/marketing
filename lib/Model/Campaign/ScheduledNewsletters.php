@@ -12,6 +12,11 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('total_visitor')->destroy();
 		$leads->getElement('score')->destroy();
 
+		// count active emails available
+		$lead->addExpression('active_valid_emails_count')->set(function($m,$q){
+			return $m->refSQL('Emails')->addCondition('is_active',true)->addCondition('is_valid',true)->count();
+		});
+
 		/***************************************************************************
 			Joining tables to find lead->categories->campaigns->schedule->content
 		***************************************************************************/
@@ -111,7 +116,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 			return $m->refSQL('document_id')->fieldQuery('status');
 		});
 
-
+		$lead->addCondition('active_valid_emails_count','>',0);
 		
 	}
 }

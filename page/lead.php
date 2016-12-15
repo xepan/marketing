@@ -8,18 +8,63 @@ class page_lead extends \xepan\base\Page{
 	function page_index(){
 
 
+		$vp = $this->add('VirtualPage');
+		$vp->set(function($p){
+			try{
+				$lead = $this->add('xepan\marketing\Model_Lead')->load($_POST['pk']);
+				$lead->ref('xepan\marketing\Lead_Category_Association')->deleteAll();
+				foreach ($_POST['value']?:[] as $catagory_id) {
+					$this->add('xepan\marketing\Model_Lead_Category_Association')
+						->set('lead_id',$_POST['pk'])
+						->set('marketing_category_id',$catagory_id)
+						->saveAndUnload();
+				}
+			}catch(\Exception $e){
+				http_response_code(400);
+				echo $e->getMessage();
+			}
+			exit;
+			
+		});
+
 		$lead = $this->add('xepan\marketing\Model_Lead');
 
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
 
+		$lead->addExpression('existing_associated_catagories')->set(function($m,$q){
+			$x = $m->add('xepan\marketing\Model_Lead_Category_Association',['table_alias'=>'lead_cat_assos']);
+			return $x->addCondition('lead_id',$q->getField('id'))->_dsql()->del('fields')->field($q->expr('group_concat([0])',[$x->getElement('marketing_category_id')]));
+		});
+
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		// $lead->setOrder('total_visitor','desc');
 
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['emails_str','contacts_str','name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code','organization'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['emails_str','contacts_str','name','source','city','type',/*'open_count','converted_count','rejected_count',*/'score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code','organization','existing_associated_catagories'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_MultiDelete');
+
+		if(!$crud->isEditing()){
+			$catagories = $this->add('xepan\marketing\Model_MarketingCategory');
+			$value =[];
+			foreach ($catagories as $cc) {
+				$value[]=['value'=>$cc->id,'text'=>$cc['name']];
+			}
+
+			$quick_edit_permission =false;
+
+			if($this->app->auth->model->isSuperUser()) $quick_edit_permission = true;
+
+			$crud->grid->js(true)->_load('bootstrap-editable.min')->_css('libs/bootstrap-editable')->_selector('.catagory-associated')->editable(
+				[
+				'url'=>$vp->getURL(),
+				'limit'=> 3,
+				'source'=> $value,
+				'disabled'=> !$quick_edit_permission
+				]);
+		}
+
 		$grid=$crud->grid;
 		$grid->addClass('grab-lead-grid');
 		$grid->js('reload')->reload();
@@ -59,16 +104,16 @@ class page_lead extends \xepan\base\Page{
 		$source_type->js('change',$frm->js()->submit());
 
 
-		$grid->addColumn('category');
-		$grid->addMethod('format_marketingcategory',function($grid,$field){				
-				$data = $grid->add('xepan\marketing\Model_Lead_Category_Association')->addCondition('lead_id',$grid->model->id);
-				$l = $grid->add('Lister',null,'category',['grid/lead-grid','category_lister']);
-				$l->setModel($data);
+		// $grid->addColumn('category');
+		// $grid->addMethod('format_marketingcategory',function($grid,$field){				
+		// 		$data = $grid->add('xepan\marketing\Model_Lead_Category_Association')->addCondition('lead_id',$grid->model->id);
+		// 		$l = $grid->add('Lister',null,'category',['grid/lead-grid','category_lister']);
+		// 		$l->setModel($data);
 				
-				$grid->current_row_html[$field] = $l->getHtml();
-		});
+		// 		$grid->current_row_html[$field] = $l->getHtml();
+		// });
 
-		$grid->addFormatter('category','marketingcategory');
+		// $grid->addFormatter('category','marketingcategory');
 		$grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 		if(!$crud->isEditing()){
 			$grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);

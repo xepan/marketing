@@ -25,14 +25,7 @@
           <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="#" data-id="{$id}" class="user-link do-view-lead">{$effective_name}</a><span class="user-subhead">{source}Source{/}
               <h6>[{city}{/}] - [{$type}]</h6></span>
           </td>
-          <td>
-            {$category}
-            {category_lister}
-            {rows}
-            {row}
-            <div class="row">{$marketing_category}</div>{/}{/}
-            {/}
-          </td>
+          <td><a data-type="checklist" data-value="{$existing_associated_catagories}" data-title="Associated Categories" data-pk="{$id}" style="cursor:pointer; cursor: hand;" class="catagory-associated"></a></td>
           <td>
             <div title="Lead Created By" style="border-bottom:1px solid gray;">{$created_by}</div>
             <div title="Lead Assign To">{$assign_to}</div>

@@ -48,14 +48,7 @@
                       span.user-subhead {source}Source{/}
                         h6 [{city}{/}] - [{$type}]
                     td
-                        {$category}
-                        {category_lister}
-                        {rows}
-                        {row}
-                        .row
-                            {$marketing_category}
-                        {/}{/}
-                        {/}
+                        a.catagory-associated(data-type="checklist" data-value="{$existing_associated_catagories}" data-title="Associated Categories" data-pk="{$id}" style= "cursor:pointer; cursor: hand;")
                     td
                         div(title="Lead Created By" style="border-bottom:1px solid gray;") {$created_by}
                         div(title="Lead Assign To") {$assign_to}

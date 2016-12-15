@@ -30,7 +30,10 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
 
 		$this->addExpression('leads_count')->set(function($m){
-			return $m->refSQL('xepan\marketing\Lead_Category_Association')->count();
+			$association = $this->add('xepan\marketing\Model_Lead_Category_Association');
+			$association->addCondition('marketing_category_id',$m->getElement('id'));
+			return $association->count();
+			// return $m->refSQL('xepan\marketing\Lead_Category_Association')->count();
 		})->sortable(true);
 
 		$this->addHook('beforeDelete',[$this,'checkExistingLeadCategoryAssociation']);

@@ -41,8 +41,6 @@ class page_test extends \xepan\base\Page{
 		$lead_printing_assoc = $this->add('xepan\marketing\Model_Lead_Category_Association');
 		$lead_printing_assoc->addCondition('marketing_category_id',$category->id);	
 		$lead_printing_assoc->addCondition('lead_id',$lead_id);
-
-		throw new \Exception($lead_printing_assoc->count());
 		
 		foreach ($lead_cat_assoc as $assoc){
 			$assoc->delete();

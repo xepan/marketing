@@ -6,12 +6,8 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 
 	public $status=[];
 	public $actions=[
-		'All'=>[
-			'view',
-			'edit',
-			'delete'
-		]
-	];
+						'All'=>['view','edit','delete','merge_category']
+					];
 
 	function init(){
 		parent::init();
@@ -40,6 +36,43 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 	}
+
+	function page_merge_category($p){
+		$p->add('View')->set('Add leads in this catagory which are common in selected categories');
+		$marketing_category_m = $this->add('xepan\marketing\Model_MarketingCategory')
+									 ->addCondition('id','<>',$this->id);
+		$form = $p->add('Form');
+		$category_field = $form->addField('xepan\base\DropDown','category','');
+	    $category_field->setModel($marketing_category_m);
+		$category_field->setEmptyText('Please select categories to merge');
+		$category_field->setAttr(['multiple'=>'multiple']);
+		$form->addSubmit('Merge');
+		
+		if($form->isSubmitted()){
+			$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
+			
+			$category_array = explode(",", $form['category']);
+			if(count($category_array) == 1)
+				$form->displayError('category','Please select two or more categories');
+			
+			$lead_cat->addCondition('marketing_category_id',$category_array);
+			$lead_cat->_dsql()->having($lead_cat->dsql()->expr('(COUNT(DISTINCT([0])) = [1])',[$lead_cat->getElement('marketing_category_id'),count($category_array)]));
+			$lead_cat->_dsql()->group('lead_id');
+
+			foreach ($lead_cat as $l) {
+				$lead_m = $this->add('xepan\marketing\Model_Lead');				
+				$lead_m->load($l['lead_id']);
+
+				$lead_m->associateCategory($this->id);
+			}
+
+			$this->app->employee
+				->addActivity("Category '".$this['name']."' and ".$form['category']."' merged'", $this->id, null,null,null,"xepan_marketing_marketingcategory")
+				->notifyWhoCan('view,edit,delete','All');
+			return $p->js()->univ()->closeDialog();
+		}
+	}
+
 
 	function updateSearchString($m){
 

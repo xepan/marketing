@@ -116,7 +116,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 			return $m->refSQL('document_id')->fieldQuery('status');
 		});
 
-		$lead->addCondition('active_valid_emails_count','>',0);
+		$leads->addCondition('active_valid_emails_count','>',0);
 		
 	}
 }

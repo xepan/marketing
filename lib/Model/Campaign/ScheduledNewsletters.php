@@ -13,7 +13,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('score')->destroy();
 
 		// count active emails available
-		$lead->addExpression('active_valid_emails_count')->set(function($m,$q){
+		$leads->addExpression('active_valid_emails_count')->set(function($m,$q){
 			return $m->refSQL('Emails')->addCondition('is_active',true)->addCondition('is_valid',true)->count();
 		});
 

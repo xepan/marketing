@@ -12,5 +12,10 @@ class page_addsms extends \xepan\base\Page{
 
 		$sv = $this->add('xepan\hr\View_Document',['action'=>$action,'id_field_on_reload'=>'content_id'],null,['view/addsms']);
 	    $sv->setModel($sms,['title','message_blog','marketing_category_id'],['title','message_blog','marketing_category_id']);
+	
+	    $sv->form->onSubmit(function($f){
+    		$f->save();
+    		return $this->js()->univ()->redirect($this->app->url('xepan_marketing_sms'));	
+    	});
 	}
 }

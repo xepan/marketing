@@ -15,11 +15,16 @@ class page_addsocialpost extends \xepan\base\Page{
 		$sv->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);
 	    
 	    $sv->setModel($social,['title','message_blog','url','marketing_category_id'],['title','message_blog','url','marketing_category_id']);
-	    	if($_GET['document_id']){
-		    	$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$_GET['document_id']);
-		    	$model_attachment->acl = 'xepan\marketing\Model_SocialPost';
-	    		$attachment = $sv->addMany('Attachment',null,'attachment',['view/socialimage']);
-				$attachment->setModel($model_attachment);
-	    	}
+    	if($_GET['document_id']){
+	    	$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$_GET['document_id']);
+	    	$model_attachment->acl = 'xepan\marketing\Model_SocialPost';
+    		$attachment = $sv->addMany('Attachment',null,'attachment',['view/socialimage']);
+			$attachment->setModel($model_attachment);
+    	}
+
+    	$sv->form->onSubmit(function($f){
+    		$f->save();
+    		return $this->js()->univ()->redirect($this->app->url('xepan_marketing_addsocialpost',['action'=>'edit','document_id'=>$f->model->id]));	
+    	});
 	}
 }

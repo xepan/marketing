@@ -22,7 +22,7 @@ class page_subscriberschedule extends \xepan\base\Page{
 		$form = $this->add('Form',null,'asso_form');
 		$cat_ass_field = $form->addField('hidden','ass_cat')->set(json_encode($m->getAssociatedCategories()));
 		$usr_ass_field = $form->addField('hidden','ass_usr')->set(json_encode($m->getAssociatedUsers()));
-		$events_field = $form->addField('Text','events_fields');
+		$events_field = $form->addField('hidden','events_fields');
 		$submit_btn = $form->addButton('Update');
 
 		/**

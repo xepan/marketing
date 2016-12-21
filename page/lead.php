@@ -145,11 +145,11 @@ class page_lead extends \xepan\base\Page{
 		$form->addSubmit('Download Sample File');
 		
 		if($_GET['download_sample_csv_file']){
-			$output = ['first_name','last_name','address','city','state','country','pin_code','organization','post','website','source','remark','personal_email_1','personal_email_2','official_email_1','official_email_2','personal_contact_1','personal_contact_2','official_contact_1','official_contact_2'];
+			$output = ['first_name','last_name','address','city','state','country','pin_code','organization','post','website','source','remark','personal_email_1','personal_email_2','official_email_1','official_email_2','personal_contact_1','personal_contact_2','official_contact_1','official_contact_2','category'];
 
 			$output = implode(",", $output);
 	    	header("Content-type: text/csv");
-	        header("Content-disposition: attachment; filename=\"sample_qty_set_file.csv\"");
+	        header("Content-disposition: attachment; filename=\"sample_xepan_lead_import.csv\"");
 	        header("Content-Length: " . strlen($output));
 	        header("Content-Transfer-Encoding: binary");
 	        print $output;

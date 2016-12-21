@@ -12,7 +12,7 @@ class page_strategyplanning extends \xepan\base\Page{
 				->_load('mindchart/mindchart');
 		$this->js(true)->_css('mindchart/jquery.orgchart');
 		
-		// JOSN CONFIG MODEL WITH SEPERATE FIELDS
+		// JSON CONFIG MODEL WITH SEPERATE FIELDS
 		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
 		[
 			'fields'=>[
@@ -24,9 +24,6 @@ class page_strategyplanning extends \xepan\base\Page{
 						'business_stream' =>'text',
 						'business_usp'=>'text',
 						'strategy_planning_digital_presence'=>'text',
-						'competitor_name'=>"Line",
-						'competitor_url'=>"Line",
-						'competitor_description' => "text"
 						],
 				'config_key'=>'ORGANIZATIONS_STRATEGY_PLANNING',
 				'application'=>'marketing'
@@ -34,6 +31,20 @@ class page_strategyplanning extends \xepan\base\Page{
 		$config_m->add('xepan\hr\Controller_ACL');
 		$config_m->tryLoadAny();
 
+		$config_competitor_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'acl'=>$config_m,
+			'fields'=>[
+						'competitor_name'=>"Line",
+						'competitor_url'=>"Line",
+						'competitor_description' => "text"
+						],
+				'config_key'=>'ORGANIZATIONS_COMPETITOR_STRATEGY_PLANNING',
+				'application'=>'marketing'
+		]);
+		$config_competitor_m->add('xepan\hr\Controller_ACL');
+		$config_competitor_m->tryLoadAny();
+		
 		// ORGANIZATION'S AUDIENCE MANAGEMENT
 		$audience = $config_m['strategy_planning_target_audience']?:"{}";		
 		$audience = json_decode($audience,true);
@@ -120,14 +131,8 @@ class page_strategyplanning extends \xepan\base\Page{
 									]);
 
 		// ORGANIZATION'S COMPETITORS MANAGEMENT
-		$competitors_form = $this->add('Form',null,'competetor');
-		$competitors_form->setModel($config_m,['competitor_name','competitor_url','competitor_description']);
-		$competitors_form->addSubmit('Save')->addClass('btn btn-primary');
-	
-		if($competitors_form->isSubmitted()){
-			$competitors_form->save();
-			$competitors_form->js()->univ()->successMessage('Saved')->execute();
-		}
+		
+		$competetor_crud = $this->add('xepan\hr\CRUD',null,'competetor',null)->setModel($config_competitor_m);
 	}
 
 	function defaultTemplate(){

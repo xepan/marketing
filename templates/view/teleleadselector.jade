@@ -13,6 +13,8 @@
                 {cols}{col}
                 th
                     span Lead {$name_sort}
+                th(id="{$priority_sortid}")
+                    span Priority {$priority_sort}    
                 th(data-hide="desktop,phone,tablet") Contact
                 th(id="{$score_sortid}") 
                     span Score {$score_sort}
@@ -36,7 +38,10 @@
                         small.text-muted {$last_communication} 
                       div
                         small.text-muted{$date}
+                    td
+                       {$priority}
                     td {$contacts_str} 
+
                     td {score}xyz{/}
                         a.tele-lead(href='' data-id="{$id}")
                             .area-hidden(style="display: none;") {$name}

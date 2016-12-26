@@ -91,6 +91,11 @@ class page_telemarketing extends \xepan\base\Page{
 		if($_GET['comm_type']){			
 			$model_communication->addCondition('communication_type',explode(",", $_GET['comm_type']));
 		}
+		
+		if($this->app->stickyGET('view_telecommunication')){
+			$model_communication->addCondition('communication_type','TeleMarketing');
+			
+		}
 
 		if($search = $this->app->stickyGET('search')){			
 			$model_communication->addExpression('Relevance')->set('MATCH(title,description,communication_type) AGAINST ("'.$search.'")');
@@ -110,7 +115,7 @@ class page_telemarketing extends \xepan\base\Page{
 		*/
 					
 		$view_lead->js('click',
-			[$view_conversation->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')]),
+			[$view_conversation->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id'),'view_telecommunication'=>true]),
 			$view_teleform->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
 			])->_selector('.tele-lead');
 		

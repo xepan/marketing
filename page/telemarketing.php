@@ -31,7 +31,7 @@ class page_telemarketing extends \xepan\base\Page{
 			}
  		});
 		
-		$view_lead->setModel($model_lead, ['name','type','city','contacts_str','emails_str','score']);
+		$view_lead->setModel($model_lead, ['priority','name','type','city','contacts_str','emails_str','score']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$view_lead->addPaginator(10);
 

@@ -37,6 +37,7 @@ class page_newslettertemplate extends \xepan\base\Page{
 		
 		if($crud->isEditing()){
 			$field = $crud->form->getElement('message_blog');
+			$field->setFieldHint('Hint : type {$unsubscribe} for unsubscription link');
 			$field->options=['templates'=> $templates_vp->getURL(),'relative_urls'=> true];
 		}
 	}

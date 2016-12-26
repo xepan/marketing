@@ -23,9 +23,11 @@
                 th
                     span Last Communication
                 th(id="{$score_sortid}")
-                    span Total Score {$score_sort}
+                    span Score {$score_sort}
                 th
-                    span Total Visits
+                    span Visits
+                th(id="{$priority_sortid}")
+                    span Priority {$priority_sort}
                 th 
                 {/}{/}
             {/}
@@ -54,15 +56,14 @@
                         div(title="Lead Assign To") {$assign_to}
                     td
                         {$last_communication}
-                    //- td
-                    //-   span.sparkline(sparkType="pie" sparkHeight="50px" sparksliceColors="[orange,green,red]") 
-                    //-     {$open_count},{$converted_count},{$rejected_count}
                     td
                         a.do-view-lead-score(href="#" data-id="{$id}")
                             span.alert.alert-warning{score}0{/}
                     td
                         a.do-view-lead-visitor(href="#" data-id="{$id}")
                             span.alert.alert-success{$total_visitor}
+                    td
+                        span.alert.alert-success {$priority}
                     td
                         {$action}
                     td(style="width: 15%;")

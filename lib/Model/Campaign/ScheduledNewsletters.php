@@ -9,8 +9,8 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 
 		$leads = $this;
 
-		$leads->getElement('total_visitor')->destroy();
-		$leads->getElement('score')->destroy();
+		// $leads->getElement('total_visitor')->destroy();
+		// $leads->getElement('score')->destroy();
 
 		// count active emails available
 		$leads->addExpression('active_valid_emails_count')->set(function($m,$q){
@@ -25,6 +25,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$lead_cat_assos_j->addField('association_time','created_at');
 		
 		$camp_cat_assos_j = $lead_cat_assos_j->join('campaign_category_association.marketing_category_id','marketing_category_id');
+		$camp_cat_assos_j->addField('campaign_cat_ass_time','created_at');
 				
 		$camp_j = $camp_cat_assos_j->join('campaign.document_id','campaign_id');
 		$camp_j->addField('campaign_title','title');
@@ -52,8 +53,14 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 	// 		Expression for finding total days since lead joined
 	// 	***************************************************************************/
 		$leads->addExpression('days_from_join')->set(function($m,$q){
-			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('created_at'),$this->api->today]);
+			// NOW - (IF association_date > schedule_date then association_date else schedule_date)
+			return $m->dsql()->expr("IF([lead_association_time] > [camp_association_time],DATEDIFF('[now]',[lead_association_time]),DATEDIFF('[now]',[camp_association_time]))",[
+				'lead_association_time'=> $m->getElement('association_time'),
+				'camp_association_time'=> $m->getElement('campaign_cat_ass_time'),
+				'now'=>$this->api->today
+				]);
 		});
+
 
 		/***************************************************************************
 			Expression to find if the lead is 'Hot'/'sendable limit'

@@ -77,6 +77,7 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 			return 	$this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters')
 					->addCondition('lead_campaing_id',$q->getField('id'))
 					->addCondition('is_already_sent',0)
+					->addCondition('sendable',true)
 					->count();
 		});
 
@@ -183,6 +184,7 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		return $this->add('xepan\marketing\Model_Campaign_Category_Association')
 						->addCondition('campaign_id',$this->id)
 		     			->addCondition('marketing_category_id',$category)
+		     			->addCondition('created_at',$this->app->now)
 			 			->tryLoadAny()	
 			 			->save();
 	}

@@ -24,8 +24,6 @@ class Model_Campaign_Category_Association extends \xepan\base\Model_Table{
 		
 		$this->hasOne('xepan\marketing\MarketingCategory','marketing_category_id');
 		$this->hasOne('xepan\marketing\Campaign','campaign_id');
-		//$this->addCondition('type','CampaignCategory');
-
-
+		$this->addField('created_at')->type('datetime')->defaultValue($this->app->now);
 	}	
 }

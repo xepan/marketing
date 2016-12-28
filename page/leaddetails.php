@@ -77,6 +77,9 @@ class page_leaddetails extends \xepan\base\Page {
 
 			if($form->isSubmitted()){
 
+				if($form['category'] == null)
+					$form->displayError('category','Please associate lead with category');
+
 				if(!$form['source'])
 					$form->displayError('source','mandatory');
 				

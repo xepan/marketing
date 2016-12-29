@@ -4,6 +4,9 @@
 namespace xepan\marketing;
 
 class Model_Campaign_ScheduledNewsletters extends Model_Lead {
+
+	public $pass_group_by = false;
+
 	function init(){
 		parent::init();
 
@@ -39,6 +42,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$schedule_j->addField('schedule_date','date');
 		$schedule_j->addField('schedule_day','day');
 		$schedule_j->addField('schedule_id','id');
+		$schedule_j->addField('schedule_content_id','document_id');
 		
 		$document_schecule_j = $schedule_j->join('document','document_id');
 		$document_schecule_j->addField('document_type','type');
@@ -124,6 +128,14 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		});
 
 		$leads->addCondition('active_valid_emails_count','>',0);
+		
+		if(!$this->pass_group_by){
+			$leads->_dsql()->group(['lead_id',
+									$leads->dsql()->expr('[0]',[$leads->getElement('schedule_id')])
+									// $leads->dsql()->expr('[0]',[$leads->getElement('lead_campaing_id')])
+								]);
+		}
+
 		
 	}
 }

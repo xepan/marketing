@@ -116,6 +116,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
     		}else
     			$this->app->redirect($this->app->url($this->options['success_url']));
 		}
+		
 	}	
 
 	function sendThankYouMail($email_id){
@@ -175,10 +176,11 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 	}
 
 	function render(){
-		if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
-			$this->js(true)->_selector('#'.$this->name."_subscription_model")->modal('show');
-		else		
-			$this->js(true)->_selector('#'.$this->name."_subscription_model")->modal('hide');
+		// if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true)){
+		// 	$this->js(true)->_selector('#'.$this->name."_subscription_model")->modal('show');
+		// }
+		// else		
+		// 	$this->js(true)->_selector('#'.$this->name."_subscription_model")->modal('hide');
 
 		parent::render();
 	}

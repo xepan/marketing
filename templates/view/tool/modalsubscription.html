@@ -16,4 +16,19 @@
       </div>
     </div>
   </div>
+<script>
+  $(function(){
+    if (document.cookie.indexOf('xepan_lead_subscription') > -1 ) {
+       return true;
+    }
+    $(window).bind("scroll.alert", function() {
+    var $this = $(this);
+      if ($this.scrollTop() >= 1000) {
+        $('#{$_name}_subscription_model').modal('show');
+        $this.unbind("scroll.alert");
+      }
+    });
+  });
+</script>
+
 </div>

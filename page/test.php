@@ -5,7 +5,7 @@ namespace xepan\marketing;
 class page_test extends \xepan\base\Page{
 	function init(){
 		parent::init();
-
+		return;
 		$category_name = ['Default',
 					 'Active Affiliate',
 					 'InActive Affiliate',

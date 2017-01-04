@@ -74,11 +74,13 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 
 
 		$this->addExpression('newsletter_remaining')->set(function($m,$q){
-			return 	$this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters')
-					->addCondition('lead_campaing_id',$q->getField('id'))
-					->addCondition('is_already_sent',0)
-					->addCondition('sendable',true)
-					->count();
+				$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters',['table_alias'=>'rem_c','pass_group_by'=>true]);
+				$leads->addCondition('sendable',true);
+				$leads->addCondition('campaign_status','Approved');
+				$leads->addCondition('is_already_sent',0);
+				$leads->addCondition($q->expr('[0]',[$leads->getElement('lead_campaing_id')]),$q->getField('id'));
+				$leads->addCondition('document_type','Newsletter');
+				return $leads->count();
 		});
 
 

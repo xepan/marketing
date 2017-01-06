@@ -12,8 +12,30 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 
 		$leads = $this;
 
-		// $leads->getElement('total_visitor')->destroy();
-		// $leads->getElement('score')->destroy();
+		// DESTROYING UNNECESSERY FILEDS
+		$leads->getElement('created_by_id')->destroy();
+		$leads->getElement('assign_to_id')->destroy();
+		$leads->getElement('country')->destroy();
+		$leads->getElement('state')->destroy();
+		$leads->getElement('address')->destroy();
+		$leads->getElement('city')->destroy();
+		$leads->getElement('pin_code')->destroy();
+		$leads->getElement('post')->destroy();
+		$leads->getElement('website')->destroy();
+		$leads->getElement('source')->destroy();
+		$leads->getElement('remark')->destroy();
+		$leads->getElement('freelancer_type')->destroy();
+		$leads->getElement('image')->destroy();
+		$leads->getElement('unique_name')->destroy();
+		$leads->getElement('contacts_comma_seperated')->destroy();
+		$leads->getElement('online_status')->destroy();
+		$leads->getElement('scope')->destroy();
+		$leads->getElement('open_count')->destroy();
+		$leads->getElement('converted_count')->destroy();
+		$leads->getElement('rejected_count')->destroy();
+		$leads->getElement('last_communication')->destroy();
+		$leads->getElement('user')->destroy();
+		$leads->getElement('type')->destroy();
 
 		// count active emails available
 		$leads->addExpression('active_valid_emails_count')->set(function($m,$q){

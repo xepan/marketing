@@ -65,7 +65,6 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 				]);
 		});
 
-
 		/***************************************************************************
 			Expression to find if the lead is 'Hot'/'sendable limit'
 		***************************************************************************/
@@ -74,7 +73,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 			return $q->expr(
 					"IF([campaign_type]='campaign',
 						if([schedule_date]<='[now]',
-						if([schedule_date]>[lead_association_time],1,0),0),
+						if([schedule_date]>=date([lead_association_time]),1,0),0),
 						if([days_from_join]=[schedule_day],1,0)
 						)",
 					[

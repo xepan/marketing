@@ -30,6 +30,9 @@ class Controller_NewsLetterExec extends \AbstractController {
 		$leads->addCondition('is_already_sent',0);
 		$leads->addCondition('document_type','Newsletter');
 
+		// throw new \Exception($leads->count()->getOne());
+		// $this->owner->add('Grid')->setModel($leads,['name']);	
+		// return;
 	// 	/***************************************************************************
 	// 		Must have a gap of N days between sending this Content/Newsletter again
 	// 	/***************************************************************************
@@ -81,6 +84,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
 			$done_contact_newsletter=[];
 			foreach ($leads as $lead) {
+				// throw new \Exception("Error Processing Request", 1);
 				// throw new \Exception($lead->id, 1);
 				// echo $lead['name']. '<br/>';
 				if(in_array($lead['id'].$lead['document_id'], $done_contact_newsletter)) continue;
@@ -152,6 +156,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 				$model_communication_newsletter->setBody($body_v->getHtml());
 
 				if(!$this->debug){
+					// throw new \Exception("DANGER - DEBUGING IS OFF");
 					$model_communication_newsletter->send($email_settings, $mailer);
 				}else{
 					$model_communication_newsletter->save();

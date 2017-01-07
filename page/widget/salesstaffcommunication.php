@@ -25,7 +25,7 @@ class page_widget_salesstaffcommunication extends \xepan\base\Page{
 		$model_communication->addCondition('created_at','>',$start_date);
 		$model_communication->addCondition('created_at','<',$this->app->nextDate($end_date));
 		$model_communication->addCondition([['from_id',$contact_id],['to_id',$contact_id]]);
-		$model_communication->debug();
+		$model_communication;
 		if($type =='Meeting')
 			$model_communication->addCondition('communication_type','Personal');
 		else

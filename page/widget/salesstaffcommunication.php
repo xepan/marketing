@@ -10,9 +10,9 @@ class page_widget_salesstaffcommunication extends \xepan\base\Page{
 		$details = $this->app->stickyGet('details');
 		$details = json_decode($details,true);
 		
-		$start_date = $this->app->stickyGet('start_date');
-		$end_date = $this->app->stickyGet('end_date');
-		
+		$start_date = $this->app->stickyGet('start_date')?:$this->app->today;
+		$end_date = $this->app->stickyGet('end_date')?:$this->app->today;
+
 		$model_employee = $this->add('xepan\hr\Model_Employee');
 		$model_employee->loadBy('name',$x_axis);
 		$contact_id	 = $model_employee->id;	
@@ -25,7 +25,7 @@ class page_widget_salesstaffcommunication extends \xepan\base\Page{
 		$model_communication->addCondition('created_at','>',$start_date);
 		$model_communication->addCondition('created_at','<',$this->app->nextDate($end_date));
 		$model_communication->addCondition([['from_id',$contact_id],['to_id',$contact_id]]);
-
+		$model_communication->debug();
 		if($type =='Meeting')
 			$model_communication->addCondition('communication_type','Personal');
 		else

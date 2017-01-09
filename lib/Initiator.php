@@ -23,8 +23,9 @@ class Initiator extends \Controller_Addon {
 		$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
 		$model_landingresponse['ip'] = $_SERVER['REMOTE_ADDR'];
 		$model_landingresponse->save();
-		$this->app->hook('pointable_event',['landing_response',['lead'=>$model_landingresponse->ref('contact_id'),'response'=>$model_landingresponse]]);
 		
+		if(!$this->app->url('xepan_marketing_unsubscribe'))
+			$this->app->hook('pointable_event',['landing_response',['lead'=>$model_landingresponse->ref('contact_id'),'response'=>$model_landingresponse]]);											
 	}
 
 	function setup_admin(){

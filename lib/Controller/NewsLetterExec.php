@@ -147,7 +147,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
 
 				foreach ($emails as $email) {	
-					$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$lead->id.'>Unsubscribe</>');
+					$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$lead->id.'&schedule_id='.$lead['schedule_id'].'&document_id='.$lead['document_id'].'>Unsubscribe</>');
 					$model_communication_newsletter->addTo($email);
 					// var_dump($email);
 				}

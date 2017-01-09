@@ -1,9 +1,26 @@
-div(class="container")
-	.row.col-md-12(style ="margin-top:40px; margin-bottom:50px;")
-			h2.text-center It's sad to see you go
-	.row(style ="margin-bottom:100px;")
-		.col-md-4
-		.col-md-4
-			h2.text-center Changed Your Mind, subscribe again
-			{$subscription}
-		.col-md-4
+.container.xpean-unsubscribe-page(style="margin-top:30px; margin-bottom:200px;")
+	.panel.panel-default
+		.panel-body
+			h1(style="text-align:center") It's Sad To See You Go
+			hr
+			.row.col-md-12
+				{$form}
+
+
+	style.
+		h1{
+		color:#4e4e4e !important;
+		}
+
+		hr{
+		color: #4e4e4e;
+		background-color: #4e4e4e;
+		height: 2px;
+		}
+
+		select{
+		width:100%;
+		}
+		textarea{
+		width:100%;
+		}

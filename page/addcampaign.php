@@ -31,7 +31,7 @@ class page_addcampaign extends \xepan\base\Page{
 		$category_field->setAttr(['multiple'=>'multiple']);
 		
 		$user_field = $form->addField('xepan\base\DropDown','user');
-		$user_field->setModel('xepan\marketing\Model_Campaign_SocialUser_Association');
+		$user_field->setModel('xepan\marketing\Model_SocialPosters_Base_SocialUsers');
 		$user_field->set($associated_users)->js(true)->trigger('changed');
 		$user_field->setAttr(['multiple'=>'multiple']);
 

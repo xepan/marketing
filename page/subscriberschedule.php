@@ -13,7 +13,7 @@ class page_subscriberschedule extends \xepan\base\Page{
 		$m=$this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
 		
 		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
-		$content_view->setModel('xepan/marketing/Content');
+		$content_view->setModel('xepan/marketing/Content')->addCondition([['is_template',false],['is_template',null]])->addCondition('status','Active');
 
 		/**
 			 Common form decleration 

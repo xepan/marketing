@@ -1,18 +1,19 @@
 {$Content}
 <div class="row">
   <div class="col-lg-4">
-    <div class="main-box clearfix">
-      <div class="tabs-wrapper profile-tabs">
-        <ul class="nav nav-tabs responsive-tabs">
-          <li class="active"><a data-toggle="tab" href="#tab-content">Content</a></li>
-        </ul>
-        <div class="tab-content">
-          <div id="tab-content" class="tab-pane active">{$MarketingContent}</div>
-        </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Content</div>
+      <div class="panel-body">
+        <div style="height:596px; overflow:auto;">{$MarketingContent}     </div>
       </div>
     </div>
   </div>
   <div class="col-lg-8">
-    <div id="calendar"></div>{$asso_form}
+    <div class="panel panel-default">
+      <div class="panel-heading">Calendar</div>
+      <div class="panel-body"> 
+        <div id="calendar"> </div>{$asso_form}
+      </div>
+    </div>
   </div>
 </div>

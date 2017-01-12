@@ -54,7 +54,7 @@ class page_campaign extends \xepan\base\Page{
 		});	
 
 		$this->on('click','.campaign-visit-detail',function($js,$data)use($vp1){
-				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
+			return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
 		});
 				 
 		$crud->grid->addHook('formatRow',function($g){			
@@ -110,6 +110,37 @@ class page_campaign extends \xepan\base\Page{
 			$g->js(true)->_selector('.sparkline.timing_graph[data-id='.$g->model->id.']')->sparkline($timing_values, ['enableTagOptions' => true,'tooltipFormat'=>'{{offset:offset}} ({{percent.1}}%)','tooltipValueLookups'=>['offset'=>$timing_labels]]);
 		});
 		$crud->grid->js(true)->_load('jquery.sparkline.min');														
+		
+		$sent_btn = $crud->grid->addButton('Sent Newsletters')->addClass('btn btn-primary');
+
+		$p2=$this->add('VirtualPage');
+		$p2->set(function($p){
+			$newsletter_sent_m = $p->add('xepan\marketing\Model_Communication_Newsletter');
+			$newsletter_sent_m->setOrder('created_at','desc');
+			$grid = $p->add('xepan\base\Grid');
+			$grid->setModel($newsletter_sent_m,['to','title','created_at','status']);
+			$grid->addPaginator(50);
+			$frm = $grid->addQuickSearch(['to','title','status',],['to','title','status']);
+		});
+		
+		if($sent_btn->isClicked()){
+			$this->js()->univ()->frameURL('Newsletters Sent',$p2->getUrl())->execute();
+		}
+
+		$unsubscribe_btn = $crud->grid->addButton('Unsubscribes')->addClass('btn btn-primary');
+
+		$p3=$this->add('VirtualPage');
+		$p3->set(function($p){
+			$model_unsubscribe = $p->add('xepan\marketing\Model_Unsubscribe');
+			$grid = $p->add('xepan\base\Grid');
+
+			$grid->setModel($model_unsubscribe);
+		});
+		
+		if($unsubscribe_btn->isClicked()){
+			$this->js()->univ()->frameURL('Unsubscribes',$p3->getUrl())->execute();
+		}
+
 	}
 
 	function render(){

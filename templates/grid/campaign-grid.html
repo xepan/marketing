@@ -14,7 +14,10 @@
     <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
       <div class="main-box clearfix project-box {$box}">
         <div style="cursor:pointer; cursor: hand; max-width:600px;" class="ribbon-wrapper-green">
-          <div class="ribbon-green"> <span data-id="{$id}" style="color:#ffffff;" class="small text-muted campaign-visit-detail">{$total_visitor} Visits</span></div>
+          <div class="ribbon-green">
+             
+            {visitor_wrapper}<span data-id="{$id}" style="color:#ffffff;" class="campaign-visit-detail small text-muted">{$total_visitor} Visits</span>{/} <span data-id="{$id}" style="color:red;" class="small text-muted">{$defect} {$dummy_spot}</span>
+          </div>
         </div>
         <div class="main-box-body clearfix">
           <div class="project-box-header {$bg}">

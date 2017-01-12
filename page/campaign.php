@@ -56,25 +56,35 @@ class page_campaign extends \xepan\base\Page{
 		$this->on('click','.campaign-visit-detail',function($js,$data)use($vp1){
 				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
 		});
-
-		$color = [
-					0=>"emerald", 
-					1=>"green",
-					2=>"red",
-					3=>"yellow",
-					4=>"purple",
-					5=>"gray" 
-				 ];
 				 
-		$this->count = 0;		 
-		$crud->grid->addHook('formatRow',function($g)use($color){
-			if($this->count > 5) $this->count = 0;
+		$crud->grid->addHook('formatRow',function($g){			
+			if($g->model['is_defective'] == 0){
+				$g->current_row_html['visitor_wrapper'] =' '; 	
+				$g->current_row_html['defect'] ='Category?'; 	
+			}else{
+				$g->current_row_html['dummy_spot'] = ' '; 	
+			}
 
-			$g->current_row_html['box'] = $color[$this->count].'-box'; 	
-			$g->current_row_html['bg'] = $color[$this->count].'-bg';	
+			if($g->model['status'] == 'Draft'){
+				$g->current_row_html['box'] = 'gray-box'; 	
+				$g->current_row_html['bg'] = 'gray-bg';	
+			}
+			elseif($g->model['status'] == 'Submitted'){
+				$g->current_row_html['box'] = 'yellow-box'; 	
+				$g->current_row_html['bg'] = 'yellow-bg';	
+			}
+			elseif($g->model['status'] == 'Approved'){
+				$g->current_row_html['box'] = 'green-box'; 	
+				$g->current_row_html['bg'] = 'green-bg';	
+			}
+			elseif($g->model['status']== 'Onhold'){
+				$g->current_row_html['box'] = 'emerald-box'; 	
+				$g->current_row_html['bg'] = 'emerald-bg';			
+			}else{
+				$g->current_row_html['box'] = 'purple-box'; 	
+				$g->current_row_html['bg'] = 'purple-bg';
+			}
 
-			$this->count++;
-			
 			$g->current_row['url'] = "?page=xepan_marketing_scheduledetail&campaign_id=".$g->model->id;
 
 			$source_data = explode(",",$g->model['source_graph_data']);

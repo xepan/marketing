@@ -105,6 +105,12 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 			return $m->dsql()->expr("IFNULL(ROUND(([0]/([0]+[1]))*100,0),0)",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
 		});
 
+		$this->addExpression('is_defective')->set(function($m,$q){
+			$assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
+			$assoc->addCondition('campaign_id',$m->getElement('id'));
+			return $assoc->count();
+		});
+
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);

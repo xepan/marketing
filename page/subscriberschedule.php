@@ -13,7 +13,8 @@ class page_subscriberschedule extends \xepan\base\Page{
 		$m=$this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
 		
 		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
-		$content_view->setModel('xepan/marketing/Content')->addCondition([['is_template',false],['is_template',null]])->addCondition('status','Active');
+		$content_view->setModel('xepan/marketing/Content')->addCondition('status','Approved')->addCondition('is_template',false);
+
 
 		/**
 			 Common form decleration 
@@ -21,7 +22,7 @@ class page_subscriberschedule extends \xepan\base\Page{
 
 		$form = $this->add('Form',null,'asso_form');
 		$events_field = $form->addField('hidden','events_fields');
-		$submit_btn = $form->addButton('Update');
+		$submit_btn = $form->addButton('Update Schedule')->addClass('btn btn-primary btn-block');
 
 		/**
 				getting json encoded event list on form click
@@ -67,9 +68,6 @@ class page_subscriberschedule extends \xepan\base\Page{
 			
 		 	$form->js(null,$this->js()->univ()->successMessage('Schedule Updated'))->reload()->execute();
 		}
-
-
-
 	}
 
 	function defaultTemplate(){

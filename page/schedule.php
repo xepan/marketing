@@ -19,7 +19,7 @@ class page_schedule extends \xepan\base\Page{
 
 		$form = $this->add('Form',null,'asso_form');
 		$events_field = $form->addField('hidden','events_fields');
-		$submit_btn = $form->addButton('Update');
+		$submit_btn = $form->addButton('Update Schedule')->addClass('btn btn-primary btn-block');
 
 		/**
 				getting json encoded event list on form click

@@ -119,6 +119,8 @@ class page_campaign extends \xepan\base\Page{
 			$newsletter_sent_m->setOrder('created_at','desc');
 			$newsletter_sent_m->getElement('created_at')->sortable(true);
 			$newsletter_sent_m->getElement('status')->sortable(true);
+			$newsletter_sent_m->getElement('to')->sortable(true);
+			$newsletter_sent_m->getElement('title')->sortable(true);
 
 			$grid = $p->add('xepan\base\Grid');
 			$grid->setModel($newsletter_sent_m,['to','title','created_at','status']);

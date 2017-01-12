@@ -8,52 +8,39 @@
       </div>
     </div>
   </header>{/Pannel}
-  <div class="main-box-body clearfix">
-    <div class="row">
-      {header}{cols}{col}{/}{/}{/}
-      {rows}{row}
-      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
-        <div class="col-lg-12 col-md-6 col-sm-6">
-          <div class="main-box clearfix project-box">
-            <div class="project-box-header">
-              <div class="name text-center"><a href="{$url}">
-                  <h1 style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</h1></a></div>
-            </div>
-            <div class="row text-muted"> 
-              <div class="col-md-4"><span data-id="{$id}" style="cursor:pointer; cursor: hand; max-width:600px;" class="campaign-visit-detail">&nbsp; Visitors</span>
-                <div data-id="{$id}" style="margin-left:8px; cursor:pointer; cursor: hand; max-width:600px;" class="campaign-visit-detail">{$total_visitor}</div>
-              </div>
-              <div class="col-md-4"><span>Postings </span>
-                <div style="margin-left:3px;">{$total_combined_postings_done}</div>
-              </div>
-              <div class="col-md-4"> <span>Remaining</span>
-                <div style="margin-left:4px;"> </div><span class="fa fa-globe"> {$social_post_remaining} &nbsp;     </span><span class="fa fa-envelope-o"> {$newsletter_remaining}</span>
-              </div>
-            </div>
-            <hr/>
-            <div class="project-box-content"><span data-bar-color="#2ecc71" data-percent="{$completed_percentage}" class="chart"><span class="percent">{$completed_percentage}</span>%<br/><span class="lbl">completed</span>
-                <canvas height="130" width="130"></canvas></span></div>
-            <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline source_graph">{$source_graph}  </span><span class="text-success">Platform</span></a><a href="#"></a><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a>
-            </div>
-            <div class="project-box-ultrafooter clearfix">
-              <div class="col-md-4">{$action}</div>
-              <div class="col-md-4"> </div>
-              <div class="col-md-4 pull-right">
-                {$edit}
-                {$delete}
-              </div>
+  <div class="row">
+    {header}{cols}{col}{/}{/}{/}
+    {rows}{row}
+    <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
+      <div class="main-box clearfix project-box {$box}">
+        <div style="cursor:pointer; cursor: hand; max-width:600px;" class="ribbon-wrapper-green">
+          <div class="ribbon-green"> <span data-id="{$id}" style="color:#ffffff;" class="small text-muted campaign-visit-detail">{$total_visitor} Visits</span></div>
+        </div>
+        <div class="main-box-body clearfix">
+          <div class="project-box-header {$bg}">
+            <div class="name"><a href="{$url}">{$title}</a></div>
+          </div>
+          <div class="project-box-content"><span data-percent="{completed_percentage}0{/}" class="chart"><span class="percent"></span>% <br/><span class="lbl">completed</span></span></div>
+          <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a></div>
+          <div class="project-box-ultrafooter clearfix">
+            <div class="col-md-4">{$action}</div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+               
+              {$edit}
+              {$delete}
             </div>
           </div>
         </div>
-      </div>{/}
-      {/}{/}
-      {not_found}
-      <div class="row">
-        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
-      </div>{/}
-      {totals}{cols}{col}{$content}{/}{/}{/}
-    </div>{$Paginator}
-  </div>
+      </div>
+    </div>{/}
+    {/}{/}
+    {not_found}
+    <div class="row">
+      <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+    </div>{/}
+    {totals}{cols}{col}{$content}{/}{/}{/}
+  </div>{$Paginator}
 </div>
 <script>
   $('.chart').easyPieChart({
@@ -71,33 +58,64 @@
   });
   
 </script>
-<style type="text/css" media="screen">
-  .project-box-content {
-  padding-top : 0px !important;
-  padding-bottom : 0px !important;
-  padding-left : 0px !important;
-  padding-right : 0px !important;
+<style type="text/css">
+  .wrapper {
+  margin: 50px auto;
+  width: 280px;
+  height: 370px;
+  background: white;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.3);
+  -moz-box-shadow:    0px 0px 8px rgba(0,0,0,0.3);
+  box-shadow:         0px 0px 8px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 90;
   }
-  .project-box .project-box-header .name a{
-  padding-top : 0px !important;
-  padding-bottom : 0px !important;
-  padding-left : 0px !important;
-  padding-right : 0px !important; 
-  }    
-  
-  hr{
-  margin-top : 5px !important;
-  margin-bottom : 5px !important;
-  margin-left : 0px !important;
-  margin-right : 0px !important;
+  .ribbon-wrapper-green {
+  width: 85px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  top: -3px;
+  right: -3px;
   }
-  
-  .project-box .project-box-footer a{
-  padding: 0px 15px !important;
-  margin: 10px 0; !important;
+  .ribbon-green {
+  font: bold 15px Sans-Serif;
+  color: #333;
+  text-align: center;
+  text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform:    rotate(45deg);
+  -ms-transform:     rotate(45deg);
+  -o-transform:      rotate(45deg);
+  position: relative;
+  padding: 7px 0;
+  left: -5px;
+  top: 15px;
+  width: 120px;
+  background-color: #BFDC7A;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
+  background-image: -webkit-linear-gradient(top, #BFDC7A, #8EBF45);
+  background-image:    -moz-linear-gradient(top, #BFDC7A, #8EBF45);
+  background-image:     -ms-linear-gradient(top, #BFDC7A, #8EBF45);
+  background-image:      -o-linear-gradient(top, #BFDC7A, #8EBF45);
+  color: #6a6340;
+  -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+  -moz-box-shadow:    0px 0px 3px rgba(0,0,0,0.3);
+  box-shadow:         0px 0px 3px rgba(0,0,0,0.3);
   }
-  
-  .project-box .project-box-footer a{
-  border-right: 0px!important;
+  .ribbon-green:before, .ribbon-green:after {
+  content: "";
+  border-top:   3px solid #6e8900;
+  border-left:  3px solid transparent;
+  border-right: 3px solid transparent;
+  position:absolute;
+  bottom: -3px;
   }
+  .ribbon-green:before {
+  left: 0;
+  }
+  .ribbon-green:after {
+  right: 0;
+  }​  
 </style>

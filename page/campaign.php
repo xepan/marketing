@@ -57,7 +57,24 @@ class page_campaign extends \xepan\base\Page{
 				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
 		});
 
-		$crud->grid->addHook('formatRow',function($g){
+		$color = [
+					0=>"emerald", 
+					1=>"green",
+					2=>"red",
+					3=>"yellow",
+					4=>"purple",
+					5=>"gray" 
+				 ];
+				 
+		$this->count = 0;		 
+		$crud->grid->addHook('formatRow',function($g)use($color){
+			if($this->count > 5) $this->count = 0;
+
+			$g->current_row_html['box'] = $color[$this->count].'-box'; 	
+			$g->current_row_html['bg'] = $color[$this->count].'-bg';	
+
+			$this->count++;
+			
 			$g->current_row['url'] = "?page=xepan_marketing_scheduledetail&campaign_id=".$g->model->id;
 
 			$source_data = explode(",",$g->model['source_graph_data']);

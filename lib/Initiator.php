@@ -13,19 +13,20 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function landingResponse(){		
-		$model_landingresponse = $this->add('xepan\marketing\Model_LandingResponse');
-		$model_landingresponse['contact_id'] = $_GET['xepan_landing_contact_id'];
-		$model_landingresponse['campaign_id'] = $_GET['xepan_landing_campaign_id'];
-		$model_landingresponse['content_id'] = $_GET['xepan_landing_content_id'];
-		$model_landingresponse['emailsetting_id'] = $_GET['xepan_landing_emailsetting_id'];
-		$model_landingresponse['date'] = $this->app->now;
-		$model_landingresponse['type'] = $_GET['source']?:"Unknown";
-		$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
-		$model_landingresponse['ip'] = $_SERVER['REMOTE_ADDR'];
-		$model_landingresponse->save();
-		
-		if(!$this->app->url('xepan_marketing_unsubscribe'))
+		if(!$this->app->url('xepan_marketing_unsubscribe')){	
+			$model_landingresponse = $this->add('xepan\marketing\Model_LandingResponse');
+			$model_landingresponse['contact_id'] = $_GET['xepan_landing_contact_id'];
+			$model_landingresponse['campaign_id'] = $_GET['xepan_landing_campaign_id'];
+			$model_landingresponse['content_id'] = $_GET['xepan_landing_content_id'];
+			$model_landingresponse['emailsetting_id'] = $_GET['xepan_landing_emailsetting_id'];
+			$model_landingresponse['date'] = $this->app->now;
+			$model_landingresponse['type'] = $_GET['source']?:"Unknown";
+			$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
+			$model_landingresponse['ip'] = $_SERVER['REMOTE_ADDR'];
+			$model_landingresponse->save();
+			
 			$this->app->hook('pointable_event',['landing_response',['lead'=>$model_landingresponse->ref('contact_id'),'response'=>$model_landingresponse]]);											
+		}
 	}
 
 	function setup_admin(){

@@ -117,6 +117,9 @@ class page_campaign extends \xepan\base\Page{
 		$p2->set(function($p){
 			$newsletter_sent_m = $p->add('xepan\marketing\Model_Communication_Newsletter');
 			$newsletter_sent_m->setOrder('created_at','desc');
+			$newsletter_sent_m->getElement('created_at')->sortable(true);
+			$newsletter_sent_m->getElement('status')->sortable(true);
+
 			$grid = $p->add('xepan\base\Grid');
 			$grid->setModel($newsletter_sent_m,['to','title','created_at','status']);
 			$grid->addPaginator(50);

@@ -8,7 +8,7 @@ class Widget_GlobalMassCommunication extends \xepan\base\Widget {
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
-
+		$this->report->enableFilterEntity('employee');
 		$this->chart = $this->add('xepan\base\View_Chart');
 	}
 
@@ -17,7 +17,10 @@ class Widget_GlobalMassCommunication extends \xepan\base\Widget {
 		$this->end_date = $this->app->nextDate($this->report->end_date);
 		
 		$model = $this->add('xepan\hr\Model_Employee');
-			
+		
+		if(isset($this->report->employee))
+			$model->addCondition('id',$this->report->employee);
+
 		$model->addExpression('Newsletter')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition('from_id',$q->getField('id'))

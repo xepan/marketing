@@ -8,6 +8,7 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
+		$this->report->enableFilterEntity('employee');
 
 		$this->chart = $this->add('xepan\base\View_Chart');
 	}
@@ -18,6 +19,9 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
 		
 		$model = $this->add('xepan\hr\Model_Employee');
 		
+		if(isset($this->report->employee))
+			$model->addCondition('id',$this->report->employee);
+
 		$model->addExpression('Email')->set(function($m,$q){
 			return $this->add('xepan\communication\Model_Communication')
 						->addCondition([['from_id',$q->getField('id')],['to_id',$q->getField('id')]])

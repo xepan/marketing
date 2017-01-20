@@ -15,6 +15,12 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('posted_on')->type('datetime');
 		
 		$this->addExpression('content_type')->set($this->refSQL('document_id')->fieldQuery('type'));
+	
+		$this->addExpression('sent')->set(function($m,$q){
+			$comm_m = $this->add('xepan\communication\Model_Communication');
+			$comm_m->addCondition('related_id',$m->getElement('id'));
+			return $comm_m->count();		
+		})->type('boolean');
 	}
 
 	function campaign(){

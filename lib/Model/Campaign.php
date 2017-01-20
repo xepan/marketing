@@ -37,6 +37,26 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		$this->addCondition('type','Campaign');
 		$this->getElement('status')->defaultValue('Draft');
 		
+		// total schedule of campaign
+		$this->addExpression('total_schedule')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$q->getField('id'))
+						->count();
+		});
+
+		// total schedules posted
+		$this->addExpression('posted_schedule')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$q->getField('id'))
+						->addCondition('sent',true)
+						->count();
+		});
+
+		// remaining schedules
+		$this->addExpression('remaining_schedule')->set(function($m,$q){
+			return $m->dsql()->expr("[0]-[1]",[$m->getElement('total_schedule'),$m->getElement('posted_schedule')]);
+		});
+
 		$this->addExpression('total_visitor')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_LandingResponse')
 					->addCondition('campaign_id',$q->getField('id'))
@@ -100,17 +120,28 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		$this->addExpression('total')->set(function($m,$q){
 			return $m->dsql()->expr("([0]+[1])",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
 		});
-
+	
 		$this->addExpression('completed_percentage')->set(function($m, $q){
-			return $m->dsql()->expr("IFNULL(ROUND(([0]/([0]+[1]))*100,0),0)",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
+			return $q->expr(
+					"IF([campaign_type]='campaign',
+						IFNULL(ROUND(([total_combined_postings_done]/([total_combined_postings_done]+[total_remaining]))*100,0),0),
+						IFNULL(ROUND(([posted_schedule]/([posted_schedule]+[remaining_schedule]))*100,0),0)
+						)",
+					[
+						'campaign_type'=> $m->getElement('campaign_type'),
+						'total_combined_postings_done'=> $m->getElement('total_combined_postings_done'),
+						'total_remaining'=> $m->getElement('total_remaining'),
+						'posted_schedule'=> $m->getElement('posted_schedule'),
+						'remaining_schedule'=> $m->getElement('remaining_schedule')
+					]
+					);
 		});
 
-		// TODO
-		// $this->addExpression('is_defective')->set(function($m,$q){
-		// 	$assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
-		// 	$assoc->addCondition('campaign_id',$m->getElement('id'));
-		// 	return $assoc->count();
-		// });
+		$this->addExpression('is_defective')->set(function($m,$q){
+			$assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
+			$assoc->addCondition('campaign_id',$m->getElement('id'));
+			return $assoc->count();
+		});
 
 
 		$this->addHook('beforeSave',$this);

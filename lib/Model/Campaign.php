@@ -44,11 +44,11 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		});
 
 		$this->addExpression('started_since')->set(function($m,$q){
-			return $m->dsql()->expr("DATEDIFF([1],[0])",[$m->getElement('starting_date'),$this->app->today]);
+			return $m->dsql()->expr("DATEDIFF('[1]',[0])",[$m->getElement('starting_date'),$this->app->today]);
 		});
 
 		$this->addExpression('remaining_duration')->set(function($m,$q){
-			return $m->dsql()->expr("DATEDIFF([0],[1])",[$m->getElement('ending_date'),$this->app->today]);
+			return $m->dsql()->expr("DATEDIFF([0],'[1]')",[$m->getElement('ending_date'),$this->app->today]);
 		});
 
 		// social posts posted
@@ -105,11 +105,12 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 			return $m->dsql()->expr("IFNULL(ROUND(([0]/([0]+[1]))*100,0),0)",[$m->getElement('total_combined_postings_done'),$m->getElement('total_remaining')]);
 		});
 
-		$this->addExpression('is_defective')->set(function($m,$q){
-			$assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
-			$assoc->addCondition('campaign_id',$m->getElement('id'));
-			return $assoc->count();
-		});
+		// TODO
+		// $this->addExpression('is_defective')->set(function($m,$q){
+		// 	$assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
+		// 	$assoc->addCondition('campaign_id',$m->getElement('id'));
+		// 	return $assoc->count();
+		// });
 
 
 		$this->addHook('beforeSave',$this);

@@ -24,7 +24,10 @@
             <div class="name"><a href="{$url}">{$title}</a></div>
           </div>
           <div class="project-box-content"><span data-percent="{completed_percentage}0{/}" class="chart"><span class="percent"></span>% <br/><span class="lbl">completed</span></span></div>
-          <div class="project-box-footer clearfix"><a href="#"><span sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]" class="sparkline timing_graph">{$timing_graph}  </span><span class="text-success">  Timings   </span></a></div>
+          <div class="project-box-footer clearfix"><a href="#"> <strong class="text-success">  Sent</strong>
+              <div class="row">   <span class="text-success">  {$total_combined_postings_done}   </span></div></a><a href="#"> <strong class="text-success">  Remaining   </strong>
+              <div class="row"><span class="text-success">  {$total_remaining}   </span></div></a><a href="#"> <strong class="text-success">  Days Left   </strong>
+              <div class="row"><span class="text-success">  {$remaining_duration}   </span></div></a></div>
           <div class="project-box-ultrafooter clearfix">
             <div class="col-md-4">{$action}</div>
             <div class="col-md-4"></div>

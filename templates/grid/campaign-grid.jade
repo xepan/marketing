@@ -31,9 +31,18 @@
                     br
                     span.lbl completed
                 .project-box-footer.clearfix
-                  a(href='#')
-                    span.sparkline.timing_graph(sparkType="pie" sparkHeight="50px" data-id="{$id}" sparksliceColors="[orange,green,red]") {$timing_graph}  
-                    span.text-success   Timings   
+                  a(href='#') 
+                    strong.text-success   Sent
+                    .row    
+                      span.text-success   {$total_combined_postings_done}   
+                  a(href='#') 
+                    strong.text-success   Remaining   
+                    .row
+                      span.text-success   {$total_remaining}   
+                  a(href='#') 
+                    strong.text-success   Days Left   
+                    .row
+                      span.text-success   {$remaining_duration}   
                 .project-box-ultrafooter.clearfix
                   .col-md-4
                     {$action}

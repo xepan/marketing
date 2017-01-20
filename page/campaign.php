@@ -58,12 +58,13 @@ class page_campaign extends \xepan\base\Page{
 		});
 				 
 		$crud->grid->addHook('formatRow',function($g){			
-			if($g->model['is_defective'] == 0){
-				$g->current_row_html['visitor_wrapper'] =' '; 	
-				$g->current_row_html['defect'] ='Category?'; 	
-			}else{
-				$g->current_row_html['dummy_spot'] = ' '; 	
-			}
+			// TODO
+			// if($g->model['is_defective'] == 0){
+			// 	$g->current_row_html['visitor_wrapper'] =' '; 	
+			// 	$g->current_row_html['defect'] ='Category?'; 	
+			// }else{
+			// 	$g->current_row_html['dummy_spot'] = ' '; 	
+			// }
 
 			if($g->model['status'] == 'Draft'){
 				$g->current_row_html['box'] = 'gray-box'; 	

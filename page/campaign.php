@@ -63,7 +63,10 @@ class page_campaign extends \xepan\base\Page{
 				$g->current_row_html['defect'] ='Expired'; 	
 			}elseif($g->model['has_schedule'] == false){
 				$g->current_row_html['visitor_wrapper'] =' '; 	
-				$g->current_row_html['defect'] ='Schedule?'; 	
+				$g->current_row_html['defect'] ='Schedule?';
+			}elseif($g->model['content_not_approved'] == true){
+				$g->current_row_html['visitor_wrapper'] =' '; 	
+				$g->current_row_html['defect'] ='Approve Content';
 			}elseif($g->model['has_social_schedule'] == true And $g->model['socialuser_count'] == false){
 				$g->current_row_html['visitor_wrapper'] =' '; 	
 				$g->current_row_html['defect'] ='User?';

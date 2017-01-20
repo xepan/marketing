@@ -6,6 +6,7 @@ namespace xepan\marketing;
 class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 
 	public $pass_group_by = false;
+	public $on_time = null;
 
 	function init(){
 		parent::init();
@@ -101,7 +102,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 					[
 						'campaign_type'=> $m->getElement('campaign_type'),
 						'schedule_date'=> $m->getElement('schedule_date'),
-						'now' => $this->app->now,
+						'now' => $this->on_time?:$this->app->now,
 						'days_from_join'=> $m->getElement('days_from_join'),
 						'schedule_day'=> $m->getElement('schedule_day'),
 						'lead_association_time'=> $m->getElement('association_time')

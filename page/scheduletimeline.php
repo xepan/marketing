@@ -8,29 +8,37 @@ class page_scheduletimeline extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters');
-		$leads->addCondition('sendable',true);
-		$leads->addCondition('campaign_status','Approved');
-		$leads->addCondition('content_status','Approved');
-		$leads->addCondition('is_already_sent',0);
-		$leads->addCondition('document_type','Newsletter');
-		
-		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($leads,['name','emails_str','unique_name','campaign_title','campaign_type','document']);
-		$grid->addPaginator(50);
-		$form = $grid->addQuickSearch(['lead_campaing_id','name','emails_str','unique_name','campaign_title','document']);
-		
-		$campaign_m = $this->add('xepan\marketing\Model_Campaign');
-		$campaign_filter = $form->addField('DropDown','campaign');
-		$campaign_filter->setModel($campaign_m);
-		$campaign_filter->setEmptyText('Please select a campaign');
+		$day_array = [
+						['date' =>$this->app->today." 11:59:59"],
+						['date' =>date("Y-m-d", strtotime('+ 1 day', strtotime($this->app->now)))." 11:59:59"],
+						['date' => date("Y-m-d", strtotime('+ 2 day', strtotime($this->app->now)))." 11:59:59"],
+						['date' => date("Y-m-d", strtotime('+ 3 day', strtotime($this->app->now)))." 11:59:59"],
+						['date' => date("Y-m-d", strtotime('+ 4 day', strtotime($this->app->now)))." 11:59:59"],
+						['date' => date("Y-m-d", strtotime('+ 5 day', strtotime($this->app->now)))." 11:59:59"],
+						['date' => date("Y-m-d", strtotime('+ 6 day', strtotime($this->app->now)))." 11:59:59"]
+					];
 
-		$form->addHook('applyFilter',function($f,$m){
-			if($f['campaign']){
-				$m->addCondition('lead_campaing_id',$f['campaign']);
-			}
-		});
+		$rows = [];			
+		foreach ($day_array as $date) {					
+			$model = $this->add('xepan\marketing\Model_Campaign_ScheduleTimeline',['on_time'=>$date['date']]);
+			$model->addCondition('campaign_status','Approved');
+			$model->addCondition('content_status','Approved');
+			$model->addCondition('is_already_sent',0);
+			$model->addCondition('sendable',true);
+			$model->addCondition('document_type','Newsletter');		
+			$rows[] = $model->getRows(); 
+		}
 
-		$campaign_filter->js('change',$form->js()->submit());
+		// echo "<pre>";
+		// print_r($day_array);
+		// echo "</pre>";
+		// exit;
+
+		asort($day_array);
+		$grid = $this->add('Grid');
+		$grid->setSource($day_array);
+		$grid->addColumn('date');
+		$grid->removeColumn('id');
+		// $grid->addPaginator(50);
 	}
 }

@@ -122,6 +122,13 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 						->count();
 		})->type('boolean');
 
+		$this->addExpression('content_not_approved')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->addCondition('document_status',['Draft','Submitted','Rejected'])
+						->count();
+		})->type('boolean');
+
 		$this->addExpression('has_social_schedule')->set(function($m,$q){
 			return $this->add('xepan\marketing\Model_Schedule')
 						->addCondition('campaign_id',$m->getElement('id'))

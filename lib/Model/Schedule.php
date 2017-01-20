@@ -27,6 +27,12 @@ class Model_Schedule extends \xepan\base\Model_Table{
 			$document_m->addCondition('id',$m->getElement('document_id'));
 			return $document_m->fieldQuery('type');
 		});
+
+		$this->addExpression('document_status')->set(function($m,$q){
+			$document_m = $this->add('xepan\base\Model_Document');
+			$document_m->addCondition('id',$m->getElement('document_id'));
+			return $document_m->fieldQuery('status');
+		});
 	}
 
 	function campaign(){

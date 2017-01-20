@@ -4,10 +4,8 @@ namespace xepan\marketing;
 
 class Model_MarketingCategory extends \xepan\hr\Model_Document{
 
-	public $status=[];
-	public $actions=[
-						'All'=>['view','edit','delete','merge_category']
-					];
+	public $status=['All'];
+	public $actions=['All'=>['view','edit','delete','merge_category']];
 
 	function init(){
 		parent::init();

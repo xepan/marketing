@@ -112,12 +112,41 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 					);
 		});
 
-		$this->addExpression('is_defective')->set(function($m,$q){
-			$assoc = $this->add('xepan\marketing\Model_Campaign_Category_Association');
-			$assoc->addCondition('campaign_id',$m->getElement('id'));
-			return $assoc->count();
-		});
 
+		/*************************************************
+		  EXPRESSIONS TO SHOW ERROR MESSAGE ON CAMPAIGN 
+		**************************************************/
+		$this->addExpression('has_schedule')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->count();
+		})->type('boolean');
+
+		$this->addExpression('has_social_schedule')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->addCondition('document_type','SocialPost')
+						->count();
+		})->type('boolean');
+
+		$this->addExpression('has_newsletter_schedule')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Schedule')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->addCondition('document_type','Newsletter')
+						->count();
+		})->type('boolean');
+
+		$this->addExpression('socialuser_count')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Campaign_SocialUser_Association')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->count();
+		})->type('boolean');
+
+		$this->addExpression('category_count')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Campaign_Category_Association')
+						->addCondition('campaign_id',$m->getElement('id'))
+						->count();
+		})->type('boolean');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);

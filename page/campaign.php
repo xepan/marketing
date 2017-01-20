@@ -57,14 +57,22 @@ class page_campaign extends \xepan\base\Page{
 			return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['campaign_id'=>$data['id']]));
 		});
 				 
-		$crud->grid->addHook('formatRow',function($g){			
-			// TODO
-			// if($g->model['is_defective'] == 0){
-			// 	$g->current_row_html['visitor_wrapper'] =' '; 	
-			// 	$g->current_row_html['defect'] ='Category?'; 	
-			// }else{
-			// 	$g->current_row_html['dummy_spot'] = ' '; 	
-			// }
+		$crud->grid->addHook('formatRow',function($g){						
+			if($g->model['remaining_duration'] <= 0){
+				$g->current_row_html['visitor_wrapper'] =' '; 	
+				$g->current_row_html['defect'] ='Expired'; 	
+			}elseif($g->model['has_schedule'] == false){
+				$g->current_row_html['visitor_wrapper'] =' '; 	
+				$g->current_row_html['defect'] ='Schedule?'; 	
+			}elseif($g->model['has_social_schedule'] == true And $g->model['socialuser_count'] == false){
+				$g->current_row_html['visitor_wrapper'] =' '; 	
+				$g->current_row_html['defect'] ='User?';
+			}elseif($g->model['has_newsletter_schedule'] == true And $g->model['category_count'] == false){
+				$g->current_row_html['visitor_wrapper'] =' '; 	
+				$g->current_row_html['defect'] ='Category?'; 	
+			}else{
+				$g->current_row_html['dummy_spot'] = ' '; 	
+			}
 
 			if($g->model['status'] == 'Draft'){
 				$g->current_row_html['box'] = 'gray-box'; 	

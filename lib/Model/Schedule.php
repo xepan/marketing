@@ -21,6 +21,12 @@ class Model_Schedule extends \xepan\base\Model_Table{
 			$comm_m->addCondition('related_id',$m->getElement('id'));
 			return $comm_m->count();		
 		})->type('boolean');
+
+		$this->addExpression('document_type')->set(function($m,$q){
+			$document_m = $this->add('xepan\base\Model_Document');
+			$document_m->addCondition('id',$m->getElement('document_id'));
+			return $document_m->fieldQuery('type');
+		});
 	}
 
 	function campaign(){

@@ -28,7 +28,7 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		$camp_j->addField('schedule')->defaultValue('[]');
 		$camp_j->addField('starting_date')->type('date');
 		$camp_j->addField('ending_date')->type('date');
-		$camp_j->addField('campaign_type')->enum(['subscription','campaign']);
+		$camp_j->addField('campaign_type')->setValueList(['subscription'=>'subscription','campaign'=>'calendar']);
 		
 		$camp_j->hasMany('xepan\marketing\Schedule','campaign_id');
 		$camp_j->hasMany('xepan\marketing\Campaign_Category_Association','campaign_id');
@@ -155,6 +155,11 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 						->count();
 		})->type('boolean');
 
+		$this->is([
+				'title|to_trim|unique',
+			]);
+
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCampaignCategoryAssociation']);
@@ -188,7 +193,19 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		
 	}
 	
-	function beforeSave($m){}
+	function beforeSave($m){
+		if($this['starting_date'] == null)
+			throw $this->exception('Starting date and ending date cannot be null','ValidityCheck')->setField('starting_date');
+		
+		if($this['ending_date'] == null)
+			throw $this->exception('Ending date and ending date cannot be null','ValidityCheck')->setField('ending_date');
+		
+		if($this['ending_date'] < $this['starting_date'])
+			throw $this->exception('Ending date cannot be smaller then starting date','ValidityCheck')->setField('ending_date');
+
+		if($this['campaign_type'] == null)
+			throw $this->exception('Campaign type cannot be null','ValidityCheck')->setField('campaign_type');		
+	}
 
 	function checkExistingCampaignCategoryAssociation($m){
 		$m->ref('xepan\marketing\Campaign_Category_Association')->deleteAll();

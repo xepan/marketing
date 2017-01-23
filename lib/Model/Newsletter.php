@@ -116,53 +116,6 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			return $this->api->js()->univ()->successMessage('Email Send SuccessFully')->closeDialog();
 		}
 	}
-	
-	function page_schedule($p){
-		if(!$this->loaded())
-			throw new \Exception('Model not loaded');		
-		
-		$form = $p->add('Form');		
-		$campaign_field = $form->addField('Dropdown','campaign');
-		$campaign_field->validate('required');
-		$campaign_field->setEmptyText('Please select a campaign')->setModel('xepan\marketing\Model_Campaign');
-		$form->addField('DatePicker','date')->validate('required');
-		$form->addField('TimePicker','time')->validate('required');
-		$form->addSubmit('Schedule')->addClass('btn btn-primary btn-block');
-
-		if($form->isSubmitted()){
-			if(!$form['date'])				
-				$form->error('date','Date field is mandatory');
-
-			$schedule_time = date("H:i:s", strtotime($form['time']));
-			$schedule_date = $form['date'].' '.$schedule_time;
-			
-			$campaign = $this->add('xepan\marketing\Model_Campaign');
-			$schedule = $this->add('xepan\marketing\Model_Schedule');
-
-			$schedule['campaign_id'] = $form['campaign'];
-			$schedule['document_id'] = $this->id;
-			$schedule['date'] = $schedule_date; 
-			$schedule['client_event_id'] = '_fc'.uniqid(); 
-			$schedule->save();
-			
-			$campaign->tryLoadBy('id',$form['campaign']);
-			
-			$old_schedule = json_decode($campaign['schedule'],true);
-			$temp = Array ( 
-				'title' => $this['title'], 
-				'start' => $schedule_date, 
-				'document_id' => $this->id, 
-				'client_event_id' => $schedule['client_event_id'] 
-			);
-			
-			$old_schedule[] = $temp;
-
-			$campaign['schedule'] = json_encode($old_schedule);
-			$campaign->save();
-
-			return $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Newsletter Scheduled')->execute();
-		}
-	}
 
 	function submit(){
 		$this['status']='Submitted';

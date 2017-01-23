@@ -43,7 +43,13 @@ class page_newsletter extends \xepan\base\Page{
 			$this->js(null,$crud->js()->reload(['compact_grid'=>true]))->univ()->successMessage('wait ...')->execute();
 		}
 
+		$crud->grid->addPaginator('20');
 		$frm=$crud->grid->addQuickSearch(['title','content_name']);
+		
+		$marketing_category = $frm->addField('DropDown','marketing_category_id');
+		$marketing_category->setModel('xepan\marketing\Model_MarketingCategory');
+		$marketing_category->setEmptyText('Select a category');
+
 
 		$vp = $this->add('VirtualPage');
 		$vp->set(function($p){
@@ -70,6 +76,14 @@ class page_newsletter extends \xepan\base\Page{
 		$this->on('click','.newsletter-visit-detail',function($js,$data)use($vp1){
 				return $js->univ()->dialogURL("VISIT DETAIL",$this->api->url($vp1->getURL(),['newsletter_id'=>$data['id']]));
 		});
+
+		$frm->addHook('applyFilter',function($f,$m){
+			if($f['marketing_category_id']){
+				$m->addCondition('marketing_category_id',$f['marketing_category_id']);
+			}
+		});
+		
+		$marketing_category->js('change',$frm->js()->submit());
 
 		$crud->grid->addHook('formatRow',function($g){
 			$com = $this->add('xepan\communication\Model_Communication');

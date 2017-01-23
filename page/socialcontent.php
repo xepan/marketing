@@ -39,9 +39,22 @@ class page_socialcontent extends \xepan\base\Page{
 		
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addsocialpost'],null,['grid/social-grid']);
 		$crud->setModel($social);
+		$crud->grid->addPaginator('20');
+		
 		$frm=$crud->grid->addQuickSearch(['title']);
+
+		$marketing_category = $frm->addField('DropDown','marketing_category_id');
+		$marketing_category->setModel('xepan\marketing\Model_MarketingCategory');
+		$marketing_category->setEmptyText('Select a category');	
 		
+		$frm->addHook('applyFilter',function($f,$m){
+			if($f['marketing_category_id']){
+				$m->addCondition('marketing_category_id',$f['marketing_category_id']);
+			}
+		});
 		
+		$marketing_category->js('change',$frm->js()->submit());
+
 		$crud->grid->addHook('formatRow',function($g){
 			$model_attachment = $this->add('xepan\base\Model_Document_Attachment')->addCondition('document_id',$g->model->id);
     		$model_attachment->tryLoadAny();

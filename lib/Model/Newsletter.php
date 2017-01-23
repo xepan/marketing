@@ -18,7 +18,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			return $this->add('xepan\marketing\Model_LandingResponse')
 					->addCondition('content_id',$q->getField('id'))
 					->count();
-		});
+		})->sortable(true);
 		
 		$this->is([
 			'message_blog|required'

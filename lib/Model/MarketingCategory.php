@@ -20,6 +20,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		// $this->addExpression('leads_count')->set($this->refSQL('xepan\marketing\Lead_Category_Association')->count());
 		
 		$this->addCondition('type','MarketingCategory');
+		$this->addCondition('status','All');
 		
 		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
 

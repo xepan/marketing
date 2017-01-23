@@ -29,6 +29,14 @@ class page_lead extends \xepan\base\Page{
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
 
+		if($category_id = $this->app->stickyGet('category_id')){
+			$lead_assoc = $lead->join('lead_category_association.lead_id','id');
+			$lead_assoc->addField('lead_category_id','marketing_category_id');
+
+			$lead->addCondition('lead_category_id',$category_id);
+			$lead->_dsql()->group('lead_id');
+		}
+
 		if($status = $this->app->stickyGET('status'))
 			$lead->addCondition('status',$status);
 

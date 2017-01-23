@@ -9,7 +9,7 @@ class page_marketingcategory extends \xepan\base\Page{
 
 		$m = $this->add('xepan\marketing\Model_MarketingCategory');
 
-		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
+	$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
 
 		$crud->setModel($m,['name','status'],['name','leads_count','system','status']);
 	    $crud->grid->addQuickSearch(['name']);
@@ -22,6 +22,8 @@ class page_marketingcategory extends \xepan\base\Page{
 				$g->current_row_html['delete'] = ' ';
 			}
 		});
+		
+		$crud->grid->js('click')->_selector('.do-view-cat-lead')->univ()->frameURL('Lead',[$this->api->url('xepan_marketing_lead'),'category_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 	}
 
 

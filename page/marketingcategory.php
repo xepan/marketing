@@ -9,7 +9,7 @@ class page_marketingcategory extends \xepan\base\Page{
 
 		$m = $this->add('xepan\marketing\Model_MarketingCategory');
 
-	$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
+		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/category-grid']);
 
 		$crud->setModel($m,['name','status'],['name','leads_count','system','status']);
 	    $crud->grid->addQuickSearch(['name']);

@@ -5,6 +5,11 @@ class page_newsletter extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		if($this->app->stickyGET('compact_grid'))
+			$grid_template = ['grid/newslettercompact-grid'];
+		else
+			$grid_template = ['grid/newsletter-grid'];
+
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter');
 
 		$newsletter->addExpression('source_graph_data')->set(function($m,$q){
@@ -28,9 +33,16 @@ class page_newsletter extends \xepan\base\Page{
 				
 		$newsletter->add('xepan\marketing\Controller_SideBarStatusFilter');
 		$newsletter->addCondition('is_template',false);
-		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_newslettertemplate', 'edit_page'=>'xepan_marketing_newsletterdesign'],null,['grid/newsletter-grid']);
+
+		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_newslettertemplate', 'edit_page'=>'xepan_marketing_newsletterdesign'],null,$grid_template);
 		$crud->setModel($newsletter);
 		
+		$switch_btn = $crud->grid->addButton('Grid View')->addClass('btn btn-primary');
+
+		if($switch_btn->isClicked()){
+			$this->js(null,$crud->js()->reload(['compact_grid'=>true]))->univ()->successMessage('wait ...')->execute();
+		}
+
 		$frm=$crud->grid->addQuickSearch(['title','content_name']);
 
 		$vp = $this->add('VirtualPage');

@@ -19,7 +19,7 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><small>{$name}</small></td>
+          <td><small style="cursor:pointer; cursor:hand;" data-id="{$id}" class="newsletter-preview">{$name}</small></td>
           <td><small>{$title}</small></td>
           <td>{$total_sent}</td>
           <td><span data-id="{$id}" style="cursor:hand; cursor:pointer;" class="newsletter-visit-detail">{$total_visitor}</span></td>

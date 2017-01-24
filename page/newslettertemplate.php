@@ -25,7 +25,6 @@ class page_newslettertemplate extends \xepan\base\Page{
 					$templates[] = [ 'title'=> $template_name, 'description'=> '', 'content'=> $content];
 				}
 			}
-
 			echo json_encode($templates);
 			exit;
 		});
@@ -34,6 +33,19 @@ class page_newslettertemplate extends \xepan\base\Page{
 		$newsletter->addCondition('is_template',true);
 		$crud=$this->add('xepan\hr\CRUD',['entity_name'=>'Newsletter Template'],null,['grid/newslettertemplate-grid']);
 		$crud->setModel($newsletter,['content_name','title','message_blog','marketing_category_id']);
+		
+		$vp = $this->add('VirtualPage');
+		$vp->set(function($p){
+			$newsletter_model = $this->add('xepan\marketing\Model_Newsletter')->load($_GET['newsletter_id']);
+			
+			$nv = $p->add('View');
+			$nv->template->trySetHTML('Content',$newsletter_model['message_blog']);
+		});	
+
+
+		$this->on('click','.newsletter-preview',function($js,$data)use($vp){
+				return $js->univ()->dialogURL("NEWSLETTER PREVIEW",$this->api->url($vp->getURL(),['newsletter_id'=>$data['id']]));
+		});
 		
 		if($crud->isEditing()){
 			$field = $crud->form->getElement('message_blog');

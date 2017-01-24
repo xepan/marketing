@@ -18,7 +18,7 @@
                     .main-box-body.clearfix
                       .project-box-header.green-bg
                         .name
-                          a(href='#' style="text-overflow: ellipsis;white-space: nowrap; width: 12em; overflow: hidden;")
+                          a.newsletter-preview(href='#' style="text-overflow: ellipsis;white-space: nowrap; overflow: hidden;" data-id = "{$id}")
                             | {$content_name}
                       .project-box-content
                         iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px;-moz-transform-scale(0.5);" frameborder="0")  

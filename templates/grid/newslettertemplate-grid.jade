@@ -18,10 +18,10 @@
                     .main-box-body.clearfix
                       .project-box-header.green-bg
                         .name
-                          a(href='#')
+                          a(href='#' style="text-overflow: ellipsis;white-space: nowrap; width: 12em; overflow: hidden;")
                             | {$content_name}
                       .project-box-content
-                        iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px; -webkit-transform:scale(0.5);-moz-transform-scale(0.5);" frameborder="0")  
+                        iframe(src="index.php?page=xepan_marketing_newsletterpreview&cut_page=1&content_id={$id}" style=" height:300px;-moz-transform-scale(0.5);" frameborder="0")  
                       .project-box-ultrafooter.clearfix
                         .col-md-1
                         .col-md-5.pull-left

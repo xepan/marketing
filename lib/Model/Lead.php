@@ -6,8 +6,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	public $status = ['Active','InActive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate','communication','send','create_opportunity'],
-					'InActive'=>['view','edit','delete','activate','communication']
+					'Active'=>['view','edit','delete','deactivate','communication','send','create_opportunity','manage_score'],
+					'InActive'=>['view','edit','delete','activate','communication','manage_score']
 					];
 
 	public $assigable_by_field = 'assign_to_id';

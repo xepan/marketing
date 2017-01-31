@@ -172,8 +172,50 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'count'=>$opportunity_count,
  				];
 
+ 		$newsletter = $this->add('xepan\marketing\Model_Newsletter');
+		$newsletter->addCondition('created_at','>=',$start_date);
+		$newsletter->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$newsletter->addCondition('created_by_id',$emp);
+		$newsletter_count = $newsletter->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Newsletter',
+ 					'count'=>$newsletter_count,
+ 				];
+
+ 		$socialpost = $this->add('xepan\marketing\Model_SocialPost');
+		$socialpost->addCondition('created_at','>=',$start_date);
+		$socialpost->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$socialpost->addCondition('created_by_id',$emp);
+		$socialpost_count = $socialpost->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Social Post',
+ 					'count'=>$socialpost_count,
+ 				];
+
+		$sms = $this->add('xepan\marketing\Model_Sms');
+		$sms->addCondition('created_at','>=',$start_date);
+		$sms->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$sms->addCondition('created_by_id',$emp);
+		$sms_count = $sms->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'SMS',
+ 					'count'=>$sms_count,
+ 				];		
+
 		$cl = $report_view->add('CompleteLister',null,null,['view\marketingactivityreport']);
-		$cl->setSource($result_array);
+		$cl->setSource($result_array);		
 	}
 
 	function quickSearch($app,$search_string,&$result_array,$relevency_mode){

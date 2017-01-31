@@ -1,0 +1,26 @@
+.xepan-grid(id="{$_name}" class="{$class}")
+    div(style="width:100%; max-width:100%; margin-bottom:0px !important;")
+        {header}
+        {cols}{col}   
+        {/}{/}
+        {/}
+        {$subheader}
+        {rows}{row}
+        div(class="{$odd_even} row" data-id="{$id}" style="padding-top:5px;padding-bottom:5px;")
+            {cols}
+            .col-md-3
+              {$assign_to}
+            .col-md-2
+              {$from_date}
+            .col-md-2
+              {$to_date}
+            .col-md-2
+              {$type}
+            .col-md-3
+              {$count}
+            {/}
+        {/}{/}
+        {not_found}
+        {$not_found_message}
+        {/}
+    {$Paginator}

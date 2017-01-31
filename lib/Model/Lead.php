@@ -141,6 +141,41 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this['search_string'] = $search_string;
 	}
 
+	function activityReport($app,$report_view,$emp,$start_date,$end_date){		
+		$employee = $this->add('xepan\hr\Model_Employee')->load($emp);
+							  					  
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->addCondition('created_at','>=',$start_date);
+		$lead->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$lead->addCondition('created_by_id',$emp);
+		$lead_count = $lead->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Lead',
+ 					'count'=>$lead_count,
+ 				];
+
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('created_at','>=',$start_date);
+		$opportunity->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$opportunity->addCondition('created_by_id',$emp);
+		$opportunity_count = $opportunity->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Opportunity',
+ 					'count'=>$opportunity_count,
+ 				];
+
+		$cl = $report_view->add('CompleteLister',null,null,['view\marketingactivityreport']);
+		$cl->setSource($result_array);
+	}
+
 	function quickSearch($app,$search_string,&$result_array,$relevency_mode){
 		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$this->addCondition('Relevance','>',0);

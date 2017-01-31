@@ -214,6 +214,21 @@ class Model_Lead extends \xepan\base\Model_Contact{
  					'count'=>$sms_count,
  				];		
 
+ 		$telecommunication = $this->add('xepan\marketing\Model_TeleCommunication');
+		$telecommunication->addCondition('created_at','>=',$start_date);
+		$telecommunication->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$telecommunication->addCondition('created_by_id',$emp);
+		$telecommunication_count = $telecommunication->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'TeleCommunication',
+ 					'count'=>$telecommunication_count,
+ 				];		
+		
+
 		$cl = $report_view->add('CompleteLister',null,null,['view\marketingactivityreport']);
 		$cl->setSource($result_array);		
 	}

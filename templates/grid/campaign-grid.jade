@@ -15,10 +15,7 @@
             .main-box.clearfix.project-box(class="{$box}")
               .ribbon-wrapper-green(style= "cursor:pointer; cursor: hand; max-width:600px;")
                 .ribbon-green 
-                  {visitor_wrapper}
-                  span.campaign-visit-detail.small.text-muted(data-id = "{$id}" style="color:#ffffff;") {$total_visitor} Visits
-                  {/} 
-                  span.small.text-muted(data-id="{$id}" style="color:red;"){$defect} {$dummy_spot}
+                  span.small.text-muted(data-id="{$id}" style="color:white;"){$defect} {$dummy_spot}
               .main-box-body.clearfix
                 .project-box-header(class="{$bg}")
                   .name
@@ -36,9 +33,9 @@
                     .row    
                       span.text-success   {$total_combined_postings_done}   
                   a(href='#') 
-                    strong.text-success   Remaining   
+                    strong.text-success   Schedule Left  
                     .row
-                      span.text-success   {$total_remaining}   
+                      span.text-success   {$schedule_left} 
                   a(href='#') 
                     strong.text-success   Days Left   
                     .row

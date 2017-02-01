@@ -59,22 +59,17 @@ class page_campaign extends \xepan\base\Page{
 				 
 		$crud->grid->addHook('formatRow',function($g){						
 			if($g->model['remaining_duration'] <= 0){
-				$g->current_row_html['visitor_wrapper'] =' '; 	
 				$g->current_row_html['defect'] ='Expired'; 	
 			}elseif($g->model['has_schedule'] == false){
-				$g->current_row_html['visitor_wrapper'] =' '; 	
 				$g->current_row_html['defect'] ='Schedule?';
 			}elseif($g->model['content_not_approved'] == true){
-				$g->current_row_html['visitor_wrapper'] =' '; 	
 				$g->current_row_html['defect'] ='Approve Content';
 			}elseif($g->model['has_social_schedule'] == true And $g->model['socialuser_count'] == false){
-				$g->current_row_html['visitor_wrapper'] =' '; 	
 				$g->current_row_html['defect'] ='User?';
 			}elseif($g->model['has_newsletter_schedule'] == true And $g->model['category_count'] == false){
-				$g->current_row_html['visitor_wrapper'] =' '; 	
 				$g->current_row_html['defect'] ='Category?'; 	
 			}else{
-				$g->current_row_html['dummy_spot'] = ' '; 	
+				$g->current_row_html['defect'] = 'Visits : '.$g->model['total_visitor'];
 			}
 
 			if($g->model['status'] == 'Draft'){

@@ -51,6 +51,39 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 			return $m->dsql()->expr("DATEDIFF([0],'[1]')",[$m->getElement('ending_date'),$this->app->today]);
 		});
 
+		// Todays day [depending upon oldest lead joining day]
+		$this->addExpression('todays_day')->set(function($m,$q){			
+			$scheduleNewsletter = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters');
+			$scheduleNewsletter->addCondition('lead_campaing_id',$m->getElement('id'));
+			$scheduleNewsletter->setOrder('days_from_join','desc');
+			$scheduleNewsletter->setLimit(1);
+			return $scheduleNewsletter->fieldQuery('days_from_join');
+		});
+
+		$this->addExpression('calendar_schedule_left')->set(function($m,$q){
+			$schedule = $this->add('xepan\marketing\Model_Schedule');
+			$schedule->addCondition('campaign_id',$m->getElement('id'));
+			$schedule->addCondition('date','>=',$this->app->now);
+			return $schedule->count();
+		});
+
+		$this->addExpression('subscription_schedule_left')->set(function($m,$q){
+			$schedule = $this->add('xepan\marketing\Model_Schedule');
+			$schedule->addCondition('campaign_id',$m->getElement('id'));
+			$schedule->addCondition('day','>=',$m->getElement('todays_day'));
+			return $schedule->count();
+		});
+
+		$this->addExpression('schedule_left')->set(function($m,$q){
+			return $q->expr("IF([campaign_type] = 'campaign',[calendar_schedule_left],[subscription_schedule_left])",
+								[
+									'campaign_type' => $m->getElement('campaign_type'),
+									'calendar_schedule_left' => $m->getElement('calendar_schedule_left'),
+									'subscription_schedule_left' => $m->getElement('subscription_schedule_left')
+								]
+							);
+		});
+
 		// social posts posted
 		$this->addExpression('social_postings_posted_count')->set(function($m,$q){			
 			return $this->add('xepan\marketing\Model_SocialPosters_Base_SocialPosting')
@@ -77,6 +110,7 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 				$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters',['table_alias'=>'rem_c','pass_group_by'=>true]);
 				$leads->addCondition('sendable',true);
 				$leads->addCondition('campaign_status','Approved');
+				$leads->addCondition('lead_campaing_id',$m->getElement('id'));
 				$leads->addCondition('is_already_sent',0);
 				$leads->addCondition($q->expr('[0]',[$leads->getElement('lead_campaing_id')]),$q->getField('id'));
 				$leads->addCondition('document_type','Newsletter');

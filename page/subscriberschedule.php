@@ -10,8 +10,14 @@ class page_subscriberschedule extends \xepan\base\Page{
 		parent::init();
 
 		$campaign_id=$this->app->stickyGET('campaign_id');
-		$m=$this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
-		
+		$m = $this->add('xepan/marketing/Model_Campaign')->load($campaign_id);
+
+		// Setting oldest days from join
+		if($m['campaign_type'] == 'subscription'){
+			$this->template->trySet('day','['.'Todays Day : '.$m['todays_day'].']');
+		}
+
+
 		$content_view = $this->add('xepan/marketing/View_ScheduleContent',null,'MarketingContent');
 		$content_view->setModel('xepan/marketing/Content')->addCondition('status','Approved')->addCondition('is_template',false);
 

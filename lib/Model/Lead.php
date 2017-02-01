@@ -6,8 +6,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 	public $status = ['Active','InActive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate','communication','send','create_opportunity'],
-					'InActive'=>['view','edit','delete','activate','communication']
+					'Active'=>['view','edit','delete','deactivate','communication','send','create_opportunity','manage_score'],
+					'InActive'=>['view','edit','delete','activate','communication','manage_score']
 					];
 
 	public $assigable_by_field = 'assign_to_id';
@@ -139,6 +139,98 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$search_string .=" ". $this['website'];
 
 		$this['search_string'] = $search_string;
+	}
+
+	function activityReport($app,$report_view,$emp,$start_date,$end_date){		
+		$employee = $this->add('xepan\hr\Model_Employee')->load($emp);
+							  					  
+		$lead = $this->add('xepan\marketing\Model_Lead');
+		$lead->addCondition('created_at','>=',$start_date);
+		$lead->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$lead->addCondition('created_by_id',$emp);
+		$lead_count = $lead->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Lead',
+ 					'count'=>$lead_count,
+ 				];
+
+		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
+		$opportunity->addCondition('created_at','>=',$start_date);
+		$opportunity->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$opportunity->addCondition('created_by_id',$emp);
+		$opportunity_count = $opportunity->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Opportunity',
+ 					'count'=>$opportunity_count,
+ 				];
+
+ 		$newsletter = $this->add('xepan\marketing\Model_Newsletter');
+		$newsletter->addCondition('created_at','>=',$start_date);
+		$newsletter->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$newsletter->addCondition('created_by_id',$emp);
+		$newsletter_count = $newsletter->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Newsletter',
+ 					'count'=>$newsletter_count,
+ 				];
+
+ 		$socialpost = $this->add('xepan\marketing\Model_SocialPost');
+		$socialpost->addCondition('created_at','>=',$start_date);
+		$socialpost->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$socialpost->addCondition('created_by_id',$emp);
+		$socialpost_count = $socialpost->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'Social Post',
+ 					'count'=>$socialpost_count,
+ 				];
+
+		$sms = $this->add('xepan\marketing\Model_Sms');
+		$sms->addCondition('created_at','>=',$start_date);
+		$sms->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$sms->addCondition('created_by_id',$emp);
+		$sms_count = $sms->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'SMS',
+ 					'count'=>$sms_count,
+ 				];		
+
+ 		$telecommunication = $this->add('xepan\marketing\Model_TeleCommunication');
+		$telecommunication->addCondition('created_at','>=',$start_date);
+		$telecommunication->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		$telecommunication->addCondition('created_by_id',$emp);
+		$telecommunication_count = $telecommunication->count()->getOne();
+		
+		$result_array[] = [
+ 					'assign_to'=>$employee['name'],
+ 					'from_date'=>$start_date,
+ 					'to_date'=>$end_date,
+ 					'type'=> 'TeleCommunication',
+ 					'count'=>$telecommunication_count,
+ 				];		
+		
+
+		$cl = $report_view->add('CompleteLister',null,null,['view\marketingactivityreport']);
+		$cl->setSource($result_array);		
 	}
 
 	function quickSearch($app,$search_string,&$result_array,$relevency_mode){

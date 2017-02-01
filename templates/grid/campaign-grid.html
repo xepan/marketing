@@ -14,10 +14,7 @@
     <div data-id="{$id}" class="{$odd_even} col-md-{col-width}4{/}">{cols}
       <div class="main-box clearfix project-box {$box}">
         <div style="cursor:pointer; cursor: hand; max-width:600px;" class="ribbon-wrapper-green">
-          <div class="ribbon-green">
-             
-            {visitor_wrapper}<span data-id="{$id}" style="color:#ffffff;" class="campaign-visit-detail small text-muted">{$total_visitor} Visits</span>{/} <span data-id="{$id}" style="color:red;" class="small text-muted">{$defect} {$dummy_spot}</span>
-          </div>
+          <div class="ribbon-green"> <span data-id="{$id}" style="color:white;" class="small text-muted campaign-visit-detail">{$defect} {$dummy_spot}</span></div>
         </div>
         <div class="main-box-body clearfix">
           <div class="project-box-header {$bg}">
@@ -25,8 +22,8 @@
           </div>
           <div class="project-box-content"><span data-percent="{completed_percentage}0{/}" class="chart"><span class="percent"></span>% <br/><span class="lbl">completed</span></span></div>
           <div class="project-box-footer clearfix"><a href="#"> <strong class="text-success">  Sent</strong>
-              <div class="row">   <span class="text-success">  {$total_combined_postings_done}   </span></div></a><a href="#"> <strong class="text-success">  Remaining   </strong>
-              <div class="row"><span class="text-success">  {$total_remaining}   </span></div></a><a href="#"> <strong class="text-success">  Days Left   </strong>
+              <div class="row">   <span class="text-success">  {$total_combined_postings_done}   </span></div></a><a href="#"> <strong class="text-success">  Schedule Left  </strong>
+              <div class="row"><span class="text-success">  {$schedule_left} </span></div></a><a href="#"> <strong class="text-success">  Days Left   </strong>
               <div class="row"><span class="text-success">  {$remaining_duration}   </span></div></a></div>
           <div class="project-box-ultrafooter clearfix">
             <div class="col-md-4">{$action}</div>

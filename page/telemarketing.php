@@ -92,10 +92,10 @@ class page_telemarketing extends \xepan\base\Page{
 			$model_communication->addCondition('communication_type',explode(",", $_GET['comm_type']));
 		}
 		
-		if($this->app->stickyGET('view_telecommunication')){
-			$model_communication->addCondition('communication_type','TeleMarketing');
-			
-		}
+		// IN CASE YOU WANT TO SHOW ONLY TELEMARKETING COMMUNICATION, UNCOMMENT THIS LINE 
+		// if($this->app->stickyGET('view_telecommunication')){
+		// 	$model_communication->addCondition('communication_type','TeleMarketing');
+		// }
 
 		if($search = $this->app->stickyGET('search')){			
 			$model_communication->addExpression('Relevance')->set('MATCH(title,description,communication_type) AGAINST ("'.$search.'")');
@@ -107,7 +107,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_conversation->add('Paginator',['ipp'=>10]);
 
 		
-		$temp = ['TeleMarketing'];
+		$temp = ['TeleMarketing','Email','Support','Call','Newsletter','SMS','Personal'];
 		$type_field->set($_GET['comm_type']?explode(",", $_GET['comm_type']):$temp)->js(true)->trigger('changed');
 		
 		/*
@@ -119,8 +119,7 @@ class page_telemarketing extends \xepan\base\Page{
 			$view_teleform->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
 			])->_selector('.tele-lead');
 		
-		if($contact_id){						
-			
+		if($contact_id){					
 			// submitting filter form
 			if($form->isSubmitted() AND $contact_id){												
 				$view_conversation->js()->reload(['comm_type'=>$form['communication_type'],'search'=>$form['search']])->execute();

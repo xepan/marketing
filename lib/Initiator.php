@@ -60,6 +60,7 @@ class Initiator extends \Controller_Addon {
         $this->app->status_icon["xepan\marketing\Model_Campaign"] = ['All'=>'fa fa-globe','Draft'=>"fa fa-sticky-note-o ",'Submitted'=>'fa fa-check-square-o text-primary','Redesign'=>'fa fa-refresh ','Approved'=>'fa fa-thumbs-up text-success','Onhold'=>'fa fa-pause text-warning'];
 		$search_lead = $this->add('xepan\marketing\Model_Lead');
 		$this->app->addHook('quick_searched',[$search_lead,'quickSearch']);
+		$this->app->addHook('activity_report',[$search_lead,'activityReport']);
 		$this->app->addHook('contact_save',[$this,'contactSave']);
 		$this->app->addHook('widget_collection',[$this,'exportWidgets']);
 		$this->app->addHook('entity_collection',[$this,'exportEntities']);

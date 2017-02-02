@@ -9,8 +9,9 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
 
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('employee');
-
-		$this->chart = $this->add('xepan\base\View_Chart');
+		if($this->isChart())
+			$this->chart = $this->add('xepan\base\View_Chart');
+		
 	}
 
 	function recursiveRender(){	
@@ -53,12 +54,18 @@ class Widget_SaleStaffCommunication extends \xepan\base\Widget {
 		$model->addCondition([['Email','>',0],['Call','>',0],['Meeting','>',0]]);
 		$model->addCondition('status','Active');
 
-     	$this->chart->setType('bar')
-     				->setModel($model,'name',['Email','Call','Meeting'])
-     				->setGroup(['Email','Call','Meeting'])
- 					->setTitle('Sales Staff Communication')
-     				->rotateAxis()
-     				->openOnClick('xepan_marketing_widget_salesstaffcommunication');
+		if($this->isChart()){
+
+	     	$this->chart->setType('bar')
+	     				->setModel($model,'name',['Email','Call','Meeting'])
+	     				->setGroup(['Email','Call','Meeting'])
+	 					->setTitle('Sales Staff Communication')
+	     				->rotateAxis()
+	     				->openOnClick('xepan_marketing_widget_salesstaffcommunication');
+		}else{
+			$this->add('Grid')->setModel($model,['name','Email']);
+		}
+
 
 		return parent::recursiveRender();
 	}

@@ -288,7 +288,7 @@ class page_lead extends \xepan\base\Page{
 				foreach ($unique_emails as $host => $emails) {
 					foreach ($emails as $em) {
 						if(!in_array($em, $already_in_database_emails)) {
-							echo "creating lead for $em <br/>";
+							// echo "creating lead for $em <br/>";
 							$this->createLead($em,$host, $category_array);
 						}
 					}

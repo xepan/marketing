@@ -279,8 +279,8 @@ class page_lead extends \xepan\base\Page{
 					}
 				}
 
-				echo "already in database emails <br/>";
-				var_dump($already_in_database_emails);
+				// echo "already in database emails <br/>";
+				// var_dump($already_in_database_emails);
 
 				foreach ($unique_emails as $host => $emails) {
 					foreach ($emails as $em) {
@@ -292,7 +292,7 @@ class page_lead extends \xepan\base\Page{
 
 				}
 
-				echo "<br/>".implode("<br/>", $this->insert_sql) ."<br/>";
+				// echo "<br/>".implode("<br/>", $this->insert_sql) ."<br/>";
 				$this->app->db->dsql()->expr(implode("", $this->insert_sql))->execute();
 				$this->api->db->commit();
 	        }catch(Exception $e){
@@ -300,12 +300,12 @@ class page_lead extends \xepan\base\Page{
 	            throw $e;
 	        }
 
-			// $js=[
-			// 		$f->js()->closest('.dialog')->dialog('close'),
-			// 		$this->js()->_selector('.grab-lead-grid')->trigger('reload')
-			// 	];
+			$js=[
+					$f->js()->closest('.dialog')->dialog('close'),
+					$this->js()->_selector('.grab-lead-grid')->trigger('reload')
+				];
 
-			// $f->js(null,$js)->univ()->successMessage('Leads Grabbed')->execute();
+			$f->js(null,$js)->univ()->successMessage('Leads Grabbed')->execute();
 		}
 
 	}

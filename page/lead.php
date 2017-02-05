@@ -263,8 +263,11 @@ class page_lead extends \xepan\base\Page{
 				$this->insert_sql =[];
 
 				foreach ($unique_emails as $host => $emails) {
-					$all_emails += $emails;
+					$all_emails = array_merge($all_emails,$emails);
 				}
+
+				// echo "So all emails to be check are as follows <br/>";
+				// var_dump($all_emails);
 
 				$existing_email=$this->add('xepan\base\Model_Contact_Email');
 				$existing_email->addCondition('value',$all_emails);

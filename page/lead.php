@@ -235,7 +235,8 @@ class page_lead extends \xepan\base\Page{
 		// $tyop->js('change',$url_select->js()->reload(['type_of_pages'=>$tyop->js()->val()]));
 	
 		if($f->isSubmitted()){
-			$category = $f['categories'];			
+			$category = $f['categories'];
+			$category_array = explode(",", $category);			
 
 			$this->grab('http://searchpage.null/root',$f['html_code'],$f['url_selector']);
 			$unique_emails=[];
@@ -253,16 +254,58 @@ class page_lead extends \xepan\base\Page{
 				}
 			}
 
-			foreach ($unique_emails as $host => $emails) {
-				$this->createLeads($emails,$host,$category);
-			}
+			$this->api->db->beginTransaction();
+			try {
 
-			$js=[
-					$f->js()->closest('.dialog')->dialog('close'),
-					$this->js()->_selector('.grab-lead-grid')->trigger('reload')
-				];
+				// get all emails and find existing leads first here
+				// get all existing contact emails with their lead id
+				$all_emails = [];
+				$this->insert_sql =[];
 
-			$f->js(null,$js)->univ()->successMessage('Leads Grabbed')->execute();
+				foreach ($unique_emails as $host => $emails) {
+					$all_emails += $emails;
+				}
+
+				$existing_email=$this->add('xepan\base\Model_Contact_Email');
+				$existing_email->addCondition('value',$all_emails);
+				$existing_lead_data = $existing_email->getRows();
+
+				$already_in_database_emails = [];
+				foreach ($existing_lead_data as $dt) {
+					$contact_id = $dt['contact_id'];
+					$already_in_database_emails [] = $dt['value'];
+					foreach ($category_array as $cat_id) {
+						$this->insert_sql [] = "INSERT IGNORE INTO lead_category_association (id, lead_id, marketing_category_id, created_at) VALUES (0,$contact_id,$cat_id,'".$this->app->now."'); ";
+					}
+				}
+
+				echo "already in database emails <br/>";
+				var_dump($already_in_database_emails);
+
+				foreach ($unique_emails as $host => $emails) {
+					foreach ($emails as $em) {
+						if(!in_array($em, $already_in_database_emails)) {
+							echo "creating lead for $em <br/>";
+							$this->createLead($em,$host, $category_array);
+						}
+					}
+
+				}
+
+				echo "<br/>".implode("<br/>", $this->insert_sql) ."<br/>";
+				$this->app->db->dsql()->expr(implode("", $this->insert_sql))->execute();
+				$this->api->db->commit();
+	        }catch(Exception $e){
+	            $this->api->db->rollback();
+	            throw $e;
+	        }
+
+			// $js=[
+			// 		$f->js()->closest('.dialog')->dialog('close'),
+			// 		$this->js()->_selector('.grab-lead-grid')->trigger('reload')
+			// 	];
+
+			// $f->js(null,$js)->univ()->successMessage('Leads Grabbed')->execute();
 		}
 
 	}
@@ -430,53 +473,26 @@ class page_lead extends \xepan\base\Page{
 	}
 
 
-	function createLeads($emails,$url, $category){
-		$category_array = explode(',', $category);
-			
-				
-		foreach ($emails as  $email) {
-			$existing_email=$this->add('xepan\base\Model_Contact_Email');
-			$existing_email->addCondition('value',$email);
-			$existing_email->tryLoadAny();
-			try{
-				if(!$existing_email->loaded()){
-					$lead=$this->add('xepan\marketing\Model_Lead');
-					$email_parts = explode("@", $email);
-					$lead['first_name'] = $email_parts[0];
-					unset($email_parts[0]);
-					$lead['last_name'] = "@" . implode("", $email_parts);
-					$lead['website'] = $url;
-					$lead['source'] = 'Data Grabber';
-					$lead->save();
+	function createLead($email,$url, $category_array){
 
-					foreach ($category_array as $cat) {
-						$associate_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
-						$associate_m['lead_id'] = $lead->id;
-		     			$associate_m['marketing_category_id']= $cat;
-		     			$associate_m['created_at']= $this->app->now;
-			 			$associate_m->save();	
-					}
+		$company_info = $this->app->epan['name'];
+		$owner_code = substr($company_info, 0,3);
+		$code = $owner_code.'LEA';
 
-					$email_info=$this->add('xepan\base\Model_Contact_Email');
-					$email_info['contact_id']=$lead->id;
-					$email_info['head']="Official";
-					$email_info['value'] = $email;
-					$email_info->save();
-				}else{
-					foreach ($category_array as $cat) {	
-						$associate_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
-						$associate_m->addCondition('lead_id',$existing_email['contact_id']);
-		     			$associate_m->addCondition('marketing_category_id',$cat);
-		     			$associate_m->addCondition('created_at',$this->app->now);
-		     			$associate_m->tryLoadAny();
-		     			
-		     			if(!$associate_m->loaded())
-		 					$associate_m->save();	
-					}
-				}
-			}catch(\Exception $e){
-				// echo $email;
-			}			
+		$email_parts = explode("@", $email);
+		$first_name = $email_parts[0];
+		unset($email_parts[0]);
+		$last_name = "@" . implode("", $email_parts);
+		$website = $url;
+		$source = 'Data Grabber';
+
+		$search_string = $first_name." ".$last_name." ".$website." ".$source." ".$email;
+		$this->insert_sql [] = "INSERT INTO contact (id, first_name, last_name, type, website, source, created_at, updated_at,created_by_id,score,freelancer_type,search_string, status) VALUES (0,'$first_name','$last_name','Contact','$website','$source','".$this->app->now."','".$this->app->now."','".$this->app->employee->id."',0,'Not Applicable','$search_string','Active'); SET @last_lead_id = LAST_INSERT_ID();";
+		$this->insert_sql [] = "UPDATE contact set code = concat('$code',@last_lead_id) WHERE id = @last_lead_id;";
+		$this->insert_sql [] = "INSERT INTO contact_info (id, contact_id, head, value, is_active, is_valid, type) VALUES (0,@last_lead_id,'Official','$email',1,1,'Email');";
+		foreach ($category_array as $cat_id) {
+			$this->insert_sql[] = "INSERT IGNORE INTO lead_category_association (id, lead_id, marketing_category_id, created_at) VALUES (0,@last_lead_id,$cat_id,'".$this->app->now."'); ";
 		}
+
 	}
 }

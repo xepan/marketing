@@ -43,7 +43,7 @@ class page_newsletter extends \xepan\base\Page{
 			$this->js(null,$crud->js()->reload(['compact_grid'=>true]))->univ()->successMessage('wait ...')->execute();
 		}
 
-		$crud->grid->addPaginator('20');
+		$crud->grid->addPaginator('10');
 		$frm=$crud->grid->addQuickSearch(['title','content_name']);
 		
 		$marketing_category = $frm->addField('DropDown','marketing_category_id');

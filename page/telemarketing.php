@@ -15,11 +15,11 @@ class page_telemarketing extends \xepan\base\Page{
 			GRID FOR SHOWING ALL LEAD 
 		*/
 
-		$view_lead = $this->add('xepan\hr\Grid',null, 'side',['view\teleleadselector'])->addClass('view-lead-grid');
+		$view_lead = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
 		$view_lead->js('reload')->reload();
 
-		$view_lead->addHook('formatRow',function($g){
+		$view_lead->grid->addHook('formatRow',function($g){
  				$communication = $this->add('xepan\marketing\Model_TeleCommunication')
 									->addCondition('to_id',$g->model->id)
 									->setOrder('id','desc')
@@ -31,11 +31,11 @@ class page_telemarketing extends \xepan\base\Page{
 			}
  		});
 		
-		$view_lead->setModel($model_lead, ['priority','effective_name','type','city','contacts_str','emails_str','score']);
+		$view_lead->setModel($model_lead, ['priority','effective_name','type','city','contacts_str','emails_str','score','status']);
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
-		$view_lead->addPaginator(10);
+		$view_lead->grid->addPaginator(10);
 
-		$frm = $view_lead->addQuickSearch(['effective_name','contacts_str','emails_str','score']);
+		$frm = $view_lead->grid->addQuickSearch(['effective_name','contacts_str','emails_str','score']);
 
 		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');

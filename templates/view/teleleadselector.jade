@@ -3,6 +3,7 @@
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block( style="100%") 
             .form-group.pull-right.xepan-filter-form
+                span |{$grid_buttons}
                 span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
@@ -40,7 +41,7 @@
                         small.text-muted{$date}
                     td
                        {$priority}
-                    td {$contacts_str} 
+                    td {$contacts_str} &nbsp; &nbsp; {action}Action Here{/}
 
                     td {score}xyz{/}
                         a.tele-lead(href='' data-id="{$id}")

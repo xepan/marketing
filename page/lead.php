@@ -259,7 +259,7 @@ class page_lead extends \xepan\base\Page{
 
 				// get all emails and find existing leads first here
 				// get all existing contact emails with their lead id
-				$all_emails = [];
+				$all_emails = [0];
 				$this->insert_sql =[];
 
 				foreach ($unique_emails as $host => $emails) {

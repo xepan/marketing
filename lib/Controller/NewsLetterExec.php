@@ -80,6 +80,11 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 			// return;
 
+			if($this->debug){
+				$leads->debug()->tryLoadAny();
+				return;
+			}
+
 			$loop_count=1;
 			// // just for test :: $leads = $this->add('xepan\marketing\Model_Lead')->setLimit(10);
 			$done_contact_newsletter=[];

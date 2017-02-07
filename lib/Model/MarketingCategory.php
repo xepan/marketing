@@ -37,38 +37,59 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 	}
 
 	function page_merge_category($p){
-		$p->add('View')->set('Add leads in this catagory which are common in selected categories');
 		$marketing_category_m = $this->add('xepan\marketing\Model_MarketingCategory')
 									 ->addCondition('id','<>',$this->id);
 		$form = $p->add('Form');
+		$condition_field = $form->addField('xepan\base\DropDown','condition')->setValueList(['and'=>'Common (AND)','or'=>'Any (OR)']);
 		$category_field = $form->addField('xepan\base\DropDown','category','');
 	    $category_field->setModel($marketing_category_m);
 		$category_field->setEmptyText('Please select categories to merge');
 		$category_field->setAttr(['multiple'=>'multiple']);
+		$merge_field = $form->addField('checkbox','associate_orphans');
 		$form->addSubmit('Merge');
 		
 		if($form->isSubmitted()){
 			$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
-			
 			$category_array = explode(",", $form['category']);
-			if(count($category_array) == 1)
-				$form->displayError('category','Please select two or more categories');
-			
 			$lead_cat->addCondition('marketing_category_id',$category_array);
-			$lead_cat->_dsql()->having($lead_cat->dsql()->expr('(COUNT(DISTINCT([0])) = [1])',[$lead_cat->getElement('marketing_category_id'),count($category_array)]));
+			
+			if($form['condition'] === 'and'){
+				$lead_cat->_dsql()->having($lead_cat->dsql()->expr('(COUNT(DISTINCT([0])) = [1])',[$lead_cat->getElement('marketing_category_id'),count($category_array)]));
+			}
+			
 			$lead_cat->_dsql()->group('lead_id');
-
-			foreach ($lead_cat as $l) {
+			
+			foreach ($lead_cat as $l) {				
 				$lead_m = $this->add('xepan\marketing\Model_Lead');				
-				$lead_m->load($l['lead_id']);
+				$lead_m->tryLoad($l['lead_id']);
+				if($lead_m->loaded())
+					$lead_m->associateCategory($this->id);
+			}
 
-				$lead_m->associateCategory($this->id);
+			if($form['associate_orphans']){
+				$this->associate_orphans($this->id);	
 			}
 
 			$this->app->employee
 				->addActivity("Category '".$this['name']."' and ".$form['category']."' merged'", $this->id, null,null,null,"xepan_marketing_marketingcategory")
 				->notifyWhoCan('view,edit,delete','All');
 			return $p->js()->univ()->closeDialog();
+		}
+	}
+
+	function associate_orphans($cat_id){
+		$orphan_lead_m = $this->add('xepan\marketing\Model_Lead');
+		
+		$orphan_lead_m->addExpression('has_category')->set(function($m,$q){
+			$assoc = $this->add('xepan\marketing\Model_Lead_Category_Association');
+			$assoc->addCondition('lead_id',$m->getElement('id'));
+			return $assoc->count();	
+		})->type('boolean');
+
+		$orphan_lead_m->addCondition('has_category',false);
+
+		foreach ($orphan_lead_m as $orphan) {
+			$orphan->associateCategory($cat_id);	
 		}
 	}
 

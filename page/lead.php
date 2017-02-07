@@ -259,7 +259,7 @@ class page_lead extends \xepan\base\Page{
 
 				// get all emails and find existing leads first here
 				// get all existing contact emails with their lead id
-				$all_emails = [0];
+				$all_emails = [];
 				$this->insert_sql =[];
 
 				foreach ($unique_emails as $host => $emails) {
@@ -269,18 +269,21 @@ class page_lead extends \xepan\base\Page{
 				// echo "So all emails to be check are as follows <br/>";
 				// var_dump($all_emails);
 
-				$existing_email=$this->add('xepan\base\Model_Contact_Email');
-				$existing_email->addCondition('value',$all_emails);
-				$existing_lead_data = $existing_email->getRows();
+				if(count($all_emails)){
+					$existing_email=$this->add('xepan\base\Model_Contact_Email');
+					$existing_email->addCondition('value',$all_emails);
+					$existing_lead_data = $existing_email->getRows();
 
-				$already_in_database_emails = [];
-				foreach ($existing_lead_data as $dt) {
-					$contact_id = $dt['contact_id'];
-					$already_in_database_emails [] = $dt['value'];
-					foreach ($category_array as $cat_id) {
-						$this->insert_sql [] = "INSERT IGNORE INTO lead_category_association (id, lead_id, marketing_category_id, created_at) VALUES (0,$contact_id,$cat_id,'".$this->app->now."'); ";
+					$already_in_database_emails = [];
+					foreach ($existing_lead_data as $dt) {
+						$contact_id = $dt['contact_id'];
+						$already_in_database_emails [] = $dt['value'];
+						foreach ($category_array as $cat_id) {
+							$this->insert_sql [] = "INSERT IGNORE INTO lead_category_association (id, lead_id, marketing_category_id, created_at) VALUES (0,$contact_id,$cat_id,'".$this->app->now."'); ";
+						}
 					}
 				}
+
 
 				// echo "already in database emails <br/>";
 				// var_dump($already_in_database_emails);

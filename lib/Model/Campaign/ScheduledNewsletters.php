@@ -37,6 +37,10 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('last_communication')->destroy();
 		$leads->getElement('user')->destroy();
 		$leads->getElement('type')->destroy();
+		$leads->getElement('last_communication_date_from_lead')->destroy();
+		$leads->getElement('last_communication_date_from_company')->destroy();
+		$leads->getElement('days_ago')->destroy();
+		$leads->getElement('priority')->destroy();
 
 		// count active emails available
 		$leads->addExpression('active_valid_emails_count')->set(function($m,$q){

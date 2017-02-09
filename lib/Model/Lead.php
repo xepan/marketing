@@ -59,55 +59,55 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		/********************************************
 			PRIORITY EXPRESSIONS START
 		*********************************************/
-		// $this->addExpression('last_communication')->set(function($m,$q){
-		// 	$last_commu = $m->add('xepan\communication\Model_Communication');
-		// 	$last_commu->addCondition(
-		// 					$last_commu->dsql()->orExpr()
-		// 						->where('from_id',$q->getField('id'))
-		// 						->where('to_id',$q->getField('id'))
-		// 					)
-		// 				->setOrder('id','desc')
-		// 				->setLimit(1);
-		// 	return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
-		// });
+		$this->addExpression('last_communication')->set(function($m,$q){
+			$last_commu = $m->add('xepan\communication\Model_Communication');
+			$last_commu->addCondition(
+							$last_commu->dsql()->orExpr()
+								->where('from_id',$q->getField('id'))
+								->where('to_id',$q->getField('id'))
+							)
+						->setOrder('id','desc')
+						->setLimit(1);
+			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
+		});
 
 
-		// $this->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
-		// 	$landing_response = $m->add('xepan\marketing\Model_LandingResponse')
-		// 							->addCondition('contact_id',$m->getElement('id'))
-		// 							->setLimit(1)
-		// 							->setOrder('date','desc');
-		// 	return $q->expr("[0]",[$landing_response->fieldQuery('date')]);
-		// });
+		$this->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
+			$landing_response = $m->add('xepan\marketing\Model_LandingResponse')
+									->addCondition('contact_id',$m->getElement('id'))
+									->setLimit(1)
+									->setOrder('date','desc');
+			return $q->expr("[0]",[$landing_response->fieldQuery('date')]);
+		});
 
-		// $this->addExpression('last_communication_date_from_lead')->set(function($m,$q){
-		// 	$communication = $m->add('xepan\communication\Model_Communication')->addCondition('from_id',$m->getElement('id'))->addCondition('direction','In')->setLimit(1)->setOrder('created_at','desc');
-		// 	return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
-		// });
+		$this->addExpression('last_communication_date_from_lead')->set(function($m,$q){
+			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('from_id',$m->getElement('id'))->addCondition('direction','In')->setLimit(1)->setOrder('created_at','desc');
+			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
+		});
 
 
-		// $this->addExpression('last_communication_date_from_company')->set(function($m,$q){
-		// 	$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->getElement('id'))->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc');
-		// 	return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
-		// });
+		$this->addExpression('last_communication_date_from_company')->set(function($m,$q){
+			$communication = $m->add('xepan\communication\Model_Communication')->addCondition('to_id',$m->getElement('id'))->addCondition('direction','Out')->setLimit(1)->setOrder('created_at','desc');
+			return $q->expr("[0]",[$communication->fieldQuery('created_at')]);
+		});
 
 		// current date - max from last_landing_from_lead, last_communication_form_lead or last_communication_form_employee
-		// $this->addExpression('days_ago')->set(function($m,$q){
-		// 	return $q->expr("DATEDIFF([0], IFNULL(GREATEST([1],COALESCE([2],0),COALESCE([3],0)),[0]))",
-		// 						[
-		// 							'"'.$this->app->now.'"',
-		// 							$m->getElement('last_landing_response_date_from_lead'),
-		// 							$m->getElement('last_communication_date_from_lead'),
-		// 							$m->getElement('last_communication_date_from_company')
-		// 						]
-		// 				);
-		// });
+		$this->addExpression('days_ago')->set(function($m,$q){
+			return $q->expr("DATEDIFF([0], IFNULL(GREATEST([1],COALESCE([2],0),COALESCE([3],0)),[0]))",
+								[
+									'"'.$this->app->now.'"',
+									$m->getElement('last_landing_response_date_from_lead'),
+									$m->getElement('last_communication_date_from_lead'),
+									$m->getElement('last_communication_date_from_company')
+								]
+						);
+		});
 
 		// return days ago * score * k .// here k is constant
-		// $k = 1;
-		// $this->addExpression('priority')->set(function($m,$q)use($k){
-		// 	return $q->expr('[0] * [1] * [2]',[$m->getElement('days_ago'),$m->getElement('score'),$k]);
-		// })->sortable(true);
+		$k = 1;
+		$this->addExpression('priority')->set(function($m,$q)use($k){
+			return $q->expr('[0] * [1] * [2]',[$m->getElement('days_ago'),$m->getElement('score'),$k]);
+		})->sortable(true);
 		
 		/********************************************
 			PRIORITY EXPRESSIONS STOP

@@ -14,6 +14,14 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads = $this;
 
 		// DESTROYING UNNECESSERY FILEDS
+		$leads->getElement('effective_name')->destroy();
+		$leads->getElement('emails_str')->destroy();
+		$leads->getElement('unique_name')->destroy();
+		$leads->getElement('contacts_str')->destroy();
+		$leads->getElement('contacts_comma_seperated')->destroy();
+		$leads->getElement('scope')->destroy();
+
+
 		$leads->getElement('created_by_id')->destroy();
 		$leads->getElement('assign_to_id')->destroy();
 		$leads->getElement('country')->destroy();
@@ -27,10 +35,6 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('remark')->destroy();
 		$leads->getElement('freelancer_type')->destroy();
 		$leads->getElement('image')->destroy();
-		$leads->getElement('unique_name')->destroy();
-		$leads->getElement('contacts_comma_seperated')->destroy();
-		$leads->getElement('online_status')->destroy();
-		$leads->getElement('scope')->destroy();
 		$leads->getElement('open_count')->destroy();
 		$leads->getElement('converted_count')->destroy();
 		$leads->getElement('rejected_count')->destroy();
@@ -41,6 +45,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('last_communication_date_from_company')->destroy();
 		$leads->getElement('days_ago')->destroy();
 		$leads->getElement('priority')->destroy();
+		$leads->getElement('total_visitor')->destroy();
 
 		// count active emails available
 		$leads->addExpression('active_valid_emails_count')->set(function($m,$q){

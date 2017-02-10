@@ -72,16 +72,17 @@ class Controller_NewsLetterExec extends \AbstractController {
 		    *******************************************************************/
 			$leads->setLimit($total_send_limit);
 			
-			// $grid = $this->owner->add('Grid');
-			// $grid->setModel($leads,['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable','is_already_sent','document_type']);
-			// $grid->addFormatter('document','wrap');
-			// $grid->addFormatter('name','wrap');
-
-			// return;
 
 			if($this->debug){
-				$leads->debug()->tryLoadAny();
+				$grid = $this->owner->add('Grid');
+				$grid->setModel($leads->debug(),['name','campaign_title','document','schedule_date','days_from_join','last_sent_newsletter_date','last_sent_newsletter_from_schedule_row_days','campaign_status','content_status','sendable','is_already_sent','document_type']);
+				$grid->addFormatter('document','wrap');
+				$grid->addFormatter('name','wrap');
+
 				return;
+				// echo (string) $leads->debug()->_dsql();
+				// $leads->debug()->tryLoadAny();
+				// return;
 			}
 
 			$loop_count=1;

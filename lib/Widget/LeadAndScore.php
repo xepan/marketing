@@ -14,6 +14,7 @@ class Widget_LeadAndScore extends \xepan\base\Widget {
 
 	function recursiveRender(){
 		$model = $this->add('xepan\marketing\Model_Lead');
+		$model->addCondition('status','Active');
 		$model->addExpression('lead_count')->set('count(*)');
 		$model->addExpression('score_sum')->set(function($m,$q){
 			return $q->expr('IFNULL([0],0)',[$this->add('xepan\base\Model_PointSystem')->addCondition('contact_id',$q->getField('id'))->sum('score')]);

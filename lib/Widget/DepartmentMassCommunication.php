@@ -18,7 +18,6 @@ class Widget_DepartmentMassCommunication extends \xepan\base\Widget {
 		$this->end_date = $this->app->nextDate($this->report->end_date);
 		
 		$model = $this->add('xepan\hr\Model_Employee');
-		$model->addCondition('status','Active');
 
 		if(isset($this->report->department))
 			$model->addCondition('department_id',$this->report->department);

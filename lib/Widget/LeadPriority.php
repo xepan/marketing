@@ -11,6 +11,7 @@ class Widget_LeadPriority extends \xepan\base\Widget{
 
 	function recursiveRender(){
 		$lead_m = $this->add('xepan\marketing\Model_Lead');
+		$lead_m->addCondition('status','Active');
 		$lead_m->addCondition('score','>',0);
 		$lead_m->setOrder('last_communication_date_from_company','desc');
 		$lead_m->setOrder('last_communication_date_from_lead','desc');

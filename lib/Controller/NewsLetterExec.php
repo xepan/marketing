@@ -18,7 +18,6 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 	function init(){
 		parent::init();
-
 		// $this->app->today = '2016-09-12';
 		// $this->app->now = $this->app->today.' 00:00:00';
 

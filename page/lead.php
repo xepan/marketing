@@ -28,6 +28,11 @@ class page_lead extends \xepan\base\Page{
 		});
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
+		// $lead->getElement('days_ago')->destroy();
+		// $lead->getElement('last_communication')->destroy();
+		// $lead->getElement('last_landing_response_date_from_lead')->destroy();
+		// $lead->getElement('last_communication_date_from_lead')->destroy();
+		// $lead->getElement('last_communication_date_from_company')->destroy();
 
 		if($category_id = $this->app->stickyGet('category_id')){
 			$lead_assoc = $lead->join('lead_category_association.lead_id','id');
@@ -49,7 +54,7 @@ class page_lead extends \xepan\base\Page{
 		// $lead->setOrder('total_visitor','desc');
 
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['priority','emails_str','contacts_str','name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','last_communication','effective_name','code','organization','existing_associated_catagories'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['emails_str','contacts_str','name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_MultiDelete');
 
@@ -101,18 +106,18 @@ class page_lead extends \xepan\base\Page{
 		$source_type->setValueList(array_combine($source_array,$source_array));
 
 		$frm->addHook('applyFilter',function($f,$m){
-			// if($f['marketing_category_id']){
-			// 	$cat_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
-			// 	$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
-			// 	$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
-			// }
+			if($f['marketing_category_id']){
+				$cat_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
+				$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
+				$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
+			}
 			if($f['source_type']){
 				$m->addCondition('source',$f['source_type']);
 			}
 		});
 		
-		$category_filter_field->js('change',$grid->js()->reload(null,null,[$this->app->url('.'),'category_id'=>$category_filter_field->js()->val()]));
-		// $category_filter_field->js('change',$frm->js()->submit());
+		// $category_filter_field->js('change',$grid->js()->reload(null,null,[$this->app->url('.'),'category_id'=>$category_filter_field->js()->val()]));
+		$category_filter_field->js('change',$frm->js()->submit());
 		$source_type->js('change',$frm->js()->submit());
 
 

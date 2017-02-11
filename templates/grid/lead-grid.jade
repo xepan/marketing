@@ -26,8 +26,6 @@
                     span Score {$score_sort}
                 th
                     span Visits
-                th(id="{$priority_sortid}")
-                    span Priority {$priority_sort}
                 th 
                 {/}{/}
             {/}
@@ -62,8 +60,6 @@
                     td
                         a.do-view-lead-visitor(href="#" data-id="{$id}")
                             span.alert.alert-success{$total_visitor}
-                    td
-                        span.alert.alert-success {$priority}
                     td
                         {$action}
                     td(style="width: 15%;")

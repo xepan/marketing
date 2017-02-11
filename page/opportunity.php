@@ -27,6 +27,20 @@ class page_opportunity extends \xepan\base\Page{
 			$lead->addCondition('id',$m->getElement('lead_id'));
 			$lead->setLimit(1);
 			return $lead->fieldQuery('last_communication');
+		});
+
+		$opportunity->addExpression('city')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Lead')
+						->addCondition('id',$m->getElement('lead_id'))
+						->setLimit(1)
+						->fieldQuery('city');
+		});	
+
+		$opportunity->addExpression('country')->set(function($m,$q){
+			return $this->add('xepan\marketing\Model_Lead')
+						->addCondition('id',$m->getElement('lead_id'))
+						->setLimit(1)
+						->fieldQuery('country');
 		});	
 
 		$watchable = $this->app->stickyGET('watchable');
@@ -47,7 +61,7 @@ class page_opportunity extends \xepan\base\Page{
 			$crud->form->setLayout('form\opportunity');
 		}	
 
-		$crud->setModel($opportunity,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date']);
+		$crud->setModel($opportunity,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date','city','country'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date','city','country']);
 		$crud->grid->addPaginator(10);		
 		$crud->add('xepan\base\Controller_MultiDelete');		
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);

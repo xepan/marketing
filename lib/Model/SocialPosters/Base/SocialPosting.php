@@ -61,7 +61,7 @@ class Model_SocialPosters_Base_SocialPosting extends \xepan\base\Model_Table{
 
 		$this->hasMany('xepan/marketing/SocialPosters_Base_SocialActivity','posting_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function keep_monitoring(){

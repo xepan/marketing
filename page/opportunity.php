@@ -67,7 +67,7 @@ class page_opportunity extends \xepan\base\Page{
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
 		
 		$f = $crud->grid->addQuickSearch(['lead','title','description',$x,'city','country']);
-		$dropdown = $f->addField('dropdown','status')->setValueList(['Open'=>'Open','Converted'=>'Converted','Rejected'=>'Rejected'])->setEmptyText('Status');
+		$dropdown = $f->addField('dropdown','status')->setValueList(['Open'=>'Open','Qualified'=>'Qualified','NeedsAnalysis'=>'NeedsAnalysis','Quoted'=>'Quoted','Negotiated'=>'Negotiated','Won'=>'Won','Lost'=>'Lost'])->setEmptyText('Status');
 		$dropdown->js('change',$f->js()->submit());
 
 		if(!$crud->isEditing()){

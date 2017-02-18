@@ -39,7 +39,7 @@ class page_socialcontent extends \xepan\base\Page{
 		
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addsocialpost'],null,['grid/social-grid']);
 		$crud->setModel($social);
-		$crud->grid->addPaginator('20');
+		$crud->grid->addPaginator('10');
 		
 		$frm=$crud->grid->addQuickSearch(['title']);
 

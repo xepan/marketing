@@ -6,7 +6,7 @@ class Widget_LeadPriority extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
-		$this->grid = $this->add('xepan\hr\Grid');
+		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\lead-priority']);
 	}
 
 	function recursiveRender(){
@@ -20,6 +20,7 @@ class Widget_LeadPriority extends \xepan\base\Widget{
 		$lead_m->setOrder('priority','desc');
 		$lead_m->setLimit(10);
 
+		$this->grid->template->trySet('form_buttons','Hi');
 		$this->grid->setModel($lead_m,['name','last_communication_date_from_company','days_ago','priority']);
 
 		return parent::recursiveRender();

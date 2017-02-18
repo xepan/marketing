@@ -21,8 +21,8 @@ class page_widget_daybydaycommunication extends \xepan\base\Page{
 		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id]);
 
 		$model_communication = $this->add('xepan\communication\Model_Communication');
-		$model_communication->addCondition('created_at','>',$start_date);
-		$model_communication->addCondition('created_at','<',$this->app->nextDate($end_date));
+		$model_communication->addCondition('created_at','>=',$start_date);
+		$model_communication->addCondition('created_at','<=',$this->app->nextDate($end_date));
 		$model_communication->addCondition([['from_id',$contact_id],['to_id',$contact_id]]);
 
 		if($type =='Meeting')

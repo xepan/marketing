@@ -40,10 +40,10 @@ class page_widget_salesstaffstatus extends \xepan\base\Page{
 			return $lead->fieldQuery('last_communication');
 		});	
 
-		$opportunity->addCondition('status',$status);
-		$opportunity->addCondition('created_by_id',$employee_id);
-		$opportunity->addCondition('created_at','>=',$start_date);
-		$opportunity->addCondition('created_at','<=',$this->app->nextDate($end_date));
+		// $opportunity->addCondition('status',$status);
+		// $opportunity->addCondition('created_by_id',$employee_id);
+		// $opportunity->addCondition('created_at','>=',$start_date);
+		// $opportunity->addCondition('created_at','<=',$this->app->nextDate($end_date));
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['page/widget/opportunity-grid']);
 		

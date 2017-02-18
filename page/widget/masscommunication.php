@@ -11,7 +11,7 @@ class page_widget_masscommunication extends \xepan\base\Page{
 		$details = json_decode($details,true);
 		$start_date = $this->app->stickyGET('start_date');
 		$end_date = $this->app->stickyGET('end_date');
-		
+
 		$model_employee = $this->add('xepan\hr\Model_Employee');
 		$model_employee->loadBy('name',$x_axis);
 		$contact_id	 = $model_employee->id;	
@@ -21,8 +21,8 @@ class page_widget_masscommunication extends \xepan\base\Page{
 		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id]);
 
 		$model_communication = $this->add('xepan\communication\Model_Communication');
-		$model_communication->addCondition('created_at','>',$start_date);
-		$model_communication->addCondition('created_at','<',$this->app->nextDate($end_date));
+		$model_communication->addCondition('created_at','>=',$start_date);
+		$model_communication->addCondition('created_at','<=',$this->app->nextDate($end_date));
 		$model_communication->addCondition([['from_id',$contact_id],['to_id',$contact_id]]);
 		$model_communication->addCondition('communication_type',$type);
 		

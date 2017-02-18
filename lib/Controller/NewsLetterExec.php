@@ -21,6 +21,8 @@ class Controller_NewsLetterExec extends \AbstractController {
 		// $this->app->today = '2016-09-12';
 		// $this->app->now = $this->app->today.' 00:00:00';
 
+		$this->app->skipActivityCreate = true;
+
 		$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters');
 
 		$leads->addCondition('sendable',true);

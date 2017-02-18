@@ -41,7 +41,7 @@ class page_widget_salesstaffstatus extends \xepan\base\Page{
 		});	
 
 		$opportunity->addCondition('status',$status);
-		// $opportunity->addCondition('created_by_id',$employee_id);
+		$opportunity->addCondition('created_by_id',$employee_id);
 		$opportunity->addCondition('created_at','>=',$start_date);
 		$opportunity->addCondition('created_at','<=',$this->app->nextDate($end_date));
 

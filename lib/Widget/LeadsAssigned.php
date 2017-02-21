@@ -10,7 +10,8 @@ class Widget_LeadsAssigned extends \xepan\base\Widget {
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('employee');
 		$this->grid = $this->add('xepan\hr\Grid');
-
+		$this->grid->add('View',null,'grid_buttons')->setHtml('<b>Lead Assigned</b>');
+		$this->grid->removeSearchIcon();
 	}
 
 	function recursiveRender(){

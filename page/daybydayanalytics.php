@@ -12,7 +12,7 @@ class page_daybydayanalytics extends \xepan\base\Page{
         parent::init();
         
         $rpt = $this->add('xepan\base\Model_GraphicalReport');
-        $rpt->tryLoadBy('name','DayByDayAnalytics'); 
+        $rpt->tryLoadBy('name','MarketingReport'); 
         
         $runner_view = $this->add('xepan\hr\View_GraphicalReport_Runner',['report_id'=>$rpt->id]);   
     }

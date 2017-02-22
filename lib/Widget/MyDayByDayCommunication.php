@@ -25,6 +25,8 @@ class Widget_MyDayByDayCommunication extends \xepan\base\Widget {
 		else
 			$communication_graph->addCondition('created_at','<=',$this->app->nextDate($this->app->today));
 		
+		$communication_graph->addCondition('created_by_id',$this->app->employee->id);
+		
 		$communication_graph->addCondition('status','<>','Outbox');
 		$communication_graph->setOrder('date','asc')
 							->_dsql()->group(['communication_type',$communication_graph->_dsql()->expr('[0]',[$communication_graph->getElement('date')])]);

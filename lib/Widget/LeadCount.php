@@ -23,10 +23,10 @@ class Widget_LeadCount extends \xepan\base\Widget{
 		if(isset($this->report->start_date))
 			$lead_created_m->addCondition('created_at','<=',$this->app->nextDate($this->report->start_date));
 		else
-			$lead_created_m->addCondition('created_at','>=',$this->app->today);
-		
+			$lead_created_m->addCondition('created_at','>=',$this->app->today);	
 
 		$lead_assigned_m = clone($lead_created_m);
+		$lead_assigned_m->addCondition('assign_to_id','<>',null);
 
 		if(isset($this->report->employee)){
 			$lead_created_m->addCondition('created_by_id',$this->report->employee);

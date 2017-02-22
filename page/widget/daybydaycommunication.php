@@ -9,13 +9,17 @@ class page_widget_daybydaycommunication extends \xepan\base\Page{
 		$x_axis = $this->app->stickyGet('x_axis');
 		$details = $this->app->stickyGet('details');
 		$details = json_decode($details,true);
-		$start_date = $this->app->stickyGet('start_date');
-		$end_date = $this->app->stickyGet('end_date');
-		
+		$start_date = $this->app->stickyGet('x_axis')?:$this->app->today;
+		$end_date = $this->app->stickyGet('x_axis')?:$this->app->today;
+				
 		$model_employee = $this->add('xepan\hr\Model_Employee');
-		$model_employee->loadBy('name',$x_axis);
-		$contact_id	 = $model_employee->id;	
+		
+		if($_GET['employee'])
+			$model_employee->load($_GET['employee']);
+		else
+			$model_employee->load($this->app->employee->id);
 
+		$contact_id	 = $model_employee->id;	
 		$type = $details['name'];
 		
 		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id]);

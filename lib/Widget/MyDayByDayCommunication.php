@@ -46,7 +46,8 @@ class Widget_MyDayByDayCommunication extends \xepan\base\Widget {
 	 		->setXAxis('date')
 	 		->setYAxises(['Email','Newsletter','Call','Personal','Comment','TeleMarketing'])
 	 		->addClass('col-md-12')
-	 		->setTitle('Communication');
+	 		->setTitle('Communication')
+	 		->openOnClick('xepan_marketing_widget_daybydaycommunication');
 
 		return parent::recursiveRender();
 	}

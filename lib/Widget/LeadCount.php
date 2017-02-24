@@ -13,19 +13,17 @@ class Widget_LeadCount extends \xepan\base\Widget{
 	}
 
 	function recursiveRender(){
+		$start_date = isset($this->report->start_date)?$this->report->start_date:$this->app->today;
+		$end_date =  isset($this->report->end_date)?$this->report->end_date:$this->app->today;
+		
 		$lead_created_m = $this->add('xepan\marketing\Model_Lead');
+		$lead_assigned_m = $this->add('xepan\marketing\Model_Lead');
 
-		if(isset($this->report->start_date))
-			$lead_created_m->addCondition('created_at','>=',$this->report->start_date);
-		else
-			$lead_created_m->addCondition('created_at','>=',$this->app->today);
+		$lead_created_m->addCondition('created_at','>=',$start_date);
+		$lead_created_m->addCondition('created_at','<=',$this->app->nextDate($end_date));
 
-		if(isset($this->report->start_date))
-			$lead_created_m->addCondition('created_at','<=',$this->app->nextDate($this->report->start_date));
-		else
-			$lead_created_m->addCondition('created_at','>=',$this->app->today);	
-
-		$lead_assigned_m = clone($lead_created_m);
+		$lead_assigned_m->addCondition('created_at','>=',$start_date);
+		$lead_assigned_m->addCondition('created_at','<=',$this->app->nextDate($end_date));
 		$lead_assigned_m->addCondition('assign_to_id','<>',null);
 
 		if(isset($this->report->employee)){

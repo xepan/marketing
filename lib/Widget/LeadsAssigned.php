@@ -9,7 +9,7 @@ class Widget_LeadsAssigned extends \xepan\base\Widget {
 
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('employee');
-		$this->grid = $this->add('xepan\hr\Grid');
+		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\leads-assigned']);
 		$this->grid->add('View',null,'grid_buttons')->setHtml('<b>Lead Assigned</b>');
 		$this->grid->removeSearchIcon();
 	}
@@ -32,7 +32,9 @@ class Widget_LeadsAssigned extends \xepan\base\Widget {
 			$lead_m->addCondition('assign_to_id',$this->report->employee);
 
 		$this->grid->setModel($lead_m,['name','created_by','assign_to','source']);
-		$this->grid->addPaginator(20);
+		$this->grid->addPaginator(10);
+
+		$this->grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 
 		return parent::recursiveRender();
 	}

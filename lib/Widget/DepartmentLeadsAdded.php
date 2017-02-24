@@ -18,6 +18,10 @@ class Widget_DepartmentLeadsAdded extends \xepan\base\Widget{
 		$end_date =  isset($this->report->end_date)?$this->report->end_date:$this->app->today;
 
 		$department_m = $this->add('xepan\hr\Model_Department');
+		
+		if(isset($this->report->department))
+			$department_m->addCondition('id',$this->report->department);
+
 		$department_m->addExpression('lead_count')->set(function($m,$q) use($start_date,$end_date){
 			$emp_m = $this->add('xepan\hr\Model_Employee');
 			$emp_lead_j = $emp_m->join('contact.created_by_id','id');

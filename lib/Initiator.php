@@ -48,7 +48,7 @@ class Initiator extends \Controller_Addon {
 		$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));
 		$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']));
 		$m->addItem(['Schedule Timeline','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_scheduletimeline'));
-		$m->addItem(['Day by Day Analytics','icon'=>'fa fa-graph'],$this->app->url('xepan_marketing_daybydayanalytics'));
+		$m->addItem(['Day by Day Analytics','icon'=>'fa fa bar-chart-o'],$this->app->url('xepan_marketing_daybydayanalytics'));
 		// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 		$m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 		

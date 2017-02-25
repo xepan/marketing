@@ -365,7 +365,7 @@ class page_leaddetails extends \xepan\base\Page {
 				'fields'=>[
 							'email_duplication_allowed'=>'DropDown'
 							],
-					'config_key'=>'Email Duplication Allowed Settings',
+					'config_key'=>'Email_Duplication_Allowed_Settings',
 					'application'=>'base'
 			]);
 		$emailconfig_m->tryLoadAny();

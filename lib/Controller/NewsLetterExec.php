@@ -26,14 +26,17 @@ class Controller_NewsLetterExec extends \AbstractController {
 		}
 
 		$this->app->skipActivityCreate = true;
-
+		
 		$leads = $this->add('xepan\marketing\Model_Campaign_ScheduledNewsletters');
 
 		$leads->addCondition('sendable',true);
 		$leads->addCondition('campaign_status','Approved');
 		$leads->addCondition('content_status','Approved');
-		$leads->addCondition('is_already_sent',0);
 		$leads->addCondition('document_type','Newsletter');
+		$leads->addCondition('is_already_sent',false);
+		
+		
+		
 
 		// throw new \Exception($leads->count()->getOne());
 		// $this->owner->add('Grid')->setModel($leads,['name']);	
@@ -153,9 +156,11 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 				$email_str = implode(',',$emails);
 
+				
 				$model_communication_newsletter['to_id'] =$lead->id;
 				$model_communication_newsletter['related_id'] = $lead['schedule_id'];
 				$model_communication_newsletter['related_document_id'] = $lead['document_id'];
+				
 
 				foreach ($emails as $email) {	
 					$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$lead->id.'&schedule_id='.$lead['schedule_id'].'&document_id='.$lead['document_id'].'>Unsubscribe</>');
@@ -169,7 +174,9 @@ class Controller_NewsLetterExec extends \AbstractController {
 				if(!$this->debug){
 					// throw new \Exception("DANGER - DEBUGING IS OFF");
 					$model_communication_newsletter->send($email_settings, $mailer);
+					
 				}else{
+
 					$model_communication_newsletter->save();
 					echo"**********************************************************************************<br/>";
 					echo "name"." = ".$lead['name'] ."<br/>";
@@ -183,7 +190,13 @@ class Controller_NewsLetterExec extends \AbstractController {
 					echo "last_send_nwl_date"." = ".$lead['last_sent_newsletter_date'] ."<br/>";
 					echo "Body"." = ".$lead['body'] ."<br/>";
 					echo"**********************************************************************************<br/><br/><br/>";
+					
 				}
+
+				$schedule_m = $this->add('xepan\marketing\Model_Schedule');
+				$schedule_m->load($lead['schedule_id']);
+				$schedule_m['last_communicated_lead_id'] = $lead->id;	
+				$schedule_m->save();	
 
 				/***************************************************
 			         check if we can continue with same email setting

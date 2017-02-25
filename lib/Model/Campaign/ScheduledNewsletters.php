@@ -1,6 +1,5 @@
 <?php
 
-
 namespace xepan\marketing;
 
 class Model_Campaign_ScheduledNewsletters extends Model_Lead {
@@ -20,7 +19,6 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('contacts_str')->destroy();
 		$leads->getElement('contacts_comma_seperated')->destroy();
 		$leads->getElement('scope')->destroy();
-
 
 		$leads->getElement('created_by_id')->destroy();
 		$leads->getElement('assign_to_id')->destroy();
@@ -72,6 +70,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$schedule_j = $camp_j->join('schedule.campaign_id','document_id');
 		$schedule_j->hasOne('xepan/marketing/Content','document_id','title');
 		$schedule_j->addField('schedule_date','date');
+		$schedule_j->addField('last_communicated_lead_id');
 		$schedule_j->addField('schedule_day','day');
 		$schedule_j->addField('schedule_id','id');
 		$schedule_j->addField('schedule_content_id','document_id');
@@ -120,12 +119,10 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		})->type('boolean');
 
 		$this->addExpression('is_already_sent')->set(function($m,$q){
-			$comm_m = $this->add('xepan\communication\Model_Communication');
-			$comm_m->addCondition('related_id',$m->getElement('schedule_id'));
-			$comm_m->addCondition('to_id',$m->getElement('id'));
-			$comm_m->addCondition('related_document_id',$m->getElement('document_id'));
-			return $comm_m->count();		
+			return $q->expr('[0] < IFNULL([1],0) + 1',[$m->getElement('id'),$m->getElement('last_communicated_lead_id')]);
 		})->type('boolean');
+
+		$this->setOrder('id');
 
 	// 	/***************************************************************************
 	// 		To find the last newsletter sending time.

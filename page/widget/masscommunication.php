@@ -9,8 +9,8 @@ class page_widget_masscommunication extends \xepan\base\Page{
 		$x_axis = $this->app->stickyGET('x_axis');
 		$details = $this->app->stickyGET('details');
 		$details = json_decode($details,true);
-		$start_date = $this->app->stickyGET('start_date');
-		$end_date = $this->app->stickyGET('end_date');
+		$start_date = $this->app->stickyGET('start_date')?:$this->app->today;
+		$end_date = $this->app->stickyGET('end_date')?:$this->app->today;
 
 		$model_employee = $this->add('xepan\hr\Model_Employee');
 		$model_employee->loadBy('name',$x_axis);

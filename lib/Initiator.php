@@ -48,7 +48,7 @@ class Initiator extends \Controller_Addon {
 		$m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));
 		$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']));
 		$m->addItem(['Schedule Timeline','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_scheduletimeline'));
-		$m->addItem(['Day by Day Analytics','icon'=>'fa fa-graph'],$this->app->url('xepan_marketing_daybydayanalytics'));
+		$m->addItem(['Day by Day Analytics','icon'=>'fa fa bar-chart-o'],$this->app->url('xepan_marketing_daybydayanalytics'));
 		// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 		$m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 		
@@ -78,10 +78,15 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\marketing\Widget_GlobalMassCommunication','level'=>'Global','title'=>'Company Mass Communication Status'];
         $array[] = ['xepan\marketing\Widget_LeadPriority','level'=>'Global','title'=>'Lead Priority'];
         $array[] = ['xepan\marketing\Widget_LeadsAssigned','level'=>'Global','title'=>'Leads Assigned'];
-       
+        $array[] = ['xepan\marketing\Widget_LeadsAdded','level'=>'Global','title'=>'Leads Added'];
+        $array[] = ['xepan\marketing\Widget_LeadCount','level'=>'Global','title'=>'Lead Count'];
+        $array[] = ['xepan\marketing\Widget_SubCommunication','level'=>'Global','title'=>'Sub Communication'];
+       	
         $array[] = ['xepan\marketing\Widget_DepartmentMassCommunication','level'=>'Department','title'=>'Departmental Mass Communication Status'];
         $array[] = ['xepan\marketing\Widget_DepartmentCommunication','level'=>'Department','title'=>'Departmental Communication Status'];
         $array[] = ['xepan\marketing\Widget_DepartmentSaleStatus','level'=>'Department','title'=>'Department Sale Status'];
+        $array[] = ['xepan\marketing\Widget_DepartmentLeadsAdded','level'=>'Department','title'=>'Department Leads Added'];
+        $array[] = ['xepan\marketing\Widget_DepartmentLeadsAssigned','level'=>'Department','title'=>'Department Leads Assigned'];
         
         $array[] = ['xepan\marketing\Widget_MyCommunication','level'=>'Individual','title'=>'My Communication Graph'];
         $array[] = ['xepan\marketing\Widget_MySaleStatus','level'=>'Individual','title'=>'My Sales Status'];

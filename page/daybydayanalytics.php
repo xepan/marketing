@@ -12,9 +12,11 @@ class page_daybydayanalytics extends \xepan\base\Page{
         parent::init();
         
         $rpt = $this->add('xepan\base\Model_GraphicalReport');
-        $rpt->tryLoadBy('name','DayByDayAnalytics'); 
-        
-        $runner_view = $this->add('xepan\hr\View_GraphicalReport_Runner',['report_id'=>$rpt->id]);   
+        $rpt->tryLoadBy('name','MarketingReport'); 
+           
+        $permitted_post = json_decode($rpt['permitted_post'],true);      
+        if((in_array($this->app->employee['post_id'], $permitted_post)) OR $this->app->employee['scope'] == 'SuperUser')    
+            $runner_view = $this->add('xepan\hr\View_GraphicalReport_Runner',['report_id'=>$rpt->id]);   
     }
 
 	function defaultTemplate(){

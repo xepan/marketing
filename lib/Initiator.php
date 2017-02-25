@@ -104,7 +104,7 @@ class Initiator extends \Controller_Addon {
         $array['socialPosting'] = ['caption'=>'socialPosting','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_socialPosting'];
         $array['TeleCommunication'] = ['caption'=>'TeleCommunication','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_TeleCommunication'];
         $array['Sms'] = ['caption'=>'Sms','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Sms'];
-        $array['OutsourceParty'] = ['caption'=>'OutsourceParty','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_OutsourceParty'];
+        // $array['OutsourceParty'] = ['caption'=>'OutsourceParty','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_OutsourceParty'];
         $array['SocialPosters_Facebook_FacebookConfig'] = ['caption'=>'SocialPosters_Facebook_FacebookConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Facebook_FacebookConfig'];
         $array['SocialPosters_Base_SocialConfig'] = ['caption'=>'SocialPosters_Base_SocialConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Base_SocialConfig'];
         $array['SocialPosters_Linkedin_LinkedinConfig'] = ['caption'=>'SocialPosters_Linkedin_LinkedinConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Linkedin_LinkedinConfig'];

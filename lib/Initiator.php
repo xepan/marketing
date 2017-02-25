@@ -94,7 +94,22 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\marketing\Widget_MyMassCommunication','level'=>'Individual','title'=>'My Mass Communication Status'];
     }
 
-    function exportEntities($app,&$array){
+     function exportEntities($app,&$array){
+        $array['Lead'] = ['caption'=>'Lead','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Lead'];
+        $array['Opportunity'] = ['caption'=>'Opportunity','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Opportunity'];
+        $array['MarketingCategory'] = ['caption'=>'MarketingCategory','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_MarketingCategory'];
+        $array['Campaign'] = ['caption'=>'Campaign','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Campaign'];
+        $array['Newsletter'] = ['caption'=>'Newsletter','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Newsletter'];
+        $array['SocialPost'] = ['caption'=>'SocialPost','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPost'];
+        $array['socialPosting'] = ['caption'=>'socialPosting','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_socialPosting'];
+        $array['TeleCommunication'] = ['caption'=>'TeleCommunication','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_TeleCommunication'];
+        $array['Sms'] = ['caption'=>'Sms','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Sms'];
+        $array['OutsourceParty'] = ['caption'=>'OutsourceParty','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_OutsourceParty'];
+        $array['SocialPosters_Facebook_FacebookConfig'] = ['caption'=>'SocialPosters_Facebook_FacebookConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Facebook_FacebookConfig'];
+        $array['SocialPosters_Base_SocialConfig'] = ['caption'=>'SocialPosters_Base_SocialConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Base_SocialConfig'];
+        $array['SocialPosters_Linkedin_LinkedinConfig'] = ['caption'=>'SocialPosters_Linkedin_LinkedinConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Linkedin_LinkedinConfig'];
+        $array['ORGANIZATIONS_STRATEGY_PLANNING'] = ['caption'=>'ORGANIZATIONS_STRATEGY_PLANNING','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_ORGANIZATIONS_STRATEGY_PLANNING'];
+        $array['MARKETING_LEAD_SOURCE'] = ['caption'=>'MARKETING_LEAD_SOURCE','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_MARKETING_LEAD_SOURCE'];
 
     }
 	

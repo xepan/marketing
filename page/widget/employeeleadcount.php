@@ -22,9 +22,9 @@ class page_widget_employeeleadcount extends \xepan\base\Page{
 						->count();
 		});
 				
-		$grid = $this->add('xepan\hr\Grid',null,null,['page\widget\department-lead']);
+		$grid = $this->add('xepan\hr\Grid',null,null,['page\widget\employee-leadcount']);
 		$grid->setModel($model_employee,['name','lead_count']);
 	
-		$grid->js('click')->_selector('.do-view-employee')->univ()->frameURL('Leads Added',[$this->api->url('xepan_marketing_widget_leadsadded'),['start_date'=>$start_date,'end_date'=>$end_date],'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		$grid->js('click')->_selector('.do-view-employeeleadcount')->univ()->frameURL('Leads Added',[$this->api->url('xepan_marketing_widget_leadsadded'),['start_date'=>$start_date,'end_date'=>$end_date],'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 	}
 }

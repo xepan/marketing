@@ -8,7 +8,7 @@ class Widget_DepartmentLeadsAssigned extends \xepan\base\Widget{
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('department');
 		
-		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\department-lead']);
+		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\department-leadassigned']);
 		$this->grid->add('View',null,'grid_buttons')->setHtml('<b>Lead Assigned</b>');
 		$this->grid->removeSearchIcon();
 	}
@@ -35,7 +35,7 @@ class Widget_DepartmentLeadsAssigned extends \xepan\base\Widget{
 
 		$this->grid->setModel($department_m,['name','lead_count']);
 
-		$this->grid->js('click')->_selector('.do-view-employee')->univ()->frameURL('Employee Lead Assigned',[$this->api->url('xepan_marketing_widget_employeeleadassigned'),['start_date'=>$start_date,'end_date'=>$end_date],'department_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		$this->grid->js('click')->_selector('.do-view-employeecount')->univ()->frameURL('Employee Lead Assigned',[$this->api->url('xepan_marketing_widget_employeeleadassigned'),['start_date'=>$start_date,'end_date'=>$end_date],'department_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 
 		return parent::recursiveRender();
 	}

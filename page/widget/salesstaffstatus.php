@@ -11,9 +11,18 @@ class page_widget_salesstaffstatus extends \xepan\base\Page{
 		$details = json_decode($details,true);
 		$start_date = $this->app->stickyGET('start_date');
 		$end_date = $this->app->stickyGET('end_date');
+		$employee_id = $this->app->stickyGET('employee');
 
 		$employee_m = $this->add('xepan\hr\Model_Employee');
-		$employee_m->loadBy('name',$x_axis);
+		$employee_m->tryLoadBy('name',$x_axis);
+
+		if(!$employee_m->loaded())
+			$employee_m->tryLoadBy('id',$employee_id);
+
+		if(!$employee_m->loaded()){
+			$this->add('View')->set('Error : No Employee Selected');
+			return;
+		}
 
 		$employee_id = $employee_m->id;
 		$status = $details['name'];

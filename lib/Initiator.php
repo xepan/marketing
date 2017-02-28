@@ -81,6 +81,7 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\marketing\Widget_LeadsAdded','level'=>'Global','title'=>'Leads Added'];
         $array[] = ['xepan\marketing\Widget_LeadCount','level'=>'Global','title'=>'Lead Count'];
         $array[] = ['xepan\marketing\Widget_SubCommunication','level'=>'Global','title'=>'Sub Communication'];
+        $array[] = ['xepan\marketing\Widget_Subscribers','level'=>'Global','title'=>'Online Subscriptions'];
        	
         $array[] = ['xepan\marketing\Widget_DepartmentMassCommunication','level'=>'Department','title'=>'Departmental Mass Communication Status'];
         $array[] = ['xepan\marketing\Widget_DepartmentCommunication','level'=>'Department','title'=>'Departmental Communication Status'];

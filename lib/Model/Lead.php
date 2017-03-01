@@ -497,10 +497,14 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					$mail->addTo($email);
 			}
 			
+			// Stop automatic activity creation by newsletter send email0
+			$this->app->skipActivityCreate = true;
+
 			$mail['related_document_id'] = $newsletter_model->id;
 			$mail->setSubject($subject_v->getHtml());
 			$mail->setBody($body_v->getHtml());
 			$mail->send($email_settings);
+			
 			$this->app->employee
 				->addActivity("Newsletter : '".$newsletter_model['content_name']."' successfully sent to '".$this['name']."'", $newsletter_model->id/* Related Document ID*/, /*Related Contact ID*/$this->id,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$newsletter_model->id."")
 				->notifyWhoCan(' ',' ',$this);

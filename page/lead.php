@@ -7,7 +7,6 @@ class page_lead extends \xepan\base\Page{
 	public $content=null;
 	function page_index(){
 
-
 		$vp = $this->add('VirtualPage');
 		$vp->set(function($p){
 			try{
@@ -33,6 +32,16 @@ class page_lead extends \xepan\base\Page{
 		// $lead->getElement('last_landing_response_date_from_lead')->destroy();
 		// $lead->getElement('last_communication_date_from_lead')->destroy();
 		// $lead->getElement('last_communication_date_from_company')->destroy();
+
+
+		if($src = $this->app->stickyGET('source'))
+			$lead->addCondition('source',$src);
+		
+		if($strt = $this->app->stickyGET('start_date'))
+			$lead->addCondition('created_at','>=',$strt);
+		
+		if($end = $this->app->stickyGET('end_date'))
+			$lead->addCondition('created_at','<=',$this->app->nextDate($end));
 
 		if($category_id = $this->app->stickyGet('category_id')){
 			$lead_assoc = $lead->join('lead_category_association.lead_id','id');

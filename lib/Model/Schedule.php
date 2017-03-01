@@ -13,6 +13,7 @@ class Model_Schedule extends \xepan\base\Model_Table{
 		$this->addField('client_event_id');
 		$this->addField('day')->type('Number');
 		$this->addField('posted_on')->type('datetime');
+		$this->addField('last_communicated_lead_id');
 		
 		$this->addExpression('content_type')->set($this->refSQL('document_id')->fieldQuery('type'));
 	

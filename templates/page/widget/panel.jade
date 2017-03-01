@@ -1,6 +1,12 @@
 .row
 	.panel.panel-default
 		.panel-heading
-			{$heading}
+			{$heading} &nbsp;&nbsp;&nbsp;&nbsp; [Employee: {$employee}]
 		.panel-body
-			{$value1} :: {$value2}
+			.row(style="cursor:pointer; cursor:hand;")
+				.col-md-6
+					strong Leads Added : &nbsp;&nbsp;
+					span.value1 {$value1} 
+				.col-md-6
+					strong Leads Assigned : &nbsp;&nbsp;
+					span.value2 {$value2}

@@ -442,72 +442,110 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$f=$page->add('Form',null,null,['form/empty']);
 		$newsletter_field=$f->addField('Dropdown','newsletter')->validate('required')->setEmptyText('Please Select Newsletter');
 		$newsletter_field->setModel($newsletter_m);
+		$newsletter_field->setAttr(['multiple'=>'multiple']);
+		$mymail = $f->addField('Dropdown','email_username')->setEmptyText('Please Select From Email')->validate('required');
+		$mymail->setModel('xepan\hr\Model_Post_Email_MyEmails');
 
-	
 		$source_mail = explode("<br/>",$this['emails_str']);
 		foreach ($source_mail as $index => $email) {
 			$email_for_letter = $f->addField('CheckBox',"email_".$index,$email);
 		}
 
+		$employee_mail = explode("<br/>",$this->app->employee['emails_str']);
+		foreach ($employee_mail as $index => $emp_email) {
+			$emp_email_for_letter = $f->addField('CheckBox',"emp_email_".$index,$emp_email);
+		}
+
 		$f->addSubmit('Send Newsletter')->addClass('btn btn-primary');
 		
+		$view = $page->add('View');
 		if($this->app->stickyGET('newsletter')){
-			$newsletter_m->tryLoad($this->app->stickyGET('newsletter'));
+			$nws_ids = explode(',', $this->app->stickyGET('newsletter'));			
+			$newsletter_m->addCondition('id',$nws_ids);
+			
+			foreach ($newsletter_m as $nws) {
+				$view->add('View')->setHtml("<hr> <center> <b>".$nws['title']."</b></center><br><br>".$nws['message_blog']."<hr>");
+			}
 		}
-		$view=$page->add('View')->addClass('xepan-padding-large');
-		$view->setHtml($newsletter_m['title']."<br>".$newsletter_m['message_blog']);
+
 		$newsletter_field->js('change',$view->js()->reload(['newsletter'=>$newsletter_field->js()->val()]));
 		
-		if($f->isSubmitted()){
-			$newsletter_model=$page->add('xepan\marketing\Model_Newsletter');
-			$newsletter_model->tryLoad($f['newsletter']);
-			
-			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->tryLoadAny();
-			$mail = $this->add('xepan\marketing\Model_Communication_Newsletter');
-
-			$mail['from_id'] = $this->app->employee->id;
-
-			$subject = $newsletter_model['title'] ;		    		    
-			$email_subject=$this->add('GiTemplate');
-			
-			$email_body = $newsletter_model['message_blog'];
-			$email_subject->loadTemplateFromString($subject);
-			$subject_v=$this->add('View',null,null,$email_subject);
-			$subject_v->template->set($this->get());
-
-			$pq = new \xepan\cms\phpQuery();
-			$dom = $pq->newDocument($email_body);
-			foreach ($dom['a'] as $anchor){
-				$a = $pq->pq($anchor);
-				$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$this->id,'xepan_landing_campaign_id'=>$this['lead_campaing_id'],'xepan_landing_content_id'=>$newsletter_model->id,'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
-				$a->attr('href',$url);
-			}
-			$email_body = $dom->html();
-			$temp=$this->add('GiTemplate');
-			$temp->loadTemplateFromString($email_body);
-			$body_v=$this->add('View',null,null,$temp);
-			$body_v->template->set($this->get());
-
-			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
-
-			$source_mail = explode("<br/>",$this['emails_str']);
+		if($f->isSubmitted()){			
+			$count = 0;
 			foreach ($source_mail as $index => $email) {				
-				$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$this->id.'&document_id='.$newsletter_model->id.'>Unsubscribe</>');
-				if($f['email_'.$index])
-					$mail->addTo($email);
+				if(!$f['email_'.$index])
+					$count++;
 			}
-			
-			// Stop automatic activity creation by newsletter send email0
-			$this->app->skipActivityCreate = true;
 
-			$mail['related_document_id'] = $newsletter_model->id;
-			$mail->setSubject($subject_v->getHtml());
-			$mail->setBody($body_v->getHtml());
-			$mail->send($email_settings);
+			if($count == count($source_mail)){
+				$page->js()->univ()->alert('Please select atleast one email of lead')->execute();
+			}
+
+			if($f['email_username'] == null)
+				throw $this->exception('From email is required','ValidityCheck')->setField('email_username');
+
+			if($f['newsletter'] == null)
+				throw $this->exception('Please select a newsletter','ValidityCheck')->setField('newsletter');
+
+			$newsletter_ids = explode(',', $f['newsletter']);			
+			$newsletter_model=$page->add('xepan\marketing\Model_Newsletter');
+			$newsletter_model->addCondition('id',$newsletter_ids);
 			
-			$this->app->employee
-				->addActivity("Newsletter : '".$newsletter_model['content_name']."' successfully sent to '".$this['name']."'", $newsletter_model->id/* Related Document ID*/, /*Related Contact ID*/$this->id,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$newsletter_model->id."")
-				->notifyWhoCan(' ',' ',$this);
+			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting')->load($f['email_username']);
+
+			foreach ($newsletter_model as $single_newsletter) {
+				$mail = $this->add('xepan\marketing\Model_Communication_Newsletter');
+				$mail['from_id'] = $this->app->employee->id;
+
+				$subject = $single_newsletter['title'] ;		    		    
+				$email_subject=$this->add('GiTemplate');
+				
+				$email_body = $single_newsletter['message_blog'];
+				$email_subject->loadTemplateFromString($subject);
+				$subject_v=$this->add('View',null,null,$email_subject);
+				$subject_v->template->set($this->get());
+
+				$pq = new \xepan\cms\phpQuery();
+				$dom = $pq->newDocument($email_body);
+				
+				foreach ($dom['a'] as $anchor){
+					$a = $pq->pq($anchor);
+					$url = $this->app->url($a->attr('href'),['xepan_landing_contact_id'=>$this->id,'xepan_landing_campaign_id'=>$this['lead_campaing_id'],'xepan_landing_content_id'=>$single_newsletter->id,'xepan_landing_emailsetting_id'=>$email_settings['id'],'source'=>'NewsLetter'])->absolute()->getURL();
+					$a->attr('href',$url);
+				}
+				
+				$email_body = $dom->html();
+				$temp=$this->add('GiTemplate');
+				$temp->loadTemplateFromString($email_body);
+				$body_v=$this->add('View',null,null,$temp);
+				$body_v->template->set($this->get());
+				$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$this->id.'&document_id='.$single_newsletter->id.'>Unsubscribe</>');
+
+				$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
+
+				foreach ($source_mail as $index => $email) {				
+					if($f['email_'.$index])
+						$mail->addTo($email);
+				}
+
+				foreach ($employee_mail as $index => $emp_email) {				
+					if($f['emp_email_'.$index])
+						$mail->addBcc($emp_email);
+				}
+
+				// Stop automatic activity creation by newsletter send email0
+				$this->app->skipActivityCreate = true;
+
+				$mail['related_document_id'] = $newsletter_model->id;
+				$mail->setSubject($subject_v->getHtml());
+				$mail->setBody($body_v->getHtml());
+				$mail->send($email_settings);
+				
+				$this->app->employee
+					->addActivity("Newsletter : '".$single_newsletter['content_name']."' successfully sent to '".$this['name']."'", $single_newsletter->id/* Related Document ID*/, /*Related Contact ID*/$this->id,null,null,"xepan_marketing_newsletterdesign&0&action=view&document_id=".$single_newsletter->id."")
+					->notifyWhoCan(' ',' ',$this);
+			}
+
 			return $f->js(true,$f->js(null,$f->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Mail Send Successfully'))->reload();				
 		}
 	}

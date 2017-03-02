@@ -22,7 +22,7 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'Won'=>['view','edit','delete'],
 		'Lost'=>['view','edit','delete']
 	];
-
+ 
 	function init(){
 		parent::init();
 		

@@ -119,7 +119,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		})->type('boolean');
 
 		$this->addExpression('is_already_sent')->set(function($m,$q){
-			return $q->expr('[0] < IFNULL([1],0) + 1',[$m->getElement('id'),$m->getElement('last_communicated_lead_id')]);
+			return $q->expr('[0] > IFNULL([1],0) + 1',[$m->getElement('id'),$m->getElement('last_communicated_lead_id')]);
 		})->type('boolean');
 
 		$this->setOrder('id');

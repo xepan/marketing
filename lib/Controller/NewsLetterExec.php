@@ -178,6 +178,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 						echo "Sent To".$lead['name']." ".$lead['document']."<br/>";
 					} catch (\Exception $e) {
 						echo "Cant Send To".$lead['name']." ".$lead['document']."<br/>";
+						throw $e;
 					}
 					
 				}else{

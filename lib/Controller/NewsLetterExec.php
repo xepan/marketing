@@ -175,9 +175,9 @@ class Controller_NewsLetterExec extends \AbstractController {
 					// throw new \Exception("DANGER - DEBUGING IS OFF");
 					try {
 						$model_communication_newsletter->send($email_settings, $mailer);
-						echo "Sent To".$lead['name']." ".$lead['document']."<br/>";
+						echo "Sent to ".$lead['name']." ".$lead['document']."<br/>";
 					} catch (\Exception $e) {
-						echo "Cant Send To".$lead['name']." ".$lead['document']." [".$e->getMessage()."] <br/>";
+						echo "Cant send to ".$lead['name']." ".$lead['document']." [".$e->getMessage()."] <br/>";
 
 						// // still increase schedule_lead id to jump to next lead_id in next minute cron
 						// $schedule_m = $this->add('xepan\marketing\Model_Schedule');

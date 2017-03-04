@@ -175,6 +175,7 @@ class Controller_NewsLetterExec extends \AbstractController {
 					// throw new \Exception("DANGER - DEBUGING IS OFF");
 					try {
 						$model_communication_newsletter->send($email_settings, $mailer);
+						echo "Sent To".$lead['name']." ".$lead['document']."<br/>";
 					} catch (\Exception $e) {
 						echo "Cant Send To".$lead['name']." ".$lead['document']."<br/>";
 					}

@@ -178,7 +178,13 @@ class Controller_NewsLetterExec extends \AbstractController {
 						echo "Sent To".$lead['name']." ".$lead['document']."<br/>";
 					} catch (\Exception $e) {
 						echo "Cant Send To".$lead['name']." ".$lead['document']."<br/>";
-						throw $e;
+
+						// // still increase schedule_lead id to jump to next lead_id in next minute cron
+						// $schedule_m = $this->add('xepan\marketing\Model_Schedule');
+						// $schedule_m->load($lead['schedule_id']);
+						// $schedule_m['last_communicated_lead_id'] = $lead->id;	
+						// $schedule_m->save();
+						// throw $e;
 					}
 					
 				}else{

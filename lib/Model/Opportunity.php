@@ -14,15 +14,15 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 		'Lost'
 	];
 	public $actions=[
-		'Open'=>['view','edit','delete','qualify','lose','reassess','communication'],
-		'Qualified'=>['view','edit','delete','analyse_needs','lose','reassess','communication'],
-		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','reassess','communication'],
+		'Open'=>['view','edit','delete','qualify','lose','win','reassess','communication'],
+		'Qualified'=>['view','edit','delete','analyse_needs','win','lose','reassess','communication'],
+		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','win','reassess','communication'],
 		'Quoted'=>['view','edit','delete','negotiate','win','lose','reassess','communication'],
-		'Negotiated'=>['view','edit','delete','win','quote','lose','reassess','communication'],
+		'Negotiated'=>['view','edit','delete','quote','win','lose','reassess','communication'],
 		'Won'=>['view','edit','delete'],
 		'Lost'=>['view','edit','delete']
 	];
-
+ 
 	function init(){
 		parent::init();
 		

@@ -208,12 +208,12 @@ class Controller_NewsLetterExec extends \AbstractController {
 			         and create new one : TODO
 		        ***************************************************/
 
-			    if($loop_count >= $email_settings['smtp_auto_reconnect']){
-			    	$mailer->disconnect();
-			    	$mailer->connect();
-			    	// echo "Reconnecting smtp connection <br/>";
-			    	$loop_count=0;
-			    }
+			    // if($loop_count >= $email_settings['smtp_auto_reconnect']){
+			    // 	$mailer->disconnect();
+			    // 	$mailer->connect();
+			    // 	// echo "Reconnecting smtp connection <br/>";
+			    // 	$loop_count=0;
+			    // }
 
 			    $done_contact_newsletter[]=$lead['id'].$lead['document_id'];
 

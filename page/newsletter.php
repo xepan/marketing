@@ -11,7 +11,7 @@ class page_newsletter extends \xepan\base\Page{
 			$grid_template = ['grid/newsletter-grid'];
 
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter');
-
+		$newsletter->setOrder('created_at','desc');
 		$newsletter->addExpression('source_graph_data')->set(function($m,$q){
 			return "'1,2,3'";
 		});

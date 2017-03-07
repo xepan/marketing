@@ -7,7 +7,7 @@ class page_socialcontent extends \xepan\base\Page{
 		
 
 		$social = $this->add('xepan\marketing\Model_SocialPost');
-
+		$social->setOrder('created_at','desc');
 		$social->addExpression('source_graph_data')->set(function($m,$q){
 			$lr = $m->add('xepan\marketing\Model_LandingResponse');
 			$lr->_dsql()->del('fields');

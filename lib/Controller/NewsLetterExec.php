@@ -173,7 +173,12 @@ class Controller_NewsLetterExec extends \AbstractController {
 
 				if(!$this->debug){
 					// throw new \Exception("DANGER - DEBUGING IS OFF");
-					$model_communication_newsletter->send($email_settings, $mailer);
+					try {
+						$model_communication_newsletter->send($email_settings, $mailer);
+						echo "Sent To".$lead['name']." ".$lead['document']."<br/>";
+					} catch (\Exception $e) {
+						echo "Cant Send To".$lead['name']." ".$lead['document']."<br/>";
+					}
 					
 				}else{
 
@@ -204,12 +209,12 @@ class Controller_NewsLetterExec extends \AbstractController {
 			         and create new one : TODO
 		        ***************************************************/
 
-			    if($loop_count >= $email_settings['smtp_auto_reconnect']){
-			    	$mailer->disconnect();
-			    	$mailer->connect();
-			    	// echo "Reconnecting smtp connection <br/>";
-			    	$loop_count=0;
-			    }
+			    // if($loop_count >= $email_settings['smtp_auto_reconnect']){
+			    // 	$mailer->disconnect();
+			    // 	$mailer->connect();
+			    // 	// echo "Reconnecting smtp connection <br/>";
+			    // 	$loop_count=0;
+			    // }
 
 			    $done_contact_newsletter[]=$lead['id'].$lead['document_id'];
 

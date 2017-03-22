@@ -8,6 +8,7 @@ class Widget_ROI extends \xepan\base\Widget {
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
+		$this->report->enableFilterEntity('employee');
 
 		$this->chart = $this->add('xepan\base\View_Chart');
 	}
@@ -21,9 +22,13 @@ class Widget_ROI extends \xepan\base\Widget {
 		$model->addCondition('created_at','>',$this->report->start_date);
 		$model->addCondition('created_at','<',$this->app->nextDate($this->report->end_date));
 		
+		if(isset($this->report->employee))
+			$model->addCondition([['created_by_id',$this->report->employee],['assign_to_id',$this->report->employee]]);
+
 		$this->chart->setType('pie')
 	    			->setModel($model,'source_filled',['fund_sum'])
-	    			->setTitle('Won Business Sources');
+	    			->setTitle('Won Business Sources')
+	    			->openOnClick('xepan_marketing_widget_roi');
 
 		return parent::recursiveRender();
 	}

@@ -26,10 +26,13 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 
 		if($this->options['ask_name']){
 			$form->addField('first_name')->addClass('form-control');
-			$form->addField('last_name')->addClass('form-control');;
+			$form->addField('last_name')->addClass('form-control');
 		}
 
 		$form->addField('email')->addClass('form-control');;
+		$captcha = $form->addField('line','captcha','Captcha')->validate('required')->addClass('form-control');
+		$captcha->add('xepan\captcha\Controller_Captcha');	
+
 		$form->addSubmit($this->options['submit_button_name'])->addClass('btn btn-primary btn-block');
 		
 		if($form->isSubmitted()){

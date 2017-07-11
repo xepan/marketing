@@ -1,0 +1,80 @@
+.row
+	.col-lg-12
+		.main-box.clearfix
+			header.main-box-header.clearfix
+				{$title}
+			.main-box-body.clearfix
+				{comm_wrapper}
+				#invoice-companies.row
+					.col-md-5.col-lg-5.col-sm-12.col-xs-12
+						h2
+							a.title-communcation 
+								b|Create Communication
+					.col-md-3.col-lg-3.col-sm-12.col-xs-12
+						h2
+							a.title-followup
+								b|Follow Up
+					.col-md-4.col-lg-4.col-sm-12.col-xs-12
+						h2
+							a.title-opportunity
+								b|Opportunity
+					.col-md-5.col-lg-5.col-sm-12.col-xs-12.invoice-box
+						.view-communication.toggle-form
+							{$communication_form}
+					.col-md-3.col-lg-3.col-sm-12.col-xs-12.invoice-box
+						.view-followup.toggle-form
+							{$followup_form}
+					.col-md-4.col-lg-4.col-sm-12.col-xs-12.invoice-box
+						.view-opportunity.toggle-form
+							{$opportunity_form}
+				.row		
+					.col-md-12.col-lg-12.col-sm-12.col-xs-12.invoice-box
+						{$top}
+						{$communication_list}
+				.xepan-push
+				{/comm_wrapper}
+				{detail_wrapper}
+				.row.main-box.clearfix
+					.col-md-6.col-lg-6.col-sm-12.col-xs-12.invoice-box
+						.invoice-summary-item
+							div|Name:{$name}						
+							div|Address:{$address}						
+							div|City:{$city}						
+							div|Pin Code:{$pin_code}						
+							div|State:{$state}						
+							div|Country:{$country}						
+					.col-md-6.col-lg-6.col-sm-12.col-xs-12.invoice-box
+						.invoice-summary-item
+							div Phone No. {$contacts_str}
+							div Email ID. {$emails_str}
+				{/detail_wrapper}
+style.
+	#invoice-companies .invoice-box{
+		min-height:50px!important;
+	}	
+	.toggle-form{
+		display:none;
+	}
+	.xepan-communication-lister .xepan-push-small{
+		display:none
+	}
+
+	#invoice-companies a{
+		cursor:pointer;
+	}
+
+
+script.
+	$(document).ready(function() {
+		$('#page-wrapper').addClass('nav-small');
+	});	
+
+	$('.title-communcation').click(function(){
+		$('.view-communication').toggleClass('toggle-form');
+	});
+	$('.title-followup').click(function(){
+		$('.view-followup').toggleClass('toggle-form');
+	});
+	$('.title-opportunity').click(function(){
+		$('.view-opportunity').toggleClass('toggle-form');
+	});						

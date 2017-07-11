@@ -1,0 +1,88 @@
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="main-box clearfix">
+      <header class="main-box-header clearfix">{$title}</header>
+      <div class="main-box-body clearfix">{comm_wrapper}
+        <div id="invoice-companies" class="row">
+          <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
+            <h2><a class="title-communcation"> <b>Create Communication</b></a></h2>
+          </div>
+          <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
+            <h2><a class="title-followup"><b>Follow Up</b></a></h2>
+          </div>
+          <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+            <h2><a class="title-opportunity"><b>Opportunity</b></a></h2>
+          </div>
+          <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12 invoice-box">
+            <div class="view-communication toggle-form">{$communication_form}</div>
+          </div>
+          <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 invoice-box">
+            <div class="view-followup toggle-form">{$followup_form}</div>
+          </div>
+          <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 invoice-box">
+            <div class="view-opportunity toggle-form">{$opportunity_form}</div>
+          </div>
+        </div>
+        <div class="row">		
+          <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 invoice-box">
+            {$top}
+            {$communication_list}
+          </div>
+        </div>
+        <div class="xepan-push"></div>{/comm_wrapper}
+        {detail_wrapper}
+        <div class="row main-box clearfix">
+          <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 invoice-box">
+            <div class="invoice-summary-item">
+              <div>Name:{$name}						</div>
+              <div>Address:{$address}						</div>
+              <div>City:{$city}						</div>
+              <div>Pin Code:{$pin_code}						</div>
+              <div>State:{$state}						</div>
+              <div>Country:{$country}						</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 invoice-box">
+            <div class="invoice-summary-item">
+              <div>Phone No. {$contacts_str}</div>
+              <div>Email ID. {$emails_str}</div>
+            </div>
+          </div>
+        </div>{/detail_wrapper}
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  #invoice-companies .invoice-box{
+  	min-height:50px!important;
+  }	
+  .toggle-form{
+  	display:none;
+  }
+  .xepan-communication-lister .xepan-push-small{
+  	display:none
+  }
+  
+  #invoice-companies a{
+  	cursor:pointer;
+  }
+  
+  
+</style>
+<script>
+  $(document).ready(function() {
+  	$('#page-wrapper').addClass('nav-small');
+  });	
+  
+  $('.title-communcation').click(function(){
+  	$('.view-communication').toggleClass('toggle-form');
+  });
+  $('.title-followup').click(function(){
+  	$('.view-followup').toggleClass('toggle-form');
+  });
+  $('.title-opportunity').click(function(){
+  	$('.view-opportunity').toggleClass('toggle-form');
+  });						
+</script>

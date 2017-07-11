@@ -26,7 +26,12 @@ class page_lead extends \xepan\base\Page{
 			
 		});
 
-		$lead = $this->add('xepan\marketing\Model_Lead');
+		if($this->model_class){
+			$lead = $this->add($this->model_class);
+		}else{
+			$lead = $this->add('xepan\marketing\Model_Lead');
+		}
+
 		// $lead->getElement('days_ago')->destroy();
 		// $lead->getElement('last_communication')->destroy();
 		// $lead->getElement('last_landing_response_date_from_lead')->destroy();

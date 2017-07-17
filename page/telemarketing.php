@@ -17,6 +17,7 @@ class page_telemarketing extends \xepan\base\Page{
 
 		$view_lead = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
+		$model_lead->addCondition('status','Active');
 		$view_lead->js('reload')->reload();
 
 		$view_lead->grid->addHook('formatRow',function($g){
@@ -51,6 +52,10 @@ class page_telemarketing extends \xepan\base\Page{
 		$status->js('change',$frm->js()->submit());
 
 		$view_lead->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+
+		$list_view_btn = $view_lead->grid->add('Button',null,'grid_buttons')->set('List View')->addClass('btn btn-info');
+
+		$list_view_btn->js('click')->univ()->location($this->app->url('xepan_marketing_telemarketinglistview'));
 
 		/*
 				FORM FOR ADDING CONVERSATION 

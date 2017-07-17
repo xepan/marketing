@@ -22,23 +22,40 @@ class page_telemarketinglistview extends \xepan\base\Page{
 
 		$form = $this->add('Form',null,null,['form/empty']);
 		$view = $this->add('View');
-		// if($_GET['category']){
-		// 	$this->add('')
-		// }
+		
+		$asso_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
+		$asso_j = $lead->join('lead_category_association','id');
+		$asso_j->addField('marketing_category_id');
+		
+		$category_id = $this->app->stickyGET('category_id');
+		if($category_id){
+			$lead->addCondition('marketing_category_id',$category_id);
+		}
 
 		$form->setLayout(['form/telemarketing-listview-form']);
-		$cat_field = $form->addField('DropDown','category');
+		$cat_field = $form->addField('DropDown','category')->setEmptyText('Please Select Category');
 		$cat_field->setModel($cat);
 		$lead_field = $form->addField('xepan\base\Basic','lead');
 		$lead_field->setModel($lead);
 		$form->addSubmit('Get Details')->addClass('btn btn-success btn-block');
-
-		$cat_field->js('change',$form->js()->atk4_form('reloadField','lead',[$this->app->url(),'category_id'=>$cat_field->js()->val()]));
+		
+		$cat_field->js('change',$lead_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$lead_field->name]),'category_id'=>$cat_field->js()->val()]));
+		// $cat_field->js('change',$form->js()->atk4_form('reloadField','lead',[$this->app->url(),'category_id'=>$cat_field->js()->val()]));
 
 		$list_view = $view->add('xepan\marketing\View_TeleMarketingListView');
 		if($form->isSubmitted()){
 			$form->js(null,$view->js()->reload(['contact_id'=>$form['lead']]))->execute();	
 		}
+
+		$form->js('click',
+					$this->js()->univ()
+							->frameURL(
+									$this->app->url(
+										'xepan_marketing_leaddetails',
+										['action'=>'add']
+									)
+								)
+						)->_selector('.create-lead');
 
 	}
 }

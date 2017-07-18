@@ -37,30 +37,10 @@ class View_TeleMarketingListView extends \View{
 		// $comm_form->layout->template->del('score_button_wrapper');
 		// $comm_form->layout->template->del('followup_form_wrapper');
 
-		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
-		[
-			'fields'=>[
-						'sub_type'=>'text',
-						'calling_status'=>'text',
-						],
-				'config_key'=>'COMMUNICATION_SUB_TYPE',
-				'application'=>'Communication'
-		]);
-		$config_m->tryLoadAny();
-		$calling_status_array = explode(",",$config_m['calling_status']);
-		
-		$calling_status_field = $comm_form->addField('dropdown','calling_status')/*->set($edit_model['calling_status'])*/->setEmptyText('Please Select');
-		$calling_status_field->setValueList(array_combine($calling_status_array,$calling_status_array));
-		$type_field = $comm_form->getElement('type');
-		$type_field->js(true)->univ()->bindConditionalShow([
-			'Call'=>['from_email','from_phone','from_person','called_to','notify_email','notify_email_to','status','calling_status'],
-		],'div.atk-form-row');
 
 		$comm_form->addSubmit('Create Communication')->addClass('btn btn-success');
 		if($comm_form->isSubmitted()){
 			$communication_model = $comm_form->process();
-			$communication_model['calling_status'] = $comm_form['calling_status'];
-			$communication_model->save();
 			$comm_form->js(null,$comm_form->js()->univ()->successMessage('Communication Created'))->reload()->execute();
 		}		
 

@@ -66,6 +66,36 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 					return $form->js(null,$form->js()->_selector('#'.$this->name."_subscription_model")->modal('hide'))->univ()->successMessage('Done')->execute();
 					
 				return $form->js()->univ()->successMessage('Done')->execute();
+			}else{
+				$phone = $this->add('xepan\base\Model_Contact_Phone');
+				$phone->tryLoadBy('value',$form['contact_no']);
+				if($phone->loaded()){
+					$l_id = $phone['contact_id'];
+					$l_model = $this->add('xepan\marketing\Model_Lead')->load($l_id);
+					$cat_arr = $l_model->getAssociatedCategories();
+
+					setcookie('xepan_lead_subscription',$form['contact_no']);
+					$cat_diff = array_merge(array_diff($cat_arr, $selected_category),array_diff($selected_category, $cat_arr));
+					if(!count($cat_diff)){
+						if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
+							return $form->js(null,$form->js()->_selector('#'.$this->name."_subscription_model")->modal('hide'))->univ()->errorMessage('Already Subscribed')->execute();
+						return $form->js()->univ()->errorMessage('Already Subscribed')->execute();
+					}
+									
+					foreach ($cat_diff as $category) {					
+						$association = $this->add('xepan\marketing\Model_Lead_Category_Association');
+						
+						$association['lead_id'] = $l_model->id;
+						$association['marketing_category_id'] = $category;  
+						$association['created_at'] = $this->app->now;  
+						$association->save();
+					}
+
+					if(!isset($_COOKIE['xepan_lead_subscription']) AND ($this->options['show_as_popup'] === true))
+						return $form->js(null,$form->js()->_selector('#'.$this->name."_subscription_model")->modal('hide'))->univ()->successMessage('Done')->execute();
+						
+					return $form->js()->univ()->successMessage('Done')->execute();
+				}
 			}				
 
 			$lead = $this->add('xepan\marketing\Model_Lead');
@@ -100,11 +130,11 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 				$email_info['head'] = 'Official';
 				$email_info['value'] = $form['email'];
 				$email_info->save();
-				$email_info = $this->add('xepan\base\Model_Contact_Phone');
-				$email_info['contact_id'] = $lead->id;
-				$email_info['head'] = 'Official';
-				$email_info['value'] = $form['contact_no'];
-				$email_info->save();
+				$phone_info = $this->add('xepan\base\Model_Contact_Phone');
+				$phone_info['contact_id'] = $lead->id;
+				$phone_info['head'] = 'Official';
+				$phone_info['value'] = $form['contact_no'];
+				$phone_info->save();
 				$this->api->db->commit();
 			}catch(\Exception $e){
 				$this->api->db->rollback();
@@ -114,7 +144,8 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
     		setcookie('xepan_lead_subscription',$form['email']);
     		if($this->options['send_mail']){
     			$email_id = $form['email'];
-    			$this->sendThankYouMail($email_id);
+    			if($email_id)
+	    			$this->sendThankYouMail($email_id);
     		}
 
     		if($this->options['on_success'] == 'Same Page'){

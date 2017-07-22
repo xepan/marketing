@@ -5,6 +5,8 @@ namespace xepan\marketing;
 class page_lead extends \xepan\base\Page{
 	public $title = "Lead";
 	public $content=null;
+	public $model_class;
+	
 	function page_index(){
 
 		$vp = $this->add('VirtualPage');

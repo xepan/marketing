@@ -30,6 +30,7 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 		}
 
 		$form->addField('email')->addClass('form-control');;
+		$form->addField('contact_no')->addClass('form-control')->validate('required');
 		$captcha = $form->addField('line','captcha','Captcha')->validate('required')->addClass('form-control');
 		$captcha->add('xepan\captcha\Controller_Captcha');	
 
@@ -98,6 +99,11 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 				$email_info['contact_id'] = $lead->id;
 				$email_info['head'] = 'Official';
 				$email_info['value'] = $form['email'];
+				$email_info->save();
+				$email_info = $this->add('xepan\base\Model_Contact_Phone');
+				$email_info['contact_id'] = $lead->id;
+				$email_info['head'] = 'Official';
+				$email_info['value'] = $form['contact_no'];
 				$email_info->save();
 				$this->api->db->commit();
 			}catch(\Exception $e){

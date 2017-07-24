@@ -15,7 +15,9 @@ class page_employeeleadassign extends \xepan\base\Page{
 		$lead->addCondition('status','Active');
 
 		$form = $this->add('Form',null,null,['form\empty']);
+		$form->add('View')->set('Select Multiple Lead`s');
 		$lead_field = $form->addField('xepan\base\DropDown','leads')->addClass('xepan-push');
+		$form->add('View')->set('Select Employee to Assigned leads');
 		$form->addField('xepan\base\Basic','employee')->setModel('xepan\hr\Employee');
 		$form->addSubmit('Assign Lead')->addClass('btn btn-success');
 		$lead_field->validate_values=false;

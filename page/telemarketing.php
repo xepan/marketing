@@ -86,11 +86,27 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'bottom');
 
 		$model_communication = $this->add('xepan\communication\Model_Communication');
+		// $model_communication->addCondition(
+		// 								$model_communication->dsql()->andExpr()
+		// 							  	->where('to_id',$contact_id)
+		// 							  	->where('to_id','<>',null));
+		
 		$model_communication->addCondition(
-										$model_communication->dsql()->andExpr()
-									  	->where('to_id',$contact_id)
-									  	->where('to_id','<>',null));
+				$model_communication->dsql()->orExpr()
+							->where(
+									$model_communication->dsql()->andExpr()
+									->where('from_id','<>',null)
+									->where('from_id',$contact_id)
+								)
+							->where(
+									$model_communication->dsql()->andExpr()
+										->where('to_id','<>',null)
+										->where('to_id',$contact_id)
+								)
+					);
+
 		$model_communication->setOrder('id','desc');
+
 
 		// FILTERS
 		if($_GET['comm_type']){			

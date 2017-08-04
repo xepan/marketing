@@ -18,7 +18,13 @@ class page_telemarketinglistview extends \xepan\base\Page{
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		$lead->title_field ="lead_substr";
 		
-		$lead->addExpression('lead_substr')->set($lead->dsql()->expr('CONCAT([0]," :: ",[1], " :: ",[2])',[$lead->getElement('unique_name'),$lead->getElement('emails_str'),$lead->getElement('contacts_str')]))->sortable(true);
+		$lead->addExpression('lead_substr')
+					->set($lead->dsql()
+						->expr('CONCAT(IFNULL([0],"")," :: ",IFNULL([1],""), " :: ",IFNULL([2],""))',
+							[$lead->getElement('unique_name'),
+							$lead->getElement('emails_str'),
+							$lead->getElement('contacts_str')]))
+					->sortable(true);
 
 		$form = $this->add('Form',null,null,['form/empty']);
 		$view = $this->add('View');

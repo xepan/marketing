@@ -53,6 +53,8 @@ class Initiator extends \Controller_Addon {
 			$m->addItem(['Day by Day Analytics','icon'=>'fa fa bar-chart-o'],$this->app->url('xepan_marketing_daybydayanalytics'));
 			// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 			$m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
+
+			$this->app->user_menu->addItem(['My Lead','icon'=>'fa fa-file-text-o'],$this->app->url('xepan_marketing_mylead'));
 			
 		}
 		

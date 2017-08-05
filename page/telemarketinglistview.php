@@ -29,14 +29,14 @@ class page_telemarketinglistview extends \xepan\base\Page{
 		$form = $this->add('Form',null,null,['form/empty']);
 		$view = $this->add('View');
 		
-		$asso_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
-		$asso_j = $lead->join('lead_category_association','id');
-		$asso_j->addField('marketing_category_id');
+		// $asso_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
+		// $asso_j = $lead->join('lead_category_association','id');
+		// $asso_j->addField('marketing_category_id');
 		
-		$category_id = $this->app->stickyGET('category_id');
-		if($category_id){
-			$lead->addCondition('marketing_category_id',$category_id);
-		}
+		// $category_id = $this->app->stickyGET('category_id');
+		// if($category_id){
+		// 	$lead->addCondition('marketing_category_id',$category_id);
+		// }
 
 		$form->setLayout(['form/telemarketing-listview-form']);
 		$cat_field = $form->addField('DropDown','category')->setEmptyText('Please Select Category');

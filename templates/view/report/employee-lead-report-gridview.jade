@@ -1,0 +1,94 @@
+.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    {Pannel}
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block( style="100%")
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                span(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+    {/Pannel}
+    .main-box-body.clearfix.table
+        table.table.user-list.table-hover(style="width:100%")
+            {header}
+            thead
+                {cols}{col}
+                th
+                    a(href='#')
+                        span S.no
+                th
+                    a(href='#')
+                        span Employee Name
+                th
+                    a(href='#')
+                        span Created lead
+                th
+                    a(href='#')
+                        span No. of Lead Assign to Other
+                //- th
+                //-     a(href='#')
+                //-         span No. of Lead Assign by Other
+                th
+                    a(href='#')
+                        span Total Followup
+                th
+                    a(href='#')
+                        span Opportunity
+                                
+                th 
+                {/}{/}
+            {/}
+            {$subheader}
+
+            tbody
+                {rows}{row}
+                tr(class="{$odd_even}" data-id="{$id}")
+                    {cols}
+                    td
+                      | {$s_no}
+                    td
+                      | {$name}
+                    td
+                      | {$total_lead_created}  
+                    td
+                      | {$total_lead_assign_to}
+                    td
+                      | {$total_followup}
+                    td
+                      | Open Opportunity:  {$open_opportunity}
+                      br
+                      | Qualified Opportunity:  {$qualified_opportunity}
+                      br
+                      | NeedsAnalysis Opportunity:  {$needs_analysis_opportunity}
+                      br
+                      | Quoted Opportunity:  {$quoted_opportunity}
+                      br
+                      | Negotiated Opportunity:  {$negotiated_opportunity}
+                      br
+                      | Won Opportunity:  {$win_opportunity}
+                      br
+                      | Loss Opportunity:  {$loss_opportunity}
+                    
+                    //- td
+                    //-     | {action}Action Here{/}
+                    td(style="width: 15%;")
+                        {$edit}
+                        {$delete}
+                    
+                    {/}
+                {/}{/}
+                {not_found}
+                div.row
+                    .col-md-12.text-center.alert.alert-warning(role="alert")
+                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+                {/}
+
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
+        {$Paginator}

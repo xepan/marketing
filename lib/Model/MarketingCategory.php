@@ -5,7 +5,7 @@ namespace xepan\marketing;
 class Model_MarketingCategory extends \xepan\hr\Model_Document{
 
 	public $status=['All'];
-	public $actions=['All'=>['view','edit','delete','merge_category']];
+	public $actions=['All'=>['view','edit','delete','merge_category','delete_all_lead']];
 
 	function init(){
 		parent::init();
@@ -153,6 +153,64 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 	function removeAssociatedCampaigns(){
 		$this->ref('xepan\marketing\Campaign_Category_Association')
 								->deleteAll();
+	}
+
+	function delete_all_lead(){
+		$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
+		$lead_cat->addCondition('marketing_category_id',$this->id);
+		// throw new \Exception($lead_cat->count(), 1);
+		
+		// $lead_cat->_dsql()->group('lead_id');
+		// try{
+			// $this->api->db->beginTransaction();
+			$lead_array=[];
+			foreach ($lead_cat as $l) {
+				$lead_array[]=$l['lead_id'];
+			}
+
+			$attachment = $this->add('xepan\communication\Model_Communication_Attachment');
+			// $communication_attachment->addCondition('communication_id',$lead_communication->id);
+			$attachment->addCondition([['communication_created_by_id',$lead_array],['communication_from_id',$lead_array],['communication_to_id',$lead_array]]);			
+			$attachment->deleteAll();
+
+			// delete communication
+			$lead_communication = $this->add('xepan\communication\Model_Communication')
+					->addCondition([['from_id',$lead_array],['to_id',$lead_array],['created_by_id',$lead_array]]);			
+			$lead_communication->deleteAll();
+
+			$this->add('xepan\base\Model_Contact_Email')
+					->addCondition('contact_id',$lead_array)
+					->deleteAll();
+			$this->add('xepan\base\Model_Contact_Phone')
+					->addCondition('contact_id',$lead_array)
+					->deleteAll();
+			$this->add('xepan\base\Model_Contact_Relation')
+					->addCondition('contact_id',$lead_array)
+					->deleteAll();
+			$this->add('xepan\base\Model_Contact_IM')
+					->addCondition('contact_id',$lead_array)
+					->deleteAll();
+			$this->add('xepan\base\Model_Contact_Event')
+					->addCondition('contact_id',$lead_array)
+					->deleteAll();		
+
+			$lead_m = $this->add('xepan\marketing\Model_Lead')
+						->addCondition('id',$lead_array)
+						->deleteAll();
+
+			$lead_cat->deleteAll();			
+
+			// echo "<pre>";
+			// print_r($lead_array);
+			// echo "</pre>";
+		
+		// 	$this->api->db->commit();
+		// }catch(\Exception_StopInit $e){
+
+		// }catch(\Exception $e){
+		// 	$this->api->db->rollback();
+		// 	throw $e;
+		// }
 	}
 	
 }

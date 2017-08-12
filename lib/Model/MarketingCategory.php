@@ -168,14 +168,17 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 				$lead_array[]=$l['lead_id'];
 			}
 
+			$lead_communication = $this->add('xepan\communication\Model_Communication')
+					->addCondition([['from_id',$lead_array],['to_id',$lead_array],['created_by_id',$lead_array]]);			
 			$attachment = $this->add('xepan\communication\Model_Communication_Attachment');
-			// $communication_attachment->addCondition('communication_id',$lead_communication->id);
+			
+			$attachment->addExpression('communication_created_by_id')->set($attachment->refSQL('communication_id')->fieldQuery('created_by_id'));
+			$attachment->addExpression('communication_from_id')->set($attachment->refSQL('communication_id')->fieldQuery('from_id'));
+			$attachment->addExpression('communication_to_id')->set($attachment->refSQL('communication_id')->fieldQuery('to_id'));
 			$attachment->addCondition([['communication_created_by_id',$lead_array],['communication_from_id',$lead_array],['communication_to_id',$lead_array]]);			
 			$attachment->deleteAll();
 
 			// delete communication
-			$lead_communication = $this->add('xepan\communication\Model_Communication')
-					->addCondition([['from_id',$lead_array],['to_id',$lead_array],['created_by_id',$lead_array]]);			
 			$lead_communication->deleteAll();
 
 			$this->add('xepan\base\Model_Contact_Email')

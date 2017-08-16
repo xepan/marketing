@@ -58,7 +58,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 						->addCondition('created_at','>=',$_GET['from_date'])
 						->addCondition('created_at','<',$this->api->nextDate($_GET['to_date']));
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($lead);
+			$grid->setModel($lead,['name','created_at','assign_to','emails_str','contacts_str','address','website','last_communication_date_from_lead']);
 			$grid->addPaginator(50);
 		});
 
@@ -77,7 +77,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 						->addCondition('created_at','>=',$_GET['from_date'])
 						->addCondition('created_at','<',$this->api->nextDate($_GET['to_date']));
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($lead);
+			$grid->setModel($lead,['name','created_at','assign_to','emails_str','contacts_str','address','website','last_communication_date_from_lead']);
 			$grid->addPaginator(50);
 		});
 
@@ -99,7 +99,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    						->addCondition('type','Followup')
 		    						;
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($my_followups_model);
+			$grid->setModel($my_followups_model,['task_name','assign_to','related_person','starting_date','deadline','estimate_time','description','status','priority','rejected_at','received_at','submitted_at','reopened_at','completed_at','comment_count']);
 			$grid->addPaginator(50);
 		});
 
@@ -122,7 +122,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 
@@ -145,7 +145,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 
@@ -168,7 +168,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 
@@ -191,7 +191,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 
@@ -214,7 +214,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 
@@ -238,7 +238,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 
@@ -261,7 +261,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		    			;
 
 			$grid = $page->add('xepan\hr\Grid');
-			$grid->setModel($opportunity);
+			$grid->setModel($opportunity,['lead','assign_to','title','description','fund','discount_percentage','closing_date','narration','previous_status','probability_percentage']);
 			$grid->addPaginator(50);
 		});
 

@@ -16,8 +16,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 			// return $q->getField('id');
 			$lead = $this->add('xepan\marketing\Model_Lead',['table_alias'=>'employee_created_lead']);
 				return 	$lead->addCondition('created_by_id',$q->getField('id'))
-						// ->addCondition('created_at','>=',$this->from_date)
-						// ->addCondition('created_at','<',$this->api->nextDate($this->to_date))
+						->addCondition('created_at','>=',$this->from_date)
+						->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 						->count();
 		});
 
@@ -25,8 +25,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 			// return $q->getField('id');
 			$lead = $this->add('xepan\marketing\Model_Lead',['table_alias'=>'employee_assign_lead_to']);
 				return 	$lead->addCondition('created_by_id',$q->getField('id'))
-						// ->addCondition('created_at','>=',$this->from_date)
-						// ->addCondition('created_at','<',$this->api->nextDate($this->to_date))
+						->addCondition('created_at','>=',$this->from_date)
+						->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 						->count();
 		});
 
@@ -34,8 +34,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 			// return $q->getField('id');
 			$lead = $this->add('xepan\marketing\Model_Lead',['table_alias'=>'employee_assign_lead_by']);
 				return 	$lead->addCondition('assign_to_id',$q->getField('id'))
-						// ->addCondition('created_at','>=',$this->from_date)
-						// ->addCondition('created_at','<',$this->api->nextDate($this->to_date))
+						->addCondition('created_at','>=',$this->from_date)
+						->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 						->count();
 		});
 
@@ -43,6 +43,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 			$my_followups_model = $this->add('xepan\projects\Model_Task');
 		    return $my_followups_model->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition('created_by_id',$q->getField('id'))
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->addCondition('type','Followup')
 		    						->count();
 		});
@@ -52,6 +54,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','Open')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 
@@ -60,6 +64,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','Qualified')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 
@@ -68,6 +74,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','NeedsAnalysis')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 
@@ -76,6 +84,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','Quoted')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 
@@ -84,6 +94,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','Negotiated')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 
@@ -92,6 +104,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','Won')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 
@@ -100,6 +114,8 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		    return $opportunity->addCondition('assign_to_id',$q->getField('id'))
 		    						->addCondition([['created_by_id',$q->getField('id')],['assign_to_id',null]])
 		    						->addCondition('status','Lost')
+		    						->addCondition('created_at','>=',$this->from_date)
+									->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 		    						->count();
 		});
 	}

@@ -24,7 +24,7 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		$this->addExpression('total_lead_assign_to')->set(function($m,$q){
 			// return $q->getField('id');
 			$lead = $this->add('xepan\marketing\Model_Lead',['table_alias'=>'employee_assign_lead_to']);
-				return 	$lead->addCondition('created_by_id',$q->getField('id'))
+				return 	$lead->addCondition('assign_to_id',$q->getField('id'))
 						->addCondition('created_at','>=',$this->from_date)
 						->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 						->count();
@@ -33,7 +33,7 @@ class Model_EmployeeLead extends \xepan\hr\Model_Employee{
 		$this->addExpression('total_lead_assign_by')->set(function($m,$q){
 			// return $q->getField('id');
 			$lead = $this->add('xepan\marketing\Model_Lead',['table_alias'=>'employee_assign_lead_by']);
-				return 	$lead->addCondition('assign_to_id',$q->getField('id'))
+				return 	$lead->addCondition('created_by_id',$q->getField('id'))
 						->addCondition('created_at','>=',$this->from_date)
 						->addCondition('created_at','<',$this->api->nextDate($this->to_date))
 						->count();

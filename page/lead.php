@@ -67,11 +67,18 @@ class page_lead extends \xepan\base\Page{
 			return $x->addCondition('lead_id',$q->getField('id'))->_dsql()->del('fields')->field($q->expr('group_concat([0])',[$x->getElement('marketing_category_id')]));
 		});
 
+		$lead->addExpression('organization_name_with_name')
+					->set($lead->dsql()
+						->expr('CONCAT(IFNULL([0],"")," ::[ ",IFNULL([1],"")," ]")',
+							[$lead->getElement('first_name'),
+								$lead->getElement('organization')]))
+					->sortable(true);
+
 		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
 		// $lead->setOrder('total_visitor','desc');
 
 		$crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['emails_str','contacts_str','name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_MultiDelete');
 

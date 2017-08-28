@@ -28,20 +28,37 @@ class View_TeleMarketingListView extends \View{
 
 		$comm_form = $this->add('xepan\communication\Form_Communication',null,'communication_form');
 		$comm_form->setContact($lead);
+		$member_phones = $lead->getPhones();
 		$comm_form->getElement('email_to')->set($lead['emails_str']);
 		$comm_form->getElement('notify_email_to')->set($lead['emails_str']);
 		$comm_form->getElement('from_number')->set($lead['contacts_str']);
 		$body_field = $comm_form->getElement('body');
 		$body_field->options = ['toolbar1'=>"styleselect | bold italic fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor",'menubar'=>false];
+		$called_to_field = $comm_form->getElement('called_to');
+
+		$nos=[];
+		foreach ($member_phones as $no) {
+			$nos[$no] = $no;
+		}
+		$called_to_field->setValueList($nos);
+
 		// $comm_form->getElement('follow_up')->;
 		// $comm_form->layout->template->del('score_button_wrapper');
 		// $comm_form->layout->template->del('followup_form_wrapper');
 
+		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'communication_list');
 
 		$comm_form->addSubmit('Create Communication')->addClass('btn btn-success');
 		if($comm_form->isSubmitted()){
 			$communication_model = $comm_form->process();
-			$comm_form->js(null,$comm_form->js()->univ()->successMessage('Communication Created'))->reload()->execute();
+
+			$reload_array=
+						[
+						$comm_form->js()->univ()->successMessage('Communication Created'),
+						$view_conversation->js()->reload()						
+						];
+
+			$comm_form->js(null,$reload_array)->reload()->execute();
 		}		
 
 		$followup_form = $this->add('Form',null,'followup_form');
@@ -87,7 +104,6 @@ class View_TeleMarketingListView extends \View{
 		$form->addSubmit('Filter')->addClass('btn btn-primary btn-block');
 
 
-		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'communication_list');
 
 		$model_communication = $this->add('xepan\communication\Model_Communication');
 		$model_communication->addCondition(

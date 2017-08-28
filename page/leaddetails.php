@@ -65,6 +65,7 @@ class page_leaddetails extends \xepan\base\Page {
 				$state_field->getModel()->addCondition('country_id',$cntry_id);
 			}
 
+			// $country_field->js('change',$form->js()->atk4_form('reloadField','state_id',[$this->app->url(),'country_id'=>$state_field->js()->val()]));
 			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
 
 			$categories_field = $form->addField('DropDown','category');
@@ -87,7 +88,9 @@ class page_leaddetails extends \xepan\base\Page {
 					$this->api->db->beginTransaction();
 					$form->save();
 					$new_lead_model = $form->getModel();
-					
+						
+					$this->app->hook('new_lead_added',[$new_lead_model]);
+
 					if($form['email_1']){
 						$email = $this->add('xepan\base\Model_Contact_Email',['bypass_hook'=>true]);
 						$email['contact_id'] = $new_lead_model->id;

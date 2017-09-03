@@ -92,73 +92,81 @@ class page_leaddetails extends \xepan\base\Page {
 					$this->app->hook('new_lead_added',[$new_lead_model]);
 
 					if($form['email_1']){
+						$new_lead_model->checkEmail($form['email_1'],null,'email_1');
+
 						$email = $this->add('xepan\base\Model_Contact_Email',['bypass_hook'=>true]);
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Official";
 						$email['value'] = $form['email_1'];
-						$this->checkEmail($email->id,$form['email_1'],$new_lead_model->id,$form);
 						$email->save();
 					}
 
 					if($form['email_2']){
+						$new_lead_model->checkEmail($form['email_2'],null,'email_2');
+
 						$email = $this->add('xepan\base\Model_Contact_Email',['bypass_hook'=>true]);
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Official";
 						$email['value'] = $form['email_2'];
-						$this->checkEmail($email->id,$form['email_2'],$new_lead_model->id,$form);
 						$email->save();
 					}
 
 					if($form['email_3']){
+						$new_lead_model->checkEmail($form['email_3'],null,'email_3');
+
 						$email = $this->add('xepan\base\Model_Contact_Email',['bypass_hook'=>true]);
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = $form['email_3'];
-						$this->checkEmail($email->id,$form['email_3'],$new_lead_model->id,$form);
 						$email->save();
 					}
 					if($form['email_4']){
+						$new_lead_model->checkEmail($form['email_4'],null,'email_4');
+
 						$email = $this->add('xepan\base\Model_Contact_Email',['bypass_hook'=>true]);
 						$email['contact_id'] = $new_lead_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = $form['email_4'];
-						$this->checkEmail($email->id,$form['email_4'],$new_lead_model->id,$form);
 						$email->save();
 					}
 
 					// Contact Form
 					if($form['contact_no_1']){
+						$new_lead_model->checkPhone($form['contact_no_1'],null,'contact_no_1');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone',['bypass_hook'=>true]);
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_1'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_1'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 
 					if($form['contact_no_2']){
+						$new_lead_model->checkPhone($form['contact_no_2'],null,'contact_no_2');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone',['bypass_hook'=>true]);
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_2'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_2'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 
 					if($form['contact_no_3']){
+						$new_lead_model->checkPhone($form['contact_no_3'],null,'contact_no_3');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone',['bypass_hook'=>true]);
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_3'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_3'],$new_lead_model->id,$form);
 						$phone->save();
 					}
 					if($form['contact_no_4']){
+						$new_lead_model->checkPhone($form['contact_no_4'],null,'contact_no_4');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone',['bypass_hook'=>true]);
 						$phone['contact_id'] = $new_lead_model->id;
 						$phone['head'] = "Personal";
-						$phone['value'] = $form['contact_no_4'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_4'],$new_lead_model->id,$form);
+						$phone['value'] = $form['contact_no_4'];						
 						$phone->save();
 					}
 
@@ -384,11 +392,13 @@ class page_leaddetails extends \xepan\base\Page {
 	        
 	        $email_m->tryLoadAny();
 	        
-	        if($email_m->loaded())
+	        if($email_m->loaded()){
 	        	for ($i=1; $i <=4 ; $i++){ 
 	        		if($email_value == $form['email_'.$i])
 			        	$form->displayError('email_'.$i,'Email Already Used');
 	        	}
-		}	
+	        }    
+		}
+
     }
 }

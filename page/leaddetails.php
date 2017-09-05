@@ -45,7 +45,7 @@ class page_leaddetails extends \xepan\base\Page {
 			$base_validator = $this->add('xepan\base\Controller_Validator');
 
 			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
-			$form->setLayout(['page/leadprofile','contact_view_full_width']);			
+			$form->setLayout(['page/leadprofile','contact_view_full_width']);
 			$form->setModel($lead,['first_name','last_name','address','city','country_id','state_id','pin_code','organization','post','website','source','remark','assign_to_id']);
 			$form->addField('line','email_1')->validate('email');
 			$form->addField('line','email_2');
@@ -59,7 +59,9 @@ class page_leaddetails extends \xepan\base\Page {
 			$form->addField('Checkbox','want_to_add_next_lead')->set(true);
 
 			$country_field =  $form->getElement('country_id');
+			$country_field->getModel()->addCondition('status','Active');
 			$state_field = $form->getElement('state_id');
+			$state_field->getModel()->addCondition('status','Active');
 
 			if($cntry_id = $this->app->stickyGET('country_id')){			
 				$state_field->getModel()->addCondition('country_id',$cntry_id);

@@ -713,4 +713,52 @@ class Model_Lead extends \xepan\base\Model_Contact{
 				}
 			}
 	}
+
+	function page_assign($page){
+
+		$dept_id = $this->app->stickyGET('dept_id');
+		
+		$emp = $page->add('xepan\hr\Model_Employee');
+		$emp->addCondition('id','<>',$this->app->employee->id);
+		
+		$form = $page->add('Form');
+
+		$dept = $page->add('xepan\hr\Model_Department');
+		$dept->addCondition('status','Active');
+
+		$dept_field = $form->addField('xepan\base\DropDown','department');
+		$dept_field->setModel($dept);
+		$dept_field->setEmptyText('Please Select Department');
+
+		$emp_field = $form->addField('xepan\base\DropDown','employee')->validate('required');
+		$emp_field->setModel($emp);
+		$emp_field->setEmptyText('Please Select');
+
+		$form->addField('text','remark');
+
+		if($this['assign_to_id'])
+			$emp_field->set($this['assign_to_id']);
+
+		if($dept_id){
+			$emp_field->getModel()->addCondition('department_id',$dept_id);
+		}
+
+		$dept_field->js('change',$form->js()->atk4_form('reloadField','employee',[$this->app->url(),'dept_id'=>$dept_field->js()->val()]));
+		// $dept_field->js('change',$emp_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$emp_field->name]),'dept_id'=>$dept_field->js()->val()]));
+
+		$form->addSubmit('Assign')->addClass('btn btn-primary');
+		if($form->isSubmitted()){
+			$this->assign($form['employee'],$form['remark']);
+			return $this->app->page_action_result = $this->app->js(true,$page->js()->univ()->closeDialog())->univ()->successMessage('Assigned');
+		}
+	}
+
+	function assign($assign_to_id,$remark=null){
+
+		$this['assign_to_id'] = $assign_to_id;
+		$this['remark'] = $remark;
+		$this['assign_at'] = $this->app->now;
+		$this->save();
+		return $this;
+	}
 } 

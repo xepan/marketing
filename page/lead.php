@@ -27,9 +27,10 @@ class page_lead extends \xepan\base\Page{
 			exit;
 			
 		});
-
+		
 		if($this->model_class){
 			$lead = $this->add($this->model_class);
+			
 		}else{
 			$lead = $this->add('xepan\marketing\Model_Lead');
 		}

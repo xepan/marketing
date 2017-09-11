@@ -26,6 +26,8 @@
                     span Score {$score_sort}
                 th
                     span Visits
+                th
+                    span Created at
                 th 
                 {/}{/}
             {/}
@@ -60,6 +62,8 @@
                     td
                         a.do-view-lead-visitor(href="#" data-id="{$id}")
                             span.alert.alert-success{$total_visitor}
+                    td
+                        {$created_at}
                     td
                         {$action}
                     td(style="width: 15%;")

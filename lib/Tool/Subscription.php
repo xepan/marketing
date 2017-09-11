@@ -16,6 +16,8 @@ class Tool_Subscription extends \xepan\cms\View_Tool{
 	function init(){
 		parent::init();
 		
+		if($this->owner instanceof \AbstractController) return;
+		
 		$selected_category = [];
 		if($this->options["lead_category"]){
 			$selected_category = explode(",", $this->options["lead_category"]);

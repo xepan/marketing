@@ -170,7 +170,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		$form->addField('Number','lead_having_score_less_then')->set(0);
 		$form->addSubmit('delete contact now');
 		if($form->isSubmitted()){
-
+			$cat_name = $this['name'];
 			$delete_record = $this->delete_all_lead($form['contact'],$form['lead_having_score_less_then']);
 
 			$msg = "Category Record ";
@@ -180,7 +180,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 			$msg = trim($msg,",");
 
 			$this->app->employee
-				->addActivity( $msg, $this->id, null,null,null,"xepan_marketing_marketingcategory")
+				->addActivity("Lead of ".$cat_name." deleted", $this->id, null,$msg)
 				->notifyWhoCan('view,edit,delete,delete_all_lead','All');
 			return $page->js()->univ()->closeDialog();
 		}
@@ -201,52 +201,69 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		if($contact_type != 'All')
 			$lead_cat->addCondition('lead_type',$contact_type);
 
-		$delete_record['category_association'] = $lead_cat->count()->getOne();
-
 		$lead_array=[];
 		foreach ($lead_cat as $l) {
 			$lead_array[]=$l['lead_id'];
 		}
 
+		if(!count($lead_array)) return [];
+
 		// delete communication
 		$lead_communication = $this->add('xepan\communication\Model_Communication')
 				->addCondition([['from_id',$lead_array],['to_id',$lead_array],['created_by_id',$lead_array]]);
-		$delete_record['communication'] = $lead_communication->count()->getOne();
-		$lead_communication->deleteAll();
-
+		
+		if($count = $lead_communication->count()->getOne()){
+			$delete_record['communication'] = $count;
+			$lead_communication->deleteAll();
+		}
 
 		$attachment = $this->add('xepan\communication\Model_Communication_Attachment');
 		$attachment->addExpression('communication_created_by_id')->set($attachment->refSQL('communication_id')->fieldQuery('created_by_id'));
 		$attachment->addExpression('communication_from_id')->set($attachment->refSQL('communication_id')->fieldQuery('from_id'));
 		$attachment->addExpression('communication_to_id')->set($attachment->refSQL('communication_id')->fieldQuery('to_id'));
 		$attachment->addCondition([['communication_created_by_id',$lead_array],['communication_from_id',$lead_array],['communication_to_id',$lead_array]]);
-		$delete_record['communication_attachment'] = $attachment->count()->getOne();
-		$attachment->deleteAll();
-
+		
+		if($count = $attachment->count()->getOne()){
+			$delete_record['communication_attachment'] = $count;
+			$attachment->deleteAll();
+		}
+		
 		$email_model = $this->add('xepan\base\Model_Contact_Email')
 					->addCondition('contact_id',$lead_array);
-		$delete_record['contact_email'] = $email_model->count()->getOne();
-		$email_model->deleteAll();
+		if($count = $email_model->count()->getOne()){
+			$delete_record['contact_email'] = $count;
+			$email_model->deleteAll();
+		}
+
 
 		$phone_model = $this->add('xepan\base\Model_Contact_Phone')
 						->addCondition('contact_id',$lead_array);
-		$delete_record['contact_phone'] = $phone_model->count()->getOne();
-		$phone_model->deleteAll();
+		if($count = $phone_model->count()->getOne()){
+			$delete_record['contact_phone'] = $count;
+			$phone_model->deleteAll();
+		}
 
 		$relation_model = $this->add('xepan\base\Model_Contact_Relation')
 						->addCondition('contact_id',$lead_array);
-		$delete_record['contact_relation'] = $relation_model->count()->getOne();
-		$relation_model->deleteAll();
+		if($count = $relation_model->count()->getOne()){
+			$delete_record['contact_relation'] = $count;
+			$relation_model->deleteAll();
+		}
 
 		$im_model = $this->add('xepan\base\Model_Contact_IM')
 					->addCondition('contact_id',$lead_array);
-		$delete_record['contact_im'] = $im_model->count()->getOne();
-		$im_model->deleteAll();
+
+		if($count = $im_model->count()->getOne()){
+			$delete_record['contact_im'] = $count;
+			$im_model->deleteAll();
+		}
 
 		$event_model = $this->add('xepan\base\Model_Contact_Event')
 						->addCondition('contact_id',$lead_array);
-		$delete_record['contact_event'] = $event_model->count()->getOne();
-		$event_model->deleteAll();	
+		if($count = $event_model->count()->getOne()){
+			$delete_record['contact_event'] = $count;
+			$event_model->deleteAll();
+		}
 
 		// Remove related Document like SaleOrder, SaleInvoice, Quotation etc.
 		switch ($contact_type) {
@@ -274,19 +291,40 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 					$document_ids[] = $d->id;
 				}
 
-				$delete_record[$model_class] = $d_m->count()->getOne();
 				// remove attachment
 				if(count($document_ids)){
 					$a = $this->add('xepan\base\Model_Document_Attachment')
 						->addCondition('document_id',$document_ids);
 
-					$delete_record[$model_class."_attachment"] = $a->count()->getOne();
-					$a->delete();
+					if($count = $a->count()->getOne()){
+						$delete_record[$model_class."_attachment"] = $count;
+						$a->deleteAll();
+					}
 				}
-				$d_m->each(function($d){
-					$d->delete();
-				});
+
+				if($count = $d_m->count()->getOne()){
+					$delete_record[$model_class] = $count;
+					$d_m->each(function($d){
+						$d->delete();
+					});
+				}
 			}
+		}
+
+		// remove lead activityies
+		$act = $this->add('xepan\base\Model_Activity');
+		if(isset($document_ids) && count($document_ids)){
+			$act->addCondition([
+						['contact_id',$lead_array],
+						['related_contact_id',$lead_array],
+						['related_document_id',$document_ids]
+					]);
+		}else
+			$act->addCondition([['contact_id',$lead_array],['related_contact_id',$lead_array]]);
+
+		if($count = $act->count()->getOne()){
+			$delete_record["Activityies"] = $count;
+			$act->deleteAll();
 		}
 
 		// remove all leads
@@ -295,11 +333,16 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		if($lead_score)
 			$contact_model->addCondition('score','<',$lead_score);
 
-		$delete_record["Contact_".$contact_type] = $contact_model->count()->getOne();
-		$contact_model->deleteAll();
+		if($count = $contact_model->count()->getOne()){
+			$delete_record["Contact_".$contact_type] = $count;
+			$contact_model->deleteAll();
+		}
 
 		// remove all cat association
-		$lead_cat->deleteAll();
+		if($count = $lead_cat->count()->getOne()){
+			$delete_record['category_association'] = $count;
+			$lead_cat->deleteAll();
+		}
 
 		return $delete_record;
 	}

@@ -155,65 +155,133 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 								->deleteAll();
 	}
 
-	function delete_all_lead(){
+	function page_delete_all_lead($page){
+
+		$form = $page->add('Form');
+		$type_field = $form->addField('DropDown','contact')
+				->setValueList([
+					'All'=>'All',
+					'Lead'=>"Lead",
+					'Customer'=>'Customer',
+					'Supplier'=>'Supplier',
+					'Affiliate'=>'Affiliate'
+				]);
+		$form->addField('checkbox','remove_related_document');
+		$form->addField('Number','lead_having_score_less_then')->set(0);
+		$form->addSubmit('delete contact now');
+		if($form->isSubmitted()){
+
+			$this->delete_all_lead($form['contact'],$form['lead_having_score_less_then']);
+			// $this->app->employee
+			// 	->addActivity("Category '".$this['name']."' and ".$form['category']."' merged'", $this->id, null,null,null,"xepan_marketing_marketingcategory")
+			// 	->notifyWhoCan('view,edit,delete','All');
+			return $page->js()->univ()->closeDialog();
+		}
+
+	}
+
+	function delete_all_lead($contact_type = "All",$lead_score=0){
+
 		$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
 		$lead_cat->addCondition('marketing_category_id',$this->id);
-		// throw new \Exception($lead_cat->count(), 1);
+		$lead_cat->addExpression('lead_type')->set($lead_cat->refSQL('lead_id')->fieldQuery('type'));
+
+		if($contact_type != 'All')
+			$lead_cat->addCondition('lead_type',$contact_type);
+
+		$lead_array=[];
+		foreach ($lead_cat as $l) {
+			$lead_array[]=$l['lead_id'];
+		}
+
+		$lead_communication = $this->add('xepan\communication\Model_Communication')
+				->addCondition([['from_id',$lead_array],['to_id',$lead_array],['created_by_id',$lead_array]]);
+
+		$attachment = $this->add('xepan\communication\Model_Communication_Attachment');
 		
-		// $lead_cat->_dsql()->group('lead_id');
-		// try{
-			// $this->api->db->beginTransaction();
-			$lead_array=[];
-			foreach ($lead_cat as $l) {
-				$lead_array[]=$l['lead_id'];
-			}
+		$attachment->addExpression('communication_created_by_id')->set($attachment->refSQL('communication_id')->fieldQuery('created_by_id'));
+		$attachment->addExpression('communication_from_id')->set($attachment->refSQL('communication_id')->fieldQuery('from_id'));
+		$attachment->addExpression('communication_to_id')->set($attachment->refSQL('communication_id')->fieldQuery('to_id'));
+		$attachment->addCondition([['communication_created_by_id',$lead_array],['communication_from_id',$lead_array],['communication_to_id',$lead_array]]);
+		$attachment->deleteAll();
 
-			$lead_communication = $this->add('xepan\communication\Model_Communication')
-					->addCondition([['from_id',$lead_array],['to_id',$lead_array],['created_by_id',$lead_array]]);			
-			$attachment = $this->add('xepan\communication\Model_Communication_Attachment');
-			
-			$attachment->addExpression('communication_created_by_id')->set($attachment->refSQL('communication_id')->fieldQuery('created_by_id'));
-			$attachment->addExpression('communication_from_id')->set($attachment->refSQL('communication_id')->fieldQuery('from_id'));
-			$attachment->addExpression('communication_to_id')->set($attachment->refSQL('communication_id')->fieldQuery('to_id'));
-			$attachment->addCondition([['communication_created_by_id',$lead_array],['communication_from_id',$lead_array],['communication_to_id',$lead_array]]);			
-			$attachment->deleteAll();
+		// delete communication
+		$lead_communication->deleteAll();
 
-			// delete communication
-			$lead_communication->deleteAll();
+		$this->add('xepan\base\Model_Contact_Email')
+				->addCondition('contact_id',$lead_array)
+				->deleteAll();
 
-			$this->add('xepan\base\Model_Contact_Email')
-					->addCondition('contact_id',$lead_array)
-					->deleteAll();
-			$this->add('xepan\base\Model_Contact_Phone')
-					->addCondition('contact_id',$lead_array)
-					->deleteAll();
-			$this->add('xepan\base\Model_Contact_Relation')
-					->addCondition('contact_id',$lead_array)
-					->deleteAll();
-			$this->add('xepan\base\Model_Contact_IM')
-					->addCondition('contact_id',$lead_array)
-					->deleteAll();
-			$this->add('xepan\base\Model_Contact_Event')
-					->addCondition('contact_id',$lead_array)
-					->deleteAll();		
+		$this->add('xepan\base\Model_Contact_Phone')
+				->addCondition('contact_id',$lead_array)
+				->deleteAll();
 
-			$lead_m = $this->add('xepan\marketing\Model_Lead')
-						->addCondition('id',$lead_array)
+		$this->add('xepan\base\Model_Contact_Relation')
+				->addCondition('contact_id',$lead_array)
+				->deleteAll();
+
+		$this->add('xepan\base\Model_Contact_IM')
+				->addCondition('contact_id',$lead_array)
+				->deleteAll();
+
+		$this->add('xepan\base\Model_Contact_Event')
+				->addCondition('contact_id',$lead_array)
+				->deleteAll();	
+
+		// Remove related Document like SaleOrder, SaleInvoice, Quotation etc.
+		switch ($contact_type) {
+			case 'All':
+				$document_type = ['xepan\commerce\Model_SalesOrder','xepan\commerce\Model_SalesInvoice','xepan\commerce\Model_Quotation','xepan\commerce\Model_PurchaseOrder','xepan\commerce\Model_PurchaseInvoice'];
+			break;
+			case 'Customer':
+				$document_type = ['xepan\commerce\Model_SalesOrder','xepan\commerce\Model_SalesInvoice','xepan\commerce\Model_Quotation'];
+			break;
+			case 'Supplier':
+				$document_type = ['xepan\commerce\Model_PurchaseOrder','xepan\commerce\Model_PurchaseInvoice'];
+			break;
+		}
+
+		if(isset($document_type)){
+			foreach ($document_type as $key => $model_class) {
+				$d_m = $this->add($model_class)
+						->addCondition([['contact_id',$lead_array],['created_by_id',$lead_array]])
+						;
+				$document_ids = [];
+				foreach ($d_m as $d) {
+					$document_ids[] = $d->id;
+				}
+				// // remove attachment
+				if(count($document_ids)){
+					$this->add('xepan\base\Model_Document_Attachment')
+						->addCondition('document_id',$document_ids)
 						->deleteAll();
+				}
+				$d_m->deleteAll();
+			}
+		}
 
-			$lead_cat->deleteAll();			
+		// remove all leads
+		switch ($contact_type) {
+			case 'All':
+				$contact_model_class = 'xepan\marketing\Model_Contact';
+			break;
+			case 'Customer':
+				$contact_model_class = 'xepan\commerce\Model_Customer';
+			break;
+			case 'Supplier':
+				$contact_model_class = 'xepan\commerce\Model_Supplier';
+			break;
+		}
 
-			// echo "<pre>";
-			// print_r($lead_array);
-			// echo "</pre>";
-		
-		// 	$this->api->db->commit();
-		// }catch(\Exception_StopInit $e){
+		$contact_model = $this->add($contact_model_class)
+			->addCondition('id',$lead_array);
+		if($lead_score)
+			$contact_model->addCondition('score','<',$lead_score);
+		$contact_model->deleteAll();
 
-		// }catch(\Exception $e){
-		// 	$this->api->db->rollback();
-		// 	throw $e;
-		// }
+		// remove all cat association
+		$lead_cat->deleteAll();
 	}
-	
+
+
 }

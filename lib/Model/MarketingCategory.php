@@ -301,6 +301,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		// Remove related Document like SaleOrder, SaleInvoice, Quotation etc.
 		switch ($contact_type) {
 			case 'All':
+			case "Contact":
 				$document_type = ['xepan\commerce\Model_SalesInvoice','xepan\commerce\Model_SalesOrder','xepan\commerce\Model_Quotation','xepan\commerce\Model_PurchaseInvoice','xepan\commerce\Model_PurchaseOrder'];
 				$contact_model_class = 'xepan\marketing\Model_Lead';
 			break;

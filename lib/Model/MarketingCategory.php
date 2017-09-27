@@ -176,7 +176,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 					'Customer'=>'Customer',
 					'Supplier'=>'Supplier',
 					'Affiliate'=>'Affiliate'
-				]);
+				])->set('Lead');
 		$form->addField('checkbox','remove_related_document')->set(1);
 		$form->addField('Number','lead_having_score_less_then')->set(0);
 		$form->addField('checkbox','belongs_to_this_category_only')->set(1);

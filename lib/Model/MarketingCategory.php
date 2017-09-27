@@ -172,7 +172,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		$type_field = $form->addField('DropDown','contact')
 				->setValueList([
 					'All'=>'All',
-					'Lead'=>"Lead",
+					'Contact'=>"Lead",
 					'Customer'=>'Customer',
 					'Supplier'=>'Supplier',
 					'Affiliate'=>'Affiliate'

@@ -158,6 +158,17 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 	function page_delete_all_lead($page){
 
 		$form = $page->add('Form');
+		$form->add('xepan\base\Controller_FLC')
+			->makePanelsCoppalsible()
+			->addContentSpot()
+			->layout([
+				'contact'=>'C1~3',
+				'remove_related_document~'=>'C2~3',
+				'lead_having_score_less_then'=>'C3~3',
+				'belongs_to_this_category_only~'=>'C4~3'
+				// 'FormButtons~'=>'C5~4'
+			]);
+
 		$type_field = $form->addField('DropDown','contact')
 				->setValueList([
 					'All'=>'All',
@@ -168,10 +179,12 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 				]);
 		$form->addField('checkbox','remove_related_document')->set(1);
 		$form->addField('Number','lead_having_score_less_then')->set(0);
-		$form->addSubmit('delete contact now');
+		$form->addField('checkbox','belongs_to_this_category_only')->set(1);
+		$form->addSubmit('delete contact now')->addClass('btn btn-primary');
+
 		if($form->isSubmitted()){
 			$cat_name = $this['name'];
-			$delete_record = $this->delete_all_lead($form['contact'],$form['lead_having_score_less_then']);
+			$delete_record = $this->delete_all_lead($form['contact'],$form['lead_having_score_less_then'],$form['belongs_to_this_category_only']);
 
 			$msg = "Category Record ";
 			foreach ($delete_record as $key => $value) {
@@ -187,7 +200,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 
 	}
 
-	function delete_all_lead($contact_type = "All",$lead_score=0){
+	function delete_all_lead($contact_type = "All",$lead_score=0,$belongs_to_this_category_only=0){
 		$delete_record = [];
 		ini_set('max_execution_time', 0);
 		
@@ -197,16 +210,36 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
 		$lead_cat->addCondition('marketing_category_id',$this->id);
 		$lead_cat->addExpression('lead_type')->set($lead_cat->refSQL('lead_id')->fieldQuery('type'));
-
 		if($contact_type != 'All')
 			$lead_cat->addCondition('lead_type',$contact_type);
+		
+		$lead_cat->addExpression('lead_cat_count')->set(function($m,$q){
+			$l = $m->add('xepan\marketing\Model_Lead_Category_Association',['table_alias'=>'lcas']);
+			$l->addCondition('lead_id',$m->getElement('lead_id'));
+			return $q->expr('[0]',[$l->count()]);
+		});
+		if($belongs_to_this_category_only){
+			$lead_cat->addCondition('lead_cat_count',1);
+		}
 
 		$lead_array=[];
 		foreach ($lead_cat as $l) {
 			$lead_array[]=$l['lead_id'];
 		}
 
-		if(!count($lead_array)) return [];
+		if(!count($lead_array)){
+			$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
+			$lead_cat->addCondition('marketing_category_id',$this->id);
+			$lead_cat->addExpression('lead_type')->set($lead_cat->refSQL('lead_id')->fieldQuery('type'));
+			if($contact_type != 'All')
+				$lead_cat->addCondition('lead_type',$contact_type);
+			
+			if($count = $lead_cat->count()->getOne()){
+				$delete_record['category_association'] = $count;
+				$lead_cat->deleteAll();
+			}
+			return [];
+		}
 
 		// delete communication
 		$lead_communication = $this->add('xepan\communication\Model_Communication')
@@ -339,6 +372,12 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		}
 
 		// remove all cat association
+		$lead_cat = $this->add('xepan\marketing\Model_Lead_Category_Association');
+		$lead_cat->addCondition('marketing_category_id',$this->id);
+		$lead_cat->addExpression('lead_type')->set($lead_cat->refSQL('lead_id')->fieldQuery('type'));
+		if($contact_type != 'All')
+			$lead_cat->addCondition('lead_type',$contact_type);
+		
 		if($count = $lead_cat->count()->getOne()){
 			$delete_record['category_association'] = $count;
 			$lead_cat->deleteAll();

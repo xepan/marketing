@@ -7,7 +7,7 @@ class Widget_LeadsAdded extends \xepan\base\Widget{
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('employee');
+		$this->report->enableFilterEntity('Employee');
 
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\leads-added']);
 		$this->grid->add('View',null,'grid_buttons')->setHtml('<b>Leads Added</b>');

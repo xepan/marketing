@@ -8,7 +8,7 @@ class Widget_SubCommunication extends \xepan\base\Widget{
 		parent::init();
 		
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('employee');
+		$this->report->enableFilterEntity('Employee');
 		$this->chart = $this->add('xepan\base\View_Chart');
 	}
 

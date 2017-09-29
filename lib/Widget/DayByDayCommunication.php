@@ -8,7 +8,7 @@ class Widget_DayByDayCommunication extends \xepan\base\Widget {
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('employee');
+		$this->report->enableFilterEntity('Employee');
 	}
 
 	function recursiveRender(){

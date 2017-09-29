@@ -6,7 +6,7 @@ class Widget_DepartmentLeadsAdded extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('department');
+		$this->report->enableFilterEntity('Department');
 		
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\department-lead']);
 		$this->grid->add('View',null,'grid_buttons')->setHtml('<b>Lead Created</b>');

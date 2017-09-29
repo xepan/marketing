@@ -7,7 +7,7 @@ class Widget_LeadCount extends \xepan\base\Widget{
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('employee');
+		$this->report->enableFilterEntity('Employee');
 
 		$this->view = $this->add('View',null,null,['page\widget\panel']);
 	}

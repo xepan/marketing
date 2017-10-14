@@ -188,8 +188,8 @@ class Initiator extends \Controller_Addon {
 		});
 
 		if($this->app->isEditing){
-			
-			$this->app->exportFrontEndTool('xepan\marketing\Tool_Subscription','Marketing');
+			// deprecated bacause custom can be used as subscription tool
+			// $this->app->exportFrontEndTool('xepan\marketing\Tool_Subscription','Marketing');
 		}
 
 		return $this;

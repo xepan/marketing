@@ -120,8 +120,14 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this->addHook('beforeDelete',[$this,'checkContactIsLead']);
 		$this->addHook('beforeDelete',[$this,'checkExistingOpportunities']);
 		$this->addHook('beforeDelete',[$this,'checkExistingCategoryAssociation']);
+		$this->addHook('beforeDelete',[$this,'deleteUnsubscribe']);
+
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 
+	}
+
+	function deleteUnsubscribe(){
+		$this->add('xepan\marketing\Model_Unsubscribe')->addCondition('contact_id',$this->id)->deleteAll();
 	}
 
 	function updateSearchString($m){

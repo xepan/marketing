@@ -361,6 +361,11 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 			$act->deleteAll();
 		}
 
+		// remove all unsubscrie list
+		$un_model = $this->add('xepan\marketing\Model_Unsubscribe');
+		$un_model->addCondition('contact_id',$lead_array);
+		$un_model->deleteAll();
+
 		// remove all leads
 		$contact_model = $this->add($contact_model_class)
 				->addCondition('id',$lead_array);

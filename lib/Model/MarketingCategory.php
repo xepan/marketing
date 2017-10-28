@@ -22,7 +22,7 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		$this->addCondition('type','MarketingCategory');
 		$this->addCondition('status','All');
 		
-		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
+		$this->getElement('created_by_id')->defaultValue(@$this->app->employee->id);
 
 		$this->addExpression('leads_count')->set(function($m){
 			$association = $this->add('xepan\marketing\Model_Lead_Category_Association');

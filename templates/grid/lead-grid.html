@@ -16,8 +16,7 @@
         <th><span>Last Communication</span></th>
         <th id="{$score_sortid}"><span>Score {$score_sort}</span></th>
         <th><span>Visits</span></th>
-        <th><span>Created at</span></th>
-        <th> </th>{/}{/}
+        <th><span>Created at</span></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -35,11 +34,7 @@
           <td><a href="#" data-id="{$id}" class="do-view-lead-score"><span class="alert alert-warning">{score}0{/}</span></a></td>
           <td><a href="#" data-id="{$id}" class="do-view-lead-visitor"><span class="alert alert-success">{$total_visitor}</span></a></td>
           <td>{$created_at}</td>
-          <td>{$action}</td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}
-          </td>{/}
+          <td>{$action}</td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

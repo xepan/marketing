@@ -106,12 +106,8 @@ class View_TeleMarketingListView extends \View{
 
 
 		$model_communication = $this->add('xepan\communication\Model_Communication');
-		$model_communication->addCondition([['to_id',$contact_id],['to_id','<>',null]]);
+		$model_communication->addCondition([['to_id',$contact_id],['from_id',$contact_id]]);
 
-		// $model_communication->addCondition(
-		// 								$model_communication->dsql()->andExpr()
-		// 							  	->where('to_id',$contact_id)
-		// 							  	->where('to_id','<>',null));
 		$model_communication->setOrder('id','desc');
 
 		if($form->isSubmitted()){												
@@ -123,7 +119,7 @@ class View_TeleMarketingListView extends \View{
 			$model_communication->addCondition('communication_type',explode(",", $_GET['comm_type']));
 		}
 
-		if($search = $this->app->stickyGET('search')){		
+		if($search = $this->app->stickyGET('search')){			
 			$model_communication->addExpression('Relevance')->set('MATCH(title,description,communication_type) AGAINST ("'.$search.'")');
 			$model_communication->addCondition('Relevance','>',0);
  			$model_communication->setOrder('Relevance','Desc');

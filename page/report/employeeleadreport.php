@@ -2,50 +2,66 @@
 
 namespace xepan\marketing;
 
-/**
-* 
-*/
 class page_report_employeeleadreport extends \xepan\base\Page{
 
 	public $title = "Employee Lead Report`s";
+
 	function init(){
 		parent::init();
+
 		$emp_id = $this->app->stickyGET('employee_id');
-		$from_date = $this->app->stickyGET('from_date');
-		$to_date = $this->app->stickyGET('to_date');
-		$form = $this->add('Form',null,null,['form/empty']);
+		$from_date = $this->app->stickyGET('from_date')?:$this->app->today;
+		$to_date = $this->app->stickyGET('to_date')?:$this->app->today;
+		$department = $this->app->stickyGET('department');
+
+		$form = $this->add('Form');
+		$form->add('xepan\base\Controller_FLC')
+			->makePanelsCoppalsible(true)
+			->layout([
+				'date_range'=>'Filter~c1~3',
+				'employee'=>'c2~3',
+				'department'=>'c3~3',
+				'FormButtons~&nbsp;'=>'c4~3'
+			]);
+
 		$date = $form->addField('DateRangePicker','date_range');
-		$set_date = $this->app->today." to ".$this->app->today;
-		if($from_date){
-			$set_date = $from_date." to ".$to_date;
-			$date->set($set_date);	
-		}
+		$set_date = $from_date." to ".$to_date;
+		$date->set($set_date);
+
 		$emp_field = $form->addField('xepan\base\Basic','employee');
 		$emp_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
-		
+
+		$dept_field = $form->addField('xepan\base\DropDown','department');
+		$dept_field->setModel('xepan\hr\Model_Department');
+		$dept_field->setEmptyText('All');
+
+		$form->addSubmit('Get Details')->addClass('btn btn-primary');
+
 		$emp_model = $this->add('xepan\marketing\Model_EmployeeLead',['from_date'=>$from_date,'to_date'=>$to_date]);
 		if($emp_id){
 			$emp_model->addCondition('id',$emp_id);
 		}
-		if($_GET['from_date']){
-			$emp_model->from_date = $_GET['from_date'];
+		if($from_date){
+			$emp_model->from_date = $from_date;
 		}
-		if($_GET['from_date']){
-			$emp_model->to_date = $_GET['to_date'];
+		if($to_date){
+			$emp_model->to_date = $to_date;
 		}
-		$form->addSubmit('Get Details')->addClass('btn btn-primary');
+		if($department){
+			$emp_model->addCondition('department_id',$department);
+		}
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['view/report/employee-lead-report-gridview']);
 		$grid->setModel($emp_model);
 		$grid->addPaginator(50);
 
 		if($form->isSubmitted()){
-
 			$grid->js()->reload(
 							[
 								'employee_id'=>$form['employee'],
 								'from_date'=>$date->getStartDate()?:0,
-								'to_date'=>$date->getEndDate()?:0
+								'to_date'=>$date->getEndDate()?:0,
+								'department'=>$form['department']?:0,
 							]
 				)->execute();
 		}
@@ -89,7 +105,6 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 		$grid->addFormatter('total_lead_assign_to','total_lead_assign_to');
 
 		$total_followup_vp = $this->add('VirtualPage')->set(function($page){
-			// $page->add('View_Error')->set($_GET['from_date']);
 			$employee_id = $this->app->stickyGET('employee_id');
 			$my_followups_model = $this->add('xepan\projects\Model_Task');
 		    $my_followups_model->addCondition('assign_to_id',$employee_id)

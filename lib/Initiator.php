@@ -71,6 +71,8 @@ class Initiator extends \Controller_Addon {
 		$this->app->addHook('contact_save',[$this,'contactSave']);
 		$this->app->addHook('widget_collection',[$this,'exportWidgets']);
 		$this->app->addHook('entity_collection',[$this,'exportEntities']);
+		$this->app->addHook('collect_shortcuts',[$this,'collect_shortcuts']);
+
 		return $this;
 	}
 
@@ -120,6 +122,26 @@ class Initiator extends \Controller_Addon {
         $array['MARKETING_LEAD_SOURCE'] = ['caption'=>'MARKETING_LEAD_SOURCE','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_MARKETING_LEAD_SOURCE'];
 
     }
+
+    function collect_shortcuts($app,&$shortcuts){
+		// $shortcuts[]=["title"=>"New Email","keywords"=>"new email send","description"=>"Send New Email","normal_access"=>"My Menu -> Tasks / New Task Button","url"=>$this->app->url('xepan/projects/mytasks',['admin_layout_cube_mytasks_virtualpage'=>'true']),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Strategy Planning","keywords"=>"Strategy Planning company target audiance location competitors description","description"=>"Define your companies basic stratagy","normal_access"=>"Marketing -> Strategy Planning","url"=>$this->app->url('xepan_marketing_strategyplanning'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Marketing Category","keywords"=>"marketing category sections segments areas","description"=>"Define your companies marketing categories","normal_access"=>"Marketing -> Category Management","url"=>$this->app->url('xepan_marketing_marketingcategory'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Lead Management","keywords"=>"lead all contacts search person customer vendor opportunity","description"=>"Manage your companies leads","normal_access"=>"Marketing -> Lead","url"=>$this->app->url('xepan_marketing_lead'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Assign Multiple Leads","keywords"=>"lead assign employee staff","description"=>"Assign lead to employee","normal_access"=>"Marketing -> Lead Assign","url"=>$this->app->url('xepan_marketing_employeeleadassign'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Opportunities","keywords"=>"lead opportunities","description"=>"Manage Business Opportunities","normal_access"=>"Marketing -> Opportunity","url"=>$this->app->url('xepan_marketing_opportunity',['watchable'=>1]),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Newsletters","keywords"=>"newsletters news letter email template","description"=>"Manage Newsletters","normal_access"=>"Marketing -> Newsletter","url"=>$this->app->url('xepan_marketing_newsletter'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Social Content","keywords"=>"social content post facebook blog","description"=>"Manage Newsletters","normal_access"=>"Marketing -> Social Content","url"=>$this->app->url('xepan_marketing_socialcontent',['status'=>'Draft,Submitted,Approved']),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Tele Marketing","keywords"=>"tele marketing stanard view","description"=>"Tele Marketing Standard View","normal_access"=>"Marketing -> Tele Marketing","url"=>$this->app->url('xepan_marketing_telemarketing'),'mode'=>'fullframe'];
+		$shortcuts[]=["title"=>"Tele Marketing List View","keywords"=>"tele marketing list view","description"=>"Tele Marketing List View","normal_access"=>"Marketing -> Tele Marketing / List View","url"=>$this->app->url('xepan_marketing_telemarketinglistview'),'mode'=>'fullframe'];
+		$shortcuts[]=["title"=>"SMS Content","keywords"=>"sms marketing content","description"=>"SMS Content Management","normal_access"=>"Marketing -> SMS","url"=>$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Marketing Campaigns","keywords"=>"campaigns marketing schedule newsletter day date ","description"=>"Manage Marketing Campaigns","normal_access"=>"Marketing -> Campaign","url"=>$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Campaigns Scheduled Timeline","keywords"=>"campaigns marketing schedule timeline","description"=>"Monitor your scheduled marketing campaigns","normal_access"=>"Marketing -> Schedule Timeline","url"=>$this->app->url('xepan_marketing_scheduletimeline'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Analytics - Marketing Day by Day","keywords"=>"marketing day by day analysis","description"=>"Marketing day by day analysis","normal_access"=>"Marketing -> Day by Day Analytics","url"=>$this->app->url('xepan_marketing_daybydayanalytics'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Social Configuration","keywords"=>"facebook google blogger linkedin app","description"=>"Manage Social integration configurations with FB/Google Blogger/Linkedin","normal_access"=>"Marketing -> Configuration","url"=>$this->app->url('xepan_marketing_socialconfiguration'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Lead Source","keywords"=>"lead source","description"=>"Configure lead sources","normal_access"=>"Marketing -> Configuration/ SideBar -> Lead Source","url"=>$this->app->url('xepan_marketing_leadsource'),'mode'=>'frame'];
+		$shortcuts[]=["title"=>"Lead External Configuration","keywords"=>"lead external information api","description"=>"Get external inforamtion about lead","normal_access"=>"Marketing -> Configuration/ SideBar -> External Configuration","url"=>$this->app->url('xepan_marketing_externalconfiguration'),'mode'=>'frame'];
+	}
 	
 	function contactSave($app,$m){
 		if($m->id == $this->app->employee->id)

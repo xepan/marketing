@@ -5,8 +5,8 @@ class page_opportunity extends \xepan\base\Page{
 	public $title ="Opportunity";
 
 	function init(){
-		parent::init(); 
- 
+		parent::init();
+		
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
 		$opp_lead_j = $opportunity->opp_j->join('contact.id','lead_id');
 		$x = $opp_lead_j->addField('organization');
@@ -43,13 +43,12 @@ class page_opportunity extends \xepan\base\Page{
 						->fieldQuery('country');
 		});	
 
-		$watchable = $this->app->stickyGET('watchable');
+
+		// $watchable = $_GET['watchable'];
 		$status = $this->app->stickyGET('status');
-		if($watchable){
+		if(!$status){
 			$opportunity->addCondition('status','<>',['Won','Lost']);
-		}
-		else{
-			// throw new \Exception($status, 1);
+		}else{
 			$opportunity->addCondition('status',$status);
 		}
 
@@ -62,8 +61,8 @@ class page_opportunity extends \xepan\base\Page{
 		}	
 
 		$crud->setModel($opportunity,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date','city','country'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date','city','country']);
-		$crud->grid->addPaginator(10);		
-		$crud->add('xepan\base\Controller_MultiDelete');		
+		$crud->grid->addPaginator(10);
+		$crud->add('xepan\base\Controller_MultiDelete');
 		$crud->add('xepan\base\Controller_Avatar',['name_field'=>'lead']);
 		
 		$f = $crud->grid->addQuickSearch(['lead','title','description',$x,'city','country']);

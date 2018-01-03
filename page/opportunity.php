@@ -8,7 +8,7 @@ class page_opportunity extends \xepan\base\Page{
 		parent::init();
 		
 		$opportunity = $this->add('xepan\marketing\Model_Opportunity');
-		$opp_lead_j = $opportunity->opp_j->join('contact.id','lead_id');
+		$opp_lead_j = $opportunity->opp_j->leftJoin('contact.id','lead_id');
 		$x = $opp_lead_j->addField('organization');
 
 		$opportunity->setOrder('created_at','desc');

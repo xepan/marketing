@@ -253,6 +253,11 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 		$m->ref('xepan\marketing\Schedule')->deleteAll();
 	}
 
+	function removeExistingSchedule(){
+		if(!$this->loaded()) throw new \Exception("Model Campaign must loaded");
+		$this->ref('xepan\marketing\Schedule')->deleteAll();
+	}
+
 	function checkExistingLandingResponses(){
 		$model_landingresponse = $this->add('xepan\marketing\Model_LandingResponse');
 		$model_landingresponse->addCondition('campaign_id',$this->id)->deleteAll();
@@ -340,8 +345,139 @@ class Model_Campaign extends \xepan\hr\Model_Document{
 
 		$schedule = $this->ref('xepan\marketing\Schedule')
 								->_dsql()->del('fields')->field('id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($schedule)),false);
-			
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($schedule)),false);	
 	}
 
+
+	/*
+		$campaign_detail = [
+						'title'=>'',
+						'starting_date'=>'',
+						'ending_date'=>'',
+						'campaign_type'=>'',
+						'status'=>'',
+					];
+		
+		$category_list = [
+				'0' => 2,
+				'1' => Cat_name, // not exit then create category also
+				'3' => 90,
+			]
+
+		$newsletter_detail = [
+						newsletter_id_1 => [
+												'date'=>'2017-09-09',
+												'day'=>0'
+												'campaign_id'=>'1'
+											],
+						newsletter_id_2 => [],
+						newsletter_id_2 => [],
+						newsletter_id_2 => [],
+						.... 	       ===  ......
+					]
+		
+		$remove_old_association = true //means  delete all associated category and schedule also
+	*/
+
+	function scheduleCampaign($campaign_detail=[],$category_list=[],$contact_list=[],$document_detail=[],$delete_old_association=true){
+		if(!is_array($campaign_detail)) throw new \Exception("must pass array for campaign detail");
+		if(!is_array($category_list)) throw new \Exception("must pass array for category association");
+		
+		// create campaign
+		$cmp_model = $this->getCampaign($campaign_detail);
+
+		// todo remove all old category
+		if($delete_old_association){
+			$cmp_model->removeAssociateCategory();
+			$cmp_model->removeAssociateUser();
+		}
+
+		// campaign category association
+		$cat_list = [];
+		foreach($category_list as $key => $cat) {
+			if(!trim($cat)) continue;
+
+			$cat_model = $this->add('xepan\marketing\Model_MarketingCategory')
+							->getCategory(trim($cat));
+			
+			// lead associate with category
+			if(count($contact_list)){
+				$cat_model->associateLead($contact_list);
+			}
+			// campaign associate with category
+			$cmp_model->associateCategory($cat_model->id);
+		}
+
+		// newsletter association
+		if($delete_old_association)
+			$cmp_model->removeExistingSchedule();
+
+		$cmp_model->associateSchedule($document_detail);
+		
+		$cmp_model['schedule'] = $cmp_model->getScheduleJson();
+		$cmp_model->save();
+
+		return $cmp_model;
+	}
+
+	function getScheduleJson(){
+		if(!$this->loaded()) throw new \Exception("campaign model must loaded");
+		
+		$schedule = $this->ref('xepan\marketing\Schedule');
+		$schedule->addExpression('title')->set(function($m,$q){
+			$newsletter = $this->add('xepan\marketing\Model_Newsletter');
+			$newsletter->addCondition('id',$m->getElement('document_id'));
+			return $q->expr('[0]',[$newsletter->fieldQuery('name')]);
+		});
+
+		$list = [];
+		foreach ($schedule as $model) {
+			$temp = [
+					'title'=>$model['title'],
+					'start'=>$model['date'],
+					'document_id'=>$model['document_id'],
+					'client_event_id'=>$model['client_event_id']
+				];
+
+			array_push($list,$temp);
+		}
+
+		return json_encode($list);
+	}
+
+	function associateSchedule($document_list = []){
+		if(!is_array($document_list) || !count($document_list)) return false;
+
+		$query = "INSERT into schedule (campaign_id,document_id,date,day,client_event_id) VALUES ";
+			
+		foreach ($document_list as $document_id => $data) {
+			$campaign_id = $data['campaign_id']?:$this->id;
+			$date = $data['date']?:$this->app->today;
+			$day = $data['day']?:0;
+
+			$query .= "('".$campaign_id."','".$document_id."','".$date."','".$day."','_fc1'),";
+		}
+
+		$query = trim($query,',');
+		$this->app->db->dsql()->expr($query)->execute();
+
+		return true;
+	}
+
+	function getCampaign($campaign_detail){
+
+		if(!is_array($campaign_detail)) throw new \Exception("must pass array for campaign detail", 1);
+		if(!isset($campaign_detail['campaign_type']) || !$campaign_detail['campaign_type']) throw new \Exception("must pass campaign type", 1);
+
+		$cmp_model = $this->add('xepan\marketing\Model_Campaign');
+		$cmp_model->addCondition('title',($campaign_detail['title']?$campaign_detail['title']:$this->app->now));
+		$cmp_model->addCondition('campaign_type',$campaign_detail['campaign_type']);
+		$cmp_model->tryLoadAny();
+		$cmp_model['starting_date'] = $campaign_detail['starting_date']?$campaign_detail['starting_date']:$this->app->now;
+		$cmp_model['ending_date'] = $campaign_detail['ending_date']?$campaign_detail['ending_date']:($this->app->nextDate($this->app->now));
+
+		$cmp_model['status'] = $campaign_detail['status']?:"Draft";
+		return $cmp_model->save();
+	}
+	
 } 

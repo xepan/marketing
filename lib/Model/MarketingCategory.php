@@ -392,5 +392,32 @@ class Model_MarketingCategory extends \xepan\hr\Model_Document{
 		return $delete_record;
 	}
 
+	function getCategory($identity){
+		if(!$identity) throw new \Exception("must pass either id or category name");
+
+		$cat_model = $this->add('xepan\marketing\Model_MarketingCategory');
+		if(is_numeric($identity)){
+			$cat_model->addCondition('id',$identity);
+		}else
+			$cat_model->addCondition('name',$identity);
+
+		$cat_model->tryLoadAny();
+		$cat_model->save();
+		return $cat_model;
+	}
+
+	function associateLead($lead_id_list){
+
+		if(!$this->loaded()) throw new \Exception("marketing category must loaded");
+		// to do sql base
+		foreach ($lead_id_list as $key => $contact_id) {
+			$asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
+			$asso->addCondition('marketing_category_id',$this->id);
+			$asso->addCondition('lead_id',$contact_id);
+			$asso->tryLoadAny();
+			$asso->save();
+		}
+
+	}
 
 }

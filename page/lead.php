@@ -131,6 +131,16 @@ class page_lead extends \xepan\base\Page{
 		$source_array = explode(",",$source_model['lead_source']);
 		$source_type->setValueList(array_combine($source_array,$source_array));
 
+		// employee filter created by
+		$emp_field = $frm->addField('Dropdown','filter_employee_id');
+		$emp_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
+		$emp_field->setEmptyText('Created By Employee');
+
+		// employee filter assign to
+		$emp_assign_field = $frm->addField('Dropdown','filter_employee_assign_to_id');
+		$emp_assign_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
+		$emp_assign_field->setEmptyText('Assign to Employee');
+
 		$frm->addHook('applyFilter',function($f,$m){
 			if($f['marketing_category_id']){
 				$cat_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
@@ -140,11 +150,22 @@ class page_lead extends \xepan\base\Page{
 			if($f['source_type']){
 				$m->addCondition('source',$f['source_type']);
 			}
+
+			if($f['filter_employee_id']){
+				$m->addCondition('created_by_id',$f['filter_employee_id']);
+			}
+
+			if($f['filter_employee_assign_to_id']){
+				$m->addCondition('assign_to_id',$f['filter_employee_assign_to_id']);
+			}
+
 		});
 		
 		// $category_filter_field->js('change',$grid->js()->reload(null,null,[$this->app->url('.'),'category_id'=>$category_filter_field->js()->val()]));
 		$category_filter_field->js('change',$frm->js()->submit());
 		$source_type->js('change',$frm->js()->submit());
+		$emp_field->js('change',$frm->js()->submit());
+		$emp_assign_field->js('change',$frm->js()->submit());
 
 
 		// $grid->addColumn('category');

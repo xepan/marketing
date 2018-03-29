@@ -15,7 +15,7 @@ class page_telemarketing extends \xepan\base\Page{
 			GRID FOR SHOWING ALL LEAD 
 		*/
 
-		$view_lead = $this->add('xepan\hr\CRUD',['allow_add'=>false], 'side',['view\teleleadselector'])->addClass('view-lead-grid');
+		$view_lead = $this->add('xepan\hr\CRUD',['allow_add'=>false,'grid_options'=>['fixed_header'=>false]], 'side',['view\teleleadselector'])->addClass('view-lead-grid');
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
 		$model_lead->addCondition('status','Active');
 		$view_lead->js('reload')->reload();

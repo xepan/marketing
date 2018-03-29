@@ -193,6 +193,13 @@ class Initiator extends \Controller_Addon {
 			echo "Testing in Marketing<br/>";
 			var_dump($now);
 
+			$job1 = new \Cron\Job\ShellJob();
+			$job1->setSchedule(new \Cron\Schedule\CrontabSchedule('0 0 * * *')); // every midnight
+			if(!$job1->getSchedule() || $job1->getSchedule()->valid($now)){	
+				echo " Updating last_communication_before_days++ at midnight <br/>";
+				$this->app->db->dsql()->expr('update contact set last_communication_before_days = last_communication_before_days+1')->execute();
+			}
+
 			$job2 = new \Cron\Job\ShellJob();
 			$job2->setSchedule(new \Cron\Schedule\CrontabSchedule('* * * * *'));
 			if(!$job2->getSchedule() || $job2->getSchedule()->valid($now)){	

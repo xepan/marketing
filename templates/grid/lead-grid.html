@@ -12,11 +12,12 @@
         <th></th>
         <th><span>Name </span></th>
         <th data-hide="phone"><span>Category</span></th>
-        <th><span style="border-bottom:1px solid gray;">Created By &nbsp;</span><span>Assign To</span></th>
-        <th><span>Last Communication</span></th>
+        <th><span style="border-bottom:1px solid gray;">Created By &nbsp;</span><br/><span>Assign To</span></th>
+        <!-- <th><span>Last Communication</span></th> -->
         <th id="{$score_sortid}"><span>Score {$score_sort}</span></th>
         <th><span>Visits</span></th>
-        <th><span>Created at</span></th>{/}{/}
+        <th id="{$priority_sortid}"><span>Priority {$priority_sort}</span></th>
+        <th id="{$created_at_sortid}"><span>Created at {$created_at_sort}</span></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -30,9 +31,10 @@
             <div title="Lead Created By" style="border-bottom:1px solid gray;">{$created_by}</div>
             <div title="Lead Assign To">{$assign_to}</div>
           </td>
-          <td>{$last_communication}</td>
+          <!-- <td>{$last_communication}</td> -->
           <td><a href="#" data-id="{$id}" class="do-view-lead-score"><span class="alert alert-warning">{score}0{/}</span></a></td>
           <td><a href="#" data-id="{$id}" class="do-view-lead-visitor"><span class="alert alert-success">{$total_visitor}</span></a></td>
+          <td><span class="alert alert-danger">{$priority}</span></td>
           <td>{$created_at}</td>
           <td>{$action}</td>{/}
         </tr>{/}{/}

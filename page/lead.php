@@ -80,7 +80,7 @@ class page_lead extends \xepan\base\Page{
 		// $lead->setOrder('total_visitor','desc');
 
 		$this->crud = $crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority'])->setOrder('created_at','desc');
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_MultiDelete');
 

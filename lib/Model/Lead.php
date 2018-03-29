@@ -59,17 +59,17 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		/********************************************
 			PRIORITY EXPRESSIONS START
 		*********************************************/
-		$this->addExpression('last_communication')->set(function($m,$q){
-			$last_commu = $m->add('xepan\communication\Model_Communication');
-			$last_commu->addCondition(
-							$last_commu->dsql()->orExpr()
-								->where('from_id',$q->getField('id'))
-								->where('to_id',$q->getField('id'))
-							)
-						->setOrder('id','desc')
-						->setLimit(1);
-			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
-		});
+		// $this->addExpression('last_communication')->set(function($m,$q){
+		// 	$last_commu = $m->add('xepan\communication\Model_Communication');
+		// 	$last_commu->addCondition(
+		// 					$last_commu->dsql()->orExpr()
+		// 						->where('from_id',$q->getField('id'))
+		// 						->where('to_id',$q->getField('id'))
+		// 					)
+		// 				->setOrder('id','desc')
+		// 				->setLimit(1);
+		// 	return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
+		// });
 
 
 		$this->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){
@@ -106,7 +106,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		// return days ago * score * k .// here k is constant
 		$k = 1;
 		$this->addExpression('priority')->set(function($m,$q)use($k){
-			return $q->expr('[0] * [1] * [2]',[$m->getElement('days_ago'),$m->getElement('score'),$k]);
+			return $q->expr('[0] * [1] * [2]',[$m->getElement('last_communication_before_days'),$m->getElement('score'),$k]);
 		})->sortable(true);
 		
 		/********************************************

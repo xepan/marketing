@@ -59,17 +59,17 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		/********************************************
 			PRIORITY EXPRESSIONS START
 		*********************************************/
-		// $this->addExpression('last_communication')->set(function($m,$q){
-		// 	$last_commu = $m->add('xepan\communication\Model_Communication');
-		// 	$last_commu->addCondition(
-		// 					$last_commu->dsql()->orExpr()
-		// 						->where('from_id',$q->getField('id'))
-		// 						->where('to_id',$q->getField('id'))
-		// 					)
-		// 				->setOrder('id','desc')
-		// 				->setLimit(1);
-		// 	return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
-		// });
+		$this->addExpression('last_communication')->set(function($m,$q){
+			$last_commu = $m->add('xepan\communication\Model_Communication');
+			$last_commu->addCondition(
+							$last_commu->dsql()->orExpr()
+								->where('from_id',$q->getField('id'))
+								->where('to_id',$q->getField('id'))
+							)
+						->setOrder('id','desc')
+						->setLimit(1);
+			return $q->expr('DATE_FORMAT([0],"%M %d, %Y")',[$last_commu->fieldQuery('created_at')]);
+		});
 
 
 		$this->addExpression('last_landing_response_date_from_lead')->set(function($m,$q){

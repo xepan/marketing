@@ -263,6 +263,13 @@ class page_lead extends \xepan\base\Page{
 	}
 
 	function page_grab(){
+		$extra_info = $this->app->recall('epan_extra_info_array',false);
+
+		if($extra_info['Data Grabber'] != "Yes"){
+			$this->add('View')->addClass('alert alert-danger')->set('You are not permitted to use this services');
+			return;
+		}
+
 		set_time_limit(0);
 		// echo "TYpe of code : Google serach result page, website, portal, yahoo search result page, bing search result page <br/>";
 		// echo "Selector for urls <br/>";

@@ -4,7 +4,9 @@
     <header class="main-box-header clearfix">
       <div class="main-box small-graph-box {response}green-bg{/}"><span class="value">{$post_title}</span><span class="subinfo">{$post_content}</span><span class="subinfo">URL : {$post_url}</span></div>
       <div title="Fetch Comments, likes and shares" class="btn btn-success btn-sm btn-block update-activity-button">Update Activities          </div>
-    </header>{rows}{row}
+      {$grid_buttons}
+    </header>
+    {rows}{row}
     <div data-id="{$id}" class="{$odd_even}"></div>{cols}    
     <div class="main-box">
       <div class="clearfix">

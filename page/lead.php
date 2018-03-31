@@ -265,7 +265,7 @@ class page_lead extends \xepan\base\Page{
 	function page_grab(){
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 
-		if($extra_info['Data Grabber'] != "Yes"){
+		if($extra_info ['specification']['Data Grabber'] != "Yes"){
 			$this->add('View')->addClass('alert alert-danger')->set('You are not permitted to use this services');
 			return;
 		}

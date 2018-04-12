@@ -765,6 +765,12 @@ class Model_Lead extends \xepan\base\Model_Contact{
 		$this['remark'] = $remark;
 		$this['assign_at'] = $this->app->now;
 		$this->save();
+
+		$employee = $this->add('xepan\base\Model_Contact')
+					->load($assign_to_id);
+		$remark = "Lead Assigned to ".$employee['name']." by ".$this->app->employee['name'];
+		$this->add('xepan\communication\Model_Communication_Comment')
+			->createNew($this->app->employee,$this,$remark,$remark,$on_date=$this->app->now);
 		return $this;
 	}
 } 

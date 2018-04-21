@@ -5,6 +5,9 @@ namespace xepan\marketing;
 class View_ScheduleContent extends \CompleteLister{
 	function init(){
 		parent::init();		
+
+		$this->api->jui->addStaticInclude('listjs.min');
+
 	}
 
 	function formatRow(){
@@ -25,6 +28,8 @@ class View_ScheduleContent extends \CompleteLister{
 
 	function render(){
 		$this->js(true)->_selector('.draggable-event')->draggable(array( 'helper'=> 'clone'));
+		$this->app->js(true,"new List('xepan-content-filter', {valueNames: ['name']});");
+
 		parent::render();
 	}
 }

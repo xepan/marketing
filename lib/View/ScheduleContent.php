@@ -11,14 +11,12 @@ class View_ScheduleContent extends \CompleteLister{
 		parent::formatRow();
 
 		if($this->model['type'] == 'Newsletter'){
-			$this->current_row_html['icon'] = 'fa fa-globe';
-		}
-		elseif($this->model['type'] == 'SocialPost'){
 			$this->current_row_html['icon'] = 'fa fa-envelope';
+		}elseif($this->model['type'] == 'SocialPost'){
+			$this->current_row_html['icon'] = 'fa fa-share-alt';
+		}else{
+			$this->current_row_html['icon'] = 'fa fa-cog';
 		}
-		else{
-			$this->current_row_html['icon'] = 'fa fa-mobile';
-		}	
 	}
 
 	function defaultTemplate(){

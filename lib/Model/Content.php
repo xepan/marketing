@@ -31,7 +31,7 @@ class Model_Content extends \xepan\hr\Model_Document{
 
 		if($_GET['url']) $page=$_GET['url'];
 		if($_GET['source']) $source=$_GET['source'];
-		if($_GET['js_redirect_to_url']) $source .= '&js_redirect_to_url='.$_GET['js_redirect_to_url'];
+		if($_GET['js_redirect_to_url']) $source .= '&js_redirect_url='.$_GET['js_redirect_to_url'];
 
 		$view->set($this->app->pm->base_url."?page=$page&xepan_landing_content_id=$this->id&source=$source");
 

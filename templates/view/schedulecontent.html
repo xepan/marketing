@@ -1,8 +1,18 @@
+<div id="{$_name}" class="{$class}" style="padding:0px; {$style}">
+	<div id="xepan-content-filter">	
+		<input type="text" class="fuzzy-search" style="border:1px solid #f3f3f3;width:100;" placeholder="Content Search" />
 
-<ol class="dd-list"></ol>{rows}{row}
-<li data-id="{$id}" data-contenttype="{$type}" data-eventsource="{ &quot;title&quot;:&quot;{$title}&quot;, &quot;_nid&quot;: &quot;{$id}&quot; , &quot;document_id&quot; : &quot;{$id}&quot; , &quot;start&quot; : &quot;{$date}&quot; , &quot;contenttype&quot; : &quot;{$contenttype}&quot; }" class="dd-item dd-item-list draggable-event">
-  <div class="dd-handle-list"><i class="{$icon}"> </i></div>
-  <div class="dd-handle">
-    <div style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$title}</div>
-  </div>
-</li>{/}{/}
+		<ol class="dd-list list">
+		{rows}{row}
+		<li data-id="{$id}" data-contenttype="{$type}" data-eventsource="{ &quot;title&quot;:&quot;{$title}&quot;, &quot;_nid&quot;: &quot;{$id}&quot; , &quot;document_id&quot; : &quot;{$id}&quot; , &quot;start&quot; : &quot;{$date}&quot; , &quot;contenttype&quot; : &quot;{$contenttype}&quot; }" class="dd-item dd-item-list draggable-event">
+		  <div class="dd-handle-list">
+		  		<i class="{$icon}"> </i>
+		  </div>
+		  <div class="dd-handle">
+		    <div class="name" title="{$type}:: {$content_name}:: {$title}" style="width: 100%;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">{$content_name}::{$title}</div>
+		  </div>
+		</li>
+		{/}{/}
+		</ol>
+	</div>
+</div>

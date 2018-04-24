@@ -94,6 +94,13 @@ class page_campaign extends \xepan\base\Page{
 
 			$g->current_row['url'] = "?page=xepan_marketing_scheduledetail&campaign_id=".$g->model->id;
 
+			if($g->model['campaign_type'] == "subscription"){
+				$g->current_row['campaign_icon_class'] = "fa fa-list-alt ";
+			}
+			if($g->model['campaign_type'] == "campaign"){
+				$g->current_row['campaign_icon_class'] = "fa fa-calendar";
+			}
+
 			$source_data = explode(",",$g->model['source_graph_data']);
 			$source_values=[];
 			$source_labels =[];

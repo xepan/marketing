@@ -103,8 +103,9 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			$temp->loadTemplateFromString($email_body);
 			
 			$body_v = $this->add('View',null,null,$temp);
-			$contact = $this->app->employee;
-
+			$contact = $this->add('xepan\hr\Model_Employee')->load($this->app->employee->id);
+			// $contact = $this->app->employee;
+			
 			$body_v->setModel($contact);
 
 			$communication->setSubject($subject_v->getHtml());

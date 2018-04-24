@@ -21,7 +21,8 @@ class Model_Content extends \xepan\hr\Model_Document{
 		
 		$form = $p->add('Form');
 		$form->addField('page');
-		$form->addField('source')->addClass('xepan-push-large');
+		$form->addField('source')->addClass('xepan-push-large')->validate('required');
+		$form->addField('js_redirect_to_url')->addClass('xepan-push-large');
 		$form->addSubmit('Get traceable URL')->addClass('btn btn-primary xepan-push-large');
 		$view = $p->add('View');
 		
@@ -30,12 +31,13 @@ class Model_Content extends \xepan\hr\Model_Document{
 
 		if($_GET['url']) $page=$_GET['url'];
 		if($_GET['source']) $source=$_GET['source'];
+		if($_GET['js_redirect_to_url']) $source .= '&js_redirect_to_url='.$_GET['js_redirect_to_url'];
 
-		$view->set($this->app->pm->base_url."?page=$page&source=$source&xepan_landing_content_id=$this->id");
+		$view->set($this->app->pm->base_url."?page=$page&xepan_landing_content_id=$this->id&source=$source");
 
 		if($form->isSubmitted()){
 			$url = $form['input_your_websites_url'].'/?&xepan_landing_content_id='.$this->id;
-			$view->js()->reload(['url'=>$form['page'],'source'=>$form['source']])->execute();
+			$view->js()->reload(['url'=>$form['page'],'source'=>$form['source'],'js_redirect_to_url'=>$form['js_redirect_to_url']])->execute();
 		}
 	}
 

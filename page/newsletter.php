@@ -53,15 +53,25 @@ class page_newsletter extends \xepan\base\Page{
 
 		$vp = $this->add('VirtualPage');
 		$vp->set(function($p){
-			$newsletter_model = $this->add('xepan\marketing\Model_Newsletter')->load($_GET['newsletter_id']);
-			
-			$nv = $p->add('View');
-			$nv->template->trySetHTML('Content',$newsletter_model['message_blog']);
+			$p->app->stickyGET('newsletter_id');
+
+			if($_GET['show_newsletter']){
+				$newsletter_model = $this->add('xepan\marketing\Model_Newsletter')->load($_GET['newsletter_id']);
+				
+				$nv = $p->add('View');
+				$nv->template->trySetHTML('Content',$newsletter_model['message_blog']);				
+			}else{
+				$v = $p->add('View')->setElement('iframe');
+				$v->setAttr('src',$p->app->url(null,['show_newsletter'=>1,'cut_page'=>1]))
+					->setAttr('width','100%')
+					->setAttr('height','475px')
+					;
+			}
 		});	
 
 
 		$this->on('click','.newsletter-preview',function($js,$data)use($vp){
-				return $js->univ()->dialogURL("NEWSLETTER PREVIEW",$this->api->url($vp->getURL(),['newsletter_id'=>$data['id']]));
+				return $js->univ()->dialogURL("NEWSLETTER PREVIEW",$this->api->url($vp->getURL(),['newsletter_id'=>$data['id']]),['width'=>'100%','height'=>'500']);
 		});
 
 

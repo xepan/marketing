@@ -38,7 +38,7 @@ class Model_Campaign_ScheduledNewsletters extends Model_Lead {
 		$leads->getElement('rejected_count')->destroy();
 		$leads->getElement('last_communication')->destroy();
 		$leads->getElement('user')->destroy();
-		$leads->getElement('type')->destroy();
+		// $leads->getElement('type')->destroy();
 		$leads->getElement('last_communication_date_from_lead')->destroy();
 		$leads->getElement('last_communication_date_from_company')->destroy();
 		$leads->getElement('days_ago')->destroy();

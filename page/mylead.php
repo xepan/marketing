@@ -3,7 +3,7 @@
 namespace xepan\marketing;
 
 class page_mylead extends \xepan\base\Page{
-	public $title = "MY Lead`s"; 
+	public $title = "MY Sales Page"; 
 	
 	function init(){
 		parent::init();

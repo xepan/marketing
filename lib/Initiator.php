@@ -54,7 +54,7 @@ class Initiator extends \Controller_Addon {
 			// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 			$m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 
-			$this->app->user_menu->addItem(['My Lead','icon'=>'fa fa-file-text-o'],$this->app->url('xepan_marketing_mylead'));
+			$this->app->user_menu->addItem(['My Sales','icon'=>'fa fa-file-text-o'],$this->app->url('xepan_marketing_mylead'));
 			$this->app->report_menu->addItem(['Employee Lead Report','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_report_employeeleadreport'));
 			
 		}

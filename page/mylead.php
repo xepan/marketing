@@ -118,11 +118,11 @@ class page_mylead extends \xepan\base\Page{
 	    $task_assigned_to_me_model->setOrder(['updated_at','last_comment_time','priority']);
 	    $task_assigned_to_me_model->addCondition('status',['Pending','Submitted','Assigned','Inprogress']);
 
-	    $crud = $tasks_tab->add('xepan\projects\View_TaskList',['pass_acl'=>true]);
-	    $crud->add('xepan\base\Controller_Avatar',['name_field'=>'created_by','extra_classes'=>'profile-img center-block','options'=>['size'=>50,'display'=>'block','margin'=>'auto'],'float'=>null]);
+	    $grid = $tasks_tab->add('xepan\projects\View_TaskList',['pass_acl'=>true]);
+	    $grid->add('xepan\base\Controller_Avatar',['name_field'=>'created_by','extra_classes'=>'profile-img center-block','options'=>['size'=>50,'display'=>'block','margin'=>'auto'],'float'=>null]);
 
-	    $crud->setModel($task_assigned_to_me_model);
+	    $grid->setModel($task_assigned_to_me_model);
 
-	    $crud->grid->addPaginator(50);
+	    $grid->addPaginator(50);
 	}
 }

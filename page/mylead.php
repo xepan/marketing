@@ -44,14 +44,14 @@ class page_mylead extends \xepan\base\Page{
 		$follow_tab = $tabs->addTabURL('xepan_projects_myfollowups','My Followups');
 		$oppo_tab = $tabs->addTab('My Opportunities');
 		$tasks_tab = $tabs->addTab('My Tasks');
-		$follow_tab = $tabs->addTab('My Leads');
+		$leads_tab = $tabs->addTab('My Leads');
 
 		// My Leads
-		$crud = $follow_tab->add('xepan\hr\CRUD',['allow_add'=>false,'allow_edit'=>false,'allow_del'=>false],null,['grid/lead-grid']);
+		$crud = $leads_tab->add('xepan\hr\CRUD',['allow_add'=>false,'allow_edit'=>false,'allow_del'=>false],null,['grid/lead-grid']);
 		$mylead = $follow_tab->add('xepan\marketing\Model_Lead');
 		$mylead->addCondition('assign_to_id',$employee_id);
 		$mylead->setOrder('id','desc');
-		$crud->setModel($mylead);
+		$crud->setModel($mylead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority']);
 		$crud->add('xepan\base\Controller_Avatar');
 		$crud->grid->addPaginator(50);
 
@@ -96,33 +96,33 @@ class page_mylead extends \xepan\base\Page{
 
 
 		// My Tasks
-		$task_assigned_to_me_model = $tasks_tab->add('xepan\projects\Model_Formatted_Task')
-	    	->addCondition('type','Task')
-	    	->addCondition('is_regular_work',false)
-	    	;
-	    $field_to_destroy = ['total_duration','is_started','is_running','follower_count','total_comment'/*,'created_by_image'*//*,'assigned_to_image'*/,'related_name','priority_name','assign_employee_status','created_by_employee_status','contact_name','contact_organization'];
-	    foreach ($field_to_destroy as $field) {
-		    $task_assigned_to_me_model->getElement($field)->destroy();
-	    }
+		// $task_assigned_to_me_model = $tasks_tab->add('xepan\projects\Model_Formatted_Task')
+	 //    	->addCondition('type','Task')
+	 //    	->addCondition('is_regular_work',false)
+	 //    	;
+	 //    $field_to_destroy = ['total_duration','is_started','is_running','follower_count','total_comment'/*,'created_by_image'*//*,'assigned_to_image'*/,'related_name','priority_name','assign_employee_status','created_by_employee_status','contact_name','contact_organization'];
+	 //    foreach ($field_to_destroy as $field) {
+		//     $task_assigned_to_me_model->getElement($field)->destroy();
+	 //    }
 
-	    $task_assigned_to_me_model
-	    			->addCondition(
-	    				$task_assigned_to_me_model->dsql()->orExpr()
-	    					->where('assign_to_id',$employee_id)
-	    					->where(
-    								$task_assigned_to_me_model->dsql()->andExpr()
-    									->where('created_by_id',$employee_id)
-    									->where('assign_to_id',null)
-	    							)
-	    				)->addCondition('type','Task');
-	    $task_assigned_to_me_model->setOrder(['updated_at','last_comment_time','priority']);
-	    $task_assigned_to_me_model->addCondition('status',['Pending','Submitted','Assigned','Inprogress']);
+	 //    $task_assigned_to_me_model
+	 //    			->addCondition(
+	 //    				$task_assigned_to_me_model->dsql()->orExpr()
+	 //    					->where('assign_to_id',$employee_id)
+	 //    					->where(
+  //   								$task_assigned_to_me_model->dsql()->andExpr()
+  //   									->where('created_by_id',$employee_id)
+  //   									->where('assign_to_id',null)
+	 //    							)
+	 //    				)->addCondition('type','Task');
+	 //    $task_assigned_to_me_model->setOrder(['updated_at desc','last_comment_time','priority']);
+	 //    $task_assigned_to_me_model->addCondition('status',['Pending','Submitted','Assigned','Inprogress']);
 
-	    $grid = $tasks_tab->add('xepan\projects\View_TaskList',['pass_acl'=>true]);
-	    $grid->add('xepan\base\Controller_Avatar',['name_field'=>'created_by','extra_classes'=>'profile-img center-block','options'=>['size'=>50,'display'=>'block','margin'=>'auto'],'float'=>null]);
+	 //    $grid = $tasks_tab->add('xepan\projects\View_TaskList',['pass_acl'=>true]);
+	 //    $grid->add('xepan\base\Controller_Avatar',['name_field'=>'created_by','extra_classes'=>'profile-img center-block','options'=>['size'=>50,'display'=>'block','margin'=>'auto'],'float'=>null]);
 
-	    $grid->setModel($task_assigned_to_me_model);
+	 //    $grid->setModel($task_assigned_to_me_model);
 
-	    $grid->addPaginator(50);
+	 //    $grid->addPaginator(50);
 	}
 }

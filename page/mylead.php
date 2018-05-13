@@ -53,6 +53,7 @@ class page_mylead extends \xepan\base\Page{
 		$mylead->setOrder('id','desc');
 		$crud->setModel($mylead);
 		$crud->add('xepan\base\Controller_Avatar');
+		$crud->grid->addPaginator(50);
 
 		// My Opportunity
 		// $status=['Open','Qualified','NeedsAnalysis','Quoted','Negotiated','Won','Lost'];
@@ -91,6 +92,8 @@ class page_mylead extends \xepan\base\Page{
 				$m->addCondition('status',$show_status);
 		});
 
+		$crud->grid->addPaginator(50);
+
 
 		// My Tasks
 		$task_assigned_to_me_model = $tasks_tab->add('xepan\projects\Model_Formatted_Task')
@@ -119,5 +122,7 @@ class page_mylead extends \xepan\base\Page{
 	    $crud->add('xepan\base\Controller_Avatar',['name_field'=>'created_by','extra_classes'=>'profile-img center-block','options'=>['size'=>50,'display'=>'block','margin'=>'auto'],'float'=>null]);
 
 	    $crud->setModel($task_assigned_to_me_model);
+
+	    $crud->grid->addPaginator(50);
 	}
 }

@@ -43,12 +43,17 @@ class page_mylead extends \xepan\base\Page{
 
 		$follow_tab = $tabs->addTabURL('xepan_projects_myfollowups','My Followups');
 		$oppo_tab = $tabs->addTab('My Opportunities');
-		$tasks_tab = $tabs->addTab('My Tasks');
 		$leads_tab = $tabs->addTab('My Leads');
+		$tasks_tab = $tabs->addTab('My Tasks');
+
+
+		// My Followups
+
+		
 
 		// My Leads
 		$crud = $leads_tab->add('xepan\hr\CRUD',['allow_add'=>false,'allow_edit'=>false,'allow_del'=>false],null,['grid/lead-grid']);
-		$mylead = $follow_tab->add('xepan\marketing\Model_Lead');
+		$mylead = $leads_tab->add('xepan\marketing\Model_Lead');
 		$mylead->addCondition('assign_to_id',$employee_id);
 		$mylead->setOrder('id','desc');
 		$crud->setModel($mylead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority']);

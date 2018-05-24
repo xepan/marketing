@@ -11,7 +11,7 @@ class page_leadscore extends \xepan\base\Page{
 		
 		$score=$this->add('xepan\base\Model_PointSystem');
 		$score->addCondition('contact_id',$lead_id);
-		$score->tryLoadAny();
+		$score->setOrder('created_at','desc');
 		$grid = $this->add('xepan\base\Grid');
 		$grid->setModel($score);
 		$grid->addPaginator(50);

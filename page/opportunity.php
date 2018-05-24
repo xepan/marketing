@@ -52,7 +52,7 @@ class page_opportunity extends \xepan\base\Page{
 			$opportunity->addCondition('status',$status);
 		}
 
-		$opportunity->add('xepan\marketing\Controller_SideBarStatusFilter');
+		$opportunity->add('xepan\base\Controller_TopBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
 		

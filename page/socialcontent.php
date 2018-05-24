@@ -35,7 +35,7 @@ class page_socialcontent extends \xepan\base\Page{
 		if($this->app->stickyGET('status'))
 			$social->addCondition('status',explode(",",$this->app->stickyGET('status')));
 				
-		$social->add('xepan\marketing\Controller_SideBarStatusFilter');
+		$social->add('xepan\base\Controller_TopBarStatusFilter');
 		
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addsocialpost'],null,['grid/social-grid']);
 		$crud->setModel($social);

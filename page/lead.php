@@ -76,7 +76,7 @@ class page_lead extends \xepan\base\Page{
 								$lead->getElement('organization')]))
 					->sortable(true);
 
-		$lead->add('xepan\marketing\Controller_SideBarStatusFilter');
+		$lead->add('xepan\base\Controller_TopBarStatusFilter');
 		// $lead->setOrder('total_visitor','desc');
 
 		$this->crud = $crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);

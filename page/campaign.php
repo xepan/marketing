@@ -39,7 +39,7 @@ class page_campaign extends \xepan\base\Page{
 		$landing_response = $this->add('xepan\marketing\Model_LandingResponse');
 		$response = $landing_response->getRows();
 
-		$campaign->add('xepan\marketing\Controller_SideBarStatusFilter');
+		$campaign->add('xepan\base\Controller_TopBarStatusFilter');
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_addcampaign'],null,['grid/campaign-grid']);
 		$crud->setModel($campaign);
 		$crud->grid->js(true)->_load('jquery.sparkline.min')->_selector('.sparkline')->sparkline('html', ['enableTagOptions' => true]);

@@ -387,6 +387,19 @@ class page_lead extends \xepan\base\Page{
 			$assign_to_field->set($this->app->employee->id);
 			$description_field = $form->addField('text','description');
 
+			$emails_field->js('change',$email_to_field->js()->val($emails_field->js()->val()));
+			$number_field->js('change','
+				$("#'.$called_to_field->name.'").html("");
+				$.each($("#'.$number_field->name.'").val().split(","), function(index,item){
+					// console.log($("#'.$number_field->name.'").val());
+					$("#'.$called_to_field->name.'").append($("<option/>", {
+				        value: item, text: item
+				    }));
+				});
+				$("#'.$called_to_field->name.'").trigger("change");
+			');
+			// $.each($('.$called_to_field.').val().split(","),function(item,index){$.create("option", {"value": '"+item+"'}, "").appendTo('#mySelect');})');
+
 			$follow_up_field->js(true)->univ()->bindConditionalShow([
 				true=>['follow_up_type','task_title','starting_at','followup_assign_to','description','set_reminder']
 			],'div.col-md-1,div.col-md-2,div.col-md-3,div.col-md-4,div.col-md-6,div.col-md-12');

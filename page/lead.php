@@ -79,8 +79,36 @@ class page_lead extends \xepan\base\Page{
 		$lead->add('xepan\base\Controller_TopBarStatusFilter');
 		// $lead->setOrder('total_visitor','desc');
 
-		$this->crud = $crud = $this->add('xepan\hr\CRUD',['action_page'=>'xepan_marketing_leaddetails'],null,['grid/lead-grid']);
-		$crud->setModel($lead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority'])->setOrder('created_at','desc');
+		$emp_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+		$emp_other_info_config_m->tryLoadAny();
+		$other_fields = array_map('trim',explode(",",$emp_other_info_config_m['contact_other_info_fields']));
+
+
+		$this->crud = $crud = $this->add('xepan\hr\CRUD',null,null,['grid/lead-grid']);
+
+		$this->formLayout($crud,$lead, $other_fields);
+
+		$crud->setModel($lead,['first_name','last_name','organization','address','pin_code','city','country_id','state_id','remark','source','assign_to_id','emails_str','contacts_str'],['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority'])->setOrder('created_at','desc');
+
+		if($crud->isEditing('edit')){
+			$cats=$crud->form->model->getAssociatedCategories();
+			$crud->form->getElement('categories')->set($cats);
+
+			$crud->form->getElement('emails')->set(str_replace('<br/>', ', ',trim($crud->form->model['emails_str'])));
+			$crud->form->getElement('numbers')->set(str_replace('<br/>', ', ',trim($crud->form->model['contacts_str'])));
+
+			$i=1;
+			foreach ($other_fields as $of) {
+				$value = $this->add('xepan\base\Model_Contact_Other')
+					->addCondition('contact_id',$crud->form->model->id)
+					->addCondition('head',$of)
+					->tryLoadAny();
+				if($crud->form->hasElement('o_'.$this->app->normalizeName($of))){
+					$crud->form->getElement('o_'.$this->app->normalizeName($of))->set($value['value']);
+				}
+			}
+		}
+
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_MultiDelete');
 
@@ -201,6 +229,452 @@ class page_lead extends \xepan\base\Page{
 					$this->app->url('./import')
 					);
 
+	}
+
+	function formLayout($crud,$model, $other_fields){
+		if(!$crud->isEditing()) return;
+		$model->getElement('state_id')->display(['form'=>'xepan\base\Basic']);
+		$model->getElement('country_id')->display(['form'=>'xepan\base\Basic']);
+
+		$t = $model->getElement('assign_to_id')->getModel();
+		$t->addCondition('type','Employee');
+
+		$layout_array=[
+					'first_name'=>'General Information~c1~4',
+					'last_name'=>'c2~4',
+					'organization'=>'c3~4',
+					'city'=>'c4~4', // closed to make panel default collapsed
+					'country_id~'=>'c5~4',
+					'country'=>'c5',
+					'state_id~'=>'c6~4',
+					'state'=>'c6',
+					'emails'=>'c7~12~comma seperated emails',
+					'numbers'=>'c8~12~comma seperated numbers',
+					'remark'=>'c9~12',
+					'source'=>'c10~4',
+					'assign_to_id~Assigned to Employee'=>'c11~4',
+					'categories'=>'c12~4',
+					'score~Score (Is Lead Positive or Negative)'=>'c13~2~or leave as it is for nutral',
+					'score_buttons~'=>'c14~3',
+					'communication_type'=>'Initial Communication~x1~12~closed',
+					'sub_type'=>'x2~6',
+					'calling_status'=>'x3~6',
+					'call_direction'=>'x4~6',
+					'email_to'=>'x41~12',
+					'cc_mails'=>'x42~12',
+					'bcc_mails'=>'x43~12',
+					'title'=>'x5~12',
+					'body'=>'x6~12',
+					'from_email'=>'x7~6',
+					'from_phone'=>'x8~6',
+					'from_person'=>'x9~6',
+					'called_to'=>'x10~6',
+					'from_number'=>'x11~6',
+					'sms_to'=>'x12~6',
+					'sms_settings'=>'x13~6',
+					'follow_up'=>'f1~12',
+					'followup_assign_to'=>'f2~6',
+					'starting_at'=>'f3~6',
+					'description'=>'f4~12',
+
+					'address'=>'Extended Info~a1~12~closed',
+					'pin_code'=>'a2~12',
+				];
+		
+
+		$i=1;
+		foreach ($other_fields as $of) {
+			$layout_array['o_'.$this->app->normalizeName($of).'~'.$of]='o'.($i++).'~6';
+		}
+
+		if($crud->isEditing('edit')){
+			unset($layout_array['communication_type']);unset($layout_array['sub_type']);
+			unset($layout_array['calling_status']);unset($layout_array['call_direction']);
+			unset($layout_array['title']);unset($layout_array['body']);
+			unset($layout_array['from_email']);unset($layout_array['from_phone']);
+			unset($layout_array['called_to']);unset($layout_array['from_number']);
+			unset($layout_array['sms_to']);
+			unset($layout_array['email_to']);unset($layout_array['cc_mails']);
+			unset($layout_array['bcc_mails']);unset($layout_array['from_person']);
+			unset($layout_array['follow_up']);unset($layout_array['sms_settings']);
+			unset($layout_array['followup_assign_to']);unset($layout_array['starting_at']);
+			unset($layout_array['description']);
+			unset($layout_array['score~Score (Is Lead Positive or Negative)']);
+		}
+
+		$crud->form->add('xepan\base\Controller_FLC')
+			->showLables(true)
+			->makePanelsCoppalsible(true)
+			->addContentSpot()
+			->layout($layout_array);
+
+		$form = $crud->form;
+
+		$emails_field = $form->addField('emails');
+		$number_field = $form->addField('numbers');
+		$categories_field = $form->addField('DropDown','categories');
+		$categories_field->setModel($this->add('xepan\marketing\Model_MarketingCategory'));
+		$categories_field->addClass('multiselect-full-width');
+		$categories_field->setAttr(['multiple'=>'multiple']);
+		$categories_field->setEmptyText("Please Select");
+
+		if($crud->isEditing('edit')){		
+			$model->addHook('afterLoad',function($m)use($crud,$emails_field,$number_field,$categories_field,$other_fields){
+				
+
+			});
+		}
+
+		if($crud->isEditing('add')){
+
+			// SCORE BUTTONS START
+			$score_field = $form->addField('hidden','score')->set('0');
+			$set = $form->layout->add('ButtonSet',null,'score_buttons');
+			$up_btn = $set->add('Button')->set('+10')->addClass('btn');
+			$down_btn = $set->add('Button')->set('-10')->addClass('btn');
+			$up_btn->js('click',[$score_field->js()->val(10),$down_btn->js()->removeClass('btn-danger'),$this->js()->_selectorThis()->addClass('btn-success')]);
+			$down_btn->js('click',[$score_field->js()->val(-10),$up_btn->js()->removeClass('btn-success'),$this->js()->_selectorThis()->addClass('btn-danger')]);
+
+			$config_m = $this->add('xepan\communication\Model_Config_SubType');
+			$config_m->tryLoadAny();
+			$sub_type_array = explode(",",$config_m['sub_type']);
+
+			$type_field = $form->addField('dropdown','communication_type');
+			$type_field->setEmptyText('Please select communication type');
+			$type_field->setValueList(['Email'=>'Email','Call'=>'Call','TeleMarketing'=>'TeleMarketing','Personal'=>'Personal','Comment'=>'Comment','SMS'=>'SMS']);
+
+			$sub_type_field = $form->addField('dropdown','sub_type')->setEmptyText('Please Select');
+			$sub_type_field->setValueList(array_combine($sub_type_array,$sub_type_array));
+
+			$calling_status_array = explode(",",$config_m['calling_status']);
+			$calling_status_field = $form->addField('dropdown','calling_status')->setEmptyText('Please Select');
+			$calling_status_field->setValueList(array_combine($calling_status_array,$calling_status_array));
+
+			$status_field = $form->addField('dropdown','call_direction');
+			$status_field->setValueList(['Called'=>'Called (Out)','Received'=>'Received (In)'])->setEmptyText('Please Select');
+
+			$email_to_field = $form->addField('email_to');
+			$cc_email_field = $form->addField('cc_mails');
+			$bcc_email_field = $form->addField('bcc_mails');
+
+			$form->addField('title');
+			$form->addField('xepan\base\RichText','body');
+
+			$from_email=$form->addField('dropdown','from_email')->setEmptyText('Please Select From Email');
+			$my_email = $form->add('xepan\hr\Model_Post_Email_MyEmails');
+			$from_email->setModel($my_email);
+
+			$form->addField('line','from_phone');
+
+			$emp_field = $form->addField('DropDown','from_person');
+			$emp_model = $this->add('xepan\hr\Model_Employee');			
+			$emp_field->setModel($emp_model);
+			$emp_field->set($this->app->employee->id);
+
+			$called_to_field = $form->addField('xepan\base\DropDown','called_to');
+			$called_to_field->select_menu_options=['tags'=>true];
+			$called_to_field->validate_values=false;
+			// $called_to_field->setAttr(['multiple'=>'multiple']);
+			$form->addField('line','from_number');
+			$form->addField('line','sms_to');
+			$form->addField('DropDown','sms_settings')->setModel('xepan\communication\Model_Communication_SMSSetting');
+
+			$follow_up_field = $form->addField('checkbox','follow_up','Add Followup');
+			$starting_date_field = $form->addField('DateTimePicker','starting_at');
+			$starting_date_field->js(true)->val('');
+			$assign_to_field = $form->addField('DropDown','followup_assign_to');
+			$assign_to_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
+			$assign_to_field->set($this->app->employee->id);
+			$description_field = $form->addField('text','description');
+
+			$follow_up_field->js(true)->univ()->bindConditionalShow([
+				true=>['follow_up_type','task_title','starting_at','followup_assign_to','description','set_reminder']
+			],'div.col-md-1,div.col-md-2,div.col-md-3,div.col-md-4,div.col-md-6,div.col-md-12');
+
+			$type_field->js(true)->univ()->bindConditionalShow([
+				''=>[],
+				'Email'=>['sub_type','calling_status','email_to','cc_mails','bcc_mails','title','body','from_email','email_to','cc_mails','bcc_mails'],
+				'Call'=>['sub_type','calling_status','title','body','from_phone','from_person','called_to','notify_email','notify_email_to','status','calling_status','call_direction'],
+				'TeleMarketing'=>['sub_type','calling_status','title','body','from_phone','called_to'],
+				'Personal'=>['sub_type','calling_status','title','body','from_person'],
+				'Comment'=>['sub_type','calling_status','title','body','from_person'],
+				'SMS'=>['sub_type','calling_status','title','body','from_number','sms_to','sms_settings']
+			],'div.col-md-1,div.col-md-2,div.col-md-3,div.col-md-4,div.col-md-6,div.col-md-12');
+
+			$crud->addHook('formSubmit',function($crud,$form)use($model){
+
+				// Manage communications
+				if($form['communication_type']){
+					
+					if(!$form['title']){
+						if(!$form['sub_type'] && !$form['calling_status']){
+							$form->displayError('sub_type','Sub type, Calling Status or Title must be filled');
+						}
+						$form['title'] = $form['sub_type']. ' - ' . $form['calling_status'];
+					}
+
+					if(!$form['body']) $form->displayError('body','Please specify content');
+					switch ($form['communication_type']) {
+						case 'Email':
+							if(!$form['title']) $form->displayError('title','Please specify title');
+							if(!$form['email_to']) $form->displayError('email_to','Please specify "Email To" Value');
+							foreach (explode(",", $form['email_to']) as $e) {
+								if (!filter_var(trim($e), FILTER_VALIDATE_EMAIL)) {
+									$form->displayError('email_to',$e.' is not an valid Email');
+								}
+							}
+							if($form['cc_mails']){
+								foreach (explode(",", $form['cc_mails']) as $e) {
+									if (!filter_var(trim($e), FILTER_VALIDATE_EMAIL)) {
+										$form->displayError('cc_mails',$e.' is not an valid Email');
+									}
+								}	
+							}
+							if($form['bcc_mails']){
+								foreach (explode(",", $form['bcc_mails']) as $e) {
+									if (!filter_var(trim($e), FILTER_VALIDATE_EMAIL)) {
+										$form->displayError('bcc_mails',$e.' is not an valid Email');
+									}
+								}	
+							}
+							if(!$form['from_email']) $form->displayError('from_email','Please specify "From Email" value');
+								break;
+						case "Call":
+							if(!$form['call_direction']) $form->displayError('call_direction','Please specify "Call Direction"');
+							break;
+						case "SMS":
+						if(!$form['sms_to']) $form->displayError('sms_to','Please specify "sms_to" value');
+						if(!$form['sms_settings']) $form->displayError('sms_settings','Please specify "sms_settings"');
+							break;
+						default:
+							# code...
+							break;
+					}
+
+
+					// if communication type is defined
+					$model->addHook('afterSave',function($m)use($form){							
+						// Actual communication save
+						$this->processCommunicationSave($m,$form);
+					});
+				}
+
+				// to handle score without communication
+				$model->addHook('afterSave',function($m)use($form){							
+					// INSERTING SCORE
+					if($form['score']){
+						$model_point_system = $this->add('xepan\base\Model_PointSystem');
+						$model_point_system['contact_id'] = $m->id;
+						$model_point_system['score'] = $form['score'];
+						$model_point_system->save();
+					}	
+
+					// Followup 
+					if($form['follow_up']){
+
+						$model_task = $this->add('xepan\projects\Model_Task');
+						$model_task['type'] = 'Followup';
+						$model_task['task_name'] = 'Followup '. $m['name_with_type'];
+						$model_task['created_by_id'] = $this->app->employee->id;
+						$model_task['starting_date'] = $form['starting_at'];
+						$model_task['assign_to_id'] = $form['followup_assign_to'];
+						$model_task['description'] = $form['description'];
+						$model_task['related_id'] = $m->id;
+						
+						// if($this['set_reminder']){
+						// 	$model_task['set_reminder'] = true;
+						// 	$model_task['reminder_time'] = $this['reminder_time'];
+						// 	$model_task['remind_via'] = $this['remind_via'];
+						// 	$model_task['notify_to'] = $this['notify_to'];
+							
+						// 	if($this['force_remind']){
+						// 		$model_task['snooze_duration'] = $this['snooze_duration'];
+						// 		$model_task['remind_unit'] = $this['remind_unit'];
+
+						// 	}
+						// }
+						$model_task->save();
+					}
+
+				});
+
+			});
+		}
+
+		if($crud->isEditing()){ // add or edit to save contact details
+			$model->addHook('afterSave',function($m)use($crud, $other_fields){
+				$m->ref('Emails')->deleteAll();
+				$m->ref('Phones')->deleteAll();
+				
+				foreach (explode(",",$crud->form['emails']) as $email) {
+					$m->addEmail(trim($email),'Official',null,null,null,false);
+				}
+
+				foreach (explode(",",$crud->form['numbers']) as $no) {
+					$m->addPhone(trim($no),'Official',null,null,null,false);
+				}
+
+				$cats_from_field = is_array($crud->form['categories'])?$crud->form['categories']:explode(",",$crud->form['categories']);
+				// var_dump($cats_from_field);
+				$cat_diff = array_diff($m->getAssociatedCategories(),$cats_from_field);
+				foreach ($cats_from_field as $cat) {
+					if(!$cat) continue;
+					$m->associateCategory($cat);
+				}
+
+				foreach ($cat_diff as $cat) {
+					$this->add('xepan\marketing\Model_Lead_Category_Association')
+						->addCondition('lead_id',$m->id)
+		     			->addCondition('marketing_category_id',$cat)
+						->tryLoadAny()->tryDelete();
+				}
+
+				$i=1;
+				foreach ($other_fields as $of) {
+					$this->add('xepan\base\Model_Contact_Other')
+						->addCondition('contact_id',$m->id)
+						->addCondition('head',$of)
+						->tryLoadAny()
+						->set('value',$crud->form['o_'.$this->app->normalizeName($of)])
+						->set('is_active',1)
+						->set('is_valid',1)
+						->save();
+				}
+
+			});
+			$i=1;
+			foreach ($other_fields as $of) {
+				$crud->form->addField('Line','o_'.$this->app->normalizeName($of),$of);
+			}
+		}
+
+	}
+
+	function processCommunicationSave($m,$form){
+		$commtype = $form['communication_type'];
+		$this->contact = $m;
+					
+		$communication = $this->add('xepan\communication\Model_Communication_'.$commtype);
+
+		$communication['from_id']=$form['from_person'];
+		$communication['to_id']= $this->contact->id;
+		$communication['sub_type']=$form['sub_type'];
+		$communication['calling_status']=$form['calling_status'];
+		$communication['score']=$form['score'];
+		
+
+		switch ($commtype) {
+			case 'Email':
+				$send_settings = $form->add('xepan\communication\Model_Communication_EmailSetting');
+				$send_settings->tryLoad($form['from_email']?:-1);
+				$_from = $send_settings['from_email'];
+				$_from_name = $send_settings['from_name'];
+				$_to_field='email_to';
+				$communication['from_id']=$this->app->employee->id;
+				$communication->setFrom($_from,$_from_name);
+				$communication['direction']='Out';
+				break;
+			case 'TeleMarketing':
+				$communication['from_id']=$form['from_person'];
+				$communication['status'] = 'Called';	
+				$_to_field='called_to';
+			case 'Call':
+				$send_settings = $form['from_phone'];
+				if($form['status']=='Received'){
+					$communication['from_id']=$this->contact->id;
+					$communication['to_id']=$form['from_person']; // actually this is to person this time
+					$communication['direction']='In';
+					$communication->setFrom($form['from_phone'],$this->contact['name']);
+				}else{					
+					$communication['from_id']=$form['from_person']; // actually this is to person this time
+					$communication['to_id']=$this->contact->id;
+					$communication['direction']='Out';
+					$employee_name=$this->add('xepan\hr\Model_Employee')->load($form['from_person'])->get('name');
+					$communication->setFrom($form['from_phone'],$employee_name);
+				}
+
+
+				$communication['status']=$form['status'];
+				$_to_field='called_to';
+
+				break;
+
+			case 'SMS':
+				
+				$send_settings = $this->add('xepan\communication\Model_Epan_SMSSetting');
+				$send_settings->load($form['from_sms']);
+				$communication['from_id'] = $this->app->employee->id;
+				$communication['description'] = $form['body'];
+				$_from = $this->app->employee->id;
+				$_from_name = $this->app->employee['name'];
+				$_to_field='sms_to';
+				foreach (explode(",", $form[$_to_field]) as $nos) {
+					$communication->addTo($nos,$this->contact['name']);
+					
+				}
+				$communication->setFrom($_from,$_from_name);
+				$communication['direction']='Out';
+				$communication['communication_channel_id'] = $form['from_sms'];
+				$communication['title'] = 'SMS: '.substr(strip_tags($thformis['body']),0,35)." ...";
+				break;
+			case 'Personal':
+				$_from = $form['from_person'];
+				$_from_name = $this->add('xepan\base\Model_Contact')->load($_from)->get('name');
+				$_to = $this->contact->id;
+				$_to_name = $this->contact['name'];
+				$_to_field=null;
+				$communication->addTo($_to, $_to_name);
+				$communication->setFrom($_from,$_from_name);
+				break;
+			case 'Comment':
+				$_from = $form['from_person'];
+				$_from_name = $this->add('xepan\base\Model_Contact')->load($_from)->get('name');
+				$_to = $this->contact->id;
+				$_to_name = $this->contact['name'];
+				$_to_field=null;
+				$communication->addTo($_to, $_to_name);
+				$communication->setFrom($_from,$_from_name);
+				break;	
+			default:
+				break;
+		}
+		
+		$communication->setSubject($form['title']);
+		$communication->setBody($form['body']);
+
+		if($_to_field){
+			foreach (explode(',',$form[$_to_field]) as $to) {
+				$communication->addTo(trim($to));
+			}			
+		}
+		
+		if($form['bcc_mails']){
+			foreach (explode(',',$form['bcc_mails']) as $bcc) {
+					if( ! filter_var(trim($bcc), FILTER_VALIDATE_EMAIL))
+						$form->displayError('bcc_mails',$bcc.' is not a valid email');
+				$communication->addBcc($bcc);
+			}
+		}
+
+		if($form['cc_mails']){
+			foreach (explode(',',$form['cc_mails']) as $cc) {
+					if( ! filter_var(trim($cc), FILTER_VALIDATE_EMAIL))
+						$form->displayError('cc_mails',$cc.' is not a valid email');
+				$communication->addCc($cc);
+			}
+		}
+
+		if($form->hasElement('date')){
+			$communication['created_at'] = $form['date'];
+		}
+
+		if(isset($send_settings)){
+					
+			$communication->send($send_settings);			
+		}else{
+			$communication['direction']='Out';
+			$communication->save();
+		}
 	}
 
 	function page_import(){

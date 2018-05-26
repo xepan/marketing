@@ -520,10 +520,12 @@ class page_lead extends \xepan\base\Page{
 				$m->ref('Phones')->deleteAll();
 				
 				foreach (explode(",",$crud->form['emails']) as $email) {
+					if(!$email) continue;
 					$m->addEmail(trim($email),'Official',null,null,null,false);
 				}
 
 				foreach (explode(",",$crud->form['numbers']) as $no) {
+					if(!$no) continue;
 					$m->addPhone(trim($no),'Official',null,null,null,false);
 				}
 
@@ -544,6 +546,7 @@ class page_lead extends \xepan\base\Page{
 
 				$i=1;
 				foreach ($other_fields as $of) {
+					if(!$of) continue;
 					$this->add('xepan\base\Model_Contact_Other')
 						->addCondition('contact_id',$m->id)
 						->addCondition('head',$of)

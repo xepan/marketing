@@ -7,18 +7,28 @@ class Model_Opportunity extends \xepan\hr\Model_Document{
 	public $status=[
 		'Open',
 		'Qualified',
-		'NeedsAnalysis',
+		// 'NeedsAnalysis',
 		'Quoted',
-		'Negotiated',
+		// 'Negotiated',
 		'Won',
 		'Lost'
 	];
+	// public $actions=[
+	// 	'Open'=>['view','edit','delete','qualify','lose','win','reassess','communication'],
+	// 	'Qualified'=>['view','edit','delete','analyse_needs','win','lose','reassess','communication'],
+	// 	'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','win','reassess','communication'],
+	// 	'Quoted'=>['view','edit','delete','negotiate','win','lose','reassess','communication'],
+	// 	'Negotiated'=>['view','edit','delete','quote','win','lose','reassess','communication'],
+	// 	'Won'=>['view','edit','delete'],
+	// 	'Lost'=>['view','edit','delete']
+	// ];
+
 	public $actions=[
-		'Open'=>['view','edit','delete','qualify','lose','win','reassess','communication'],
-		'Qualified'=>['view','edit','delete','analyse_needs','win','lose','reassess','communication'],
-		'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','win','reassess','communication'],
-		'Quoted'=>['view','edit','delete','negotiate','win','lose','reassess','communication'],
-		'Negotiated'=>['view','edit','delete','quote','win','lose','reassess','communication'],
+		'Open'=>['view','qualify','lose','win','reassess','communication','edit','delete'],
+		'Qualified'=>['view','quote','win','lose','reassess','communication','edit','delete',],
+		// 'NeedsAnalysis'=>['view','edit','delete','quote','negotiate','lose','win','reassess','communication'],
+		'Quoted'=>['view','win','lose','reassess','communication','edit','delete'],
+		// 'Negotiated'=>['view','edit','delete','quote','win','lose','reassess','communication'],
 		'Won'=>['view','edit','delete'],
 		'Lost'=>['view','edit','delete']
 	];

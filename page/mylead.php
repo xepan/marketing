@@ -65,7 +65,7 @@ class page_mylead extends \xepan\base\Page{
 
 		$opp_m= $oppo_tab->add('xepan\marketing\Model_Opportunity');
 		$opp_m->addCondition('assign_to_id',$employee_id);
-		$opp_m->addCondition('status',['Open','Qualified','NeedsAnalysis','Quoted','Negotiated']);
+		$opp_m->addCondition('status',['Open','Qualified','Quoted']);
 
 		$crud = $oppo_tab->add('xepan\hr\CRUD',null,null,['grid/opportunity-grid']);
 		$crud->setModel($opp_m,['last_communication','effective_name','lead_id','title','description','status','assign_to_id','fund','discount_percentage','closing_date','city','country'],['organization','last_communication','effective_name','lead','title','description','status','assign_to','fund','discount_percentage','closing_date','city','country']);
@@ -79,9 +79,9 @@ class page_mylead extends \xepan\base\Page{
 
 		$f->addField('CheckBox','Open')->js('change',$f->js()->submit());
 		$f->addField('CheckBox','Qualified')->js('change',$f->js()->submit());
-		$f->addField('CheckBox','NeedsAnalysis')->js('change',$f->js()->submit());
+		// $f->addField('CheckBox','NeedsAnalysis')->js('change',$f->js()->submit());
 		$f->addField('CheckBox','Quoted')->js('change',$f->js()->submit());
-		$f->addField('CheckBox','Negotiated')->js('change',$f->js()->submit());
+		// $f->addField('CheckBox','Negotiated')->js('change',$f->js()->submit());
 		// $f->addField('CheckBox','Won')->js('change',$f->js()->submit());
 		// $f->addField('CheckBox','Lost')->js('change',$f->js()->submit());
 
@@ -89,7 +89,7 @@ class page_mylead extends \xepan\base\Page{
 			$show_status=[];
 			if($f['Open']) $show_status[]='Open';
 			if($f['Qualified']) $show_status[]='Qualified';
-			if($f['NeedsAnalysis']) $show_status[]='NeedsAnalysis';
+			// if($f['NeedsAnalysis']) $show_status[]='NeedsAnalysis';
 			if($f['Quoted']) $show_status[]='Quoted';
 			// if($f['Won']) $show_status[]='Won';
 			// if($f['Lost']) $show_status[]='Lost';

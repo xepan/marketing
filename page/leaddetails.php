@@ -62,13 +62,13 @@ class page_leaddetails extends \xepan\base\Page {
 			$country_field->getModel()->addCondition('status','Active');
 			$state_field = $form->getElement('state_id');
 			$state_field->getModel()->addCondition('status','Active');
-
-			if($cntry_id = $this->app->stickyGET('country_id')){			
-				$state_field->getModel()->addCondition('country_id',$cntry_id);
-			}
+			$state_field->dependsOn($country_field);
+			// if($cntry_id = $this->app->stickyGET('country_id')){			
+			// 	$state_field->getModel()->addCondition('country_id',$cntry_id);
+			// }
 
 			// $country_field->js('change',$form->js()->atk4_form('reloadField','state_id',[$this->app->url(),'country_id'=>$state_field->js()->val()]));
-			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
+			// $country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
 
 			$categories_field = $form->addField('DropDown','category');
 			$categories_field->setModel($this->add('xepan\marketing\Model_MarketingCategory'));

@@ -26,7 +26,19 @@ class page_telemarketinglistview extends \xepan\base\Page{
 							$lead->getElement('contacts_str')]))
 					->sortable(true);
 
-		$form = $this->add('Form',null,null,['form/empty']);
+		$col = $this->add('Columns');
+		$col1 = $col->addColumn(10);
+		$col2 = $col->addColumn(2);
+
+		$form = $col1->add('Form');
+		$form->add('xepan\base\Controller_FLC')
+			->makePanelsCoppalsible(true)
+			->layout([
+				'category'=>'Filter Lead~c1~3',
+				'lead'=>'c2~5',
+				'FormButtons~&nbsp;'=>'c4~3'
+			]);
+
 		$view = $this->add('View');
 		
 		// $asso_m = $this->add('xepan\marketing\Model_Lead_Category_Association');
@@ -37,8 +49,8 @@ class page_telemarketinglistview extends \xepan\base\Page{
 		// if($category_id){
 		// 	$lead->addCondition('marketing_category_id',$category_id);
 		// }
+		// $form->setLayout(['form/telemarketing-listview-form']);
 
-		$form->setLayout(['form/telemarketing-listview-form']);
 		$cat_field = $form->addField('DropDown','category')->setEmptyText('Please Select Category');
 		$cat_field->setModel($cat);
 		$lead_field = $form->addField('xepan\base\Basic','lead');
@@ -53,7 +65,8 @@ class page_telemarketinglistview extends \xepan\base\Page{
 			$form->js(null,$view->js()->reload(['contact_id'=>$form['lead']]))->execute();	
 		}
 
-		$form->js('click',
+		$btn = $col2->add('Button')->set('Create Lead');
+		$btn->js('click',
 					$this->js()->univ()
 							->frameURL(
 									$this->app->url(
@@ -61,7 +74,7 @@ class page_telemarketinglistview extends \xepan\base\Page{
 										['action'=>'add']
 									)
 								)
-						)->_selector('.create-lead');
+						);
 
 	}
 }

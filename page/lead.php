@@ -80,7 +80,7 @@ class page_lead extends \xepan\base\Page{
 		// $lead->setOrder('total_visitor','desc');
 
 		$emp_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
-		$emp_other_info_config_m->addCondition([['for','Lead'],['for','Contact']])->tryLoadAny();
+		$emp_other_info_config_m->addCondition('for','Lead')->tryLoadAny();
 		$other_fields = array_map('trim',explode(",",$emp_other_info_config_m['contact_other_info_fields']));
 
 

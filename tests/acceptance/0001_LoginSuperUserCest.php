@@ -23,7 +23,7 @@ class LoginSuperUserCest
 
     public function test_login(SuperUser $i){
         $i->amOnPage('/admin');
-        $i->login('management@xavoc.com');
+        $i->login('testsuper@xavoc.com');
         $i->see('Dashboard');
     }
 

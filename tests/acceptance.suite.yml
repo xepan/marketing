@@ -19,6 +19,19 @@ paths:
     log: tests/_output/base
 
 env:
+    local_mac:
+        modules:
+            config:
+                WebDriver:
+                    url: 'http://xepan2.loc'
+                    browser: 'chrome'
+            enabled:
+                - Db:
+                    dsn: 'mysql:host=127.0.0.1;dbname=testdb'
+                    user: 'root'
+                    password: 'winserver'
+                    # dump: tests/_data/data.sql
+                    # cleanup: false
     local_reset_db:
         modules:
             config:

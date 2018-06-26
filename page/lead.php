@@ -103,8 +103,8 @@ class page_lead extends \xepan\base\Page{
 					->addCondition('contact_id',$crud->form->model->id)
 					->addCondition('head',$of)
 					->tryLoadAny();
-				if($crud->form->hasElement('o_'.$this->app->normalizeName($of))){
-					$crud->form->getElement('o_'.$this->app->normalizeName($of))->set($value['value']);
+				if($crud->form->hasElement($this->app->normalizeName($of))){
+					$crud->form->getElement($this->app->normalizeName($of))->set($value['value']);
 				}
 			}
 		}
@@ -284,7 +284,7 @@ class page_lead extends \xepan\base\Page{
 
 		$i=1;
 		foreach ($other_fields as $of) {
-			$layout_array['o_'.$this->app->normalizeName($of).'~'.$of]='o'.($i++).'~6';
+			$layout_array[$this->app->normalizeName($of).'~'.$of]='o'.($i++).'~6';
 		}
 
 		if($crud->isEditing('edit')){
@@ -545,13 +545,15 @@ class page_lead extends \xepan\base\Page{
 				}
 
 				$i=1;
-				foreach ($other_fields as $of) {
-					if(!$of) continue;
+
+				foreach ($other_fields as $of_norm => $of_name) {
+					if(!$of_name) continue;
+
 					$this->add('xepan\base\Model_Contact_Other')
 						->addCondition('contact_id',$m->id)
-						->addCondition('head',$of)
+						->addCondition('head',$of_name)
 						->tryLoadAny()
-						->set('value',$crud->form['o_'.$this->app->normalizeName($of)])
+						->set('value',$crud->form[$of_norm])
 						->set('is_active',1)
 						->set('is_valid',1)
 						->save();
@@ -559,8 +561,39 @@ class page_lead extends \xepan\base\Page{
 
 			});
 			$i=1;
-			foreach ($other_fields as $of) {
-				$crud->form->addField('Line','o_'.$this->app->normalizeName($of),$of);
+
+			$contact_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+			$contact_other_info_config_m->addCondition([['for','Lead'],['for','Contact']]);
+
+			foreach ($contact_other_info_config_m->config_data as $of) {
+				if($of['for'] != "Contact" && $of['for'] != "Lead" ) continue;
+
+				if(!$of['name']) continue;
+
+				$form = $crud->form;
+				$field_name = $this->app->normalizeName($of['name']);
+
+				$field = $form->addField($of['type'],$field_name,$of['name']);
+				if($of['type']=='DropDown') $field->setValueList(array_combine(explode(",", $of['possible_values']), explode(",", $of['possible_values'])))->setEmptyText('Please Select');
+
+				$has_field = true;
+
+				if($crud->isEditing('edit')){
+					$existing = $this->add('xepan\base\Model_Contact_Other')
+						->addCondition('contact_id',$model->id)
+						->addCondition('head',$of['name'])
+						->tryLoadAny();
+					$field->set($existing['value']);
+				}
+
+				if($of['conditional_binding']){
+					$field->js(true)->univ()->bindConditionalShow(json_decode($of['conditional_binding'],true),'div.flc-atk-form-row');
+				}
+
+				if($of['is_mandatory']){
+					$field->validate('required');
+				}
+
 			}
 		}
 

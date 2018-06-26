@@ -11,7 +11,8 @@ class Model_Lead extends \xepan\base\Model_Contact{
 					];
 
 	public $assigable_by_field = 'assign_to_id';
-
+	public $contact_type = "Contact";
+	
 	function init(){
 		parent::init();
 		

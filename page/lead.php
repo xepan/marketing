@@ -14,7 +14,7 @@ class page_lead extends \xepan\base\Page{
 		$vp = $this->add('VirtualPage');
 		$vp->set(function($p){
 			try{
-				$lead = $this->add('xepan\marketing\Model_Lead')->load($_POST['pk']);
+				$lead = $this->add('xepan\marketing\Model_Lead',['addOtherInfo'=>true])->load($_POST['pk']);
 				$lead->ref('xepan\marketing\Lead_Category_Association')->deleteAll();
 				foreach ($_POST['value']?:[] as $catagory_id) {
 					$this->add('xepan\marketing\Model_Lead_Category_Association')
@@ -31,10 +31,10 @@ class page_lead extends \xepan\base\Page{
 		});
 		
 		if($this->model_class){
-			$lead = $this->add($this->model_class);
+			$lead = $this->add($this->model_class,['addOtherInfo'=>true]);
 			
 		}else{
-			$lead = $this->add('xepan\marketing\Model_Lead');
+			$lead = $this->add('xepan\marketing\Model_Lead',['addOtherInfo'=>true]);
 		}
 
 		// $lead->getElement('days_ago')->destroy();
@@ -79,10 +79,10 @@ class page_lead extends \xepan\base\Page{
 		$lead->add('xepan\base\Controller_TopBarStatusFilter');
 		// $lead->setOrder('total_visitor','desc');
 
-		$emp_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
-		$emp_other_info_config_m->addCondition('for','Lead')->tryLoadAny();
-		$other_fields = array_map('trim',explode(",",$emp_other_info_config_m['contact_other_info_fields']));
-
+		// $emp_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+		// $emp_other_info_config_m->addCondition('for','Lead')->tryLoadAny();
+		// $other_fields = array_map('trim',explode(",",$emp_other_info_config_m['contact_other_info_fields']));
+		$other_fields = $lead->otherInfoFields;
 
 		$this->crud = $crud = $this->add('xepan\hr\CRUD',null,null,['grid/lead-grid']);
 
@@ -277,7 +277,7 @@ class page_lead extends \xepan\base\Page{
 					'starting_at'=>'f3~6',
 					'description'=>'f4~12',
 
-					'address'=>'Extended Info~a1~12~closed',
+					'address'=>'Extended Info~a1~12',
 					'pin_code'=>'a2~12',
 				];
 		

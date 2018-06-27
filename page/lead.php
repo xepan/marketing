@@ -256,6 +256,10 @@ class page_lead extends \xepan\base\Page{
 					'categories'=>'c12~4',
 					'score~Score (Is Lead Positive or Negative)'=>'c13~2~or leave as it is for nutral',
 					'score_buttons~'=>'c14~3',
+					
+					'address'=>'Extended Info~a1~12',
+					'pin_code'=>'a2~12',
+					
 					'communication_type'=>'Initial Communication~x1~12~closed',
 					'sub_type'=>'x2~6',
 					'calling_status'=>'x3~6',
@@ -277,8 +281,6 @@ class page_lead extends \xepan\base\Page{
 					'starting_at'=>'f3~6',
 					'description'=>'f4~12',
 
-					'address'=>'Extended Info~a1~12',
-					'pin_code'=>'a2~12',
 				];
 		
 

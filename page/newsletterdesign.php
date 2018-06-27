@@ -36,6 +36,38 @@ class page_newsletterdesign extends \xepan\base\Page{
 
 		$newsletter = $this->add('xepan\marketing\Model_Newsletter')->tryLoadBy('id',$this->api->stickyGET('document_id'));
 
+		$newsletter->addHook('beforeSave',function($m){
+			$htmlContent = $m['message_blog'];
+
+			// read all image tags into an array
+			preg_match_all('/<img[^>]+>/i',$htmlContent, $imgTags); 
+
+			for ($i = 0; $i < count($imgTags[0]); $i++) {
+			  // get the source string
+			  preg_match('/src="([^"]+)/i',$imgTags[0][$i], $imgage);
+
+			  // remove opening 'src=' tag, can`t get the regex right
+			  $origImageSrc[] = str_ireplace( 'src="', '',  $imgage[0]);
+			}
+			// will output all your img src's within the html string
+			$error=[];
+			foreach ($origImageSrc as $image) {
+				if(!file_exists($image)){
+					$error[] = $image;
+				}
+			}
+			if(count($error)>0){
+				$msg = 'NOT SAVED: The following files not found in place, sending will prodcuce error, please solve them - <br/>';
+				$i=1;
+				foreach ($error as $e1) {
+					$msg .= $i.": ".$e1 ."<br/>";
+					$i++;
+				}
+				$e = $this->exception($msg,'ValidityCheck')->setField('message_blog');
+				throw $e;
+			}			
+		});
+
 		if($action !='view'){
 			$tmps = scandir(getcwd().'/../vendor/xepan/marketing/templates/newsletter-layout-chunks');
 			unset($tmps[0]);

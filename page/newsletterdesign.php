@@ -49,9 +49,13 @@ class page_newsletterdesign extends \xepan\base\Page{
 			  // remove opening 'src=' tag, can`t get the regex right
 			  $origImageSrc[] = str_ireplace( 'src="', '',  $imgage[0]);
 			}
+
 			// will output all your img src's within the html string
-			$error=[];
+			$error = [];
 			foreach ($origImageSrc as $image) {
+				$temp = explode("://", $image);
+				if($temp[0] == "http" or $temp[0] == "https") continue;
+				
 				if(!file_exists($image)){
 					$error[] = $image;
 				}

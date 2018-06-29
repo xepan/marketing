@@ -57,7 +57,7 @@ class page_mylead extends \xepan\base\Page{
 		$m->setOrder('starting_date','desc');
 		$m->addCondition('assign_to_id',$employee_id);
 		$m->addCondition('type','Followup');
-		$v = $schedule_cal_tab->add('xepan\projects\View_TaskCalendar',['defaultView'=>'month','title_field'=>'task_name']);
+		$v = $schedule_cal_tab->add('xepan\projects\View_TaskCalendar',['defaultView'=>'month','title_field'=>'task_name'])->addClass('main-box');
 		$v->setModel($m);
 
 		
@@ -69,7 +69,7 @@ class page_mylead extends \xepan\base\Page{
 		$mylead->setOrder('id','desc');
 		$crud->setModel($mylead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority']);
 		$crud->add('xepan\base\Controller_Avatar');
-		$crud->grid->addPaginator(50);
+		$crud->grid->addPaginator(25);
 
 		// My Opportunity
 		// $status=['Open','Qualified','NeedsAnalysis','Quoted','Negotiated','Won','Lost'];
@@ -108,7 +108,7 @@ class page_mylead extends \xepan\base\Page{
 				$m->addCondition('status',$show_status);
 		});
 
-		$crud->grid->addPaginator(50);
+		$crud->grid->addPaginator(25);
 
 
 		// My Tasks
@@ -138,7 +138,6 @@ class page_mylead extends \xepan\base\Page{
 	    $grid->add('xepan\base\Controller_Avatar',['name_field'=>'created_by','extra_classes'=>'profile-img center-block','options'=>['size'=>50,'display'=>'block','margin'=>'auto'],'float'=>null]);
 
 	    $grid->setModel($task_assigned_to_me_model);
-
-	    $grid->addPaginator(50);
+	    $grid->addPaginator(25);
 	}
 }

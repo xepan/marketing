@@ -62,7 +62,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$view_lead->grid->removeAttachment();
 
 		// quick filter
-		$frm = $view_lead->grid->addQuickSearch(['effective_name','contacts_str','score']);
+		$frm = $view_lead->grid->addQuickSearch(['effective_name','organization','contacts_comma_seperated','score']);
 		$status = $frm->addField('Dropdown','marketing_category_id')->setEmptyText('Select Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
 		$frm->addHook('applyFilter',function($f,$m){

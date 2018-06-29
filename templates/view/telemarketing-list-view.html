@@ -5,23 +5,23 @@
       <header class="main-box-header clearfix">{$title}</header>
       <div class="main-box-body clearfix">{comm_wrapper}
         <div id="invoice-companies" class="row">
-          <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
-            <h2><a class="title-communcation"> <b>Create Communication</b></a></h2>
-          </div>
-          <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
-            <h2><a class="title-followup"><b>Follow Up</b></a></h2>
+          <!-- <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
+          </div> -->
+          <!-- <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
           </div>
           <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-            <h2><a class="title-opportunity"><b>Opportunity</b></a></h2>
-          </div>
+          </div> -->
           <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12 invoice-box">
-            <div class="view-communication toggle-form">{$communication_form}</div>
+            <h2 class="text-center"><a class="title-communcation"> <b>Create Communication</b></a></h2>
+            <div class="view-communication">{$communication_form}</div>
           </div>
           <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 invoice-box">
-            <div class="view-followup toggle-form">{$followup_form}</div>
+            <h2 class="text-center"><a class="title-followup"><b>New Follow Up</b></a></h2>
+            <div class="view-followup ">{$followup_form}</div>
           </div>
           <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 invoice-box">
-            <div class="view-opportunity toggle-form">{$opportunity_form}</div>
+            <h2 class="text-center"><a class="title-opportunity"><b>Create Opportunity</b></a></h2>
+            <div class="view-opportunity">{$opportunity_form}</div>
           </div>
         </div>
         <div class="row">		
@@ -57,13 +57,14 @@
 <style>
   #invoice-companies .invoice-box{
   	min-height:50px!important;
+    padding-top: 0px;
   }	
   .toggle-form{
   	display:none;
   }
-  .xepan-communication-lister .xepan-push-small{
+  /*.xepan-communication-lister .xepan-push-small{
   	display:none
-  }
+  }*/
   
   #invoice-companies a{
   	cursor:pointer;
@@ -84,5 +85,5 @@
   });
   $('.title-opportunity').click(function(){
   	$('.view-opportunity').toggleClass('toggle-form');
-  });						
+  });
 </script>

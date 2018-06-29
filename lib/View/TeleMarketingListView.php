@@ -21,8 +21,8 @@ class View_TeleMarketingListView extends \View{
 			$this->template->del('detail_wrapper');
 			return;	
 		}else{
-			$title = $this->add('View',null,'title')->setHtml("<h1>". $lead['name']." { Score: ".$lead['score']." }</h1>")->addClass('lead-score text-center');
-			$title->js('reload')->reload();
+			$title = $this->add('View',null,'title')->setHtml("<h1>". $lead['name_with_type']." { Score: ".$lead['score']." }</h1>")->addClass('lead-score text-center');
+			// $title->js('reload')->reload();
 		}
 
 
@@ -35,6 +35,9 @@ class View_TeleMarketingListView extends \View{
 		$body_field = $comm_form->getElement('body');
 		$body_field->options = ['toolbar1'=>"styleselect | bold italic fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor",'menubar'=>false];
 		$called_to_field = $comm_form->getElement('called_to');
+
+		$comm_form->getElement('type')->set('Call');
+		$comm_form->getElement('status')->set('Called');
 
 		$nos=[];
 		foreach ($member_phones as $no) {

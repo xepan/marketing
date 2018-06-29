@@ -65,10 +65,11 @@ class page_telemarketinglistview extends \xepan\base\Page{
 			$form->js(null,$view->js()->reload(['contact_id'=>$form['lead']]))->execute();	
 		}
 
-		$btn = $col2->add('Button')->set('Create Lead');
+		$btn = $col2->add('Button')->set('Create Lead')->addClass('btn btn-primary');
 		$btn->js('click',
 					$this->js()->univ()
 							->frameURL(
+									'Creating New Lead',
 									$this->app->url(
 										'xepan_marketing_leaddetails',
 										['action'=>'add']

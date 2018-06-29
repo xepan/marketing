@@ -15,174 +15,141 @@ class page_telemarketing extends \xepan\base\Page{
 			GRID FOR SHOWING ALL LEAD 
 		*/
 
-		$view_lead = $this->add('xepan\hr\CRUD',['allow_add'=>false,'grid_options'=>['fixed_header'=>false]], 'side',['view\teleleadselector'])->addClass('view-lead-grid');
+		$view_lead = $this->add('xepan\hr\CRUD',['grid_options'=>['fixed_header'=>false]],'left_side')->addClass('view-lead-grid');
+
 		$model_lead = $this->add('xepan\marketing\Model_Lead');
 		$model_lead->addCondition('status','Active');
-		$view_lead->js('reload')->reload();
 
+		$model_lead->getElement('effective_name')->caption('Name');
 		$view_lead->grid->addHook('formatRow',function($g){
- 				$communication = $this->add('xepan\marketing\Model_TeleCommunication')
+
+ 			$communication = $this->add('xepan\marketing\Model_TeleCommunication')
 									->addCondition('to_id',$g->model->id)
 									->setOrder('id','desc')
 									->tryLoadAny();
+			$title = "";
 
+			$name_html = '<a title="'.$title.'" href="#" data-id="'.$g->model['id'].'" class="do-view-lead">'.$g->model['effective_name']."</a>";
+			if(trim($g->model['organization']))
+				$name_html .= "<br/>".$g->model['organization'];
+
+			$name_html .= "<br/>".$g->model['city'].", ".$g->model['state'].",".$g->model['country'];
+			$name_html .= "<br/>".$g->model['contacts_comma_seperated'];
+			// last communication
 			if($communication['description']){
- 				$g->current_row['last_communication']= substr($communication['description'],0,41).'...';
-				$g->current_row['date']= $communication['created_at']; 			
+				$title = "Last communication on date: ".$communication['created_at']."(".strip_tags($communication['description']).")";
+				$name_html .= '<br/><span>Last Comm: '.$communication['title'].'</span>'.'<span> '.$communication['created_at'].'</span>';
 			}
+
+			$name_html .= "<br/> Days Ago: ".$g->model['days_ago']." Priority:".$g->model['priority']." Score: ".$g->model['score'];
+			$g->current_row_html['effective_name'] = '<div title="'.$title.'" data-id="'.$g->model->id.'">'.$name_html.'</div>';
+			$g->current_row_html['detail'] = '<div data-id="'.$g->model->id.'" class="tele-lead fa fa-phone btn btn-sm btn-primary"></div>';
  		});
 		
-		$view_lead->setModel($model_lead, ['priority','effective_name','type','city','contacts_str','emails_str','score','status']);
+		$view_lead->setModel($model_lead, ['priority','effective_name','organization','type','city','contacts_comma_seperated','score','status','state','county','last_communication','days_ago']);
+		$view_lead->grid->addColumn('detail');
 		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
-		$view_lead->grid->addPaginator(10);
 
-		$frm = $view_lead->grid->addQuickSearch(['effective_name','contacts_str','emails_str','score']);
+		$view_lead->grid->addPaginator(25);
+		$view_lead->grid->addFormatter('effective_name','Wrap');
+		$field = $model_lead->getActualFields();
+		$not_remove = ['effective_name'];
+		foreach ($field as $name) {
+			if(in_array($name, $not_remove)) continue;
+			$view_lead->grid->removeColumn($name);
+		}
+		$view_lead->grid->removeColumn('action');
+		$view_lead->grid->removeAttachment();
 
-		$status=$frm->addField('Dropdown','marketing_category_id')->setEmptyText('Categories');
+		// quick filter
+		$frm = $view_lead->grid->addQuickSearch(['effective_name','contacts_str','score']);
+		$status = $frm->addField('Dropdown','marketing_category_id')->setEmptyText('Select Categories');
 		$status->setModel('xepan\marketing\MarketingCategory');
-
 		$frm->addHook('applyFilter',function($f,$m){
 			if($f['marketing_category_id']){
 				$cat_asso = $this->add('xepan\marketing\Model_Lead_Category_Association');
 				$cat_asso->addCondition('marketing_category_id',$f['marketing_category_id']);
 				$m->addCondition('id','in',$cat_asso->fieldQuery('lead_id'));
 			}
+
+			switch ($f['sort_by']) {
+				case 'priority_asc':
+					$m->setOrder('priority','asc');
+					break;
+				case 'priority_desc':
+					$m->setOrder('priority','desc');
+					break;
+				case 'score_asc':
+					$m->setOrder('score','asc');
+					break;
+				case 'score_desc':
+					$m->setOrder('score','desc');
+					break;
+				case 'last_communication_asc':
+					$m->setOrder('last_communication','asc');
+					break;
+				case 'last_communication_desc':
+					$m->setOrder('last_communication','desc');
+					break;
+			}
 		});
-		
 		$status->js('change',$frm->js()->submit());
+		$sort_by_field = $frm->addField('Dropdown','sort_by')
+			->setEmptyText('Sort By ..')
+			->setValueList([
+				'priority_asc'=>'Priority Asc',
+				'priority_desc'=>'Priority Desc',
+				'score_asc'=>'Score Asc',
+				'score_desc'=>'Score Desc',
+				'last_communication_asc'=>'Last Communication Asc',
+				'last_communication_desc'=>'Last Communication Desc'
+			]);
+		$sort_by_field->js('change',$frm->js()->submit());
+
 
 		$view_lead->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 
-		$list_view_btn = $view_lead->grid->add('Button',null,'grid_buttons')->set('List View')->addClass('btn btn-info');
-
+		// redirect to other extended view
+		$list_view_btn = $view_lead->grid->add('Button',null,'grid_buttons')->set('Detail View')->addClass('btn btn-info');
 		$list_view_btn->js('click')->univ()->location($this->app->url('xepan_marketing_telemarketinglistview'));
 
-		/*
-				FORM FOR ADDING CONVERSATION 
-		*/
 
-		$model_telecommunication = $this->add('xepan\marketing\Model_TeleCommunication');
-		$view_teleform = $this->add('View',null,'top');
-		$view_teleform_url = $this->api->url(null,['cut_object'=>$view_teleform->name]);
-		
-		// opportunity, filter form
-		$form = $view_teleform->add('Form');
-		$form->setLayout('view\teleconversationform');
-		$type_field = $form->addField('xepan\base\DropDown','communication_type');
-		$type_field->setAttr(['multiple'=>'multiple']);
-		$type_field->setValueList(['TeleMarketing'=>'TeleMarketing','Email'=>'Email','Support'=>'Support','Call'=>'Call','Newsletter'=>'Newsletter','SMS'=>'SMS','Personal'=>'Personal']);
-		$form->addField('search');
-		$form->addSubmit('Filter')->addClass('btn btn-primary btn-block');
-		
-
-		$lead_name = $form->layout->add('View',null,'name')->set(isset($lead_model)?$lead_model['name']:'No Lead Selected');
-
-		$button = $form->layout->add('Button',null,'btn-opportunity')->set('Opportunities')->addClass('btn btn-sm btn-primary');
-
-		/*
-			GRID FOR SHOWING PREVIOUS CONVERSATION 
-		*/							
-
-		$view_conversation = $this->add('xepan\communication\View_Lister_Communication',['contact_id'=>$contact_id, 'type' =>'TeleMarketing'],'bottom');
-
-		$model_communication = $this->add('xepan\communication\Model_Communication');
-		// $model_communication->addCondition(
-		// 								$model_communication->dsql()->andExpr()
-		// 							  	->where('to_id',$contact_id)
-		// 							  	->where('to_id','<>',null));
-		
-		$model_communication->addCondition(
-				$model_communication->dsql()->orExpr()
-							->where(
-									$model_communication->dsql()->andExpr()
-									->where('from_id','<>',null)
-									->where('from_id',$contact_id)
-								)
-							->where(
-									$model_communication->dsql()->andExpr()
-										->where('to_id','<>',null)
-										->where('to_id',$contact_id)
-								)
-					);
-
-		$model_communication->setOrder('id','desc');
-
-
-		// FILTERS
-		if($_GET['comm_type']){			
-			$model_communication->addCondition('communication_type',explode(",", $_GET['comm_type']));
-		}
-		
-		// IN CASE YOU WANT TO SHOW ONLY TELEMARKETING COMMUNICATION, UNCOMMENT THIS LINE 
-		// if($this->app->stickyGET('view_telecommunication')){
-		// 	$model_communication->addCondition('communication_type','TeleMarketing');
-		// }
-
-		if($search = $this->app->stickyGET('search')){			
-			$model_communication->addExpression('Relevance')->set('MATCH(title,description,communication_type) AGAINST ("'.$search.'")');
-			$model_communication->addCondition('Relevance','>',0);
- 			$model_communication->setOrder('Relevance','Desc');
-		}
-
-		$view_conversation->setModel($model_communication)->setOrder('created_at','desc');
-		$view_conversation->add('Paginator',['ipp'=>10]);
-
-		
-		$temp = ['TeleMarketing','Email','Support','Call','Newsletter','SMS','Personal'];
-		$type_field->set($_GET['comm_type']?explode(",", $_GET['comm_type']):$temp)->js(true)->trigger('changed');
-		
-		/*
-			JS FOR RELOAD WITH SPECIFIC ID 
-		*/
-					
-		$view_lead->js('click',
-			[$view_conversation->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id'),'view_telecommunication'=>true]),
-			$view_teleform->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
-			])->_selector('.tele-lead');
-		
-		if($contact_id){					
-			// submitting filter form
-			if($form->isSubmitted() AND $contact_id){												
-				$view_conversation->js()->reload(['comm_type'=>$form['communication_type'],'search'=>$form['search']])->execute();
-			}
-			
-			$form->on('click','.positive-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
-				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication,'score'=>true]]);
-			
-			$js_array = [
-				$js->univ()->successMessage('Positive Marking Done'),
-				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
-				];
-			return $js_array;
-			});
-			
-			$form->on('click','.negative-lead',function($js,$data)use($lead_model,$model_communication,$view_lead){
-				$this->app->hook('pointable_event',['telemarketing_response',['lead'=>$lead_model,'comm'=>$model_communication],'score'=>false]);
-				$js_array = [
-				$js->univ()->successMessage('Negative Marking Done'),
-				$view_lead->js()->_selector('.view-lead-grid')->trigger('reload'),
-				];
-			return $js_array;
-			});
-		}
+		$right_side_view = $this->add('View',null,'right_side');
 
 		/*
 				VIRTUAL PAGE TO SEE AND ADD OPPORTUNITIES 
 		*/	
 
- 		$button->add('VirtualPage')
-			->bindEvent('Opportunities','click')
-			->set(function($page){
-				$contact_id = $this->app->stickyGET('contact_id');
-				if(!$contact_id){
-					$page->add('View_Error')->set('Please Select A Lead First');
-					return;	
-				}
-				$opportunity_model = $page->add('xepan\marketing\Model_Opportunity')
-									  ->addCondition('lead_id',$contact_id);	
-				$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model,['title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
+		if($contact_id){
+			$button = $right_side_view->add('Button')->set('Opportunities')->addClass('btn btn-sm btn-primary');
+	 		$button->add('VirtualPage')
+				->bindEvent('Opportunities','click')
+				->set(function($page){
+					$contact_id = $this->app->stickyGET('contact_id');
+					if(!$contact_id){
+						$page->add('View_Error')->set('Please Select A Lead First');
+						return;	
+					}
+					$opportunity_model = $page->add('xepan\marketing\Model_Opportunity')
+										  ->addCondition('lead_id',$contact_id);	
+					$page->add('xepan\hr\CRUD',null,null,['grid\miniopportunity-grid'])->setModel($opportunity_model,['title','description','status','assign_to_id','fund','discount_percentage','closing_date'],['title','description','status','assign_to_id','fund','discount_percentage','closing_date']);
 
 			});
+
+			$view_communication = $right_side_view->add('View');
+			$comm = $view_communication->add('xepan\communication\View_Communication');
+			$comm->setCommunicationsWith($lead_model);
+			$comm->showCommunicationHistory(true);
+
+		}else{
+			$right_side_view->add('View_Error')->set('Please Select lead to view details');
+		}
+
+		$view_lead->js('click',
+			[
+				$right_side_view->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
+			])->_selector('.tele-lead');
+
 	}
 
 	function defaultTemplate(){

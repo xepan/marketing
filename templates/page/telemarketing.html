@@ -1,12 +1,21 @@
-
-<div class="row">{$graph}				</div>
+<div id="{$_name}" class="{$class} " style="{$style}">
 <div class="row">
-  <div class="col-md-5">{$side}</div>
-  <div class="col-md-7">{filter_block}
+  <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12 left-side">{$left_side}</div>
+  <div class="col-md-7 col-lg-7 col-sm-12 col-xs-12">
+  	{$right_side}
+  	{filter_block}
     <div class="row xepan-push-small">{$top}</div>
-    <div class="row">
-      	
+    <div class="row">  	
       {$bottom}
-    </div>{/filter_block}
+    </div>
+    {/filter_block}
   </div>
+</div>
+<style type="text/css">
+	.left-side .main-box-body.table{
+		max-height: 450px;
+		overflow-y: scroll;
+	}
+
+</style>
 </div>

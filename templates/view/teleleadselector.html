@@ -1,11 +1,13 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">
+  {Pannel}
   <header class="main-box-header clearfix atk-actions  {$class} ">
     <div style="100%" class="filter-block"> 
       <div class="form-group pull-right xepan-filter-form"><span>{$grid_buttons}</span><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span>
       </div>
     </div>
-  </header>{/Pannel}
+  </header>
+  {/Pannel}
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
@@ -26,7 +28,8 @@
           </td>
           <td>{$priority}</td>
           <td>{$contacts_str} &nbsp; &nbsp; {action}Action Here{/}</td>
-          <td>{score}xyz{/}<a href="" data-id="{$id}" class="tele-lead">
+          <td>{score}xyz{/}
+            <a href="" data-id="{$id}" class="tele-lead">
               <div style="display: none;" class="area-hidden">{$name}</div><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa-phone fa fa-stack-1x fa-inverse">           </i></span></a></td>{/}
         </tr>{/}{/}
         {not_found}

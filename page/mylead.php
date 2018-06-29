@@ -41,13 +41,24 @@ class page_mylead extends \xepan\base\Page{
 
 		$tabs = $this->add('Tabs');
 
-		$follow_tab = $tabs->addTabURL('xepan_projects_myfollowups','My Followups');
+		$schedule_cal_tab = $tabs->addTab('My Schedule Calendar');
+		$follow_tab = $tabs->addTabURL($this->app->url('xepan_projects_myfollowups',['filter_for_employee_id'=>$employee_id]),'My Followups');
 		$oppo_tab = $tabs->addTab('My Opportunities');
 		$leads_tab = $tabs->addTab('My Leads');
 		$tasks_tab = $tabs->addTab('My Tasks');
 
 
 		// My Followups
+
+
+		// $schedule_cal_tab
+
+		$m = $schedule_cal_tab->add('xepan\projects\Model_Task');
+		$m->setOrder('starting_date','desc');
+		$m->addCondition('assign_to_id',$employee_id);
+		$m->addCondition('type','Followup');
+		$v = $schedule_cal_tab->add('xepan\projects\View_TaskCalendar',['defaultView'=>'month','title_field'=>'task_name']);
+		$v->setModel($m);
 
 		
 

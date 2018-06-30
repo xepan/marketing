@@ -48,7 +48,7 @@ class page_telemarketing extends \xepan\base\Page{
 		
 		$view_lead->setModel($model_lead, ['priority','effective_name','organization','type','city','contacts_comma_seperated','score','status','state','county','last_communication','days_ago']);
 		$view_lead->grid->addColumn('detail');
-		$view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
+		// $view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 
 		$view_lead->grid->addPaginator(25);
 		$view_lead->grid->addFormatter('effective_name','Wrap');
@@ -107,7 +107,7 @@ class page_telemarketing extends \xepan\base\Page{
 		$sort_by_field->js('change',$frm->js()->submit());
 
 
-		$view_lead->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		$view_lead->grid->js('click')->_selector('.do-view-lead')->univ()->frameURL('Lead Details',[$this->api->url('xepan_marketing_leaddetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 
 		// redirect to other extended view
 		$list_view_btn = $view_lead->grid->add('Button',null,'grid_buttons')->set('Detail View')->addClass('btn btn-info');
@@ -145,7 +145,7 @@ class page_telemarketing extends \xepan\base\Page{
 			$right_side_view->add('View_Error')->set('Please Select lead to view details');
 		}
 
-		$view_lead->js('click',
+		$view_lead->grid->js('click',
 			[
 				$right_side_view->js()->reload(['contact_id'=>$this->js()->_selectorThis()->data('id')])
 			])->_selector('.tele-lead');

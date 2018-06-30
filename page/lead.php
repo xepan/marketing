@@ -11,6 +11,12 @@ class page_lead extends \xepan\base\Page{
 
 	function page_index(){
 
+		$task_subtype_m = $this->add('xepan\projects\Model_Config_TaskSubtype');
+		$task_subtype_m->tryLoadAny();
+		$this->task_subtype = explode(",",$task_subtype_m['value']);
+		$this->task_subtype = array_combine($this->task_subtype, $this->task_subtype);
+
+
 		$vp = $this->add('VirtualPage');
 		$vp->set(function($p){
 			try{
@@ -258,8 +264,16 @@ class page_lead extends \xepan\base\Page{
 					'score_buttons~'=>'c14~3',
 					
 					'address'=>'Extended Info~a1~12',
-					'pin_code'=>'a2~12',
-					
+					'pin_code'=>'a2~12'];
+
+		
+
+		$i=1;
+		foreach ($other_fields as $of) {
+			$layout_array[$this->app->normalizeName($of).'~'.$of]='o'.($i++).'~6';
+		}
+		
+		$layout_array=array_merge($layout_array,[
 					'communication_type'=>'Initial Communication~x1~12~closed',
 					'sub_type'=>'x2~6',
 					'calling_status'=>'x3~6',
@@ -277,17 +291,20 @@ class page_lead extends \xepan\base\Page{
 					'sms_to'=>'x12~6',
 					'sms_settings'=>'x13~6',
 					'follow_up'=>'f1~12',
-					'followup_assign_to'=>'f2~6',
-					'starting_at'=>'f3~6',
+					'followup_assign_to'=>'f2~4',
+					'starting_at'=>'f3~3',
+					'followup_type'=>'f31~3',
+					'existing_schedule'=>'f32~2',
 					'description'=>'f4~12',
+					'set_reminder'=>'r1~12',
+					'remind_via'=>'r2~6',
+					'notify_to'=>'r3~6',
+					'reminder_time'=>'r4~4',
+					// 'force_remind'=>'r5~12',
+					'snooze_duration'=>'r6~4',
+					'remind_unit'=>'r7~4',
 
-				];
-		
-
-		$i=1;
-		foreach ($other_fields as $of) {
-			$layout_array[$this->app->normalizeName($of).'~'.$of]='o'.($i++).'~6';
-		}
+				]);
 
 		if($crud->isEditing('edit')){
 			unset($layout_array['communication_type']);unset($layout_array['sub_type']);
@@ -388,6 +405,25 @@ class page_lead extends \xepan\base\Page{
 			$assign_to_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
 			$assign_to_field->set($this->app->employee->id);
 			$description_field = $form->addField('text','description');
+			
+			$followup_type = $form->addField('DropDown','followup_type')->setValueList($this->task_subtype)->setEmptyText('Please Select ...');
+
+			$set_reminder_field = $form->addField('checkbox','set_reminder');
+			$remind_via_field = $form->addField('DropDown','remind_via')->setValueList(['Email'=>'Email','SMS'=>'SMS','Notification'=>'Notification'])->setAttr(['multiple'=>'multiple'])->setEmptyText('Please Select A Value');
+			$notify_to_field = $form->addField('DropDown','notify_to')->setAttr(['multiple'=>'multiple'])->setEmptyText('Please select a value');
+			$notify_to_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
+			$reminder_time  = $form->addField('DateTimePicker','reminder_time');
+			$reminder_time->js(true)->val('');
+
+			// $force_remind_field = $form->addField('checkbox','force_remind','Enable Snoozing [Repetitive Reminder]');
+			$snooze_field = $form->addField('snooze_duration');
+			$remind_unit_field = $form->addField('DropDown','remind_unit')->setValueList(['Minutes'=>'Minutes','hours'=>'Hours','day'=>'Days'])->setEmptyText('Please select a value');
+			
+			$form->layout->add('xepan\projects\View_EmployeeFollowupSchedule',['employee_field'=>$assign_to_field,'date_field'=>$starting_date_field],'existing_schedule');
+
+			$set_reminder_field->js(true)->univ()->bindConditionalShow([
+				true=>['remind_via','notify_to','reminder_time','force_remind','snooze_duration','remind_unit']
+			],'div.col-md-1,div.col-md-2,div.col-md-3,div.col-md-4,div.col-md-6,div.col-md-12');
 
 			$emails_field->js('change',$email_to_field->js()->val($emails_field->js()->val()));
 			$number_field->js('change','
@@ -403,7 +439,7 @@ class page_lead extends \xepan\base\Page{
 			// $.each($('.$called_to_field.').val().split(","),function(item,index){$.create("option", {"value": '"+item+"'}, "").appendTo('#mySelect');})');
 
 			$follow_up_field->js(true)->univ()->bindConditionalShow([
-				true=>['follow_up_type','task_title','starting_at','followup_assign_to','description','set_reminder']
+				true=>['follow_up_type','task_title','starting_at','followup_assign_to','description','set_reminder','followup_type','existing_schedule']
 			],'div.col-md-1,div.col-md-2,div.col-md-3,div.col-md-4,div.col-md-6,div.col-md-12');
 
 			$type_field->js(true)->univ()->bindConditionalShow([
@@ -495,19 +531,20 @@ class page_lead extends \xepan\base\Page{
 						$model_task['assign_to_id'] = $form['followup_assign_to'];
 						$model_task['description'] = $form['description'];
 						$model_task['related_id'] = $m->id;
+						$model_task['sub_type'] = $form['followup_type'];
 						
-						// if($this['set_reminder']){
-						// 	$model_task['set_reminder'] = true;
-						// 	$model_task['reminder_time'] = $this['reminder_time'];
-						// 	$model_task['remind_via'] = $this['remind_via'];
-						// 	$model_task['notify_to'] = $this['notify_to'];
+						if($form['set_reminder']){
+							$model_task['set_reminder'] = true;
+							$model_task['reminder_time'] = $form['reminder_time'];
+							$model_task['remind_via'] = $form['remind_via'];
+							$model_task['notify_to'] = $form['notify_to'];
 							
-						// 	if($this['force_remind']){
-						// 		$model_task['snooze_duration'] = $this['snooze_duration'];
-						// 		$model_task['remind_unit'] = $this['remind_unit'];
+							if($form['force_remind']){
+								$model_task['snooze_duration'] = $form['snooze_duration'];
+								$model_task['remind_unit'] = $form['remind_unit'];
 
-						// 	}
-						// }
+							}
+						}
 						$model_task->save();
 					}
 

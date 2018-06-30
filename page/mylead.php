@@ -56,8 +56,8 @@ class page_mylead extends \xepan\base\Page{
 		$m = $schedule_cal_tab->add('xepan\projects\Model_Task');
 		$m->setOrder('starting_date','desc');
 		$m->addCondition('assign_to_id',$employee_id);
-		$m->addCondition('type','Followup');
-		$v = $schedule_cal_tab->add('xepan\projects\View_TaskCalendar',['defaultView'=>'month','title_field'=>'task_name'])->addClass('main-box');
+		// $m->addCondition('type','Followup');
+		$v = $schedule_cal_tab->add('xepan\projects\View_TaskCalendar',['defaultView'=>'agendaDay','title_field'=>'task_name','add_employee_filter'=>false,'default_task_type'=>'Followup'])->addClass('main-box');
 		$v->setModel($m);
 
 		

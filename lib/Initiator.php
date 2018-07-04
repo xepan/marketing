@@ -69,20 +69,20 @@ class Initiator extends \Controller_Addon {
 
 	function populateApplicationMenus(){
 		if(!$this->app->getConfig('hidden_xepan_marketing',false)){
-			$m = $this->app->top_menu->addMenu('Marketing');
+			// $m = $this->app->top_menu->addMenu('Marketing');
 			// $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],'xepan_marketing_dashboard');
-			$m->addItem(['Strategy Planning','icon'=>'fa fa-gavel'],'xepan_marketing_strategyplanning');
-			$m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
-			$m->addItem(['Lead','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_lead',['status'=>'Active']));
-			$m->addItem(['Lead Assign','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_employeeleadassign'));
-			$m->addItem(['Opportunity','icon'=>'fa fa-user'],$this->api->url('xepan_marketing_opportunity',['watchable'=>true]));
-			$m->addItem(['Newsletter','icon'=>'fa fa-envelope-o'],$this->app->url('xepan_marketing_newsletter',['status'=>'Draft,Submitted,Approved']));
-			$m->addItem(['Social Content','icon'=>'fa fa-globe'],$this->app->url('xepan_marketing_socialcontent',['status'=>'Draft,Submitted,Approved']));
-			$m->addItem(['Tele Marketing','icon'=>'fa fa-phone'],'xepan_marketing_telemarketing');
+			// $m->addItem(['Strategy Planning','icon'=>'fa fa-gavel'],'xepan_marketing_strategyplanning');
+			// $m->addItem(['Category Management','icon'=>'fa fa-sitemap'],'xepan_marketing_marketingcategory');
+			// $m->addItem(['Lead','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_lead',['status'=>'Active']));
+			// $m->addItem(['Lead Assign','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_employeeleadassign'));
+			// $m->addItem(['Opportunity','icon'=>'fa fa-user'],$this->api->url('xepan_marketing_opportunity',['watchable'=>true]));
+			// $m->addItem(['Newsletter','icon'=>'fa fa-envelope-o'],$this->app->url('xepan_marketing_newsletter',['status'=>'Draft,Submitted,Approved']));
+			// $m->addItem(['Social Content','icon'=>'fa fa-globe'],$this->app->url('xepan_marketing_socialcontent',['status'=>'Draft,Submitted,Approved']));
+			// $m->addItem(['Tele Marketing','icon'=>'fa fa-phone'],'xepan_marketing_telemarketing');
 			// $m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));
-			$m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']));
-			$m->addItem(['Schedule Timeline','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_scheduletimeline'));
-			$m->addItem(['Day by Day Analytics','icon'=>'fa fa bar-chart-o'],$this->app->url('xepan_marketing_daybydayanalytics'));
+			// $m->addItem(['Campaign','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_campaign',['status'=>'Draft,Submitted,Redesign,Approved,Onhold']));
+			// $m->addItem(['Schedule Timeline','icon'=>'fa fa-bullhorn'],$this->app->url('xepan_marketing_scheduletimeline'));
+			// $m->addItem(['Day by Day Analytics','icon'=>'fa fa bar-chart-o'],$this->app->url('xepan_marketing_daybydayanalytics'));
 			// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 			// $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 
@@ -90,6 +90,90 @@ class Initiator extends \Controller_Addon {
 			$this->app->report_menu->addItem(['Employee Lead Report','icon'=>'fa fa-users'],$this->app->url('xepan_marketing_report_employeeleadreport'));
 			
 		}
+	}
+
+	function getConfigTopApplicationMenu(){
+		return ['Marketing_Config'=>[
+					[	'name'=>'Social Configuration',
+						'icon'=>'fa fa-globe',
+						'url'=>'xepan_marketing_socialconfiguration'
+					],
+					[	'name'=>'Lead Sources',
+						'icon'=>'fa fa-user',
+						'url'=>'xepan_marketing_leadsource'
+					],
+					[	'name'=>'External Configuration (Via API)',
+						'icon'=>'fa fa-gears',
+						'url'=>'xepan_marketing_externalconfiguration'
+					]
+				]
+			];
+	}
+
+	function getTopApplicationMenu(){
+		return ['Marketing'=>[
+						[	'name'=>'Strategy Planning',
+							'icon'=>'fa fa-gavel',
+							'url'=>'xepan_marketing_strategyplanning'
+						],
+						[	'name'=>'Category Management',
+							'icon'=>'fa fa-sitemap',
+							'url'=>'xepan_marketing_marketingcategory'
+						],
+						[	'name'=>'Lead',
+							'icon'=>'fa fa-users',
+							'url'=>'xepan_marketing_lead',
+							'url_param'=>['status'=>'Active']
+						],
+						[	'name'=>'Lead Assign',
+							'icon'=>'fa fa-users',
+							'url'=>'xepan_marketing_employeeleadassign'
+						],
+						[	'name'=>'Opportunity',
+							'icon'=>'fa fa-user',
+							'url'=>'xepan_marketing_opportunity',
+							'url_param'=>['watchable'=>true]
+						],
+						[	'name'=>'Newsletter',
+							'icon'=>'fa fa-envelope-o',
+							'url'=>'xepan_marketing_newsletter',
+							'url_param'=>['status'=>'Draft,Submitted,Approved']
+						],
+						[	'name'=>'Social Content',
+							'icon'=>'fa fa-globe',
+							'url'=>'xepan_marketing_socialcontent',
+							'url_param'=>['status'=>'Draft,Submitted,Approved']
+						],
+						[	'name'=>'Tele Marketing',
+							'icon'=>'fa fa-phone',
+							'url'=>'xepan_marketing_telemarketing'
+						],
+						[	'name'=>'Campaign',
+							'icon'=>'fa fa-bullhorn',
+							'url'=>'xepan_marketing_campaign',
+							'url_param'=>['status'=>'Draft,Submitted,Redesign,Approved,Onhold']
+						],
+						[	'name'=>'Schedule Timeline',
+							'icon'=>'fa fa-bullhorn',
+							'url'=>'xepan_marketing_scheduletimeline'
+						],
+						[	'name'=>'Day by Day Analytics',
+							'icon'=>'fa fa bar-chart-o',
+							'url'=>'xepan_marketing_daybydayanalytics'
+						],
+						[	'name'=>'My Sales',
+							'icon'=>'fa fa-file-text-o',
+							'url'=>'xepan_marketing_mylead'
+						],
+						[	'name'=>'Employee Lead Report',
+							'icon'=>'fa fa-users',
+							'url'=>'xepan_marketing_report_employeeleadreport'
+						]
+				]
+			];
+			// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
+			// $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
+			// $m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));
 	}
 
 	function exportWidgets($app,&$array){

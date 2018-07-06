@@ -158,16 +158,18 @@ class Initiator extends \Controller_Addon {
 							'url'=>'xepan_marketing_scheduletimeline'
 						],
 						[	'name'=>'Day by Day Analytics',
-							'icon'=>'fa fa bar-chart-o',
+							'icon'=>'fa fa bar-chart',
 							'url'=>'xepan_marketing_daybydayanalytics'
 						],
 						[	'name'=>'My Sales',
 							'icon'=>'fa fa-file-text-o',
-							'url'=>'xepan_marketing_mylead'
+							'url'=>'xepan_marketing_mylead',
+							'skip_default'=>true
 						],
 						[	'name'=>'Employee Lead Report',
 							'icon'=>'fa fa-users',
-							'url'=>'xepan_marketing_report_employeeleadreport'
+							'url'=>'xepan_marketing_report_employeeleadreport',
+							'skip_default'=>true
 						]
 				]
 			];

@@ -764,7 +764,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 
 		$this['assign_to_id'] = $assign_to_id;
 		$this['remark'] = $remark;
-		$this['assign_at'] = $this->app->now;
+		// $this['assign_at'] = $this->app->now; // done by before save hook in model contact
 		$this->save();
 
 		$employee = $this->add('xepan\base\Model_Contact')

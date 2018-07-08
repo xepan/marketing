@@ -46,6 +46,7 @@ class page_mylead extends \xepan\base\Page{
 		$oppo_tab = $tabs->addTab('My Opportunities');
 		$leads_tab = $tabs->addTab('My Leads');
 		$tasks_tab = $tabs->addTab('My Tasks');
+		$sale_report_tab = $tabs->addTabURL($this->app->url('xepan_commerce_reports_salesreport',['employee_id'=>$employee_id]),'My Sales Report');
 
 
 		// My Followups

@@ -94,7 +94,7 @@ class page_lead extends \xepan\base\Page{
 
 		$this->formLayout($crud,$lead, $other_fields);
 
-		$crud->setModel($lead,['first_name','last_name','organization','address','pin_code','city','country_id','state_id','remark','source','assign_to_id','assign_at','emails_str','contacts_str'],['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','assign_at','effective_name','code','organization','existing_associated_catagories','created_at','priority'])->setOrder('created_at','desc');
+		$crud->setModel($lead,['first_name','last_name','organization','address','pin_code','city','country_id','state_id','remark','source','assign_to_id','emails_str','contacts_str'],['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','assign_at','effective_name','code','organization','existing_associated_catagories','created_at','priority'])->setOrder('created_at','desc');
 
 		$crud->grid->addHook('formatRow',function($g){
 			if(!$g->model['assign_to_id']) $g->current_row_html['assign_at'] = "";

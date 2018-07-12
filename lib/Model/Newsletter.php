@@ -107,7 +107,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			// $contact = $this->app->employee;
 			
 			$body_v->setModel($contact);
-
+			$body_v->template->trySetHTML('unsubscribe','<a href='.$_SERVER["HTTP_HOST"].'/?page=xepan_marketing_unsubscribe&email_str='.$email.'&xepan_landing_contact_id='.$this->app->employee->id.'>Unsubscribe<a/>');
 			$communication->setSubject($subject_v->getHtml());
 			$communication->setBody($body_v->getHtml());
 

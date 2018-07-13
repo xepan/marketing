@@ -39,6 +39,7 @@ class page_newsletterdesign extends \xepan\base\Page{
 		$newsletter->addHook('beforeSave',function($m){
 			$htmlContent = $m['message_blog'];
 
+			$origImageSrc = [];
 			// read all image tags into an array
 			preg_match_all('/<img[^>]+>/i',$htmlContent, $imgTags); 
 

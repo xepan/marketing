@@ -392,7 +392,21 @@ class page_lead extends \xepan\base\Page{
 			$my_email = $form->add('xepan\hr\Model_Post_Email_MyEmails');
 			$from_email->setModel($my_email);
 
-			$form->addField('line','from_phone');
+			// $form->addField('line','from_phone');
+
+			$from_number_field = $form->addField('xepan\base\DropDown','from_phone');
+			$this->employee_phones = $this->app->employee->getPhones();
+			$emp_phones = $this->employee_phones;
+			$emp_phones = array_combine($emp_phones, $emp_phones);
+
+			$company_m = $this->add('xepan\base\Model_Config_CompanyInfo');			
+			$company_m->tryLoadAny();
+			$company_number = explode(",", $company_m['mobile_no']);
+			$company_number = array_combine($company_number, $company_number);
+
+			$from_number_field->setValueList(array_merge(array_filter($company_number),array_filter($emp_phones)));
+			$from_number_field->select_menu_options = ['tags'=>true];
+			$from_number_field->validate_values = false;
 
 			$emp_field = $form->addField('DropDown','from_person');
 			$emp_model = $this->add('xepan\hr\Model_Employee');			

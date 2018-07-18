@@ -6,15 +6,8 @@ class page_leadsource extends page_configurationsidebar{
 	function init(){
 		parent::init();
 
-		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
-		[
-			'fields'=>[
-						'lead_source'=>'text',
-						],
-				'config_key'=>'MARKETING_LEAD_SOURCE',
-				'application'=>'marketing'
-		]);
-
+		$config_m = $this->add('xepan\marketing\Model_Config_LeadSource');
+		
 		$config_m->add('xepan\hr\Controller_ACL');
 		$config_m->tryLoadAny();
 

@@ -157,14 +157,7 @@ class page_lead extends \xepan\base\Page{
 			$category_filter_field->js(true)->val($_GET['category_id']);
 
 		$source_type = $frm->addField('Dropdown','source_type')->setEmptyText('Please Select Source');
-		$source_model = $this->add('xepan\base\Model_ConfigJsonModel',
-		        [
-		            'fields'=>[
-						'lead_source'=>'text',
-						],
-					'config_key'=>'MARKETING_LEAD_SOURCE',
-					'application'=>'marketing'
-		        ]);
+		$source_model = $this->add('xepan\marketing\Model_Config_LeadSource');
 		$source_model->tryLoadAny();
 		$source_array = explode(",",$source_model['lead_source']);
 		$source_type->setValueList(array_combine($source_array,$source_array));

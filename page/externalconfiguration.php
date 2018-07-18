@@ -24,6 +24,18 @@ class page_externalconfiguration extends \xepan\base\Page{
 		$tabs = $this->add('Tabs');
         $lead_tab = $tabs->addTab('Leads');
 
+        $dir = new \DirectoryIterator('vendor/xepan/marketing/lib/Controller/APIConnector/');
+		foreach ($dir as $fileinfo) {
+		    if (!$fileinfo->isDot()) {
+		    	$api = $fileinfo->getFilename();
+		    	$api = str_replace(".php", '', $api);
+		        $tab = $tabs->addTab($api);
+		        $cont = $this->add('xepan\marketing\Controller_APIConnector_'.$api);
+		        $cont->config($tab);
+
+		    }
+		}
+
         $lead_form = $lead_tab->add('Form');
         $lead_form->setModel($config_m,['activate_lead_api','open_lead_external_info_in_iframe','external_url']);
         $lead_form->addSubmit('Save')->addClass('btn btn-info');

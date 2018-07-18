@@ -16,14 +16,7 @@ class Model_Lead extends \xepan\base\Model_Contact{
 	function init(){
 		parent::init();
 		
-		$config_m = $this->add('xepan\base\Model_ConfigJsonModel',
-		[
-			'fields'=>[
-						'lead_source'=>'text',
-						],
-				'config_key'=>'MARKETING_LEAD_SOURCE',
-				'application'=>'marketing'
-		]);
+		$config_m = $this->add('xepan\marketing\Model_Config_LeadSource');
 		$config_m->tryLoadAny();
 
 		$this->getElement('source')->enum(explode(',', $config_m['lead_source']));

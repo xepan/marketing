@@ -221,7 +221,7 @@ class Initiator extends \Controller_Addon {
         $array['SocialPosters_Base_SocialConfig'] = ['caption'=>'SocialPosters_Base_SocialConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Base_SocialConfig'];
         $array['SocialPosters_Linkedin_LinkedinConfig'] = ['caption'=>'SocialPosters_Linkedin_LinkedinConfig','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_SocialPosters_Linkedin_LinkedinConfig'];
         $array['ORGANIZATIONS_STRATEGY_PLANNING'] = ['caption'=>'ORGANIZATIONS_STRATEGY_PLANNING','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_ORGANIZATIONS_STRATEGY_PLANNING'];
-        $array['MARKETING_LEAD_SOURCE'] = ['caption'=>'MARKETING_LEAD_SOURCE','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_MARKETING_LEAD_SOURCE'];
+        $array['MARKETING_LEAD_SOURCE'] = ['caption'=>'MARKETING_LEAD_SOURCE','type'=>'xepan\base\Basic','model'=>'xepan\marketing\Model_Config_LeadSource'];
 
     }
 

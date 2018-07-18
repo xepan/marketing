@@ -339,11 +339,10 @@ class page_lead extends \xepan\base\Page{
 
 		$emails_field = $form->addField('emails');
 		$number_field = $form->addField('numbers');
-		$categories_field = $form->addField('DropDown','categories');
+		$categories_field = $form->addField('xepan\base\DropDown','categories');
 		$categories_field->setModel($this->add('xepan\marketing\Model_MarketingCategory'));
-		$categories_field->addClass('multiselect-full-width');
-		$categories_field->setAttr(['multiple'=>'multiple']);
-		$categories_field->setEmptyText("Please Select");
+		$categories_field->enableMultiSelect();
+		// $categories_field->setEmptyText("Please Select");
 
 		if($crud->isEditing('edit')){		
 			$model->addHook('afterLoad',function($m)use($crud,$emails_field,$number_field,$categories_field,$other_fields){

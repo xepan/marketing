@@ -89,25 +89,50 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 		$data = json_decode($output,true);
 		$count = 0;
 		foreach ($data as $record){
+
+			$from_email = trim($record['SENDEREMAIL']);
+			$from_phone = trim($record['MOB']);
 			$email_ids = [$record['SENDEREMAIL'],$record['EMAIL_ALT']];
 			$phone_nos = [$record['MOB'],$record['MOBILE_ALT'],$record['PHONE'],$record['PHONE_ALT']];
 			$created_date = date('Y-m-d H:i:s',strtotime($record['DATE_TIME_RE']));
 
-			// check config duplicate allowed
-			
-			// creating lead
+			// echo "--------------------------------------------<br/>";
+			// echo $from_email." = ".$from_phone."<br/>";
 			$lead_model = $this->add('xepan\marketing\Model_Lead');
-			$lead_model['first_name'] = $record['SENDERNAME'];
-			$lead_model['organization']= $record['GLUSR_USR_COMPANYNAME'];
-			$lead_model['address'] = $record['ENQ_ADDRESS'];
-			$lead_model['city'] = $record['ENQ_CITY'];
-			$lead_model['state_id'] = $this->add('xepan\base\Model_State')->addCondition('name',$record['ENQ_STATE'])->tryLoadAny()->id;
-			$lead_model['country_id'] = $this->add('xepan\base\Model_Country')->addCondition('iso_code',$record['COUNTRY_ISO'])->tryLoadAny()->id;
-			$lead_model['remark'] = 'Auto Created From India Mart and Data are: '.json_encode($record);
-			$lead_model['source'] = $this->config['source_to_be_set'];
-			$lead_model['status'] = "Active";
-			$lead_model['created_at'] = $created_date;
-			$lead_model->save();
+			if($from_email){
+				$email = $this->add('xepan\base\Model_Contact_Email');
+				$email->addCondition('value',$from_email);
+				$email->tryLoadAny();
+				if($email->loaded()){
+					$lead_model->tryLoad($email['contact_id']);
+				}
+				// echo "email = ".$from_email."Lead id ".$lead_model['name']."<br/>";
+			}elseif($from_phone){
+				$phone = $this->add('xepan\base\Model_Contact_Phone');
+				$phone->addCondition('value',$from_phone);
+				$phone->tryLoadAny();
+				if($phone->loaded()){
+					$lead_model->tryLoad($phone['contact_id']);
+				}
+				// echo "phone = ".$from_phone."Lead id ".$lead_model['name']."<br/>";
+			}
+			// creating lead
+			if(!$lead_model->loaded()){
+				$lead_model = $this->add('xepan\marketing\Model_Lead');
+				$lead_model['first_name'] = $record['SENDERNAME'];
+				$lead_model['organization']= $record['GLUSR_USR_COMPANYNAME'];
+				$lead_model['address'] = $record['ENQ_ADDRESS'];
+				$lead_model['city'] = $record['ENQ_CITY'];
+				$lead_model['state_id'] = $this->add('xepan\base\Model_State')->addCondition('name',$record['ENQ_STATE'])->tryLoadAny()->id;
+				$lead_model['country_id'] = $this->add('xepan\base\Model_Country')->addCondition('iso_code',$record['COUNTRY_ISO'])->tryLoadAny()->id;
+				$lead_model['remark'] = 'Auto Created From India Mart and Data are: '.json_encode($record);
+				$lead_model['source'] = $this->config['source_to_be_set'];
+				$lead_model['status'] = "Active";
+				$lead_model['created_at'] = $created_date;
+				$lead_model->save();
+
+				// echo "Lead Created ".$lead_model['first_name']."<br/>";
+			}
 
 			$count++;
 			// company email
@@ -115,8 +140,10 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 				if(trim($email_id)){
 					$email = $this->add('xepan\base\Model_Contact_Email');
 					$email->addCondition('contact_id',$lead_model->id);
-					$email->addCondition('value',$email_id);
 					$email->tryLoadAny();
+					if($email->loaded() AND $email['contact_id'] != $lead_model->id) continue;
+
+					$email['value'] = $email_id;
 					if(!$email['head']) $email['head'] = "Official";
 					$email->save();
 				}
@@ -125,38 +152,39 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 			foreach ($phone_nos as $phone_no) {
 				if(trim($phone_no)){
 					$phone = $this->add('xepan\base\Model_Contact_Phone');
-					$phone->addCondition('contact_id',$lead_model->id);
 					$phone->addCondition('value',$phone_no);
 					$phone->tryLoadAny();
+					if($phone->loaded() AND $phone['contact_id'] != $lead_model->id) continue;
+
+					$phone['contact_id'] = $lead_model->id;
 					if(!$phone['head']) $phone['head'] = "Official";
 					$phone->save();
 				}
 			}
 			// associate lead
-			if($this->config['associate_with_category']){
+			if($this->config['associate_with_category'] AND $lead_model->loaded()){
 				$cat_asso_model = $this->add('xepan\marketing\Model_Lead_Category_Association');
 				$cat_asso_model->addCondition('lead_id',$lead_model->id);
 				$cat_asso_model->addCondition('marketing_category_id',$this->config['associate_with_category']);
 				$cat_asso_model->tryLoadAny();
-				if(!$cat_asso_model->loaded())
+				if(!$cat_asso_model->loaded()){
 					$cat_asso_model['created_at'] = $this->app->now;
-				$cat_asso_model->save();
+					$cat_asso_model->save();
+				}
 			}
 
-			$subject = $record['SUBJECT']." ".$record['PRODUCT_NAME'];
+			$subject = $record['SUBJECT']." :: ".$record['PRODUCT_NAME'];
 			$comment_model = $this->add('xepan\communication\Model_Communication_Comment');
 			$comment_model->addCondition('from_id',$lead_model->id);
 			$comment_model->addCondition('created_at',$created_date);
+			$comment_model->addCondition('title',$subject);
 			$comment_model->tryLoadAny();
-
 			if(!$comment_model->loaded()){
 				// create comment type communication
 				$this->add('xepan\communication\Model_Communication_Comment')
 					->createNew($lead_model,$this->app->employee,$subject,$record['ENQ_MESSAGE'],$created_date);
 			}
-
-
-		}	
+		}
 
 		$this->app->js(true)->univ()->successMessage('Total Record Fetched '.$count);
 	}

@@ -118,6 +118,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 			}
 			// creating lead
 			if(!$lead_model->loaded()){
+				// die($from_email.' '. $from_phone);
 				$lead_model = $this->add('xepan\marketing\Model_Lead');
 				$lead_model['first_name'] = $record['SENDERNAME'];
 				$lead_model['organization']= $record['GLUSR_USR_COMPANYNAME'];
@@ -139,11 +140,11 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 			foreach ($email_ids as $email_id) {
 				if(trim($email_id)){
 					$email = $this->add('xepan\base\Model_Contact_Email');
-					$email->addCondition('contact_id',$lead_model->id);
+					$email->addCondition('value',$email_id);
 					$email->tryLoadAny();
 					if($email->loaded() AND $email['contact_id'] != $lead_model->id) continue;
 
-					$email['value'] = $email_id;
+					$email['contact_id'] = $lead_model->id;
 					if(!$email['head']) $email['head'] = "Official";
 					$email->save();
 				}

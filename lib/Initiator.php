@@ -316,6 +316,21 @@ class Initiator extends \Controller_Addon {
 				$this->add('xepan\marketing\Controller_SocialExec');
 			}
 
+			$job4 = new \Cron\Job\ShellJob();
+			$job4->setSchedule(new \Cron\Schedule\CrontabSchedule('7 * * * *')); // every hour and 7 minutes
+			if(!$job4->getSchedule() || $job4->getSchedule()->valid($now)){	
+				echo " Executing API Fetch <br/>";
+				$dir = new \DirectoryIterator('vendor/xepan/marketing/lib/Controller/APIConnector/');
+				foreach ($dir as $fileinfo) {
+				    if (!$fileinfo->isDot()) {
+				    	$api = $fileinfo->getFilename();
+				    	$api = str_replace(".php", '', $api);
+				        $cont = $this->add('xepan\marketing\Controller_APIConnector_'.$api);
+				        $cont->execute();
+				    }
+				}
+			}
+
 		});
 
 		if($this->app->isEditing){

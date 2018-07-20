@@ -82,6 +82,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 		// value yes/no to use this facility
         if((!isset($extra_info ['specification'][$this->epan_specifition_key])) OR (strtotlower($extra_info ['specification'][$this->epan_specifition_key]) != 'yes')){
+        	$this->app->js()->univ()->errorMessage('You are not permitted to use this service')->execute();
         	return;
         }
 

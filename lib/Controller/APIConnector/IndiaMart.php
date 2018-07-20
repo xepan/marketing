@@ -48,8 +48,9 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 
 		$url = str_replace('{$registered_mobile_number}', $this->config['registered_mobile_number'], $url);
 		$url = str_replace('{$crm_key}', $this->config['crm_key'], $url);
-		$url = str_replace('{$start_date}', date('d-M-Y',strtotime($this->config['last_checked'])), $url);
+		$url = str_replace('{$start_date}', date('d-m-Y H:i:s',strtotime($this->config['last_checked'])), $url);
 		$url = str_replace('{$end_date}', date('d-M-Y',strtotime($this->app->now)), $url);
+
 
 		$page->add('View_Error')->set('Under development, not for production use');
 		$page->add('View_Info')->set($url);
@@ -95,7 +96,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 		$url = $this->api_key;
 		$url = str_replace('{$registered_mobile_number}', $this->config['registered_mobile_number'], $url);
 		$url = str_replace('{$crm_key}', $this->config['crm_key'], $url);
-		$url = str_replace('{$start_date}', date('d-M-Y',strtotime($this->config['last_checked'])), $url);
+		$url = str_replace('{$start_date}', date('d-m-Y H:i:s',strtotime($this->config['last_checked'])), $url);
 		$url = str_replace('{$end_date}', date('d-M-Y',strtotime($this->app->now)), $url);
 
 		$curl=$this->add('xepan\communication\Controller_CURL',['getHeaders'=>false]);

@@ -67,7 +67,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 			->set('Execute Now')
 			->addClass('btn btn-primary btn-block')
 			->on('click',function($js,$data){
-				$this->execute();
+				$this->execute(true);
 				return $js->univ()->successMessage('Executed');
 			});
 
@@ -77,7 +77,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 		}
 	}
 
-	function execute(){
+	function execute($force=false){
 
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 		// value yes/no to use this facility
@@ -85,8 +85,10 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
         	return;
         }
 
-        if(strtotime($this->config['last_checked']) > strtotime($this->app->now.' -'.$this->config['check_frequency_in_hours'].' Hour')){
-        	return;
+        if(!$force){
+	        if(strtotime($this->config['last_checked']) > strtotime($this->app->now.' -'.$this->config['check_frequency_in_hours'].' Hour')){
+	        	return;
+	        }
         }
 
 		$url = $this->api_key;

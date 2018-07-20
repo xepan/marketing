@@ -52,7 +52,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 		$url = str_replace('{$end_date}', date('d-M-Y',strtotime($this->app->now)), $url);
 
 
-		$page->add('View_Error')->set('Under development, not for production use');
+		// $page->add('View_Error')->set('Under development, not for production use');
 		$page->add('View_Info')->set($url);
 
 		$this->config->addHook('beforeSave',function($m){

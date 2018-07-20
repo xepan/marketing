@@ -103,8 +103,12 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 		$output = $curl->get($url);	
 
 		$data = json_decode($output,true);
+		if(!is_array($data)) return;
+		if(isset($data['RESPONSE']) AND !is_array($data['RESPONSE'])) return;
+		
 		$count = 0;
 		foreach ($data as $record){
+			if(!is_array($record)) continue;
 
 			$from_email = trim($record['SENDEREMAIL']);
 			$from_phone = trim($record['MOB']);

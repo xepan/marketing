@@ -199,6 +199,9 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 			}
 		}
 
+		$this->config['last_checked'] = $this->app->now;
+		$this->config->save();
+
 		$this->app->js(true)->univ()->successMessage('Total Record Fetched '.$count);
 	}
 

@@ -34,6 +34,7 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 	
 	// http://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/7042445112/GLUSR_MOBILE_KEY/NzA0MjQ0NTExMiMxMDM1OTU4MA==/Start_Time/06-OCT-2017/End_Time/25-OCT-2017/
 	public $api_key = 'http://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/{$registered_mobile_number}/GLUSR_MOBILE_KEY/{$crm_key}/Start_Time/{$start_date}/End_Time/{$end_date}/';
+	public $epan_specifition_key='IndiaMart CRM Integration';
 
 	function init(){
 		parent::init();
@@ -77,6 +78,17 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 	}
 
 	function execute(){
+
+		$extra_info = $this->app->recall('epan_extra_info_array',false);
+		// value yes/no to use this facility
+        if((!isset($extra_info ['specification'][$this->epan_specifition_key])) OR (strtotlower($extra_info ['specification'][$this->epan_specifition_key]) != 'yes')){
+        	return;
+        }
+
+        if(strtotime($this->config['last_checked']) > strtotime($this->app->now.' -'.$this->config['check_frequency_in_hours'].' Hour')){
+        	return;
+        }
+
 		$url = $this->api_key;
 		$url = str_replace('{$registered_mobile_number}', $this->config['registered_mobile_number'], $url);
 		$url = str_replace('{$crm_key}', $this->config['crm_key'], $url);

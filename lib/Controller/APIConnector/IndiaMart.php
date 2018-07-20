@@ -93,6 +93,8 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 	        }
         }
 
+        if(!$this->config['registered_mobile_number']) return;
+
 		$url = $this->api_key;
 		$url = str_replace('{$registered_mobile_number}', $this->config['registered_mobile_number'], $url);
 		$url = str_replace('{$crm_key}', $this->config['crm_key'], $url);

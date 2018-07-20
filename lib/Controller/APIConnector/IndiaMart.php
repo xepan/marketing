@@ -67,8 +67,8 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 			->set('Execute Now')
 			->addClass('btn btn-primary btn-block')
 			->on('click',function($js,$data){
-				$this->execute(true);
-				return $js->univ()->successMessage('Executed');
+				$msg = $this->execute(true);
+				return $js->univ()->successMessage($msg?:'Executed');
 			});
 
 		if($form->isSubmitted()){
@@ -81,9 +81,9 @@ class Controller_APIConnector_IndiaMart extends \AbstractController {
 
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 		// value yes/no to use this facility
-        if((!isset($extra_info ['specification'][$this->epan_specifition_key])) OR (strtotlower($extra_info ['specification'][$this->epan_specifition_key]) != 'yes')){
-        	$this->app->js()->univ()->errorMessage('You are not permitted to use this service')->execute();
-        	return;
+        if((!isset($extra_info ['specification'][$this->epan_specifition_key])) OR (strtolower($extra_info ['specification'][$this->epan_specifition_key]) != 'yes')){
+        	// $this->app->js()->univ()->errorMessage('You are not permitted to use this service')->execute();
+        	return 'You are not permitted to use this service';
         }
 
         if(!$force){

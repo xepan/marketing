@@ -17,7 +17,7 @@ class Model_Config_IndiaMart extends \xepan\base\Model_ConfigJsonModel{
 	function init(){
 		parent::init();
 
-		$this->getElement('last_checked')->display(['form'=>'DatePicker']);
+		$this->getElement('last_checked')->display(['form'=>'DateTimePicker']);
 
 		$source_model = $this->add('xepan\marketing\Model_Config_LeadSource');
 		$source_model->tryLoadAny();

@@ -112,7 +112,7 @@ class Model_Newsletter extends \xepan\marketing\Model_Content{
 			$communication->setBody($body_v->getHtml());
 
 			try{
-				$communication->send($email_settings);
+				$communication->send($email_settings,null,false);
 			}catch(\Exception $e){
 				throw $e;
 				

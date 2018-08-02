@@ -53,6 +53,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['view/report/employee-lead-report-gridview']);
 		$grid->setModel($emp_model);
+		$grid->add('misc/Export');
 		$grid->addPaginator(50);
 
 		if($form->isSubmitted()){

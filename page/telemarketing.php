@@ -46,7 +46,7 @@ class page_telemarketing extends \xepan\base\Page{
 			$g->current_row_html['detail'] = '<div data-id="'.$g->model->id.'" class="tele-lead fa fa-phone btn btn-sm btn-primary"></div>';
  		});
 		
-		$view_lead->setModel($model_lead, ['priority','effective_name','organization','type','city','contacts_comma_seperated','score','status','state','county','last_communication','days_ago']);
+		$view_lead->setModel($model_lead, ['priority','effective_name','organization','type','city','contacts_comma_seperated','score','status','state','county','last_communication','days_ago','branch_id']);
 		$view_lead->grid->addColumn('detail');
 		// $view_lead->add('xepan\base\Controller_Avatar',['options'=>['size'=>25,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 

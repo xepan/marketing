@@ -36,6 +36,8 @@ class page_employeeleadassign extends \xepan\base\Page{
 
 		$lead = $this->add('xepan\marketing\Model_Lead');
 		$lead->addCondition('status','Active');
+		if($this->app->branch->id)
+			$lead->addCondition('branch_id',$this->app->branch->id);
 
 		$form = $this->add('Form');
 		$form->add('xepan\base\Controller_FLC')
@@ -56,7 +58,11 @@ class page_employeeleadassign extends \xepan\base\Page{
 			]);
 
 		$field_cat = $form->addField('xepan\base\DropDown','lead_category');
-		$field_cat->setModel('xepan\marketing\Model_MarketingCategory');
+		$cat_model = $this->add('xepan\marketing\Model_MarketingCategory');
+		if($this->app->branch->id)
+			$cat_model->addCondition('branch_id',$this->app->branch->id);
+		
+		$field_cat->setModel($cat_model);
 		$field_cat->setEmptyText('Please Select ...');
 
 		$field_created_by_emp = $form->addField('xepan\hr\Employee','lead_created_by_employee');

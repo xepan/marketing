@@ -53,7 +53,7 @@ class page_report_employeeleadreport extends \xepan\base\Page{
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['view/report/employee-lead-report-gridview']);
 		$grid->setModel($emp_model);
-		$grid->add('misc/Export');
+		$grid->add('misc/Export',['export_fields'=>['name','total_lead_created','total_lead_assign_to','total_followup','open_opportunity','qualified_opportunity','needs_analysis_opportunity','quoted_opportunity','negotiated_opportunity','win_opportunity','loss_opportunity']]);
 		$grid->addPaginator(50);
 
 		if($form->isSubmitted()){

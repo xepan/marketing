@@ -508,6 +508,8 @@ class page_lead extends \xepan\base\Page{
 								break;
 						case "Call":
 							if(!$form['call_direction']) $form->displayError('call_direction','Please specify "Call Direction"');
+							if(!$form['from_phone']) $form->displayError('from_phone','From Phone must not be empty');
+							if(!$form['called_to']) $form->displayError('called_to','Called to  must not be empty');
 							break;
 						case "SMS":
 						if(!$form['sms_to']) $form->displayError('sms_to','Please specify "sms_to" value');

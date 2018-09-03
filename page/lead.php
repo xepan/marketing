@@ -435,7 +435,7 @@ class page_lead extends \xepan\base\Page{
 			$snooze_field = $form->addField('snooze_duration');
 			$remind_unit_field = $form->addField('DropDown','remind_unit')->setValueList(['Minutes'=>'Minutes','hours'=>'Hours','day'=>'Days'])->setEmptyText('Please select a value');
 			
-			$form->layout->add('xepan\projects\View_EmployeeFollowupSchedule',['employee_field'=>$assign_to_field,'date_field'=>$starting_date_field],'existing_schedule');
+			$form->layout->add('xepan\projects\View_EmployeeFollowupSchedule',['employee_field'=>$assign_to_field,'date_field'=>$starting_date_field,'follow_type_field'=>$followup_type],'existing_schedule');
 
 			$set_reminder_field->js(true)->univ()->bindConditionalShow([
 				true=>['remind_via','notify_to','reminder_time','force_remind','snooze_duration','remind_unit']

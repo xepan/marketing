@@ -111,6 +111,8 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function getTopApplicationMenu(){
+		if($this->app->getConfig('hidden_xepan_marketing',false)){return [];}
+
 		return ['Marketing'=>[
 						[	'name'=>'Strategy Planning',
 							'icon'=>'fa fa-gavel',
@@ -179,6 +181,8 @@ class Initiator extends \Controller_Addon {
 					]
 				]
 			];
+
+		
 			// $m->addItem(['Reports','icon'=>'fa fa-cog'],'xepan_marketing_report');
 			// $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_marketing_socialconfiguration');
 			// $m->addItem(['SMS','icon'=>'fa fa-envelope-square'],$this->app->url('xepan_marketing_sms',['status'=>'Draft,Submitted,Approved']));

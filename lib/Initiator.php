@@ -93,6 +93,8 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function getConfigTopApplicationMenu(){
+		if($this->app->getConfig('hidden_xepan_marketing',false)){return [];}
+		
 		return ['Marketing_Config'=>[
 					[	'name'=>'Social Configuration',
 						'icon'=>'fa fa-globe',

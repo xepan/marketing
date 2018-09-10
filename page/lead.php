@@ -398,7 +398,7 @@ class page_lead extends \xepan\base\Page{
 			$company_number = explode(",", $company_m['mobile_no']);
 			$company_number = array_combine($company_number, $company_number);
 
-			$from_number_field->setValueList(array_merge(array_filter($company_number),array_filter($emp_phones)));
+			$from_number_field->setValueList(array_filter($company_number)+array_filter($emp_phones));
 			$from_number_field->select_menu_options = ['tags'=>true];
 			$from_number_field->validate_values = false;
 

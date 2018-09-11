@@ -68,7 +68,7 @@ class page_mylead extends \xepan\base\Page{
 		$mylead = $leads_tab->add('xepan\marketing\Model_Lead');
 		$mylead->addCondition('assign_to_id',$employee_id);
 		$mylead->setOrder('id','desc');
-		$crud->setModel($mylead,['emails_str','contacts_str','name','organization_name_with_name','source','city','type','score','total_visitor','created_by_id','created_by','assign_to_id','assign_to','effective_name','code','organization','existing_associated_catagories','created_at','priority']);
+		$crud->setModel($mylead);
 		$crud->add('xepan\base\Controller_Avatar');
 		$crud->grid->addPaginator(25);
 

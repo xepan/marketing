@@ -90,7 +90,7 @@ class page_employeeleadassign extends \xepan\base\Page{
 
 			$this->applyCondition($lead_model);
 
-			if($this->execute){
+			if($this->execute AND $lead_model->count()->getOne()){
 				$ids = $lead_model->_dsql()->del('fields')->field($lead_model->getElement('id'))->getAll();
 				$ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($ids)),false);
 				

@@ -23,9 +23,12 @@ class Initiator extends \Controller_Addon {
 			$model_landingresponse['type'] = $_GET['source']?:"Unknown";
 			$model_landingresponse['referrersite'] = $_GET['xepan_landing_referersite']?:$_SERVER['HTTP_REFERER'];
 			$model_landingresponse['ip'] = $_SERVER['REMOTE_ADDR'];
-			$model_landingresponse->save();
+
+			if($model_landingresponse['referrersite']){
+				$model_landingresponse->save();
+				$this->app->hook('pointable_event',['landing_response',['lead'=>$model_landingresponse->ref('contact_id'),'response'=>$model_landingresponse]]);											
+			}
 			
-			$this->app->hook('pointable_event',['landing_response',['lead'=>$model_landingresponse->ref('contact_id'),'response'=>$model_landingresponse]]);											
 		}	
 		
 	}
